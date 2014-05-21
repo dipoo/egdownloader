@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 
 /**
  * 封装JButton,使构造函数可以设置text值,name值,注册监听器,坐标,大小<br>
@@ -39,9 +41,16 @@ public class AJButton extends JButton {
 		this.setToolTipText(text);
 		this.setBounds(x, y, width, height);
 		this.setForeground(Color.GRAY);
-		this.setMargin(new Insets(5, 5, 5, 5));
+		this.setFocusable(false);
+		this.setMargin(new Insets(0, 0, 0, 0));
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
 		this.addActionListener(actionListener);
+	}
+	
+	public AJButton(String text, String name, String icon, ActionListener actionListener,
+			int x, int y, int width, int height) {
+		this(text, name, actionListener, x, y, width, height);
+		this.setIcon(new ImageIcon(EgDownloaderWindow.class.getResource("/resources/icon/" + icon)));
 	}
 }

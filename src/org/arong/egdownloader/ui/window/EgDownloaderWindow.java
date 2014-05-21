@@ -5,12 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
-import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JToggleButton;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
@@ -35,6 +34,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public EgDownloaderWindow(){
 		// 设置主窗口
 		this.setTitle(Version.NAME);
+		this.setIconImage(new ImageIcon(EgDownloaderWindow.class.getResource("/resources/icon/eye.png")).getImage());
 		this.getContentPane().setLayout(null);
 		this.setSize(800, 600);
 		this.setResizable(false);
@@ -55,8 +55,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				aboutMenu);
 		
 		//构造操作按钮组
-		newTaskBtn = new AJButton("新建", "newTaskBtn", null, 5, 40, 40, 25);//新建
-		deleteTasksBtn = new AJButton("删除", "deleteTasksBtn", null, newTaskBtn.getX() + newTaskBtn.getWidth() + 10, 40, 40, 25);
+		newTaskBtn = new AJButton("新建", "newTaskBtn", "add.gif", null, 5, 40, 55, 25);//新建
+		deleteTasksBtn = new AJButton("删除", "deleteTasksBtn", "delete.gif", null, newTaskBtn.getX() + newTaskBtn.getWidth() + 10, 40, 55, 25);
 		
 		// 添加各个子组件
 		addComponents(jMenuBar, newTaskBtn, deleteTasksBtn);
