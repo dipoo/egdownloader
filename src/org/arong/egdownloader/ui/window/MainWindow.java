@@ -22,7 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import org.arong.egdownloader.ini.IniPropertyValidator;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.SwingPrintStream;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
@@ -302,7 +301,7 @@ public class MainWindow extends JFrame implements ActionListener {
 		String startPage = startField.getText();
 		String endPage = endField.getText();
 		/* 验证页码 */
-		if (IniPropertyValidator.invalidPositiveInteger(startPage)) {
+		/*if (IniPropertyValidator.invalidPositiveInteger(startPage)) {
 			JOptionPane.showMessageDialog(this, "起始页码：请输入正整数。");
 			// 选中页码值
 			startField.selectAll();
@@ -315,7 +314,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			endField.selectAll();
 			endField.requestFocusInWindow();
 			return false;
-		}
+		}*/
 		int start = Integer.parseInt(startPage);
 		int end = Integer.parseInt(endPage);
 		if (start > end) {
