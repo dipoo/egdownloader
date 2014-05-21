@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -36,6 +37,10 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 8904976570969033245L;
 	
 	JMenuBar jMenuBar;//菜单栏
+	public JFrame toolsMenuWindow;
+	public JDialog aboutMenuWindow;
+	
+	
 	JButton newTaskBtn;//新建任务
 	JButton deleteTasksBtn;//删除任务
 	

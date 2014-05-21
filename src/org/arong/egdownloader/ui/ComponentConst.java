@@ -96,7 +96,7 @@ public final class ComponentConst {
 	
 	
 	/*AboutMenuWindow内的组件*/
-	public final static String ABOUT_TEXTPANE_TEXT ="<h2>" + Version.NAME + "</h2>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" + Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" + Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED + "</b><br>官方网站：<a href='http://www.shujixiazai.com/'>http://www.shujixiazai.com/</a><br>其他网站：<a href='http://dipoo.j1.fjjsp.net/'>http://dipoo.j1.fjjsp.net/</a>";
+	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME + "</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" + Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" + Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED + "</b><br>官方网站：https://github.com/dipoo/egdownloader";
 	
 	/*DecodeAndEncodeWindow内的组件*/
 	public final static String DECODE_BUTTON_NAME = "decodeButton";

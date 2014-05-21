@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -16,7 +17,7 @@ import org.arong.egdownloader.ui.swing.AJTextPane;
  * 【关于】菜单的窗口类
  * 
  * @author 阿荣
- * @since 2013-8-25
+ * @since 2014-05-21
  * 
  */
 public class AboutMenuWindow extends JDialog {
@@ -30,10 +31,11 @@ public class AboutMenuWindow extends JDialog {
 	 * @param mainWindow
 	 */
 	public AboutMenuWindow(final JFrame mainWindow) {
-		//System.out.println("AboutMenuWindow实例化");
 		// 设置主窗口
-		this.setSize(320, 240);
+		this.setSize(340, 220);
+		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "user.png")).getImage());
 		// this.setBackground(Color.GREEN);
+		this.setTitle("about");
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);

@@ -1,4 +1,4 @@
-package org.arong.egdownloader.ui.window;
+/*package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -34,12 +34,12 @@ import org.arong.egdownloader.ui.work.CollectWork;
 import org.arong.egdownloader.ui.work.UpdateSiteWork;
 import org.arong.egdownloader.version.Version;
 
-/**
+*//**
  * 采集程序主界面
  * 
  * @author 阿荣
  * @since 2013-8-18
- */
+ *//*
 public class MainWindow extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -929178969404921993L;
 	JMenuBar jMenuBar;
@@ -220,7 +220,7 @@ public class MainWindow extends JFrame implements ActionListener {
 				return;
 			}
 
-			/* 采集或者检测 */
+			 采集或者检测 
 
 			Boolean intoDao = false;
 			// 当点击了采集按钮，才开启入库模式
@@ -238,7 +238,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			int end = Integer.parseInt(endPage);
 			int siteIndex = siteNameCombo.getSelectedIndex();
 			int typeIndex = typeNameCombo.getSelectedIndex();
-			/*ISiteEngine siteEngine = null;
+			ISiteEngine siteEngine = null;
 			SiteInfo siteInfo = sites.get(siteIndex);
 			siteInfo.setChangable(typeIndex, start, end, intoDao);
 			if ("搜娱电子书".equals(siteNameCombo.getSelectedItem())) {
@@ -268,14 +268,14 @@ public class MainWindow extends JFrame implements ActionListener {
 				return;
 			}
 			// 开启业务线程
-			collectWork = new CollectWork(siteEngine, this);*/
+			collectWork = new CollectWork(siteEngine, this);
 			collectWork.execute();
 		}
 	}
 
-	/**
+	*//**
 	 * 根据所选的采集站点和小说类型动态为起始页码和结束页码赋值，默认二者是一样的
-	 */
+	 *//*
 	private void setPageFieldText() {
 		// 获取选择站点的索引，索引从0开始
 		int siteIndex = siteNameCombo.getSelectedIndex();
@@ -283,11 +283,11 @@ public class MainWindow extends JFrame implements ActionListener {
 		int typeIndex = typeNameCombo.getSelectedIndex();
 	}
 
-	/**
+	*//**
 	 * 添加组件到主容器
 	 * 
 	 * @param components
-	 */
+	 *//*
 	private void addComponents(Component... components) {
 		if (components != null) {
 			for (Component comp : components) {
@@ -300,8 +300,8 @@ public class MainWindow extends JFrame implements ActionListener {
 		// 获取两个页码表单域的值
 		String startPage = startField.getText();
 		String endPage = endField.getText();
-		/* 验证页码 */
-		/*if (IniPropertyValidator.invalidPositiveInteger(startPage)) {
+		 验证页码 
+		if (IniPropertyValidator.invalidPositiveInteger(startPage)) {
 			JOptionPane.showMessageDialog(this, "起始页码：请输入正整数。");
 			// 选中页码值
 			startField.selectAll();
@@ -314,7 +314,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			endField.selectAll();
 			endField.requestFocusInWindow();
 			return false;
-		}*/
+		}
 		int start = Integer.parseInt(startPage);
 		int end = Integer.parseInt(endPage);
 		if (start > end) {
@@ -324,7 +324,8 @@ public class MainWindow extends JFrame implements ActionListener {
 			// 光标定位到输入框
 			startField.requestFocusInWindow();
 			return false;
-		}/* 验证页码结束 */
+		} 验证页码结束 
 		return true;
 	}
 }
+*/

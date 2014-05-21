@@ -9,7 +9,6 @@ import javax.swing.JMenu;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.AboutMenuWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.window.MainWindow;
 import org.arong.egdownloader.ui.window.ToolsMenuWindow;
 
 /**
@@ -21,18 +20,14 @@ import org.arong.egdownloader.ui.window.ToolsMenuWindow;
  * 
  */
 public class MenuMouseListener implements MouseListener {
-	private MainWindow mainWindow;
-	private EgDownloaderWindow egDownloaderWindow;
+	private EgDownloaderWindow mainWindow;
 
 	public MenuMouseListener() {
 
 	}
 
-	public MenuMouseListener(MainWindow mainWindow) {
+	public MenuMouseListener(EgDownloaderWindow mainWindow) {
 		this.mainWindow = mainWindow;
-	}
-	public MenuMouseListener(EgDownloaderWindow egDownloaderWindow) {
-		this.egDownloaderWindow = egDownloaderWindow;
 	}
 
 	public void mouseClicked(MouseEvent e) {
