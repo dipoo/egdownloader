@@ -11,10 +11,17 @@ import org.arong.egdownloader.version.Version;
  *
  */
 public final class ComponentConst {
+	public final static int CLIENT_WIDTH = 640;//主窗口宽
+	
+	public final static int CLIENT_HEIGHT = 480;//主窗口高
 	
 	public final static int MARGIN_X = 32;//组件之间水平相隔
 	
 	public final static int MARGIN_y = 32;//组件之间垂直间隔
+	
+	public final static String RESOURCES_PATH = "/resources/";
+	
+	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
 	/*MainWindow内的组件*/
 	//组件的name值
 	

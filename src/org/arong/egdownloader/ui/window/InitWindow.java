@@ -28,7 +28,7 @@ public class InitWindow extends JFrame {
 		textLabel = new AJLabel("加载采集站点信息",Color.BLUE,80,10,260,30);
 		this.getContentPane().add(textLabel);
 		this.setVisible(true);
-	
+		textLabel.setText("初始化主窗口");
 		/*//加载采集站点信息
 		try {
 			Configuration.getSites();
@@ -51,7 +51,7 @@ public class InitWindow extends JFrame {
 			JOptionPane.showMessageDialog(this, "程序运行错误：" + e.getMessage());
 			System.exit(0);
 		}*/
-		textLabel.setText("初始化主窗口");
+		
 //		JFrame mainWindow = new MainWindow();
 		JFrame egDownloaderWindow = new EgDownloaderWindow();
 		textLabel.setText("初始化完成");
