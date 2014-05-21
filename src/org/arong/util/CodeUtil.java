@@ -130,8 +130,5 @@ public final class CodeUtil {
 	}
 	public static void main(String[] args) {
 		System.out.println(myEncode("com.mysql.jdbc.Driver"));
-		System.out.println(myEncode("jdbc:mysql://175.41.24.50:3306/jsp9877db0?generateSimpleParameterMetadata=true"));
-		System.out.println(myEncode("jsp9877db0"));
-		System.out.println(myEncode("58283911"));
 	}
 }
