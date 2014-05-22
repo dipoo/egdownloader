@@ -6,17 +6,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import org.apache.commons.codec.binary.Base64;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.listener.WindowMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJTextArea;
-import org.arong.util.CodeUtil;
 
 public class ToolsMenuWindow extends JFrame implements ActionListener {
 
@@ -99,35 +96,11 @@ public class ToolsMenuWindow extends JFrame implements ActionListener {
 			/* 加密解密 */
 			// 加密
 			if (ComponentConst.ENCODE_BUTTON_NAME.equals(buttonName)) {
-				String inputString = decodeAndEncodeInputArea.getText();
-				if (inputString == null || "".equals(inputString.trim())) {
-					JOptionPane.showMessageDialog(this, "请输入需要加密的文本");
-					decodeAndEncodeInputArea.requestFocus();
-					return;
-				}
-				String str1 = CodeUtil.myEncode(inputString);
-				byte[] b1 = Base64.encodeBase64(str1.getBytes());
-				decodeAndEncodeOutputArea.setText(new String(b1));
 				return;
 			}
 			// 解密
 			else if (ComponentConst.DECODE_BUTTON_NAME.equals(buttonName)) {
-				String inputString = decodeAndEncodeInputArea.getText();
-				if (inputString == null || "".equals(inputString.trim())) {
-					JOptionPane.showMessageDialog(this, "请输入需要解密的文本");
-					decodeAndEncodeInputArea.requestFocus();
-					return;
-				}
-				try {
-					byte[] b2 = Base64.decodeBase64(inputString.getBytes());
-					String str = CodeUtil.myDecode(new String(b2));
-					decodeAndEncodeOutputArea.setText(str);
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(this, "输入的文本不符合规范，无法解密");
-					decodeAndEncodeInputArea.selectAll();
-					return;
-				}
-				return;
+				
 			}
 		}
 	}
