@@ -15,7 +15,7 @@ public class Task {
 	private int total;//图片总数
 	private int current;//已下载完成总数
 	private int size;//总大小
-	private boolean isCompleted;//是否已完成
+	private TaskStatus status;//是否已完成
 	private List<Picture> pictures;
 	public String getUrl() {
 		return url;
@@ -65,17 +65,17 @@ public class Task {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	public boolean isCompleted() {
-		return isCompleted;
-	}
-	public void setCompleted(boolean isCompleted) {
-		this.isCompleted = isCompleted;
-	}
 	public List<Picture> getPictures() {
 		return pictures;
 	}
 	public void setPictures(List<Picture> pictures) {
 		this.pictures = pictures;
+	}
+	public TaskStatus getStatus() {
+		return status;
+	}
+	public void setStatus(TaskStatus status) {
+		this.status = status;
 	}
 	
 }
