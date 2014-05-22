@@ -99,7 +99,7 @@ public class AddFormDialog extends JDialog {
 					
 				}
 			}
-		}), (this.getWidth() - 100) / 2, 120, 100, 30);
+		}), (this.getWidth() - 100) / 2, 130, 100, 30);
 		saveDirChooser = new JFileChooser("/");
 		saveDirChooser.setDialogTitle("选择保存目录");//选择框标题
 		saveDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//只能选择目录
