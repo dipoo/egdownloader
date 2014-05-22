@@ -1,4 +1,4 @@
 egdownloader
 ============
 
-just the require of myself
+just my own needs.enjoy!
