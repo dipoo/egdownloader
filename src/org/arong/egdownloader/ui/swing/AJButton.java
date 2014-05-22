@@ -3,10 +3,12 @@ package org.arong.egdownloader.ui.swing;
 import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 
@@ -51,6 +53,12 @@ public class AJButton extends JButton {
 	public AJButton(String text, String name, String icon, ActionListener actionListener,
 			int x, int y, int width, int height) {
 		this(text, name, actionListener, x, y, width, height);
-		this.setIcon(new ImageIcon(EgDownloaderWindow.class.getResource("/resources/icon/" + icon)));
+		this.setIcon(new ImageIcon(EgDownloaderWindow.class.getResource(ComponentConst.ICON_PATH + icon)));
+	}
+	public AJButton(String text, String name, String icon, MouseListener mouseListener,
+			int x, int y, int width, int height) {
+		this(text, name, null, x, y, width, height);
+		this.addMouseListener(mouseListener);
+		this.setIcon(new ImageIcon(EgDownloaderWindow.class.getResource(ComponentConst.ICON_PATH + icon)));
 	}
 }

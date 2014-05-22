@@ -21,13 +21,13 @@ public class Main {
 		for (int i = 0; i < FontConst.DEFAULT_FONT.length; i++)
 			UIManager.put(FontConst.DEFAULT_FONT[i], new Font("微软雅黑",
 					Font.BOLD, 12));
-		/*try {
+		try {
 			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
 			BeautyEyeLNFHelper.launchBeautyEyeLNF();
 			UIManager.put("RootPane.setupButtonVisible", false);
 		} catch (Exception e) {
 
-		}*/
+		}
 		// 异步执行
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

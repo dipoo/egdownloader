@@ -1,7 +1,7 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -10,21 +10,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
+import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
 import org.arong.egdownloader.ui.swing.AJTextArea;
-import org.arong.egdownloader.ui.swing.AJTextPane;
+import org.arong.egdownloader.ui.window.form.AddFormDialog;
+import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.version.Version;
 
 /**
@@ -39,6 +38,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	JMenuBar jMenuBar;//菜单栏
 	public JFrame toolsMenuWindow;
 	public JDialog aboutMenuWindow;
+	public JDialog addFormWindow;
 	
 	
 	JButton newTaskBtn;//新建任务
@@ -70,8 +70,25 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				aboutMenu);
 		
 		//构造操作按钮
-		newTaskBtn = new AJButton("新建", "newTaskBtn", "add.gif", null, 5, 40, 55, 25);//新建
-		deleteTasksBtn = new AJButton("删除", "deleteTasksBtn", "delete.gif", null, newTaskBtn.getX() + newTaskBtn.getWidth() + 10, 40, 55, 25);
+		newTaskBtn = new AJButton("新建", "newTaskBtn", "add.gif", new OperaBtnMouseListener(this, new IListenerTask() {
+			public void doWork(Window mainWindow) {
+				EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
+				if(this_.addFormWindow == null){
+					this_.addFormWindow = new AddFormDialog(this_);
+				}else{
+					if(!this_.addFormWindow.isVisible()){//如果是隐藏的，则清空文本
+						((AddFormDialog)this_.addFormWindow).emptyField();
+					}
+					this_.addFormWindow.setVisible(true);
+				}
+			}
+		}), 5, 40, 55, 25);//新建
+		deleteTasksBtn = new AJButton("删除", "deleteTasksBtn", "delete.gif", new OperaBtnMouseListener(this, new IListenerTask() {
+			public void doWork(Window mainWindow) {
+				//EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
+				
+			}
+		}), newTaskBtn.getX() + newTaskBtn.getWidth() + 10, 40, 55, 25);
 		
 		
 		

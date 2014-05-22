@@ -13,7 +13,9 @@ public final class ComponentUtil {
 	public static void addComponents(Container container , Component ...components){
 		if (container != null && components != null) {
 			for (Component comp : components) {
-				container.add(comp);
+				if(comp != null){
+					container.add(comp);
+				}
 			}
 		}
 	}
