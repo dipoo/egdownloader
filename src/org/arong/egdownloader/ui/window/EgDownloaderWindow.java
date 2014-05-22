@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -17,8 +16,8 @@ import javax.swing.JTextArea;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
+import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
-import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
 import org.arong.egdownloader.ui.swing.AJTextArea;
@@ -41,9 +40,6 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public JDialog addFormWindow;
 	
 	
-	JButton newTaskBtn;//新建任务
-	JButton deleteTasksBtn;//删除任务
-	
 	JTextArea statusTextarea;//状态显示
 	
 	public EgDownloaderWindow(){
@@ -57,6 +53,29 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		// 设置菜单
+		JMenu newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
+				ComponentConst.SETTING_MENU_NAME, "add.gif", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+					public void doWork(Window mainWindow) {
+						EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
+						if(this_.addFormWindow == null){
+							this_.addFormWindow = new AddFormDialog(this_);
+						}else{
+							if(!this_.addFormWindow.isVisible()){//如果是隐藏的，则清空文本
+								((AddFormDialog)this_.addFormWindow).emptyField();
+							}
+							this_.addFormWindow.setVisible(true);
+						}
+						this_.setVisible(false);
+					}
+				}));
+		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
+				ComponentConst.TOOLS_MENU_NAME, "delete.gif",  new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+					public void doWork(Window mainWindow) {
+						//EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
+						
+					}
+				}));
+		
 		MouseListener menuMouseListener = new MenuMouseListener(this);
 		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
 				ComponentConst.SETTING_MENU_NAME, "cog.png", menuMouseListener);
@@ -66,30 +85,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				ComponentConst.ABOUT_MENU_NAME, "user.png", menuMouseListener);
 
 		// 构造菜单栏并添加菜单
-		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30, settingMenu, toolsMenu,
+		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30, newTaskMenu, deleteTasksMenu, settingMenu, toolsMenu,
 				aboutMenu);
-		
-		//构造操作按钮
-		newTaskBtn = new AJButton("新建", "newTaskBtn", "add.gif", new OperaBtnMouseListener(this, new IListenerTask() {
-			public void doWork(Window mainWindow) {
-				EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
-				if(this_.addFormWindow == null){
-					this_.addFormWindow = new AddFormDialog(this_);
-				}else{
-					if(!this_.addFormWindow.isVisible()){//如果是隐藏的，则清空文本
-						((AddFormDialog)this_.addFormWindow).emptyField();
-					}
-					this_.addFormWindow.setVisible(true);
-				}
-			}
-		}), 5, 40, 55, 25);//新建
-		deleteTasksBtn = new AJButton("删除", "deleteTasksBtn", "delete.gif", new OperaBtnMouseListener(this, new IListenerTask() {
-			public void doWork(Window mainWindow) {
-				//EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
-				
-			}
-		}), newTaskBtn.getX() + newTaskBtn.getWidth() + 10, 40, 55, 25);
-		
 		
 		
 		//状态栏
@@ -97,7 +94,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		statusTextarea.setForeground(Color.BLACK);
 		statusTextarea.setBackground(new Color(230,230,230));
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, newTaskBtn, deleteTasksBtn, statusTextarea);
+		ComponentUtil.addComponents(getContentPane(), jMenuBar, statusTextarea);
 	}
 
 	public void actionPerformed(ActionEvent e) {

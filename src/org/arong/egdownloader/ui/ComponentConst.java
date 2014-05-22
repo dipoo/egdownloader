@@ -75,18 +75,8 @@ public final class ComponentConst {
 	public final static String AUTHOR_BUTTON_NAME = "authorButton";
 	
 	//组件的text值
-	public final static String SITENAME_LABEL_TEXT = "采集站点";
-	public final static String TYPENAME_LABEL_TEXT = "书籍类型";
-	public final static String START_LABEL_TEXT = "起始页码";
-	public final static String END_LABEL_TEXT = "结束页码";
-	public final static String PAGEONE_BUTTON_TEXT = "第一页";
-	public final static String ADDPAGE_BUTTON_TEXT = "+1";
-	public final static String CHECK_BUTTON_TEXT = "采前检测";
-	public final static String COLLECT_BUTTON_TEXT = "开始采集";
-	public final static String CLEAR_BUTTON_TEXT = "清屏";
-	public final static String CANCEL_BUTTON_TEXT = "取消任务";
-	public final static String UPDATE_BUTTON_TEXT = "更新站点";
-	public final static String AUTHOR_BUTTON_TEXT = "生成作者";
+	public final static String ADD_MENU_TEXT = "新建";
+	public final static String DELETE_MENU_TEXT = "删除";
 	public final static String SETTING_MENU_TEXT = "配置";
 	public final static String TOOLS_MENU_TEXT = "工具";
 	public final static String ABOUT_MENU_TEXT = "关于";
