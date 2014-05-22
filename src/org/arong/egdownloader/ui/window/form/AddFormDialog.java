@@ -2,6 +2,8 @@ package org.arong.egdownloader.ui.window.form;
 
 import java.awt.Color;
 import java.awt.Window;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -15,6 +17,7 @@ import javax.swing.JTextField;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -23,7 +26,7 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 新建下载任务窗口
  * @author 阿荣
- * @since 2013-05-21
+ * @since 2014-05-21
  *
  */
 public class AddFormDialog extends JDialog {
@@ -47,6 +50,19 @@ public class AddFormDialog extends JDialog {
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setLocationRelativeTo(mainWindow);
+		this.addWindowListener(new WindowListener() {
+			public void windowOpened(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {
+				//关闭后显示主界面
+				mainWindow.setVisible(true);
+			}
+			public void windowClosing(WindowEvent e) {}
+			public void windowClosed(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) {}
+		});
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
 		tipLabel = new AJLabel("提示：保存目录不用填写具体文件夹名，下载器会自动生成", Color.LIGHT_GRAY, 80, 5, this.getWidth() - 80, 30);
 		
@@ -54,7 +70,7 @@ public class AddFormDialog extends JDialog {
 		urlField = new AJTextField("urlField", 65, 40, 395, 30);
 		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 80, 60, 30);
 		saveDirField = new AJTextField("saveDirField", 65, 80, 320, 30);
-		chooserBtn = new AJButton("浏览", "chooserBtn", "eye.png", new OperaBtnMouseListener(this, new IListenerTask() {
+		chooserBtn = new AJButton("浏览", "chooserBtn", "eye.png", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				int result = this_.saveDirChooser.showOpenDialog(this_);
@@ -71,7 +87,7 @@ public class AddFormDialog extends JDialog {
 			}
 		}) , 400, 80, 60, 30);
 		
-		addTaskBtn = new AJButton("新建", "", "add.gif", new OperaBtnMouseListener(this, new IListenerTask() {
+		addTaskBtn = new AJButton("新建", "", "add.gif", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				if("".equals(this_.urlField.getText().trim())){
@@ -88,28 +104,6 @@ public class AddFormDialog extends JDialog {
 		saveDirChooser.setDialogTitle("选择保存目录");//选择框标题
 		saveDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//只能选择目录
 		ComponentUtil.addComponents(this.getContentPane(), addTaskBtn, urlLabel, urlField, saveDirLabel, saveDirField, chooserBtn, tipLabel);
-		
-		/*//添加窗口聚焦监听器
-		this.addWindowFocusListener(new WindowFocusListener() {
-			// 当失去活动状态的时候此窗口被隐藏
-			public void windowLostFocus(WindowEvent e) {
-				AddFormDialog window = (AddFormDialog) e.getSource();
-				window.setVisible(false);
-			}
-			public void windowGainedFocus(WindowEvent e) {}
-		});
-		//添加鼠标活动监听器
-		this.addMouseListener(new MouseListener() {
-			// 当鼠标点击当前窗口时隐藏此窗口
-			public void mouseClicked(MouseEvent e) {
-				AddFormDialog window = (AddFormDialog) e.getSource();
-				window.setVisible(false);
-			}
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-		});*/
 	}
 	public void emptyField(){
 		urlField.setText("");

@@ -13,27 +13,39 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 public class OperaBtnMouseListener implements MouseListener {
 	private Window mainWindow;
 	private IListenerTask task;
-	public OperaBtnMouseListener(Window mainWindow, IListenerTask task){
+	private MouseAction action;
+	public OperaBtnMouseListener(Window mainWindow, MouseAction action, IListenerTask task){
 		this.mainWindow = mainWindow;
 		this.task = task;
+		this.action = action;
 	}
 	public void mouseClicked(MouseEvent e) {
-		task.doWork(mainWindow);
+		if(action == MouseAction.CLICK){
+			task.doWork(mainWindow);
+		}
 	}
 
 	public void mousePressed(MouseEvent e) {
-
+		if(action == MouseAction.PRESS){
+			task.doWork(mainWindow);
+		}
 	}
 
 	public void mouseReleased(MouseEvent e) {
-
+		if(action == MouseAction.RELEASE){
+			task.doWork(mainWindow);
+		}
 	}
 
 	public void mouseEntered(MouseEvent e) {
-
+		if(action == MouseAction.ENTER){
+			task.doWork(mainWindow);
+		}
 	}
 
 	public void mouseExited(MouseEvent e) {
-
+		if(action == MouseAction.EXIT){
+			task.doWork(mainWindow);
+		}
 	}
 }
