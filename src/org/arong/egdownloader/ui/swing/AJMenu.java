@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.swing;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseListener;
 
@@ -28,6 +29,7 @@ public class AJMenu extends JMenu {
 	public AJMenu(String text, String name, MouseListener listener){
 		super(text);
 		this.setName(name);
+		this.setForeground(Color.DARK_GRAY);
 		this.setCursor(CursorManager.getPointerCursor());
 		this.addMouseListener(listener);
 	}

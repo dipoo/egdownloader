@@ -32,4 +32,9 @@ public class AJLabel extends JLabel {
 		this(text, color);
 		this.setBounds(x, y, width, height);
 	}
+	
+	public AJLabel(String text, Color color, int align){
+		this(text, color);
+		this.setHorizontalAlignment(align);
+	}
 }
