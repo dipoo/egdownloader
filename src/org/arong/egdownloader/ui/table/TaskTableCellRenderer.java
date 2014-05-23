@@ -32,7 +32,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(30);
 			tc.setMaxWidth(40);
-			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "ic_folder.png")), JLabel.CENTER);
+			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
 		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(200);
@@ -42,20 +42,20 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(100);
 			tc.setMaxWidth(120);
-			return new AJLabel(value.toString() + " P", "ic_picture.png", Color.DARK_GRAY, JLabel.LEFT);
+			return new AJLabel(value.toString() + " P", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("picture"), Color.DARK_GRAY, JLabel.LEFT);
 		}else if(column == 3){//第四列：进度
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(100);
 			tc.setMaxWidth(150);
-			return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", "ic_download.png", Color.DARK_GRAY, JLabel.LEFT);
+			return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"), Color.DARK_GRAY, JLabel.LEFT);
 		}else if(column == 4){//第五列：大小
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(100);
 			tc.setMaxWidth(120);
-			return new AJLabel(value.toString(), "ic_archive.png", Color.DARK_GRAY, JLabel.LEFT);
+			return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("size"), Color.DARK_GRAY, JLabel.LEFT);
 		}else if(column == 5){//第六列：状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  60 : 80);
+			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  60 : 82);
 			tc.setMaxWidth(80);
 			return new AJLabel(value.toString(), Color.GRAY, JLabel.LEFT);
 		}else{

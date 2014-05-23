@@ -44,7 +44,7 @@ public class AddFormDialog extends JDialog {
 	
 	public AddFormDialog(final JFrame mainWindow){
 		this.setTitle("新建任务");
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "ic_plus.png")).getImage());
+		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
 		this.setSize(480, 210);
 		this.setVisible(true);
 		this.setResizable(false);
@@ -71,7 +71,7 @@ public class AddFormDialog extends JDialog {
 		urlField = new AJTextField("urlField", 65, 40, 395, 30);
 		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 80, 60, 30);
 		saveDirField = new AJTextField("saveDirField", 65, 80, 320, 30);
-		chooserBtn = new AJButton("浏览", "chooserBtn", "ic_zoom.png", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				int result = this_.saveDirChooser.showOpenDialog(this_);
@@ -88,7 +88,7 @@ public class AddFormDialog extends JDialog {
 			}
 		}) , 400, 80, 60, 30);
 		
-		addTaskBtn = new AJButton("新建", "", "ic_plus.png", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		addTaskBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				if("".equals(this_.urlField.getText().trim())){
