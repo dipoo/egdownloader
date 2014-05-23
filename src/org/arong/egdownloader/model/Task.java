@@ -17,6 +17,14 @@ public class Task {
 	private int size;//总大小
 	private TaskStatus status;//是否已完成
 	private List<Picture> pictures;
+	
+	public Task(){}
+	
+	public Task(String url, String saveDir){
+		this.url = url;
+		this.saveDir = saveDir;
+	}
+	
 	public String getUrl() {
 		return url;
 	}
