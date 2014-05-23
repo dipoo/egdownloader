@@ -14,7 +14,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 public class TaskTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -7062795869810088466L;
 	private List<Task> tasks;
-	private int column = 5;
+	private int column = 6;
 	
 	public TaskTableModel(List<Task> tasks){
 		this.tasks = tasks;
@@ -38,19 +38,31 @@ public class TaskTableModel extends AbstractTableModel {
 			case 0 :
 				return "";
 			case 1 :
-				return "  " + tasks.get(rowIndex).getName();
+				return "" + tasks.get(rowIndex).getName();
 			case 2 :
 				return tasks.get(rowIndex).getTotal();
 			case 3 :
 				return tasks.get(rowIndex).getCurrent();
+			case 4 :
+				return (tasks.get(rowIndex).getSize() / 1024) + " KB";
+			case 5 :	
+				return tasks.get(rowIndex).getStatus().getStatus();
 			default :
-				return (tasks.get(rowIndex).getSize() / 1024) + "KB";
+				return "";
 		}
 	}
 
 	//表头显示
 	public String getColumnName(int column) {
 		return ComponentConst.TASK_TABLE_HEADER[column];
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
 	}
 
 }

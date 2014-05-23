@@ -23,7 +23,9 @@ public final class ComponentConst {
 	
 	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
 	
-	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目", "已下载", "大小"};
+	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目", "已下载", "大小", "状态", ""};
+	
+	public final static int MAX_TASK_PAGE = 12;//一页显示任务数
 	/*MainWindow内的组件*/
 	//组件的name值
 	

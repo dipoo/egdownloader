@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.math.BigDecimal;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -23,24 +24,47 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
-		if (row % 2 == 0) {
-            setBackground(Color.YELLOW); //设置奇数行底色
-        } else if (row % 2 == 1) {
-            setBackground(new Color(206, 231, 255)); //设置偶数行底色
-        }
-		if(column == 0){
+		if(isSelected){
+			this.setForeground(new Color(230,230,230));
+		}
+		
+		if(column == 0){//第一列：图标
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(30);
 			tc.setMaxWidth(40);
 			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "folder.gif")), JLabel.CENTER);
-		}else if(column == 1){
+		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(250);
-			tc.setMaxWidth(300);
-			return new AJLabel(value.toString(),Color.BLUE, JLabel.LEFT);
+			tc.setPreferredWidth(200);
+			tc.setMaxWidth(250);
+			return new AJLabel(value.toString(), Color.BLUE, JLabel.LEFT);
+		}else if(column == 2){//第三列：图片总数
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(100);
+			tc.setMaxWidth(120);
+			return new AJLabel(value.toString() + " P", "ic_picture.png", Color.DARK_GRAY, JLabel.LEFT);
+		}else if(column == 3){//第四列：进度
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(100);
+			tc.setMaxWidth(150);
+			return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", "ic_download.png", Color.DARK_GRAY, JLabel.LEFT);
+		}else if(column == 4){//第五列：大小
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(100);
+			tc.setMaxWidth(120);
+			return new AJLabel(value.toString(), "ic_archive.png", Color.DARK_GRAY, JLabel.LEFT);
+		}else if(column == 5){//第六列：状态
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  60 : 80);
+			tc.setMaxWidth(80);
+			return new AJLabel(value.toString(), Color.GRAY, JLabel.LEFT);
 		}else{
-			return new AJLabel(value.toString(),Color.GRAY, JLabel.CENTER);
+			return null;
 		}
 	}
-
+	
+	private String getSchedule(Object current, Object total){
+		Double d = Double.parseDouble(current.toString()) / Double.parseDouble(total.toString()) * 100;
+		return new BigDecimal(d).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%";
+	}
 }
