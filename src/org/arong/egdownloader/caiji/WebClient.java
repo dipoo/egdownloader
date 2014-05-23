@@ -15,12 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpHost;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 
@@ -98,7 +97,7 @@ public class WebClient {
 	
 	public static void main(String[] args) {
 		try {
-			postRequest("http://localhost:8093/RedseaCloudWeb/lo.mc", "UTF-8", new HashMap());
+			postRequest("http://localhost:8093/RedseaCloudWeb/lo.mc", "UTF-8", new HashMap<String, String>());
 		} catch (WebClientException e) {
 			e.printStackTrace();
 		}

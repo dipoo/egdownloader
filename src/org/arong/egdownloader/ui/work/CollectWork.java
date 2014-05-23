@@ -15,13 +15,13 @@ public class CollectWork extends SwingWorker<Void, Void> {
 
 //	private SiteInfo siteInfo;
 
-	private JFrame mainWindow;
+//	private JFrame mainWindow;
 	
 	public CollectWork() {
 	}
 
 	public CollectWork(JFrame mainWindow) {
-		this.mainWindow = mainWindow;
+//		this.mainWindow = mainWindow;
 	}
 
 	/*public CollectWork(ISiteEngine engine, JFrame mainWindow) {
