@@ -5,7 +5,15 @@ package org.arong.egdownloader.model;
  * @since 2014-05-23
  */
 public enum TaskStatus {
-	STARTED,
-	COMPLETED,
-	DELETED
+	UNSTARTED("未开始"),
+	STARTED("下载中"),
+	COMPLETED("已完成"),
+	DELETED("已删除");
+	private String status;
+	public String getStatus(){
+		return status;
+	}
+	private TaskStatus(String status){
+		this.status = status;
+	}
 }

@@ -15,7 +15,7 @@ public class Task {
 	private int total;//图片总数
 	private int current;//已下载完成总数
 	private int size;//总大小
-	private TaskStatus status;//是否已完成
+	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private List<Picture> pictures;
 	
 	public Task(){}
