@@ -3,8 +3,6 @@ package org.arong.egdownloader.ui.window;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -39,14 +37,14 @@ public class AboutMenuWindow extends JDialog {
 		this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);
 		//添加窗口聚焦监听器
-		this.addWindowFocusListener(new WindowFocusListener() {
+		/*this.addWindowFocusListener(new WindowFocusListener() {
 			// 当失去活动状态的时候此窗口被隐藏
 			public void windowLostFocus(WindowEvent e) {
 				AboutMenuWindow window = (AboutMenuWindow) e.getSource();
 				window.setVisible(false);
 			}
 			public void windowGainedFocus(WindowEvent e) {}
-		});
+		});*/
 		//添加鼠标活动监听器
 		this.addMouseListener(new MouseListener() {
 			// 当鼠标点击当前窗口时隐藏此窗口
