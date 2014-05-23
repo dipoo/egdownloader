@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
@@ -47,6 +49,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public JDialog addFormWindow;
 	
 	public JTable runningTable;
+	JScrollPane tablePane;
 	
 	JTextArea statusTextarea;//状态显示
 	
@@ -60,11 +63,12 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		// 设置菜单
+		// 菜单
 		JMenu newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
 				ComponentConst.SETTING_MENU_NAME, "add.gif", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 					public void doWork(Window mainWindow) {
 						EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
+//						((TaskTableModel)this_.runningTable.getModel()).getTasks().remove(1);
 						if(this_.addFormWindow == null){
 							this_.addFormWindow = new AddFormDialog(this_);
 						}else{
@@ -96,10 +100,12 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30, newTaskMenu, deleteTasksMenu, settingMenu, toolsMenu,
 				aboutMenu);
 		
+		
+		
 		List<Task> tasks = new ArrayList<Task>();
 		Task t1 = new Task("http://www.hao123.com/1", "D:/eg");
 		t1.setName("齐天大圣");
-		t1.setTotal(45);
+		t1.setTotal(4500);
 		t1.setCurrent(5);
 		t1.setSize(1345200);
 		
@@ -110,16 +116,18 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		t2.setSize(5452299);
 		
 		tasks.add(t2);
-		tasks.add(t1);
+		tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
+		tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);//tasks.add(t1);
+//		tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
 		//正在下载table
 		runningTable = new TaskingTable(5, 40, getWidth() - 20, tasks.size() * 25, tasks);
-		
+		tablePane = new JScrollPane(runningTable);tablePane.setVisible(true);tablePane.setBounds(new Rectangle(5, 40, 620, 380));
 		//状态栏
 		statusTextarea = new AJTextArea("当前无任务", 0, ComponentConst.CLIENT_HEIGHT - 58, ComponentConst.CLIENT_WIDTH, 25);
 		statusTextarea.setForeground(Color.BLACK);
 		statusTextarea.setBackground(new Color(230,230,230));
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, runningTable, statusTextarea);
+		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, statusTextarea);
 		
 		this.addWindowFocusListener(new WindowFocusListener() {
 			public void windowLostFocus(WindowEvent e) {}
