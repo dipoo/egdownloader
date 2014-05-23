@@ -2,7 +2,10 @@ package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
+import org.arong.egdownloader.ui.ComponentConst;
 
 /**
  * 封装JLabel，使构造函数可以设置文本，坐标，大小及字体颜色
@@ -36,5 +39,12 @@ public class AJLabel extends JLabel {
 	public AJLabel(String text, Color color, int align){
 		this(text, color);
 		this.setHorizontalAlignment(align);
+	}
+	
+	public AJLabel(String text, String icon, Color color, int align){
+		this(text, color, align);
+		if(icon != null && !"".equals(icon.trim())){
+			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		}
 	}
 }
