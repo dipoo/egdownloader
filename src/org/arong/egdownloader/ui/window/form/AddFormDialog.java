@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.window.form;
 import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.io.File;
 
@@ -22,6 +23,7 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
+import org.arong.egdownloader.ui.window.AboutMenuWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 新建下载任务窗口
@@ -50,6 +52,15 @@ public class AddFormDialog extends JDialog {
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setLocationRelativeTo(mainWindow);
+		//添加窗口聚焦监听器
+		this.addWindowFocusListener(new WindowFocusListener() {
+			// 当失去活动状态的时候此窗口被隐藏
+			public void windowLostFocus(WindowEvent e) {
+				AddFormDialog window = (AddFormDialog) e.getSource();
+				window.setVisible(false);
+			}
+			public void windowGainedFocus(WindowEvent e) {}
+		});
 		this.addWindowListener(new WindowListener() {
 			public void windowOpened(WindowEvent e) {}
 			public void windowIconified(WindowEvent e) {}
@@ -57,6 +68,7 @@ public class AddFormDialog extends JDialog {
 			public void windowDeactivated(WindowEvent e) {
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
+				mainWindow.enable();
 			}
 			public void windowClosing(WindowEvent e) {}
 			public void windowClosed(WindowEvent e) {}

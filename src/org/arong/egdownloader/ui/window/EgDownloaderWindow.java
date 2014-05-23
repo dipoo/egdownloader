@@ -65,7 +65,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 							}
 							this_.addFormWindow.setVisible(true);
 						}
-						this_.setVisible(false);
+//						this_.setVisible(false);
+						this_.disable();
 					}
 				}));
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
