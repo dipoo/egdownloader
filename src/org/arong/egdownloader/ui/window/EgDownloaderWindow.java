@@ -56,7 +56,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public EgDownloaderWindow(){
 		// 设置主窗口
 		this.setTitle(Version.NAME);
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "down.png")).getImage());
+		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "ic_down.png")).getImage());
 		this.getContentPane().setLayout(null);
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
 		this.setResizable(false);
@@ -65,7 +65,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		
 		// 菜单
 		JMenu newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
-				ComponentConst.SETTING_MENU_NAME, "add.gif", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+				ComponentConst.SETTING_MENU_NAME, "ic_plus.png", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 					public void doWork(Window mainWindow) {
 						EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
 //						((TaskTableModel)this_.runningTable.getModel()).getTasks().remove(1);
@@ -81,7 +81,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 					}
 				}));
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
-				ComponentConst.TOOLS_MENU_NAME, "delete.gif",  new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+				ComponentConst.TOOLS_MENU_NAME, "ic_cancel.png",  new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 					public void doWork(Window mainWindow) {
 						//EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
 						
@@ -90,11 +90,11 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		
 		MouseListener menuMouseListener = new MenuMouseListener(this);
 		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
-				ComponentConst.SETTING_MENU_NAME, "cog.png", menuMouseListener);
+				ComponentConst.SETTING_MENU_NAME, "ic_settings.png", menuMouseListener);
 		JMenu toolsMenu = new AJMenu(ComponentConst.TOOLS_MENU_TEXT,
-				ComponentConst.TOOLS_MENU_NAME, "tool.png", menuMouseListener);
+				ComponentConst.TOOLS_MENU_NAME, "ic_calendar.png", menuMouseListener);
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
-				ComponentConst.ABOUT_MENU_NAME, "user.png", menuMouseListener);
+				ComponentConst.ABOUT_MENU_NAME, "ic_user.png", menuMouseListener);
 
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30, newTaskMenu, deleteTasksMenu, settingMenu, toolsMenu,

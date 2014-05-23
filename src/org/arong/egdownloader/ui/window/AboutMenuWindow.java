@@ -31,7 +31,7 @@ public class AboutMenuWindow extends JDialog {
 	public AboutMenuWindow(final JFrame mainWindow) {
 		// 设置主窗口
 		this.setSize(340, 200);
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "user.png")).getImage());
+		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "ic_user.png")).getImage());
 		this.setTitle("about");
 		this.setVisible(true);
 		this.setResizable(false);

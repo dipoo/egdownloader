@@ -32,7 +32,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(30);
 			tc.setMaxWidth(40);
-			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "folder.gif")), JLabel.CENTER);
+			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "ic_folder.png")), JLabel.CENTER);
 		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(200);
