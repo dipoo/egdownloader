@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpHost;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 
@@ -57,6 +58,11 @@ public class WebClient {
 			// 设置请求参数
 			postMethod.setRequestBody(params.toArray(array));
 		}
+		postMethod.setRequestHeader("X-Forwarded-For", "115.239.210.27, 192.168.101.111, 192.168.101.112");
+		postMethod.setRequestHeader("CLIENT_IP", "115.239.210.27");
+		postMethod.setRequestHeader("Proxy-Client-IP", "115.239.210.27");
+		postMethod.setRequestHeader("WL-Proxy-Client-IP", "115.239.210.27");
+//		HttpHost proxy = new HttpHost("192.168.101.112", 8093);
 		int statusCode = 0;
 		String result = null;
 		try {
@@ -88,6 +94,14 @@ public class WebClient {
 			throw new WebClientException(url + "：IO异常，请检查网络是否正常");
 		}
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		try {
+			postRequest("http://localhost:8093/RedseaCloudWeb/lo.mc", "UTF-8", new HashMap());
+		} catch (WebClientException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -395,7 +409,5 @@ public class WebClient {
         remap.put("contentType", contentType);
         return remap;
     }
-    public static void main(String[] args) throws IOException {
-		getResponseCodeAndType("http://down.ha18.com/txt88157/%E5%8F%8C%E4%BF%AE%E5%A5%87.txt", "GBK", 20000);
-	}
+   
 }
