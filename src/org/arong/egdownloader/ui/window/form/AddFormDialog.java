@@ -23,7 +23,6 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
-import org.arong.egdownloader.ui.window.AboutMenuWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 新建下载任务窗口
@@ -68,7 +67,7 @@ public class AddFormDialog extends JDialog {
 			public void windowDeactivated(WindowEvent e) {
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
-				mainWindow.enable();
+				mainWindow.setEnabled(true);
 			}
 			public void windowClosing(WindowEvent e) {}
 			public void windowClosed(WindowEvent e) {}
