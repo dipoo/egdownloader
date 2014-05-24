@@ -8,5 +8,5 @@ import java.awt.Window;
  * @since 2014-05-22
  */
 public interface IListenerTask {
-	public void doWork(Window mainWindow);
+	public void doWork(Window window);
 }
