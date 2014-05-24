@@ -42,6 +42,7 @@ public class TaskingTable extends JTable {
 		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, renderer);//设置渲染器
+		this.getTableHeader().setDefaultRenderer(new TaskTableHeaderRenderer());
 		this.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}

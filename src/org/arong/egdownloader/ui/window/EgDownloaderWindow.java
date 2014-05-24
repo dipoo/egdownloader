@@ -84,8 +84,6 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 						TaskingTable table = (TaskingTable) this_.runningTable;
 						table.getTasks().remove(table.getSelectedRow());
 						table.updateUI();//刷新表格
-//						table.repaint();//刷新表格
-//						table.getModel().
 					}
 				}));
 		
@@ -96,7 +94,6 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				ComponentConst.TOOLS_MENU_NAME, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("tool"), menuMouseListener);
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
 				ComponentConst.ABOUT_MENU_NAME, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("user"), menuMouseListener);
-
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30, newTaskMenu, deleteTasksMenu, settingMenu, toolsMenu,
 				aboutMenu);

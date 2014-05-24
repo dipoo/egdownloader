@@ -36,36 +36,32 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(30);
 			tc.setMaxWidth(40);
-			table.getTableHeader().getDefaultRenderer().getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).repaint();
 			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
 		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(200);
 			tc.setMaxWidth(250);
-			return new AJLabel(value.toString(), fontColor, JLabel.LEFT);
 		}else if(column == 2){//第三列：图片总数
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(100);
 			tc.setMaxWidth(120);
-			return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("picture"), fontColor, JLabel.LEFT);
+			//return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("picture"), fontColor, JLabel.LEFT);
 		}else if(column == 3){//第四列：进度
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(100);
 			tc.setMaxWidth(150);
-			return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"), fontColor, JLabel.LEFT);
+			return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", fontColor, JLabel.LEFT);
 		}else if(column == 4){//第五列：大小
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(100);
 			tc.setMaxWidth(120);
-			return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("size"), fontColor, JLabel.LEFT);
+			//return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("size"), fontColor, JLabel.LEFT);
 		}else if(column == 5){//第六列：状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  60 : 82);
 			tc.setMaxWidth(80);
-			return new AJLabel(value.toString(), fontColor, JLabel.LEFT);
-		}else{
-			return null;
 		}
+		return new AJLabel(value.toString(), fontColor, JLabel.LEFT);
 	}
 	
 	private String getSchedule(Object current, Object total){
