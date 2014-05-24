@@ -28,9 +28,9 @@ public final class ComponentConst {
 	
 	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目", "已下载", "大小", "状态"};
 	
-	public final static int MAX_TASK_PAGE = 13;//一页显示任务数
+	public final static int MAX_TASK_PAGE = 14;//一页显示任务数
 	
-	public final static int SKIN_NUM = 2;//皮肤编号
+	public final static int SKIN_NUM = 1;//皮肤编号
 	
 	public final static Map<String, String> SKIN_ICON = new HashMap<String, String>();
 	

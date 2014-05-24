@@ -54,6 +54,9 @@ public class TaskTableModel extends AbstractTableModel {
 
 	//表头显示
 	public String getColumnName(int column) {
+		if(column == 0){
+			return tasks.size() + "";
+		}
 		return ComponentConst.TASK_TABLE_HEADER[column];
 	}
 
