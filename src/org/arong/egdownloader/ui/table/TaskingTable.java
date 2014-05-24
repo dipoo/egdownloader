@@ -6,7 +6,6 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
@@ -26,33 +25,31 @@ public class TaskingTable extends JTable {
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks){
 		this.tasks = tasks;
+		this.tableModel = new TaskTableModel(this.tasks);
 		if(tasks.size() > ComponentConst.MAX_TASK_PAGE){
 			height = ComponentConst.MAX_TASK_PAGE * 25;
 		}
 		this.setBounds(x, y, width, height);
-		this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		this.setShowGrid(true);
-		this.tableModel = new TaskTableModel(this.tasks);
-		this.setModel(this.tableModel);
-		this.setCellSelectionEnabled(true);
+//		this.setShowGrid(true);//显示单元格边框
+//		this.setCellSelectionEnabled(true);//选择单元格
 		this.setRowMargin(10);
-		this.setAutoscrolls(true);
-		this.setCursor(CursorManager.getPointerCursor());
+		this.setCursor(CursorManager.getPointerCursor());//光标变手型
+		this.getTableHeader().setReorderingAllowed(false);//不可移动列
+		this.setBackground(Color.WHITE);
+//		this.setOpaque(false);//设为透明
 		
-		TaskTableCellRenderer renderer = new TaskTableCellRenderer();   
+		this.setModel(this.tableModel);//设置数据模型
+		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 		renderer.setHorizontalAlignment(JLabel.CENTER);   
-		this.setDefaultRenderer(Object.class, renderer);
+		this.setDefaultRenderer(Object.class, renderer);//设置渲染器
 		this.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
-				TaskingTable table = (TaskingTable)e.getSource();
-				int row = table.getSelectedRow();
-				int column = table.getSelectedColumn();
-				table.setSelectionBackground(new Color(230, 230, 230));
-				JOptionPane.showMessageDialog(table, table.getModel().getValueAt(row, column));
+//				TaskingTable table = (TaskingTable)e.getSource();
+//				JOptionPane.showMessageDialog(table, table.getSelectionBackground());
 			}
 		});
 	}

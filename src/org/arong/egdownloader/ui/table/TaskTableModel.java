@@ -44,7 +44,7 @@ public class TaskTableModel extends AbstractTableModel {
 			case 3 :
 				return tasks.get(rowIndex).getCurrent();
 			case 4 :
-				return (tasks.get(rowIndex).getSize() / 1024) + " KB";
+				return (tasks.get(rowIndex).getSize() / 1024);
 			case 5 :	
 				return tasks.get(rowIndex).getStatus().getStatus();
 			default :

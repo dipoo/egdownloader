@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.window;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -114,11 +115,12 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		tasks.add(t2);
 		tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
 		tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);//tasks.add(t1);
-		tasks.add(t1);//tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
+		//tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
 		//正在下载table
 		runningTable = new TaskingTable(5, 40, getWidth() - 20, tasks.size() * 28, tasks);
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
+		tablePane.getViewport().setBackground(Color.WHITE);
 		// 添加各个子组件
 		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane);
 		
