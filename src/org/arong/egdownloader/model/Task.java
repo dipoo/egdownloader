@@ -1,5 +1,7 @@
 package org.arong.egdownloader.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 /**
  * 任务模型
@@ -10,10 +12,10 @@ public class Task {
 	private String url;//下载地址
 	private String name;//名称
 	private String saveDir;//保存目录
-	private String createTime;//创建时间
+	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String completedTime;//完成时间
 	private int total;//图片总数
-	private int current;//已下载完成总数
+	private int current = 0;//已下载完成总数
 	private int size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private List<Picture> pictures;
@@ -85,5 +87,11 @@ public class Task {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
-	
+	public String toString() {
+		return "Task [url=" + url + ", name=" + name + ", saveDir=" + saveDir
+				+ ", createTime=" + createTime + ", completedTime="
+				+ completedTime + ", total=" + total + ", current=" + current
+				+ ", size=" + size + ", status=" + status + ", pictures="
+				+ pictures + "]";
+	}
 }

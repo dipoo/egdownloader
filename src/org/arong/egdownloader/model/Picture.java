@@ -6,7 +6,7 @@ package org.arong.egdownloader.model;
  * @since 2014-05-22
  */
 public class Picture {
-	private int num;//序号
+	private String num;//序号
 	private String name;//真实名称
 	private String url;//下载地址
 	private String size;//大小
@@ -14,10 +14,10 @@ public class Picture {
 	private boolean saveAsName;//是否以真实名称保存，否则以人物名+num保存
 	private boolean isCompleted;//是否下载完成
 	private boolean isRunning;//是否正在下载
-	public int getNum() {
+	public String getNum() {
 		return num;
 	}
-	public void setNum(int num) {
+	public void setNum(String num) {
 		this.num = num;
 	}
 	public String getName() {
@@ -61,5 +61,8 @@ public class Picture {
 	}
 	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
+	}
+	public String toString() {
+		return "Picture [name=" + name + ", url=" + url + "]";
 	}
 }
