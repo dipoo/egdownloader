@@ -15,7 +15,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.arong.egdownloader.model.ParseEngine;
+import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.spider.SpiderException;
+import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -99,12 +103,25 @@ public class AddFormDialog extends JDialog {
 				}else if("".equals(this_.saveDirField.getText().trim())){
 					JOptionPane.showMessageDialog(this_, "请选择保存路径");
 				}else{
-					//具体操作
+					/*//具体操作
 					Task task = new Task(this_.urlField.getText().trim(), this_.saveDirField.getText().trim());
 					task.setName("我的故事 my story");
 					task.setSize(124923);
 					task.setTotal(143);
-					task.setCurrent(132);
+					task.setCurrent(132);*/
+					String url = this_.urlField.getText().trim();
+					String saveDir = this_.saveDirField.getText().trim();
+					//假设url合法:http://exhentai.org/g/446779/553f5c4086/
+					Setting setting = new Setting();
+					Task task = null;
+					try {
+						task = ParseEngine.buildTask(url, saveDir, setting);
+					} catch (SpiderException e) {
+						e.printStackTrace();
+					} catch (WebClientException e) {
+						e.printStackTrace();
+					}
+					
 					EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
 					TaskingTable taskTable = (TaskingTable)window.runningTable;
 					taskTable.getTasks().add(task);
