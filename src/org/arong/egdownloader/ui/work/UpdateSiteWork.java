@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import org.arong.egdownloader.caiji.WebClient;
-import org.arong.egdownloader.caiji.WebClientException;
 
 /**
  * 用于处理更新[书脊电子书]首页分类的线程类，避免Swing事件派送线程造成的线程等待
@@ -32,13 +31,7 @@ public class UpdateSiteWork extends SwingWorker<Void, Void> {
 
 	// 更新网站主流程
 	private void updateSite() {
-		try {
-			WebClient.postRequest("http://www.shujixiazai.com/update", "utf-8", null);
-			return;
-		} catch (WebClientException e) {
-			JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-			return;
-		}
+		WebClient.postRequest("http://www.shujixiazai.com/update", "utf-8");
 	}
 
 	protected void done() {

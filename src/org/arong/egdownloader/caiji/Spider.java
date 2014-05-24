@@ -2,7 +2,6 @@ package org.arong.egdownloader.caiji;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 /**
  * 分析指定的url或者html源码页面，抓取网页特定内容
  * @author 阿荣
@@ -23,7 +22,7 @@ public final class Spider {
     public static String getText(final String url, final String encoding, final String prefix,
             final String suffix) throws SpiderException, WebClientException {
         String text = null;
-        String serverResponse = WebClient.postRequest(url, encoding, new HashMap<String, String>());
+        String serverResponse = WebClient.postRequest(url, encoding);
         if(serverResponse != null){
 	        int pos = serverResponse.indexOf(prefix);
 	        if (pos != -1) {
@@ -121,7 +120,7 @@ public final class Spider {
     }
     
     public static Boolean containText(String url, String encoding, String text) throws WebClientException, SpiderException{
-    	String serverResponse = WebClient.postRequest(url, encoding, new HashMap<String, String>());
+    	String serverResponse = WebClient.postRequest(url, encoding);
     	containTextFromSource(serverResponse, text);
     	return true;
     }
