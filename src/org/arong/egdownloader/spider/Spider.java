@@ -1,4 +1,4 @@
-package org.arong.egdownloader.caiji;
+package org.arong.egdownloader.spider;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

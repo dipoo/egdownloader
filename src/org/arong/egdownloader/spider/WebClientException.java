@@ -1,4 +1,4 @@
-package org.arong.egdownloader.caiji;
+package org.arong.egdownloader.spider;
 
 public class WebClientException extends Exception {
 

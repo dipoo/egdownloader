@@ -1,4 +1,4 @@
-package org.arong.egdownloader.caiji;
+package org.arong.egdownloader.spider;
 
 public class SpiderException extends Exception{
 	private static final long serialVersionUID = -4969885113130258910L;
