@@ -27,7 +27,6 @@ import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
-import org.arong.egdownloader.ui.table.TaskTableModel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.DeleteTaskWork;
@@ -43,7 +42,7 @@ import org.arong.egdownloader.version.Version;
 public class EgDownloaderWindow extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 8904976570969033245L;
-
+	
 	JMenuBar jMenuBar;// 菜单栏
 	public JFrame toolsMenuWindow;
 	public JDialog aboutMenuWindow;
@@ -72,8 +71,6 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 						new IListenerTask() {
 							public void doWork(Window mainWindow) {
 								EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
-								((TaskTableModel) this_.runningTable.getModel())
-										.getTasks().get(0).setCurrent(111);
 								if (this_.addFormWindow == null) {
 									this_.addFormWindow = new AddFormDialog(
 											this_);
@@ -123,20 +120,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		t2.setCurrent(23);
 		t2.setSize(5452299);
 
-		tasks.add(t2);
-		tasks.add(t1);
-		tasks.add(t2);
-		tasks.add(t2);
-		tasks.add(t1);
-		tasks.add(t2);
-		tasks.add(t1);
-		tasks.add(t1);
-		tasks.add(t1);
-		tasks.add(t2);
-		tasks.add(t2);
-		tasks.add(t1);
-		tasks.add(t2);
-		tasks.add(t1);// tasks.add(t1);
+		//tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);
+		//tasks.add(t1);tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);// tasks.add(t1);
 		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
 		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
 		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);

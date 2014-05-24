@@ -18,7 +18,6 @@ public class DeleteTaskWork implements IListenerTask {
 	public void doWork(Window window) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
-		System.out.println(table.getSelectedRows().length);
 		int[] rows = table.getSelectedRows();
 		if(rows.length == 0){
 			JOptionPane.showMessageDialog(null, "请选择至少一个任务");
@@ -34,6 +33,7 @@ public class DeleteTaskWork implements IListenerTask {
 			}
 			table.clearSelection();//使之不选中任何行
 			table.updateUI();//刷新表格
+			mainWindow.setVisible(true);
 		}
 		
 	}

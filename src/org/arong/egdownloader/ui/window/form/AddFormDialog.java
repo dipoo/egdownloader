@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -22,6 +23,8 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
+import org.arong.egdownloader.ui.table.TaskingTable;
+import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 新建下载任务窗口
@@ -97,7 +100,19 @@ public class AddFormDialog extends JDialog {
 					JOptionPane.showMessageDialog(this_, "请选择保存路径");
 				}else{
 					//具体操作
+					Task task = new Task(this_.urlField.getText().trim(), this_.saveDirField.getText().trim());
+					task.setName("我的故事 my story");
+					task.setSize(124923);
+					task.setTotal(143);
+					task.setCurrent(132);
+					EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
+					TaskingTable taskTable = (TaskingTable)window.runningTable;
+					taskTable.getTasks().add(task);
 					
+					//关闭form,刷新table
+					this_.setVisible(false);
+					taskTable.updateUI();
+					window.setVisible(true);
 				}
 			}
 		}), (this.getWidth() - 100) / 2, 130, 100, 30);
