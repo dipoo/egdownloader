@@ -16,7 +16,7 @@ import org.arong.egdownloader.ui.swing.AJLabel;
  * @since 2014-05-24
  */
 public class TaskTableHeaderRenderer implements TableCellRenderer {
-	private Color color = new Color(156, 183, 124);
+	private Color color = (1 == ComponentConst.SKIN_NUM ? new Color(156, 183, 124) : new Color(0, 0, 0));
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		switch (column){
