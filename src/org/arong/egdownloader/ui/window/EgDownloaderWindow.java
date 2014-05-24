@@ -80,8 +80,12 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
 				ComponentConst.TOOLS_MENU_NAME, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("delete"),  new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 					public void doWork(Window mainWindow) {
-						//EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
-						
+						EgDownloaderWindow this_ = (EgDownloaderWindow)mainWindow;
+						TaskingTable table = (TaskingTable) this_.runningTable;
+						table.getTasks().remove(table.getSelectedRow());
+						table.updateUI();//刷新表格
+//						table.repaint();//刷新表格
+//						table.getModel().
 					}
 				}));
 		
