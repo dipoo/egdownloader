@@ -1,8 +1,5 @@
 package org.arong.db4o;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,23 +14,7 @@ import com.db4o.query.Predicate;
  * @since 2014-05-23
  */
 public final class Db4oTemplate {
-	private static String db4o_file_path = getClassPath() + "db/task.data";
 	
-	public static void setDb4o_file_path(String db4oFilePath) {
-		db4o_file_path = getClassPath() + db4oFilePath;
-	}
-	private static String getClassPath() {
-		URL url = Db4oTemplate.class.getResource("/");
-		String path = null;
-		try {
-			path = URLDecoder.decode(url.getPath(), "UTF-8");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return path;
-	}
-
 	private static void cascadeClasses(EmbeddedConfiguration configuration,
 			List<Class<?>> classList) {
 		for (Class<?> c : classList) {
@@ -42,7 +23,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> List<T> queryByExample(T t) {
+	public static <T> List<T> queryByExample(T t, String db4o_file_path) {
 		List<T> result = new ArrayList<T>();
 		ObjectContainer db = null;
 		try {
@@ -58,7 +39,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> List<T> query(Class<T> clazz) {
+	public static <T> List<T> query(Class<T> clazz, String db4o_file_path) {
 		List<T> result = new ArrayList<T>();
 		ObjectContainer db = null;
 		try {
@@ -74,7 +55,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> List<T> query(Predicate<T> predicate) {
+	public static <T> List<T> query(Predicate<T> predicate, String db4o_file_path) {
 		List<T> result = new ArrayList<T>();
 		ObjectContainer db = null;
 		try {
@@ -90,7 +71,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> boolean exists(Predicate<T> predicate) {
+	public static <T> boolean exists(Predicate<T> predicate, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -106,7 +87,7 @@ public final class Db4oTemplate {
 		return false;
 	}
 
-	public static <T> void store(T t) {
+	public static <T> void store(T t, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -120,7 +101,7 @@ public final class Db4oTemplate {
 	/**
 	 * @deprecated the same with store() above
 	 */
-	public static <T> void cascadeStore(T t, List<Class<?>> cascadeClassList) {
+	public static <T> void cascadeStore(T t, List<Class<?>> cascadeClassList, String db4o_file_path) {
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 		cascadeClasses(configuration, cascadeClassList);
 
@@ -134,7 +115,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> void delete(Class<T> clazz) {
+	public static <T> void delete(Class<T> clazz, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -148,7 +129,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> void delete(T t) {
+	public static <T> void delete(T t, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -162,7 +143,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> void delete(Predicate<T> predicate) {
+	public static <T> void delete(Predicate<T> predicate, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -177,7 +158,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> void cascadeDelete(T t, List<Class<?>> cascadeClassList) {
+	public static <T> void cascadeDelete(T t, List<Class<?>> cascadeClassList, String db4o_file_path) {
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 		cascadeClasses(configuration, cascadeClassList);
 
@@ -196,7 +177,7 @@ public final class Db4oTemplate {
 	}
 
 	public static <T> void cascadeDelete(Predicate<T> predicate,
-			List<Class<?>> cascadeClassList) {
+			List<Class<?>> cascadeClassList, String db4o_file_path) {
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 		cascadeClasses(configuration, cascadeClassList);
 
@@ -213,7 +194,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> void update(T example, T target) {
+	public static <T> void update(T example, T target, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -228,7 +209,7 @@ public final class Db4oTemplate {
 		}
 	}
 
-	public static <T> void update(Predicate<T> predicate, T target) {
+	public static <T> void update(Predicate<T> predicate, T target, String db4o_file_path) {
 		ObjectContainer db = null;
 		try {
 			db = Db4oEmbedded.openFile(db4o_file_path);
@@ -244,7 +225,7 @@ public final class Db4oTemplate {
 	}
 
 	public static <T> void cascadeUpdate(T example, T target,
-			List<Class<?>> cascadeClassList) {
+			List<Class<?>> cascadeClassList, String db4o_file_path) {
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 		cascadeClasses(configuration, cascadeClassList);
 
@@ -263,7 +244,7 @@ public final class Db4oTemplate {
 	}
 
 	public static <T> void cascadeUpdate(Predicate<T> predicate, T target,
-			List<Class<?>> cascadeClassList) {
+			List<Class<?>> cascadeClassList, String db4o_file_path) {
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 		cascadeClasses(configuration, cascadeClassList);
 
