@@ -1,5 +1,7 @@
 package org.arong.egdownloader.model;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,21 +67,45 @@ public final class ParseEngine {
 		return task;
 	}
 	
-	public static void main(String[] args) throws SpiderException, WebClientException {
+	public static void main(String[] args) throws SpiderException, WebClientException, IOException {
 		
 		/*String gid = Spider.substring(url, "/g/").substring(0, Spider.substring(url, "/g/").indexOf("/"));
 		System.out.println(gid);
 		System.out.println(Spider.substring(url, gid + "/").substring(0, Spider.substring(url, gid + "/").length()).replaceAll("/", ""));
 		System.out.println(url.substring(0, url.indexOf("/g/")));*/
-		
 		Setting setting = new Setting();
+//		System.out.println(WebClient.postRequestWithCookie("http://exhentai.org/s/0068b792d4/701835-1", setting.getCookieInfo()));
 		Task task = buildTask(url, "", setting);
+		String url;
 		for (Picture pic : task.getPictures()) {
-			System.out.println(pic.getUrl() + ":" + pic.getNum());
+			url = getdownloadUrl(pic.getUrl(), setting.getCookieInfo());
+			url = url.substring(0, url.indexOf("\""));
+			System.out.println(url);
+			store(task.getSaveDir(), pic.getName(), url);
 		}
 		
 //		String str = Spider.getTextFromSource(WebClient.postRequestWithCookie(url + "?" + setting.getPageParam() + "=" + 0, setting.getCookieInfo()), url.substring(0, url.indexOf(setting.getGidPrefix())) + "/s/", "</html>");
 //		System.out.println(str);
+	}
+	private static String getdownloadUrl(String sourceUrl, String cookieInfo){
+		String url = null;
+		try {
+			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, cookieInfo), "<img id=\"img\" src=\"", "</html>");
+		} catch (Exception e) {
+			System.out.println("getdownloadUrl异常");
+			url = getdownloadUrl(sourceUrl, cookieInfo);
+		}
+		return url;
+	}
+	
+	private static void store(String dir, String name, String url){
+		try {
+			WebClient.storeStream(dir, name, WebClient.getStreamUseJava(url));
+			System.out.println(name + " completed");
+		} catch (IOException e) {
+			System.out.println("getStreamUseJava异常");
+			store(dir, name, url);
+		}
 	}
 	
 	private static List<Picture> getPictures(String fileList, int total){
