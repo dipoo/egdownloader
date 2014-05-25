@@ -4,6 +4,8 @@ import java.awt.Window;
 
 import javax.swing.JOptionPane;
 
+import org.arong.db4o.Db4oTemplate;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
@@ -26,10 +28,14 @@ public class DeleteTaskWork implements IListenerTask {
 		int option = JOptionPane.showConfirmDialog(null, "确定要删除" + (rows.length > 1 ? "这些" : "这个") + "任务吗");
 		if(option == 0){
 			for(int i = 0; i < rows.length; i ++){
+				
 				if(table.getTasks().size() >= (rows[i] - i)){
+					//操作数据库
+					Db4oTemplate.delete(table.getTasks().get(rows[i] - i), ComponentConst.TASK_DATA_PATH);
+					//更新内存
 					table.getTasks().remove(rows[i] - i);
 				}
-				//操作数据库
+				
 			}
 			table.clearSelection();//使之不选中任何行
 			table.updateUI();//刷新表格

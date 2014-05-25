@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -19,6 +18,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -57,9 +57,11 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 
 	public EgDownloaderWindow() {
 		
-		//加载数据
-		setting = new Setting();
-		
+		//加载配置数据
+		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
+		setting = settings.size() > 0 ? settings.get(0) : new Setting();
+		//加载任务列表
+		tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
 		// 设置主窗口
 		this.setTitle(Version.NAME);
 		this.setIconImage(new ImageIcon(getClass().getResource(
@@ -83,10 +85,6 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 									this_.addFormWindow = new AddFormDialog(
 											this_);
 								} else {
-									if (!this_.addFormWindow.isVisible()) {// 如果是隐藏的，则清空文本
-										((AddFormDialog) this_.addFormWindow)
-												.emptyField();
-									}
 									this_.addFormWindow.setVisible(true);
 								}
 								this_.setEnabled(false);
@@ -115,28 +113,6 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
 				newTaskMenu, deleteTasksMenu, settingMenu, toolsMenu, aboutMenu);
 
-		List<Task> tasks = new ArrayList<Task>();
-		Task t1 = new Task("http://www.hao123.com/1", "D:/eg");
-		t1.setName("齐天大圣");
-		t1.setTotal(4500);
-		t1.setCurrent(5);
-		t1.setSize(1345200);
-
-		Task t2 = new Task("http://www.hao123.com/2", "D:/eg");
-		t2.setName("盛世华景月天");
-		t2.setTotal(123);
-		t2.setCurrent(23);
-		t2.setSize(5452299);
-
-		//tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);
-		//tasks.add(t1);tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);// tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
-		// tasks.add(t1);tasks.add(t2);tasks.add(t2);tasks.add(t1);tasks.add(t2);tasks.add(t1);tasks.add(t1);
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, getWidth() - 20,
 				tasks.size() * 28, tasks);

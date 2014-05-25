@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
@@ -105,12 +106,6 @@ public class AddFormDialog extends JDialog {
 				}else if("".equals(this_.saveDirField.getText().trim())){
 					JOptionPane.showMessageDialog(this_, "请选择保存路径");
 				}else{
-					/*//具体操作
-					Task task = new Task(this_.urlField.getText().trim(), this_.saveDirField.getText().trim());
-					task.setName("我的故事 my story");
-					task.setSize(124923);
-					task.setTotal(143);
-					task.setCurrent(132);*/
 					String url = this_.urlField.getText().trim();
 					String saveDir = this_.saveDirField.getText().trim();
 					//假设url合法:http://exhentai.org/g/446779/553f5c4086/
@@ -119,19 +114,25 @@ public class AddFormDialog extends JDialog {
 					Task task = null;
 					try {
 						task = ParseEngine.buildTask(url, saveDir, setting);
+						if(task != null){
+							//保存到数据库
+							Db4oTemplate.store(task, ComponentConst.TASK_DATA_PATH);
+							//保存到内存
+							TaskingTable taskTable = (TaskingTable)window.runningTable;
+							taskTable.getTasks().add(task);
+							this_.emptyField();//清空下载地址
+							//关闭form,刷新table
+							this_.setVisible(false);
+							taskTable.updateUI();
+							window.setVisible(true);
+						}
 					} catch (SpiderException e) {
 						e.printStackTrace();
 					} catch (WebClientException e) {
 						e.printStackTrace();
 					}
 					
-					TaskingTable taskTable = (TaskingTable)window.runningTable;
-					taskTable.getTasks().add(task);
 					
-					//关闭form,刷新table
-					this_.setVisible(false);
-					taskTable.updateUI();
-					window.setVisible(true);
 				}
 			}
 		}), (this.getWidth() - 100) / 2, 130, 100, 30);
@@ -142,6 +143,5 @@ public class AddFormDialog extends JDialog {
 	}
 	public void emptyField(){
 		urlField.setText("");
-		saveDirField.setText("");
 	}
 }
