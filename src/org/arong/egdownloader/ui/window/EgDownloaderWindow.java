@@ -19,6 +19,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
@@ -50,8 +51,15 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 
 	public JTable runningTable;
 	JScrollPane tablePane;
+	
+	public Setting setting;
+	public List<Task> tasks;
 
 	public EgDownloaderWindow() {
+		
+		//加载数据
+		setting = new Setting();
+		
 		// 设置主窗口
 		this.setTitle(Version.NAME);
 		this.setIconImage(new ImageIcon(getClass().getResource(

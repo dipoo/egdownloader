@@ -78,6 +78,8 @@ public class AddFormDialog extends JDialog {
 		urlField = new AJTextField("urlField", 65, 40, 395, 30);
 		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 80, 60, 30);
 		saveDirField = new AJTextField("saveDirField", 65, 80, 320, 30);
+		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
+		saveDirField.setText(setting.getDefaultSaveDir());
 		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
@@ -112,7 +114,8 @@ public class AddFormDialog extends JDialog {
 					String url = this_.urlField.getText().trim();
 					String saveDir = this_.saveDirField.getText().trim();
 					//假设url合法:http://exhentai.org/g/446779/553f5c4086/
-					Setting setting = new Setting();
+					EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
+					Setting setting = window.setting;//获得配置信息
 					Task task = null;
 					try {
 						task = ParseEngine.buildTask(url, saveDir, setting);
@@ -122,7 +125,6 @@ public class AddFormDialog extends JDialog {
 						e.printStackTrace();
 					}
 					
-					EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
 					TaskingTable taskTable = (TaskingTable)window.runningTable;
 					taskTable.getTasks().add(task);
 					
