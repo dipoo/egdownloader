@@ -15,7 +15,7 @@ import org.arong.egdownloader.spider.WebClientException;
  * @since 2014-05-25
  */
 public final class ParseEngine {
-	private static String url = "http://exhentai.org/g/703609/b85bdd7917/";
+	private static String url = "http://exhentai.org/g/644569/d3a7972704/";
 	/**
 	 * 步骤：
 	 * 1、验证url的合法性。http://exhentai.org/g/446779/553f5c4086/
@@ -67,7 +67,7 @@ public final class ParseEngine {
 		return task;
 	}
 	
-	public static void main(String[] args) throws SpiderException, WebClientException, IOException {
+	public static void main(String[] args) throws Exception {
 		
 		/*String gid = Spider.substring(url, "/g/").substring(0, Spider.substring(url, "/g/").indexOf("/"));
 		System.out.println(gid);
@@ -77,7 +77,15 @@ public final class ParseEngine {
 		//System.out.println(WebClient.postRequestWithCookie("http://exhentai.org/", setting.getCookieInfo()));
 		Task task = buildTask(url, "E:/Reader/hello", setting);
 		String url;
+		int i = -1;
 		for (Picture pic : task.getPictures()) {
+			i ++;
+			if(i != 31){
+				continue;
+			}
+			/*if(i == 0){
+				continue;
+			}*/
 			url = getdownloadUrl(pic.getUrl(), setting);
 			System.out.println(url);
 			store(task.getSaveDir(), pic.getName(), url);
@@ -86,7 +94,7 @@ public final class ParseEngine {
 //		String str = Spider.getTextFromSource(WebClient.postRequestWithCookie(url + "?" + setting.getPageParam() + "=" + 0, setting.getCookieInfo()), url.substring(0, url.indexOf(setting.getGidPrefix())) + "/s/", "</html>");
 //		System.out.println(str);
 	}
-	private static String getdownloadUrl(String sourceUrl, Setting setting){
+	public static String getdownloadUrl(String sourceUrl, Setting setting) throws Exception{
 		String url = null;
 		try {
 			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());

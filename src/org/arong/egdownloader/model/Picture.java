@@ -10,9 +10,9 @@ public class Picture {
 	private String name;//真实名称
 	private String url;//浏览地址
 	private String realUrl;//真实下载地址
-	private String size;//大小
+	private int size;//大小
 	private String time;//下载时间
-	private boolean saveAsName;//是否以真实名称保存，否则以人物名+num保存
+	private boolean saveAsName = true;//是否以真实名称保存，否则以人物名+num保存
 	private boolean isCompleted;//是否下载完成
 	private boolean isRunning;//是否正在下载
 	public String getNum() {
@@ -33,10 +33,10 @@ public class Picture {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getSize() {
+	public int getSize() {
 		return size;
 	}
-	public void setSize(String size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
 	public String getTime() {

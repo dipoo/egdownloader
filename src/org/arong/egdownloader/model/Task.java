@@ -3,6 +3,8 @@ package org.arong.egdownloader.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import org.arong.egdownloader.ui.work.DownloadWorker;
 /**
  * 任务模型
  * @author 阿荣
@@ -19,6 +21,7 @@ public class Task {
 	private int size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private List<Picture> pictures;
+	private DownloadWorker downloadWorker;//下载线程实例
 	
 	public Task(){}
 	
@@ -93,5 +96,13 @@ public class Task {
 				+ completedTime + ", total=" + total + ", current=" + current
 				+ ", size=" + size + ", status=" + status + ", pictures="
 				+ pictures + "]";
+	}
+
+	public DownloadWorker getDownloadWorker() {
+		return downloadWorker;
+	}
+
+	public void setDownloadWorker(DownloadWorker downloadWorker) {
+		this.downloadWorker = downloadWorker;
 	}
 }

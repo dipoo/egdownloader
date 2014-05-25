@@ -6,6 +6,7 @@ package org.arong.egdownloader.model;
  */
 public enum TaskStatus {
 	UNSTARTED("未开始"),
+	STOPED("已停止"),
 	STARTED("下载中"),
 	COMPLETED("已完成"),
 	DELETED("已删除");

@@ -10,8 +10,11 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.work.DownloadWorker;
 /**
  * 正在下载任务表格
  * @author 阿荣
@@ -21,9 +24,11 @@ public class TaskingTable extends JTable {
 
 	private static final long serialVersionUID = 8917533573337061263L;
 	private List<Task> tasks;
+	private EgDownloaderWindow mainWindow;
 	private TableModel tableModel;
 	
-	public TaskingTable(int x, int y, int width, int height, List<Task> tasks){
+	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
+		this.setMainWindow(mainWindow);
 		this.tasks = tasks;
 		this.tableModel = new TaskTableModel(this.tasks);
 		if(tasks.size() > ComponentConst.MAX_TASK_PAGE){
@@ -49,8 +54,27 @@ public class TaskingTable extends JTable {
 			public void mouseExited(MouseEvent e) {}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
-//				TaskingTable table = (TaskingTable)e.getSource();
-//				JOptionPane.showMessageDialog(table, table.getSelectionBackground());
+				TaskingTable table = (TaskingTable)e.getSource();
+				//双击事件
+				if(e.getClickCount() == 2){
+					//获取点击的行数
+					int rowIndex = table.rowAtPoint(e.getPoint());
+					Task task = table.getTasks().get(rowIndex);
+					if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
+						task.setStatus(TaskStatus.STARTED);
+						if(task.getDownloadWorker() == null || task.getDownloadWorker().getTask() == null){
+							task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
+						}
+						task.getDownloadWorker().execute();
+					}else if(task.getStatus() == TaskStatus.STARTED){
+						task.setStatus(TaskStatus.STOPED);
+						if(task.getDownloadWorker() != null){
+							task.getDownloadWorker().cancel(true);
+						}
+					}
+					
+					table.updateUI();
+				}
 			}
 		});
 	}
@@ -69,6 +93,14 @@ public class TaskingTable extends JTable {
 
 	public void setTableModel(TableModel tableModel) {
 		this.tableModel = tableModel;
+	}
+
+	public EgDownloaderWindow getMainWindow() {
+		return mainWindow;
+	}
+
+	public void setMainWindow(EgDownloaderWindow mainWindow) {
+		this.mainWindow = mainWindow;
 	}
 
 	

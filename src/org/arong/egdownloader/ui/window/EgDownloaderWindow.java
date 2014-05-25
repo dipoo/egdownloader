@@ -115,7 +115,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, getWidth() - 20,
-				tasks.size() * 28, tasks);
+				tasks.size() * 28, tasks, this);
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
 		tablePane.getViewport().setBackground(Color.WHITE);
