@@ -32,5 +32,10 @@ public class HentaiHome {
 	public void setSecondParameterName(String secondParameterName) {
 		this.secondParameterName = secondParameterName;
 	}
+	public String toString() {
+		return "HentaiHome [uri=" + uri + ", firstParameterName="
+				+ firstParameterName + ", secondParameterName="
+				+ secondParameterName + "]";
+	}
 	
 }

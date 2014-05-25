@@ -8,7 +8,8 @@ package org.arong.egdownloader.model;
 public class Picture {
 	private String num;//序号
 	private String name;//真实名称
-	private String url;//下载地址
+	private String url;//浏览地址
+	private String realUrl;//真实下载地址
 	private String size;//大小
 	private String time;//下载时间
 	private boolean saveAsName;//是否以真实名称保存，否则以人物名+num保存
@@ -64,5 +65,11 @@ public class Picture {
 	}
 	public String toString() {
 		return "Picture [name=" + name + ", url=" + url + "]";
+	}
+	public String getRealUrl() {
+		return realUrl;
+	}
+	public void setRealUrl(String realUrl) {
+		this.realUrl = realUrl;
 	}
 }

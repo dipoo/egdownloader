@@ -1,7 +1,6 @@
 package org.arong.egdownloader.model;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import org.arong.egdownloader.spider.WebClientException;
  * @since 2014-05-25
  */
 public final class ParseEngine {
-	private static String url = "http://exhentai.org/g/701835/1ba4aa2531/";
+	private static String url = "http://exhentai.org/g/703609/b85bdd7917/";
 	/**
 	 * 步骤：
 	 * 1、验证url的合法性。http://exhentai.org/g/446779/553f5c4086/
@@ -31,6 +30,7 @@ public final class ParseEngine {
 		Task task = new Task(url, saveDir);
 
 		String host = url.substring(0, url.indexOf(setting.getGidPrefix()));
+		System.out.println("host:" + host);
 		// 446779
 		String gid = Spider.substring(url, setting.getGidPrefix()).substring(0,
 				Spider.substring(url, setting.getGidPrefix()).indexOf("/"));
@@ -43,15 +43,15 @@ public final class ParseEngine {
 				+ "?" + setting.getHentaiHome().getFirstParameterName() + "="
 				+ gid + "&" + setting.getHentaiHome().getSecondParameterName()
 				+ "=" + t;
-//		System.out.println(hentaiHomeUrl);
+		System.out.println("hentaiHomeUrl:" + hentaiHomeUrl);
 		//EHG-446779.hathdl文件内容
 		String hentaiHomeSource = WebClient.postRequestWithCookie(hentaiHomeUrl, setting.getCookieInfo());
 //		System.out.println(hentaiHomeSource);
 		//数量
 		String total_ = Spider.getTextFromSource(hentaiHomeSource, setting.getTotalPrefix(), "\n");
-//		System.out.println(total);
+		System.out.println("total:" + total_);
 		String name = Spider.getTextFromSource(hentaiHomeSource, setting.getNamePrefix(), "\n");
-//		System.out.println(name);
+		System.out.println("name:" + name);
 		String fileList = Spider.getTextFromSource(hentaiHomeSource, setting.getFileListPrefix(), setting.getFileListSuffix());
 //		System.out.println(fileList);
 		
@@ -74,12 +74,11 @@ public final class ParseEngine {
 		System.out.println(Spider.substring(url, gid + "/").substring(0, Spider.substring(url, gid + "/").length()).replaceAll("/", ""));
 		System.out.println(url.substring(0, url.indexOf("/g/")));*/
 		Setting setting = new Setting();
-//		System.out.println(WebClient.postRequestWithCookie("http://exhentai.org/s/0068b792d4/701835-1", setting.getCookieInfo()));
-		Task task = buildTask(url, "", setting);
+		//System.out.println(WebClient.postRequestWithCookie("http://exhentai.org/", setting.getCookieInfo()));
+		Task task = buildTask(url, "E:/Reader/hello", setting);
 		String url;
 		for (Picture pic : task.getPictures()) {
-			url = getdownloadUrl(pic.getUrl(), setting.getCookieInfo());
-			url = url.substring(0, url.indexOf("\""));
+			url = getdownloadUrl(pic.getUrl(), setting);
 			System.out.println(url);
 			store(task.getSaveDir(), pic.getName(), url);
 		}
@@ -87,14 +86,15 @@ public final class ParseEngine {
 //		String str = Spider.getTextFromSource(WebClient.postRequestWithCookie(url + "?" + setting.getPageParam() + "=" + 0, setting.getCookieInfo()), url.substring(0, url.indexOf(setting.getGidPrefix())) + "/s/", "</html>");
 //		System.out.println(str);
 	}
-	private static String getdownloadUrl(String sourceUrl, String cookieInfo){
+	private static String getdownloadUrl(String sourceUrl, Setting setting){
 		String url = null;
 		try {
-			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, cookieInfo), "<img id=\"img\" src=\"", "</html>");
+			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
 		} catch (Exception e) {
 			System.out.println("getdownloadUrl异常");
-			url = getdownloadUrl(sourceUrl, cookieInfo);
+			url = getdownloadUrl(sourceUrl, setting);
 		}
+		System.out.println(url);
 		return url;
 	}
 	
@@ -143,9 +143,10 @@ public final class ParseEngine {
 				}
 				for(int j = 0; j < count; j ++){
 					picIndex = i * setting.getPageCount() + j;
-					showUrl = showUrlPrefix + urlList.substring(0, urlList.indexOf("\""));//Spider.getTextFromSource(urlList, showUrlPrefix , "\"");
+					showUrl = showUrlPrefix + urlList.substring(0, urlList.indexOf(setting.getShowPicSuffix()));
 					pictures.get(picIndex).setNum(genNum(total, picIndex));
 					pictures.get(picIndex).setUrl(showUrl);
+					System.out.println(showUrl);
 					if(urlList.indexOf(showUrlPrefix) != -1){
 						urlList = Spider.substring(urlList, showUrlPrefix);
 					}

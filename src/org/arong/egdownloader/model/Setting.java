@@ -17,6 +17,23 @@ public class Setting {
 	private String pageParam = "p";//切换分页的参数名
 	private String sourcePrefix = "&gt;";//获取url源码的前缀
 	private String sourceSuffix = "</html>";//获取url源码的后缀
+	private String showPicPrefix = "/s/";//浏览漫画的地址前缀
+	private String showPicSuffix = "\"";//浏览漫画的地址后缀
+	private String realUrlPrefix = "<img id=\"img\" src=\"";
+	private String realUrlSuffix = "\"";
+	
+	public String getRealUrlPrefix() {
+		return realUrlPrefix;
+	}
+	public void setRealUrlPrefix(String realUrlPrefix) {
+		this.realUrlPrefix = realUrlPrefix;
+	}
+	public String getRealUrlSuffix() {
+		return realUrlSuffix;
+	}
+	public void setRealUrlSuffix(String realUrlSuffix) {
+		this.realUrlSuffix = realUrlSuffix;
+	}
 	public String getSourcePrefix() {
 		return sourcePrefix;
 	}
@@ -29,7 +46,7 @@ public class Setting {
 	public void setSourceSuffix(String sourceSuffix) {
 		this.sourceSuffix = sourceSuffix;
 	}
-	private String showPicPrefix = "/s/";//浏览漫画的地址前缀
+	
 	
 	
 	
@@ -99,5 +116,23 @@ public class Setting {
 	}
 	public void setDefaultSaveDir(String defaultSaveDir) {
 		this.defaultSaveDir = defaultSaveDir;
+	}
+	public String getShowPicSuffix() {
+		return showPicSuffix;
+	}
+	public void setShowPicSuffix(String showPicSuffix) {
+		this.showPicSuffix = showPicSuffix;
+	}
+	public String toString() {
+		return "Setting [defaultSaveDir=" + defaultSaveDir + ", cookieInfo="
+				+ cookieInfo + ", gidPrefix=" + gidPrefix + ", hentaiHome="
+				+ hentaiHome + ", totalPrefix=" + totalPrefix + ", namePrefix="
+				+ namePrefix + ", fileListPrefix=" + fileListPrefix
+				+ ", fileListSuffix=" + fileListSuffix + ", pageCount="
+				+ pageCount + ", pageParam=" + pageParam + ", sourcePrefix="
+				+ sourcePrefix + ", sourceSuffix=" + sourceSuffix
+				+ ", showPicPrefix=" + showPicPrefix + ", showPicSuffix="
+				+ showPicSuffix + ", realUrlPrefix=" + realUrlPrefix
+				+ ", realUrlSuffix=" + realUrlSuffix + "]";
 	}
 }
