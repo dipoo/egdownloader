@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.table;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -29,9 +30,9 @@ public class TaskingTable extends JTable {
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
-		this.tasks = tasks;
+		this.tasks = (tasks == null ? new ArrayList<Task>() : tasks);
 		this.tableModel = new TaskTableModel(this.tasks);
-		if(tasks.size() > ComponentConst.MAX_TASK_PAGE){
+		if(this.tasks.size() > ComponentConst.MAX_TASK_PAGE){
 			height = ComponentConst.MAX_TASK_PAGE * 25;
 		}
 		this.setBounds(x, y, width, height);

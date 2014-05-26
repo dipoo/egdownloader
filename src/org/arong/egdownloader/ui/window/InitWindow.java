@@ -1,10 +1,15 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.arong.db4o.Db4oTemplate;
+import org.arong.egdownloader.model.Setting;
+import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.version.Version;
 /**
@@ -23,41 +28,24 @@ public class InitWindow extends JFrame {
 		this.setSize(300, 100);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
+		this.setUndecorated(true);//去掉标题
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		textLabel = new AJLabel("加载采集站点信息",Color.BLUE,80,10,260,30);
+		textLabel = new AJLabel("程序初始化",Color.BLUE,0,10,300,30);
+		textLabel.setHorizontalAlignment(JLabel.CENTER);
 		this.getContentPane().add(textLabel);
 		this.setVisible(true);
-		textLabel.setText("初始化主窗口");
-		/*//加载采集站点信息
-		try {
-			Configuration.getSites();
-		} catch (InvalidFileFormatException e) {
-			JOptionPane.showMessageDialog(this, Configuration.INI_FILE_NAME
-					+ "文件格式错误,无法完成初始化", "程序运行错误", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "程序运行错误",
-					JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, Configuration.INI_FILE_NAME
-					+ "文件载入异常，无法完成初始化", "程序运行错误", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		} catch (IniException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "程序运行错误：" + e.getMessage());
-			System.exit(0);
-		}*/
-		
-//		JFrame mainWindow = new MainWindow();
-		JFrame egDownloaderWindow = new EgDownloaderWindow();
+		textLabel.setForeground(Color.BLUE);
+		textLabel.setText("读取配置数据");
+		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
+		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
+		textLabel.setForeground(new Color(123,23,89));
+		textLabel.setText("读取任务列表");
+		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
+		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks);
 		textLabel.setText("初始化完成");
-		this.setVisible(false);
 		egDownloaderWindow.setVisible(true);
-		//初始化控制台
+		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
 	}
 	public JLabel getTextLabel(){
 		return textLabel;

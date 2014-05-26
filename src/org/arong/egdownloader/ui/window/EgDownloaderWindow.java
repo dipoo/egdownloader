@@ -55,7 +55,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public Setting setting;
 	public List<Task> tasks;
 
-	public EgDownloaderWindow() {
+	public EgDownloaderWindow(Setting setting, List<Task> tasks) {
 		
 		//加载配置数据
 		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
@@ -115,7 +115,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, getWidth() - 20,
-				tasks.size() * 28, tasks, this);
+				(tasks == null ? 0 :tasks.size()) * 28, tasks, this);
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
 		tablePane.getViewport().setBackground(Color.WHITE);
