@@ -8,6 +8,7 @@ import org.arong.egdownloader.spider.Spider;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
+import org.arong.util.FileUtil;
 
 /**
  * Task分析引擎
@@ -107,7 +108,7 @@ public final class ParseEngine {
 	
 	private static void store(String dir, String name, String url){
 		try {
-			WebClient.storeStream(dir, name, WebClient.getStreamUseJava(url));
+			FileUtil.storeStream(dir, name, WebClient.getStreamUseJava(url));
 			System.out.println(name + " completed");
 		} catch (IOException e) {
 			System.out.println("getStreamUseJava异常");

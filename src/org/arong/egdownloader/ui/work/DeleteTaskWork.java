@@ -18,6 +18,7 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 public class DeleteTaskWork implements IListenerTask {
 
 	public void doWork(Window window) {
+		System.out.println(123);
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int[] rows = table.getSelectedRows();
