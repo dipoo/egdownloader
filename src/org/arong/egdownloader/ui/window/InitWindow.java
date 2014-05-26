@@ -43,6 +43,7 @@ public class InitWindow extends JFrame {
 		textLabel.setText("读取任务列表");
 		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
 		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks);
+		System.out.println(tasks.size());
 		textLabel.setText("初始化完成");
 		egDownloaderWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU

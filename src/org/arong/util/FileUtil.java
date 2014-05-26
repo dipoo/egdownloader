@@ -1,6 +1,12 @@
 package org.arong.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 目录文件工具类
@@ -27,4 +33,49 @@ public final class FileUtil {
 			file.mkdirs();
 		}
 	}
+	
+	public static boolean storeStream(String path, String name, InputStream in){
+    	File dir = new File(path);
+    	FileUtil.ifNotExistsThenCreate(dir);
+    	BufferedInputStream bis = null;
+    	BufferedOutputStream bos = null;
+    	try {
+    		File fs = new File(path + "/" + name);
+			bis = new BufferedInputStream(in);
+			bos = new BufferedOutputStream(new FileOutputStream(fs));
+			byte[] buff = new byte[1024];
+			int len = 0;
+			while ((len = bis.read(buff)) != -1) {
+				bos.write(buff, 0, len);
+			}
+			bos.flush();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (bis != null) {
+				try {
+					bis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+    	return false;
+    }
 }

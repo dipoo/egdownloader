@@ -68,12 +68,12 @@ public final class ParseEngine {
 		return task;
 	}
 	
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		
-		/*String gid = Spider.substring(url, "/g/").substring(0, Spider.substring(url, "/g/").indexOf("/"));
+		String gid = Spider.substring(url, "/g/").substring(0, Spider.substring(url, "/g/").indexOf("/"));
 		System.out.println(gid);
 		System.out.println(Spider.substring(url, gid + "/").substring(0, Spider.substring(url, gid + "/").length()).replaceAll("/", ""));
-		System.out.println(url.substring(0, url.indexOf("/g/")));*/
+		System.out.println(url.substring(0, url.indexOf("/g/")));
 		Setting setting = new Setting();
 		//System.out.println(WebClient.postRequestWithCookie("http://exhentai.org/", setting.getCookieInfo()));
 		Task task = buildTask(url, "E:/Reader/hello", setting);
@@ -84,16 +84,16 @@ public final class ParseEngine {
 			if(i != 31){
 				continue;
 			}
-			/*if(i == 0){
+			if(i == 0){
 				continue;
-			}*/
+			}
 			url = getdownloadUrl(pic.getUrl(), setting);
 			store(task.getSaveDir(), pic.getName(), url);
 		}
 		
 //		String str = Spider.getTextFromSource(WebClient.postRequestWithCookie(url + "?" + setting.getPageParam() + "=" + 0, setting.getCookieInfo()), url.substring(0, url.indexOf(setting.getGidPrefix())) + "/s/", "</html>");
 //		System.out.println(str);
-	}
+	}*/
 	public static String getdownloadUrl(String sourceUrl, Setting setting) throws Exception{
 		String url = null;
 		try {

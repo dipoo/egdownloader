@@ -18,6 +18,7 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.util.FileUtil;
 
 import com.db4o.query.Predicate;
 /**
@@ -53,7 +54,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}
 						is =  WebClient.getStreamUseJava(pic.getRealUrl());
 						int size = is.available();
-						WebClient.storeStream(task.getSaveDir() + "name", pic.getName(), is);//保存到目录
+						FileUtil.storeStream(task.getSaveDir() + "name", pic.getName(), is);//保存到目录
 						pic.setSize(size);//设置图片大小
 						pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
 						pic.setCompleted(true);//设置为已下载完成
@@ -66,6 +67,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}
 						}, task, ComponentConst.TASK_DATA_PATH);
 						table.updateUI();
+						System.out.println(task.getName() + ":" + pic.getName() + "下载完成");
 					}catch (Exception e){
 						//碰到异常
 						System.out.println(e.getMessage());
