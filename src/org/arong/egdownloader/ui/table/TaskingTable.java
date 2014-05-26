@@ -56,25 +56,34 @@ public class TaskingTable extends JTable {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
 				TaskingTable table = (TaskingTable)e.getSource();
-				//双击事件
-				if(e.getClickCount() == 2){
-					//获取点击的行数
-					int rowIndex = table.rowAtPoint(e.getPoint());
-					Task task = table.getTasks().get(rowIndex);
-					if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
-						task.setStatus(TaskStatus.STARTED);
-						if(task.getDownloadWorker() == null || task.getDownloadWorker().getTask() == null){
-							task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
+				//左键
+				if(e.getButton() == MouseEvent.BUTTON1){
+					//双击事件
+					if(e.getClickCount() == 2){
+						//获取点击的行数
+						int rowIndex = table.rowAtPoint(e.getPoint());
+						Task task = table.getTasks().get(rowIndex);
+						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
+						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
+							task.setStatus(TaskStatus.STARTED);
+							if(task.getDownloadWorker() == null || task.getDownloadWorker().getTask() == null){
+								task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
+							}
+							task.getDownloadWorker().execute();
 						}
-						task.getDownloadWorker().execute();
-					}else if(task.getStatus() == TaskStatus.STARTED){
-						task.setStatus(TaskStatus.STOPED);
-						if(task.getDownloadWorker() != null){
-							task.getDownloadWorker().cancel(true);
+						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
+						else if(task.getStatus() == TaskStatus.STARTED){
+							task.setStatus(TaskStatus.STOPED);
+							if(task.getDownloadWorker() != null){
+								task.getDownloadWorker().cancel(true);
+							}
 						}
+						table.updateUI();
 					}
-					
-					table.updateUI();
+				}
+				//右键
+				else if(e.getButton() == MouseEvent.BUTTON3){
+					table.getMainWindow().tablePopupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});

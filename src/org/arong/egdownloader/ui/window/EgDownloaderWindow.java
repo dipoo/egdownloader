@@ -15,10 +15,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -28,6 +29,8 @@ import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
+import org.arong.egdownloader.ui.swing.AJMenuItem;
+import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.DeleteTaskWork;
@@ -49,6 +52,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public JDialog aboutMenuWindow;
 	public JDialog addFormWindow;
 
+	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
 	JScrollPane tablePane;
 	
@@ -58,10 +62,10 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public EgDownloaderWindow(Setting setting, List<Task> tasks) {
 		
 		//加载配置数据
-		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
-		setting = settings.size() > 0 ? settings.get(0) : new Setting();
+		this.setting = setting;
 		//加载任务列表
-		tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
+		this.tasks = tasks;
+		
 		// 设置主窗口
 		this.setTitle(Version.NAME);
 		this.setIconImage(new ImageIcon(getClass().getResource(
@@ -90,11 +94,10 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 								this_.setEnabled(false);
 							}
 						}));
+		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
 				ComponentConst.TOOLS_MENU_NAME, ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("delete"),
-				new OperaBtnMouseListener(this, MouseAction.CLICK,
-						new DeleteTaskWork()));
+						+ ComponentConst.SKIN_ICON.get("delete"), deleteBtnMouseListener);
 
 		MouseListener menuMouseListener = new MenuMouseListener(this);
 		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
@@ -119,8 +122,18 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
 		tablePane.getViewport().setBackground(Color.WHITE);
+		
+		AJMenuItem deletePopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, ComponentConst.SKIN_NUM
+						+ ComponentConst.SKIN_ICON.get("delete"), new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
+							public void doWork(Window window) {
+								JOptionPane.showMessageDialog(window, "查看详细");
+							}
+						}));
+		//表格的右键菜单
+		tablePopupMenu = new AJPopupMenu(deletePopupMenuItem);
+		
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane);
+		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu);
 
 		this.addWindowFocusListener(new WindowFocusListener() {
 			public void windowLostFocus(WindowEvent e) {

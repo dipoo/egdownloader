@@ -74,6 +74,8 @@ public final class ComponentConst {
 	public final static String ABOUT_MENU_TEXT = "关于";
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
+	public final static String POPUP_DETAIL_MENU_TEXT = "查看";
+	
 	
 	/*AboutMenuWindow内的组件*/
 	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME + "</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" + Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" + Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED + "</b><br>官方网站：https://github.com/dipoo/egdownloader";
