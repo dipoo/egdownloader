@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.arong.util.FileUtil;
 
 /**
  * 获取远程url地址页面的源文件
@@ -216,9 +217,7 @@ public class WebClient {
     
     public static boolean storeStream(String path, String name, InputStream in){
     	File dir = new File(path);
-    	if(! dir.exists()){
-    		dir.mkdir();
-    	}
+    	FileUtil.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
     	BufferedOutputStream bos = null;
     	try {

@@ -87,7 +87,6 @@ public final class ParseEngine {
 				continue;
 			}*/
 			url = getdownloadUrl(pic.getUrl(), setting);
-			System.out.println(url);
 			store(task.getSaveDir(), pic.getName(), url);
 		}
 		
