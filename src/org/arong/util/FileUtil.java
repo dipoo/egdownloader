@@ -14,7 +14,7 @@ public final class FileUtil {
 	 */
 	public static void ifNotExistsThenCreate(String path){
 		File file = new File(path);
-		if(file.isDirectory() && !file.exists()){
+		if(!file.exists()){
 			file.mkdirs();
 		}
 	}
@@ -23,8 +23,7 @@ public final class FileUtil {
 	 * @param path
 	 */
 	public static void ifNotExistsThenCreate(File file){
-		System.out.println(123);
-		if(file.isDirectory() && !file.exists()){
+		if(!file.exists()){
 			file.mkdirs();
 		}
 	}
