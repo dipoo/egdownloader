@@ -62,7 +62,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						final String taskUrl = task.getUrl();
 						Db4oTemplate.update(new Predicate<Task>() {
 							public boolean match(Task task) {
-								return task.getUrl() == taskUrl;//更新条件
+								return task.getUrl().equals(taskUrl);//更新条件
 							}
 						}, task, ComponentConst.TASK_DATA_PATH);
 						table.updateUI();
