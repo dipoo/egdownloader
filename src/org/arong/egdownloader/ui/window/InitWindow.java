@@ -12,6 +12,9 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.version.Version;
+
+import com.db4o.Db4o;
+import com.db4o.config.Configuration;
 /**
  * 程序初始化窗口
  * @author 阿荣
@@ -36,6 +39,10 @@ public class InitWindow extends JFrame {
 		this.getContentPane().add(textLabel);
 		this.setVisible(true);
 		textLabel.setForeground(Color.BLUE);
+		//打开db4o级联
+		@SuppressWarnings("deprecation")
+		Configuration conf=Db4o.newConfiguration();
+		conf.objectClass("org.arong.egdownloader.model.Task").cascadeOnUpdate(true);
 		textLabel.setText("读取配置数据");
 		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
 		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
@@ -43,7 +50,6 @@ public class InitWindow extends JFrame {
 		textLabel.setText("读取任务列表");
 		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
 		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks);
-		System.out.println(tasks.size());
 		textLabel.setText("初始化完成");
 		egDownloaderWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU

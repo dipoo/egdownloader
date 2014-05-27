@@ -3,6 +3,7 @@ package org.arong.egdownloader.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.arong.egdownloader.spider.Spider;
 import org.arong.egdownloader.spider.SpiderException;
@@ -60,7 +61,8 @@ public final class ParseEngine {
 		//获取图片集合
 		List<Picture> pictures = getPictures(fileList, total);
 		setPicturesUrl(url, pictures, setting);
-		
+		//setid
+		task.setId(UUID.randomUUID().toString());
 		task.setTotal(total);
 		task.setName(name);
 		task.setSaveDir(saveDir + "/" + name);
@@ -127,6 +129,7 @@ public final class ParseEngine {
 			//1 39fd09ca334866a6e80248da147ed1a39666b956-267169-1200-813-jpg Img_000.jpg
 			rowInfos = rows[i].split(" ");
 			Picture picture = new Picture();
+			picture.setId(UUID.randomUUID().toString());
 			picture.setName(rowInfos[2]);
 			pictures.add(picture);
 		}

@@ -6,6 +6,7 @@ package org.arong.egdownloader.model;
  * @since 2014-05-22
  */
 public class Picture {
+	private String id;//uuid
 	private String num;//序号
 	private String name;//真实名称
 	private String url;//浏览地址
@@ -71,5 +72,11 @@ public class Picture {
 	}
 	public void setRealUrl(String realUrl) {
 		this.realUrl = realUrl;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 }

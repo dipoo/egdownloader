@@ -11,6 +11,7 @@ import org.arong.egdownloader.ui.work.DownloadWorker;
  * @since 2014-05-22
  */
 public class Task {
+	private String id;//id
 	private String url;//下载地址
 	private String name;//名称
 	private String saveDir;//保存目录
@@ -21,7 +22,7 @@ public class Task {
 	private int size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private List<Picture> pictures;
-	private DownloadWorker downloadWorker;//下载线程实例
+	public DownloadWorker downloadWorker;//下载线程实例,不保存，不提供get/set方法
 	
 	public Task(){}
 	
@@ -98,11 +99,11 @@ public class Task {
 				+ pictures + "]";
 	}
 
-	public DownloadWorker getDownloadWorker() {
-		return downloadWorker;
+	public String getId() {
+		return id;
 	}
 
-	public void setDownloadWorker(DownloadWorker downloadWorker) {
-		this.downloadWorker = downloadWorker;
+	public void setId(String id) {
+		this.id = id;
 	}
 }
