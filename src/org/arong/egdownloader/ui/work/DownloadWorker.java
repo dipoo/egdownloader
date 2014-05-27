@@ -19,6 +19,7 @@ import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
+import org.arong.util.Tracker;
 
 import com.db4o.query.Predicate;
 /**
@@ -67,7 +68,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}
 						}, task, ComponentConst.TASK_DATA_PATH);
 						table.updateUI();
-						System.out.println(task.getName() + ":" + pic.getName() + "下载完成");
+						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成");
 					}catch (Exception e){
 						//碰到异常
 						System.out.println(e.getMessage());
