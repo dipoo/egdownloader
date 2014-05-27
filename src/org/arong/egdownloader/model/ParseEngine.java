@@ -1,10 +1,12 @@
 package org.arong.egdownloader.model;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.spider.Spider;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
@@ -17,7 +19,7 @@ import org.arong.util.FileUtil;
  * @since 2014-05-25
  */
 public final class ParseEngine {
-	private static String url = "http://exhentai.org/g/644569/d3a7972704/";
+	private static String url = "http://exhentai.org/g/704576/f85149de1a/";
 	/**
 	 * 步骤：
 	 * 1、验证url的合法性。http://exhentai.org/g/446779/553f5c4086/
@@ -26,11 +28,14 @@ public final class ParseEngine {
 	 * 4、根据pictures集合开始下载图片，存放到saveDir/name/目录下
 	 * @throws SpiderException 
 	 * @throws WebClientException 
+	 * @throws ConnectTimeoutException 
+	 * @throws SocketTimeoutException 
 	 */
 	
-	public static Task buildTask(String url, String saveDir, Setting setting) throws SpiderException, WebClientException{
+	public static Task buildTask(String url, String saveDir, Setting setting) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
 		Task task = new Task(url, saveDir);
-
+		task.setId(UUID.randomUUID().toString());
+		
 		String host = url.substring(0, url.indexOf(setting.getGidPrefix()));
 		System.out.println("host:" + host);
 		// 446779
@@ -59,34 +64,30 @@ public final class ParseEngine {
 		
 		int total = Integer.parseInt(total_.trim());
 		//获取图片集合
-		List<Picture> pictures = getPictures(fileList, total);
+		List<Picture> pictures = getPictures(task, fileList, total);
 		setPicturesUrl(url, pictures, setting);
 		//setid
-		task.setId(UUID.randomUUID().toString());
 		task.setTotal(total);
 		task.setName(name);
 		task.setSaveDir(saveDir + "/" + name);
-		task.setPictures(pictures);
+		task.pictures = pictures;
 		return task;
 	}
 	
-	/*public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		
-		String gid = Spider.substring(url, "/g/").substring(0, Spider.substring(url, "/g/").indexOf("/"));
-		System.out.println(gid);
-		System.out.println(Spider.substring(url, gid + "/").substring(0, Spider.substring(url, gid + "/").length()).replaceAll("/", ""));
-		System.out.println(url.substring(0, url.indexOf("/g/")));
+//		String gid = Spider.substring(url, "/g/").substring(0, Spider.substring(url, "/g/").indexOf("/"));
+//		System.out.println(gid);
+//		System.out.println(Spider.substring(url, gid + "/").substring(0, Spider.substring(url, gid + "/").length()).replaceAll("/", ""));
+//		System.out.println(url.substring(0, url.indexOf("/g/")));
 		Setting setting = new Setting();
 		//System.out.println(WebClient.postRequestWithCookie("http://exhentai.org/", setting.getCookieInfo()));
 		Task task = buildTask(url, "E:/Reader/hello", setting);
 		String url;
 		int i = -1;
-		for (Picture pic : task.getPictures()) {
+		for (Picture pic : task.pictures) {
 			i ++;
-			if(i != 31){
-				continue;
-			}
-			if(i == 0){
+			if(i < 9){
 				continue;
 			}
 			url = getdownloadUrl(pic.getUrl(), setting);
@@ -95,7 +96,7 @@ public final class ParseEngine {
 		
 //		String str = Spider.getTextFromSource(WebClient.postRequestWithCookie(url + "?" + setting.getPageParam() + "=" + 0, setting.getCookieInfo()), url.substring(0, url.indexOf(setting.getGidPrefix())) + "/s/", "</html>");
 //		System.out.println(str);
-	}*/
+	}
 	public static String getdownloadUrl(String sourceUrl, Setting setting) throws Exception{
 		String url = null;
 		try {
@@ -112,13 +113,20 @@ public final class ParseEngine {
 		try {
 			FileUtil.storeStream(dir, name, WebClient.getStreamUseJava(url));
 			System.out.println(name + " completed");
+		} catch (SocketTimeoutException e) {
+        	//捕获到超时，不再请资源，返回null
+			System.out.println("读取超时");
+			store(dir, name, url);
+		} catch (ConnectTimeoutException e) {
+			System.out.println("连接超时");
+			store(dir, name, url);
 		} catch (IOException e) {
 			System.out.println("getStreamUseJava异常");
 			store(dir, name, url);
 		}
 	}
 	
-	private static List<Picture> getPictures(String fileList, int total){
+	private static List<Picture> getPictures(Task task, String fileList, int total){
 		if(fileList == null || "".equals(fileList.trim()) || total < 0){
 			return null;
 		}
@@ -129,6 +137,7 @@ public final class ParseEngine {
 			//1 39fd09ca334866a6e80248da147ed1a39666b956-267169-1200-813-jpg Img_000.jpg
 			rowInfos = rows[i].split(" ");
 			Picture picture = new Picture();
+			picture.setTid(task.getId());
 			picture.setId(UUID.randomUUID().toString());
 			picture.setName(rowInfos[2]);
 			pictures.add(picture);
@@ -136,7 +145,7 @@ public final class ParseEngine {
 		return pictures;
 	}
 	
-	private static void setPicturesUrl(String url, List<Picture> pictures, Setting setting) throws SpiderException, WebClientException{
+	private static void setPicturesUrl(String url, List<Picture> pictures, Setting setting) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
 		if(pictures != null){
 			int total = pictures.size();
 			//页数

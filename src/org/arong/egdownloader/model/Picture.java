@@ -6,6 +6,7 @@ package org.arong.egdownloader.model;
  * @since 2014-05-22
  */
 public class Picture {
+	private String tid;
 	private String id;//uuid
 	private String num;//序号
 	private String name;//真实名称
@@ -64,8 +65,13 @@ public class Picture {
 	public void setRunning(boolean isRunning) {
 		this.isRunning = isRunning;
 	}
+	
 	public String toString() {
-		return "Picture [name=" + name + ", url=" + url + "]";
+		return "Picture [tid=" + tid + ", id=" + id + ", num=" + num
+				+ ", name=" + name + ", url=" + url + ", realUrl=" + realUrl
+				+ ", size=" + size + ", time=" + time + ", saveAsName="
+				+ saveAsName + ", isCompleted=" + isCompleted + ", isRunning="
+				+ isRunning + "]";
 	}
 	public String getRealUrl() {
 		return realUrl;
@@ -78,5 +84,11 @@ public class Picture {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getTid() {
+		return tid;
+	}
+	public void setTid(String tid) {
+		this.tid = tid;
 	}
 }

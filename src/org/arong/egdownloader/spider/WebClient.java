@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.NameValuePair;
@@ -32,7 +33,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
  */
 public class WebClient {
 	
-	public static void main(String[] args) throws WebClientException {
+	public static void main(String[] args) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
 		String cookie = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;";
 		cookie += "ipb_member_id=1059070;";
 		cookie += "ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
@@ -42,7 +43,7 @@ public class WebClient {
 		
 	}
 	
-	public static String postRequest(String url){
+	public static String postRequest(String url) throws ConnectTimeoutException, SocketTimeoutException{
 		try {
 			return postRequestWithCookie(url, "utf-8", null, null);
 		} catch (WebClientException e) {
@@ -51,7 +52,7 @@ public class WebClient {
 		return null;
 	}
 	
-	public static String postRequest(String url, String encoding){
+	public static String postRequest(String url, String encoding) throws ConnectTimeoutException, SocketTimeoutException{
 		try {
 			return postRequestWithCookie(url, encoding, null, null);
 		} catch (WebClientException e) {
@@ -60,7 +61,7 @@ public class WebClient {
 		return null;
 	}
 	
-	public static String postRequestWithCookie(String url, String cookieInfo){
+	public static String postRequestWithCookie(String url, String cookieInfo) throws ConnectTimeoutException, SocketTimeoutException{
 		try {
 			return postRequestWithCookie(url, "utf-8", null, cookieInfo);
 		} catch (WebClientException e) {
@@ -76,8 +77,10 @@ public class WebClient {
 	 *            请求参数
 	 * @return 服务器响应字符串
 	 * @throws WebClientException 
+	 * @throws ConnectTimeoutException 
+	 * @throws SocketTimeoutException 
 	 */
-	public static String postRequestWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException {
+	public static String postRequestWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
 		HttpClient httpClient = new HttpClient();
 		// 创建HttpPost对象。
 		PostMethod postMethod = new PostMethod(url);
@@ -104,6 +107,10 @@ public class WebClient {
 			postMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
 			postMethod.setRequestHeader("Cookie", cookieInfo);
 		}
+		//设置连接超时为20秒
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(20000);
+		//设置读取超时为20秒
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(20000);
 		int statusCode = 0;
 		String result = null;
 		try {
@@ -133,8 +140,12 @@ public class WebClient {
                 String location = postMethod.getResponseHeader("Location").getValue();
                 return postRequestWithCookie(location, encoding, rawParams, cookieInfo);
             }
+		} catch (SocketTimeoutException e1){
+			throw e1;
+		} catch (ConnectTimeoutException e1){
+			throw e1;
 		} catch (HttpException e1) {
-			throw new WebClientException(url + "：连接异常");
+			throw new ConnectTimeoutException(url + "：连接异常");
 		} catch (IOException e1) {
 			throw new WebClientException(url + "：IO异常，请检查网络是否正常");
 		}
@@ -143,7 +154,7 @@ public class WebClient {
 	
     
     public static InputStream getStreamUseJava(final String urlString)
-            throws IOException {
+            throws IOException,SocketTimeoutException,ConnectTimeoutException {
 
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
@@ -159,6 +170,7 @@ public class WebClient {
         Map<String, String> headers = new HashMap<String, String>();
 
         URL url = new URL(nURL);
+        
 
         try{
 	        do {
@@ -173,6 +185,8 @@ public class WebClient {
 	            urlConnection.setUseCaches(false);
 	            urlConnection.setInstanceFollowRedirects(false);
 	            urlConnection.setRequestMethod(method);
+	            urlConnection.setConnectTimeout(20000);
+	            urlConnection.setReadTimeout(20000);
 	            //模拟http头文件
 	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
 	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
@@ -206,6 +220,10 @@ public class WebClient {
 	        } while (foundRedirect);
         }catch (SocketTimeoutException e) {
         	//捕获到超时，不再请资源，返回null
+        	throw e;
+		}catch (ConnectTimeoutException e) {
+        	//捕获到超时，不再请资源，返回null
+        	throw e;
 		}
         return inputStream;
     }

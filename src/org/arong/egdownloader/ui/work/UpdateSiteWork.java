@@ -1,9 +1,12 @@
 package org.arong.egdownloader.ui.work;
 
+import java.net.SocketTimeoutException;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.spider.WebClient;
 
 /**
@@ -30,7 +33,7 @@ public class UpdateSiteWork extends SwingWorker<Void, Void> {
 	}
 
 	// 更新网站主流程
-	private void updateSite() {
+	private void updateSite() throws ConnectTimeoutException, SocketTimeoutException {
 		WebClient.postRequest("http://www.shujixiazai.com/update", "utf-8");
 	}
 

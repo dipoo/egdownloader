@@ -22,8 +22,6 @@ public final class Db4oTemplate {
 	public static void main(String[] args) {
 		//打开db4o级联
 		EmbeddedConfiguration conf=Db4oEmbedded.newConfiguration();
-		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnUpdate(true);
-		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnDelete(true);
 		List<Task> tasks = query(Task.class, ComponentConst.TASK_DATA_PATH);
 		for (Task task : tasks) {
 			System.out.println("id:" + task.getId());
@@ -34,15 +32,9 @@ public final class Db4oTemplate {
 			System.out.println("url:" + task.getUrl());
 			System.out.println("status:" + task.getStatus().getStatus());
 			System.out.println("---pictures:---");
-			List<Picture> pics = task.getPictures();
+			List<Picture> pics = task.pictures;
 			for (Picture pic : pics) {
-				System.out.println("id:" + pic.getId());
-				System.out.println("name:" + pic.getName());
-				System.out.println("num:" + pic.getNum());
-				System.out.println("url:" + pic.getUrl());
-				System.out.println("realUrl:" + pic.getRealUrl());
-				System.out.println("isCompleted:" + pic.isCompleted());
-				System.out.println("");
+				System.out.println(pic);
 			}
 			System.out.println("");
 		}

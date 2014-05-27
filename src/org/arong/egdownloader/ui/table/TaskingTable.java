@@ -1,7 +1,6 @@
 package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -11,12 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
+import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
+
+import com.db4o.query.Predicate;
 /**
  * 正在下载任务表格
  * @author 阿荣
@@ -78,6 +80,12 @@ public class TaskingTable extends JTable {
 							task.setStatus(TaskStatus.STOPED);
 							if(task.downloadWorker != null){
 								task.downloadWorker.cancel(true);
+								final String taskId = task.getId();
+								Db4oTemplate.update(new Predicate<Task>() {
+									public boolean match(Task task_) {
+										return task_.getId().equals(taskId);//更新条件
+									}
+								}, task, ComponentConst.TASK_DATA_PATH);
 							}
 						}
 						table.updateUI();

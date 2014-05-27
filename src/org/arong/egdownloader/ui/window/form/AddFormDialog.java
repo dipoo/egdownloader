@@ -6,6 +6,7 @@ import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.net.SocketTimeoutException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Setting;
@@ -123,10 +125,16 @@ public class AddFormDialog extends JDialog {
 							taskTable.getTasks().add(task);
 							this_.emptyField();//清空下载地址
 							//关闭form,刷新table
-							this_.setVisible(false);
+							this_.dispose();
 							taskTable.updateUI();
 							window.setVisible(true);
 						}
+					} catch (SocketTimeoutException e1){
+						this_.dispose();
+						JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
+					} catch (ConnectTimeoutException e){
+						this_.dispose();
+						JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
 					} catch (SpiderException e) {
 						e.printStackTrace();
 					} catch (WebClientException e) {

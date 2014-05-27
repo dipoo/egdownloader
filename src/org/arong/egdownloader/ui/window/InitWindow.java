@@ -7,14 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.arong.db4o.Db4oTemplate;
+import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.version.Version;
 
-import com.db4o.Db4oEmbedded;
-import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.query.Predicate;
 /**
  * 程序初始化窗口
  * @author 阿荣
@@ -26,6 +26,7 @@ public class InitWindow extends JFrame {
 	
 	private JLabel textLabel;
 	
+	@SuppressWarnings("serial")
 	public InitWindow(){
 		super(Version.NAME + "初始化");
 		this.setSize(300, 100);
@@ -39,16 +40,21 @@ public class InitWindow extends JFrame {
 		this.getContentPane().add(textLabel);
 		this.setVisible(true);
 		textLabel.setForeground(Color.BLUE);
-		//打开db4o级联
-		EmbeddedConfiguration conf=Db4oEmbedded.newConfiguration();
-		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnUpdate(true);
-		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnDelete(true);
 		textLabel.setText("读取配置数据");
 		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
 		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
 		textLabel.setForeground(new Color(123,23,89));
 		textLabel.setText("读取任务列表");
 		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
+		for (final Task task : tasks) {
+			task.pictures = Db4oTemplate.query(new Predicate<Picture>() {
+				public boolean match(Picture pic) {
+					return pic.getTid().equals(task.getId());
+				}
+			}, ComponentConst.TASK_DATA_PATH);
+			System.out.println(task);
+			System.out.println("");
+		}
 		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks);
 		textLabel.setText("初始化完成");
 		egDownloaderWindow.setVisible(true);
