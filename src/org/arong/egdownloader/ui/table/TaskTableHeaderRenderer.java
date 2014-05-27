@@ -16,18 +16,18 @@ import org.arong.egdownloader.ui.swing.AJLabel;
  * @since 2014-05-24
  */
 public class TaskTableHeaderRenderer implements TableCellRenderer {
-	private Color color = (1 == ComponentConst.SKIN_NUM ? new Color(156, 183, 124) : new Color(0, 0, 0));
+	private Color color = (1 == ComponentConst.SKIN_NUM ? new Color(25, 12, 47) : new Color(0, 0, 0));
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		switch (column){
 			case 0: 
-				return new JLabel(table.getRowCount() + "", JLabel.CENTER);
+				return new AJLabel(table.getRowCount() + "", null, color, JLabel.CENTER);
 			case 2:	
-				return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("picture"), color, JLabel.LEFT);
+				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
+			/*case 3:
+				return new AJLabel(value.toString(), null, color, JLabel.LEFT);*/
 			case 3:
-				return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"), color, JLabel.LEFT);
-			case 4:
-				return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("size"), color, JLabel.LEFT);
+				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
 			default:
 				return new AJLabel(value.toString(), color);
 		}

@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -46,5 +47,11 @@ public class AJLabel extends JLabel {
 		if(icon != null && !"".equals(icon.trim())){
 			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 		}
+	}
+	
+	public AJLabel(String text, Color color, Font font, int align){
+		this(text, color);
+		this.setFont(font);
+		this.setHorizontalAlignment(align);
 	}
 }

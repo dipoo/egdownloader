@@ -30,7 +30,7 @@ public final class ComponentConst {
 	
 	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
 	
-	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目(P)", "已下载", "大小(M)", "状态"};
+	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目(P)", "已下载"/*, "大小(M)"*/, "状态"};
 	
 	public final static int MAX_TASK_PAGE = 14;//一页显示任务数
 	

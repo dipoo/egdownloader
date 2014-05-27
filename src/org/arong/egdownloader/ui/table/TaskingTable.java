@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class TaskingTable extends JTable {
 		this.setCursor(CursorManager.getPointerCursor());//光标变手型
 		this.getTableHeader().setReorderingAllowed(false);//不可移动列
 		this.setBackground(Color.WHITE);
+		
 //		this.setOpaque(false);//设为透明
 		
 		this.setModel(this.tableModel);//设置数据模型
