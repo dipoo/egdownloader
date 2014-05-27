@@ -1,6 +1,7 @@
-package org.arong.egdownloader.ui.work;
+package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JOptionPane;
 
@@ -17,8 +18,7 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
  */
 public class DeleteTaskWork implements IListenerTask {
 
-	public void doWork(Window window) {
-		System.out.println(123);
+	public void doWork(Window window, MouseEvent e) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int[] rows = table.getSelectedRows();

@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -15,7 +16,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,12 +29,12 @@ import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
-import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
-import org.arong.egdownloader.ui.work.DeleteTaskWork;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
+import org.arong.egdownloader.ui.work.listenerWork.ListTaskWork;
 import org.arong.egdownloader.version.Version;
 
 /**
@@ -83,7 +83,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 						+ ComponentConst.SKIN_ICON.get("add"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,
 						new IListenerTask() {
-							public void doWork(Window mainWindow) {
+							public void doWork(Window mainWindow, MouseEvent e) {
 								EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
 								if (this_.addFormWindow == null) {
 									this_.addFormWindow = new AddFormDialog(
@@ -123,12 +123,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
 		tablePane.getViewport().setBackground(Color.WHITE);
 		
-		AJMenuItem deletePopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("delete"), new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
-							public void doWork(Window window) {
-								JOptionPane.showMessageDialog(window, "查看详细");
-							}
-						}));
+		AJMenu deletePopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", ComponentConst.SKIN_NUM
+						+ ComponentConst.SKIN_ICON.get("tool"), new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(deletePopupMenuItem);
 		
@@ -142,13 +138,13 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 			public void windowGainedFocus(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				if (window.addFormWindow != null) {
-					window.addFormWindow.setVisible(false);
+					window.addFormWindow.dispose();
 				}
 				if (window.toolsMenuWindow != null) {
-					window.toolsMenuWindow.setVisible(false);
+					window.toolsMenuWindow.dispose();
 				}
 				if (window.aboutMenuWindow != null) {
-					window.aboutMenuWindow.setVisible(false);
+					window.aboutMenuWindow.dispose();
 				}
 			}
 		});

@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.window.form;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -82,7 +83,7 @@ public class AddFormDialog extends JDialog {
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 		saveDirField.setText(setting.getDefaultSaveDir());
 		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
-			public void doWork(Window addFormDialog) {
+			public void doWork(Window addFormDialog, MouseEvent e) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				int result = this_.saveDirChooser.showOpenDialog(this_);
 				File file = null;  
@@ -99,7 +100,7 @@ public class AddFormDialog extends JDialog {
 		}) , 400, 80, 60, 30);
 		
 		addTaskBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
-			public void doWork(Window addFormDialog) {
+			public void doWork(Window addFormDialog, MouseEvent event) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				if("".equals(this_.urlField.getText().trim())){
 					JOptionPane.showMessageDialog(this_, "请填写下载地址");

@@ -21,31 +21,31 @@ public class OperaBtnMouseListener implements MouseListener {
 	}
 	public void mouseClicked(MouseEvent e) {
 		if(action == MouseAction.CLICK){
-			task.doWork(mainWindow);
+			task.doWork(mainWindow, e);
 		}
 	}
 
 	public void mousePressed(MouseEvent e) {
 		if(action == MouseAction.PRESS){
-			task.doWork(mainWindow);
+			task.doWork(mainWindow, e);
 		}
 	}
 
 	public void mouseReleased(MouseEvent e) {
 		if(action == MouseAction.RELEASE){
-			task.doWork(mainWindow);
+			task.doWork(mainWindow, e);
 		}
 	}
 
 	public void mouseEntered(MouseEvent e) {
 		if(action == MouseAction.ENTER){
-			task.doWork(mainWindow);
+			task.doWork(mainWindow, e);
 		}
 	}
 
 	public void mouseExited(MouseEvent e) {
 		if(action == MouseAction.EXIT){
-			task.doWork(mainWindow);
+			task.doWork(mainWindow, e);
 		}
 	}
 }

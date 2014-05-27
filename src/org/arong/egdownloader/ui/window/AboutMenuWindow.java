@@ -1,8 +1,10 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -36,26 +38,20 @@ public class AboutMenuWindow extends JDialog {
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);
-		//添加窗口聚焦监听器
-		/*this.addWindowFocusListener(new WindowFocusListener() {
-			// 当失去活动状态的时候此窗口被隐藏
-			public void windowLostFocus(WindowEvent e) {
+		//关闭监听，释放窗口资源，否则消耗大量CPU
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
 				AboutMenuWindow window = (AboutMenuWindow) e.getSource();
-				window.setVisible(false);
+				window.dispose();
 			}
-			public void windowGainedFocus(WindowEvent e) {}
-		});*/
+		});
 		//添加鼠标活动监听器
-		this.addMouseListener(new MouseListener() {
+		this.addMouseListener(new MouseAdapter() {
 			// 当鼠标点击当前窗口时隐藏此窗口
 			public void mouseClicked(MouseEvent e) {
 				AboutMenuWindow window = (AboutMenuWindow) e.getSource();
-				window.setVisible(false);
+				window.dispose();
 			}
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
 		});
 
 		aboutTextPane = new AJTextPane(ComponentConst.ABOUT_TEXTPANE_TEXT,
