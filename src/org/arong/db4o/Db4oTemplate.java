@@ -3,6 +3,10 @@ package org.arong.db4o;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.arong.egdownloader.model.Picture;
+import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
+
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -14,6 +18,35 @@ import com.db4o.query.Predicate;
  * @since 2014-05-23
  */
 public final class Db4oTemplate {
+	
+	public static void main(String[] args) {
+		//打开db4o级联
+		EmbeddedConfiguration conf=Db4oEmbedded.newConfiguration();
+		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnUpdate(true);
+		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnDelete(true);
+		List<Task> tasks = query(Task.class, ComponentConst.TASK_DATA_PATH);
+		for (Task task : tasks) {
+			System.out.println("id:" + task.getId());
+			System.out.println("name:" + task.getName());
+			System.out.println("saveDir:" + task.getSaveDir());
+			System.out.println("total:" + task.getTotal());
+			System.out.println("current:" + task.getCurrent());
+			System.out.println("url:" + task.getUrl());
+			System.out.println("status:" + task.getStatus().getStatus());
+			System.out.println("---pictures:---");
+			List<Picture> pics = task.getPictures();
+			for (Picture pic : pics) {
+				System.out.println("id:" + pic.getId());
+				System.out.println("name:" + pic.getName());
+				System.out.println("num:" + pic.getNum());
+				System.out.println("url:" + pic.getUrl());
+				System.out.println("realUrl:" + pic.getRealUrl());
+				System.out.println("isCompleted:" + pic.isCompleted());
+				System.out.println("");
+			}
+			System.out.println("");
+		}
+	}
 	
 	private static void cascadeClasses(EmbeddedConfiguration configuration,
 			List<Class<?>> classList) {

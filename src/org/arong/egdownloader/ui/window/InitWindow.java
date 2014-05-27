@@ -13,8 +13,8 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.version.Version;
 
-import com.db4o.Db4o;
-import com.db4o.config.Configuration;
+import com.db4o.Db4oEmbedded;
+import com.db4o.config.EmbeddedConfiguration;
 /**
  * 程序初始化窗口
  * @author 阿荣
@@ -40,9 +40,9 @@ public class InitWindow extends JFrame {
 		this.setVisible(true);
 		textLabel.setForeground(Color.BLUE);
 		//打开db4o级联
-		@SuppressWarnings("deprecation")
-		Configuration conf=Db4o.newConfiguration();
-		conf.objectClass("org.arong.egdownloader.model.Task").cascadeOnUpdate(true);
+		EmbeddedConfiguration conf=Db4oEmbedded.newConfiguration();
+		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnUpdate(true);
+		conf.common().objectClass("org.arong.egdownloader.model.Task").cascadeOnDelete(true);
 		textLabel.setText("读取配置数据");
 		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
 		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();

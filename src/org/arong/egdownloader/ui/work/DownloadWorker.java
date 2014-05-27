@@ -61,12 +61,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						//保存数据
-						final String taskUrl = task.getUrl();
-						Db4oTemplate.update(new Predicate<Task>() {
-							public boolean match(Task task) {
-								return task.getUrl().equals(taskUrl);//更新条件
+						final String picId = pic.getId();
+						Db4oTemplate.update(new Predicate<Picture>() {
+							public boolean match(Picture pic) {
+								return pic.getId().equals(pic);//更新条件
 							}
-						}, task, ComponentConst.TASK_DATA_PATH);
+						}, pic, ComponentConst.TASK_DATA_PATH);
 						table.updateUI();
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成");
 					}catch (Exception e){
