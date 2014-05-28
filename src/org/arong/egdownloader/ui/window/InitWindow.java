@@ -51,7 +51,7 @@ public class InitWindow extends JFrame {
 				public boolean match(Picture pic) {
 					return pic.getTid().equals(task.getId());
 				}
-			}, ComponentConst.TASK_DATA_PATH);
+			}, ComponentConst.PICTURE_DATA_PATH);
 			System.out.println(task);
 			System.out.println("");
 		}

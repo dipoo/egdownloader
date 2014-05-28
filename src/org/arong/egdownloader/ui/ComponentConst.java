@@ -26,6 +26,8 @@ public final class ComponentConst {
 	
 	public final static String TASK_DATA_PATH = "data/task.db";//任务数据保存路径
 	
+	public final static String PICTURE_DATA_PATH = "data/picture.db";//图片数据保存路径
+	
 	public final static String RESOURCES_PATH = "/resources/";
 	
 	public final static String ICON_PATH = RESOURCES_PATH + "icon/";

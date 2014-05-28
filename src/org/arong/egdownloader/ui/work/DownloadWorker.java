@@ -80,7 +80,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							public boolean match(Picture pic_) {
 								return pic_.getId().equals(picId);//更新条件
 							}
-						}, pic, ComponentConst.TASK_DATA_PATH);
+						}, pic, ComponentConst.PICTURE_DATA_PATH);
 						
 						table.updateUI();
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成");

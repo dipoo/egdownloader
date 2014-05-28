@@ -32,6 +32,7 @@ public final class Db4oTemplate {
 			System.out.println("url:" + task.getUrl());
 			System.out.println("status:" + task.getStatus().getStatus());
 			System.out.println("---pictures:---");
+			System.out.println(task);
 			List<Picture> pics = query(new Predicate<Picture>() {
 				public boolean match(Picture pic) {
 					return pic.getTid().equals(task.getId());
@@ -41,7 +42,7 @@ public final class Db4oTemplate {
 				System.out.println(pic);
 			}
 			System.out.println("");
-			List<Picture> pictures = query(Picture.class, ComponentConst.TASK_DATA_PATH);
+			List<Picture> pictures = query(Picture.class, ComponentConst.PICTURE_DATA_PATH);
 			for (Picture picture : pictures) {
 				System.out.println(picture);
 			}
