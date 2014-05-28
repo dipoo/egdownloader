@@ -23,7 +23,7 @@ public final class Db4oTemplate {
 		//打开db4o级联
 		EmbeddedConfiguration conf=Db4oEmbedded.newConfiguration();
 		List<Task> tasks = query(Task.class, ComponentConst.TASK_DATA_PATH);
-		for (Task task : tasks) {
+		for (final Task task : tasks) {
 			System.out.println("id:" + task.getId());
 			System.out.println("name:" + task.getName());
 			System.out.println("saveDir:" + task.getSaveDir());
@@ -32,11 +32,19 @@ public final class Db4oTemplate {
 			System.out.println("url:" + task.getUrl());
 			System.out.println("status:" + task.getStatus().getStatus());
 			System.out.println("---pictures:---");
-			List<Picture> pics = task.pictures;
+			List<Picture> pics = query(new Predicate<Picture>() {
+				public boolean match(Picture pic) {
+					return pic.getTid().equals(task.getId());
+				}
+			}, ComponentConst.TASK_DATA_PATH);
 			for (Picture pic : pics) {
 				System.out.println(pic);
 			}
 			System.out.println("");
+			List<Picture> pictures = query(Picture.class, ComponentConst.TASK_DATA_PATH);
+			for (Picture picture : pictures) {
+				System.out.println(picture);
+			}
 		}
 	}
 	
