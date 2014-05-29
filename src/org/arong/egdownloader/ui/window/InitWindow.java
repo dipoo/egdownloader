@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -41,6 +42,11 @@ public class InitWindow extends JFrame {
 		this.setVisible(true);
 		textLabel.setForeground(Color.BLUE);
 		textLabel.setText("读取配置数据");
+		//检测数据目录是否存在,不存在则创建一个
+		File data_path = new File(ComponentConst.DATA_PATH);
+		if(!data_path.exists()){
+			data_path.mkdirs();
+		}
 		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
 		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
 		textLabel.setForeground(new Color(123,23,89));

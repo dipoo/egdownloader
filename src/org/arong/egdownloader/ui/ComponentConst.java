@@ -22,11 +22,13 @@ public final class ComponentConst {
 	
 	public final static int MARGIN_y = 32;//组件之间垂直间隔
 	
-	public final static String SETTING_DATA_PATH = "data/setting.db";//配置文件保存路径
+	public final static String DATA_PATH = "data";//数据目录
 	
-	public final static String TASK_DATA_PATH = "data/task.db";//任务数据保存路径
+	public final static String SETTING_DATA_PATH = DATA_PATH + "/setting.db";//配置文件保存路径
 	
-	public final static String PICTURE_DATA_PATH = "data/picture.db";//图片数据保存路径
+	public final static String TASK_DATA_PATH = DATA_PATH + "/task.db";//任务数据保存路径
+	
+	public final static String PICTURE_DATA_PATH = DATA_PATH + "/picture.db";//图片数据保存路径
 	
 	public final static String RESOURCES_PATH = "/resources/";
 	
@@ -51,6 +53,8 @@ public final class ComponentConst {
 		SKIN_ICON.put("tool", "_tool.png");
 		SKIN_ICON.put("picture", "_picture.png");
 		SKIN_ICON.put("user", "_user.png");
+		
+		
 	}
 	/*MainWindow内的组件*/
 	//组件的name值
