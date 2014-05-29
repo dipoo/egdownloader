@@ -95,7 +95,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 			update(t);
 		}
 		locked = true;
-		Node node = dom.selectSingleNode("/pictures/picture[id=" + t.getId() + "]");
+		Node node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
 				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
@@ -116,7 +116,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 			delete(t);
 		}
 		locked = true;
-		Node node = dom.selectSingleNode("/pictures/picture[id=" + t.getId() + "]");
+		Node node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
 				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
@@ -146,7 +146,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 
 	public List<Picture> query(Object id) {
 		@SuppressWarnings("unchecked")
-		List<Node> nodes = dom.selectNodes("/pictures/picture[id=" + id.toString() + "]");
+		List<Node> nodes = dom.selectNodes("/pictures/picture[@id='" + id.toString() + "']");
 		if(nodes != null && nodes.size() > 0){
 			List<Picture> pics = new ArrayList<Picture>();
 			for (Node node : nodes) {
@@ -158,7 +158,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	}
 
 	public Picture get(Object id) {
-		Node node = dom.selectSingleNode("/pictures/picture[id=" + id.toString() + "]");
+		Node node = dom.selectSingleNode("/pictures/picture[@id='" + id.toString() + "']");
 		if(node != null){
 			return node2Picture(node);
 		}
@@ -166,7 +166,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	}
 	
 	public boolean exsits(String name, String value) {
-		Node node = dom.selectSingleNode("/pictures/picture[" + name + "=" + value + "]");
+		Node node = dom.selectSingleNode("/pictures/picture[@" + name + "='" + value + "']");
 		if(node != null){
 			return true;
 		}
@@ -208,7 +208,8 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 
 	public static void main(String[] args) {
 		PictureDom4jDbTemplate picTemplate = new PictureDom4jDbTemplate();
-		picTemplate.query();
+		Picture pic = picTemplate.get("c834e3c9-7dbb-4cb6-818a-6939753b40bc");
+		System.out.println(pic);
 	}
 	
 }

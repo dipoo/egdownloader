@@ -96,7 +96,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 			update(t);
 		}
 		locked = true;
-		Node node = dom.selectSingleNode("/tasks/task[id=" + t.getId() + "]");
+		Node node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
 				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
@@ -117,7 +117,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 			delete(t);
 		}
 		locked = true;
-		Node node = dom.selectSingleNode("/tasks/task[id=" + t.getId() + "]");
+		Node node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
 				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
@@ -147,7 +147,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 
 	public List<Task> query(Object id) {
 		@SuppressWarnings("unchecked")
-		List<Node> nodes = dom.selectNodes("/tasks/task[id=" + id.toString() + "]");
+		List<Node> nodes = dom.selectNodes("/tasks/task[@id='" + id.toString() + "']");
 		if(nodes != null && nodes.size() > 0){
 			List<Task> tasks = new ArrayList<Task>();
 			for (Node node : nodes) {
@@ -159,7 +159,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	}
 
 	public Task get(Object id) {
-		Node node = dom.selectSingleNode("/tasks/task[id=" + id.toString() + "]");
+		Node node = dom.selectSingleNode("/tasks/task[@id='" + id.toString() + "']");
 		if(node != null){
 			return node2Task(node);
 		}
@@ -167,7 +167,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	}
 
 	public boolean exsits(String name, String value) {
-		Node node = dom.selectSingleNode("/tasks/task[" + name + "=" + value + "]");
+		Node node = dom.selectSingleNode("/tasks/task[@" + name + "='" + value + "']");
 		if(node != null){
 			return true;
 		}
@@ -201,8 +201,10 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setTotal(ele.attributeValue("total") == null ? 0 : Integer.parseInt(ele.attributeValue("total")));
 		task.setCurrent(ele.attributeValue("current") == null ? 0 : Integer.parseInt(ele.attributeValue("current")));
 		task.setSize(ele.attributeValue("size") == null ? 0 : Integer.parseInt(ele.attributeValue("size")));
-		task.setStatus(TaskStatus.valueOf(ele.attributeValue("status")));
+		task.setStatus(TaskStatus.parseTaskStatus(ele.attributeValue("status")));
 		return task;
 	}
-
+	public static void main(String[] args) {
+		System.out.println(TaskStatus.parseTaskStatus("未开始"));
+	}
 }
