@@ -36,12 +36,12 @@ public class InitWindow extends JFrame {
 		this.setUndecorated(true);//去掉标题
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		textLabel = new AJLabel("程序初始化",Color.BLUE,0,10,300,30);
+		textLabel = new AJLabel("程序初始化",new Color(123,23,89),0,10,300,30);
 		textLabel.setHorizontalAlignment(JLabel.CENTER);
 		this.getContentPane().add(textLabel);
 		this.setVisible(true);
-		textLabel.setForeground(Color.BLUE);
-		textLabel.setText("读取配置数据");
+		textLabel.setForeground(new Color(123,23,89));
+		textLabel.setText("1、读取配置数据");
 		//检测数据目录是否存在,不存在则创建一个
 		File data_path = new File(ComponentConst.DATA_PATH);
 		if(!data_path.exists()){
@@ -50,7 +50,7 @@ public class InitWindow extends JFrame {
 		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
 		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
 		textLabel.setForeground(new Color(123,23,89));
-		textLabel.setText("读取任务列表");
+		textLabel.setText("2、读取任务列表");
 		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
 		for (final Task task : tasks) {
 			task.pictures = Db4oTemplate.query(new Predicate<Picture>() {
