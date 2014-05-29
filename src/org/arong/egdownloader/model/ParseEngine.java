@@ -15,8 +15,6 @@ import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.util.FileUtil;
 
-import com.db4o.query.Predicate;
-
 /**
  * Task分析引擎
  * @author 阿荣

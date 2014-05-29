@@ -51,6 +51,10 @@ public class DeleteTaskWork implements IListenerTask {
 			}
 			table.clearSelection();//使之不选中任何行
 			table.updateUI();//刷新表格
+			if(table.getTasks().size() == 0){
+				mainWindow.tablePane.setVisible(false);//将任务panel隐藏
+				mainWindow.emptyTableTips.setVisible(true);//将控任务label显示
+			}
 			mainWindow.setVisible(true);
 		}
 		

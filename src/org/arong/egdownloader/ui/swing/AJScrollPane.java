@@ -50,4 +50,10 @@ public class AJScrollPane extends JScrollPane {
 			this.add(component);
 		}
 	}
+	public AJScrollPane(Component... components){
+		for (Component component : components) {
+			this.add(component);
+			component.setVisible(true);
+		}
+	}
 }

@@ -126,10 +126,12 @@ public class AddFormDialog extends JDialog {
 							this_.emptyField();//清空下载地址
 							//关闭form,刷新table
 							this_.dispose();
+							window.tablePane.setVisible(true);//将表格panel显示出来
+							window.emptyTableTips.setVisible(false);//将空任务label隐藏
 							taskTable.updateUI();
 							window.setVisible(true);
 						}
-					} catch (SocketTimeoutException e1){
+					} catch (SocketTimeoutException e){
 						this_.dispose();
 						JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
 					} catch (ConnectTimeoutException e){

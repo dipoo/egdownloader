@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
@@ -27,6 +29,7 @@ import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
+import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
@@ -54,7 +57,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
-	JScrollPane tablePane;
+	public JScrollPane tablePane;
+	public JLabel emptyTableTips;
 	
 	public Setting setting;
 	public List<Task> tasks;
@@ -104,7 +108,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("setting"),
 				menuMouseListener);
-		JMenu toolsMenu = new AJMenu(ComponentConst.TOOLS_MENU_TEXT,
+		JMenu searchMenu = new AJMenu(ComponentConst.TOOLS_MENU_TEXT,
 				ComponentConst.TOOLS_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("tool"),
 				menuMouseListener);
@@ -114,23 +118,28 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, deleteTasksMenu, settingMenu, toolsMenu, aboutMenu);
-
+				newTaskMenu, deleteTasksMenu, settingMenu, searchMenu, aboutMenu);
+		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, getWidth() - 20,
 				(tasks == null ? 0 :tasks.size()) * 28, tasks, this);
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
-		tablePane.getViewport().setBackground(Color.WHITE);
-		
+		tablePane.getViewport().setBackground(new Color(254,254,254));
 		AJMenu deletePopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("tool"), new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(deletePopupMenuItem);
-		
+		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
+		emptyTableTips.setBounds(0, 160, 640, 100);
+		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu);
-
+		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyTableTips);
+		if(tasks == null || tasks.size() == 0){
+			tablePane.setVisible(false);
+		}else{
+			emptyTableTips.setVisible(false);
+		}
 		this.addWindowFocusListener(new WindowFocusListener() {
 			public void windowLostFocus(WindowEvent e) {
 			}
