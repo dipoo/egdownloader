@@ -1,4 +1,4 @@
-package org.arong.egdownloader.db.impl;
+package org.arong.egdownloader.db;
 
 import java.util.List;
 /**
@@ -14,4 +14,5 @@ public interface DbTemplate<T> {
 	public List<T> query();
 	public List<T> query(Object id);
 	public T get(Object id);
+	public boolean exsits(String name, String value);
 }
