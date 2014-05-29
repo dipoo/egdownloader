@@ -1,8 +1,8 @@
 package org.arong.egdownloader.ui.window.form;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.Window;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.ParseEngine;
+import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
@@ -119,7 +119,10 @@ public class AddFormDialog extends JDialog {
 						task = ParseEngine.buildTask(url, saveDir, setting);
 						if(task != null){
 							//保存到数据库
-							Db4oTemplate.store(task, ComponentConst.TASK_DATA_PATH);
+							window.taskDbTemplate.store(task);//保存任务
+							for(Picture pic :task.pictures){//保存图片信息
+								window.pictureDbTemplate.store(pic);
+							}
 							//保存到内存
 							TaskingTable taskTable = (TaskingTable)window.runningTable;
 							taskTable.getTasks().add(task);

@@ -98,10 +98,10 @@ public class WebClient {
 			// 设置请求参数
 			postMethod.setRequestBody(params.toArray(array));
 		}
-		postMethod.setRequestHeader("X-Forwarded-For", "115.239.210.27, 192.168.101.111, 192.168.101.112");
-		postMethod.setRequestHeader("CLIENT_IP", "115.239.210.27");
-		postMethod.setRequestHeader("Proxy-Client-IP", "115.239.210.27");
-		postMethod.setRequestHeader("WL-Proxy-Client-IP", "115.239.210.27");
+		//postMethod.setRequestHeader("X-Forwarded-For", "115.239.210.27, 192.168.101.111, 192.168.101.112");
+		//postMethod.setRequestHeader("CLIENT_IP", "115.239.210.27");
+		//postMethod.setRequestHeader("Proxy-Client-IP", "115.239.210.27");
+		//postMethod.setRequestHeader("WL-Proxy-Client-IP", "115.239.210.27");
 		//设置cookie
 		if(cookieInfo != null){
 			postMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);

@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.spider.Spider;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.util.FileUtil;
 
 /**
@@ -142,7 +140,6 @@ public final class ParseEngine {
 			picture.setTid(task.getId());
 			picture.setId(UUID.randomUUID().toString());
 			picture.setName(rowInfos[2]);
-			Db4oTemplate.store(picture, ComponentConst.PICTURE_DATA_PATH);
 			pictures.add(picture);
 		}
 		return pictures;

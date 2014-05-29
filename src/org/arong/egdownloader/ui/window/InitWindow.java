@@ -8,14 +8,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.arong.db4o.Db4oTemplate;
+import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.version.Version;
-
-import com.db4o.query.Predicate;
 /**
  * 程序初始化窗口
  * @author 阿荣
@@ -27,7 +28,6 @@ public class InitWindow extends JFrame {
 	
 	private JLabel textLabel;
 	
-	@SuppressWarnings("serial")
 	public InitWindow(){
 		super(Version.NAME + "初始化");
 		this.setSize(300, 100);
@@ -51,17 +51,18 @@ public class InitWindow extends JFrame {
 		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
 		textLabel.setForeground(new Color(123,23,89));
 		textLabel.setText("2、读取任务列表");
-		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
-		for (final Task task : tasks) {
-			task.pictures = Db4oTemplate.query(new Predicate<Picture>() {
-				public boolean match(Picture pic) {
-					return pic.getTid().equals(task.getId());
-				}
-			}, ComponentConst.PICTURE_DATA_PATH);
-			System.out.println(task);
-			System.out.println("");
+		DbTemplate<Task> taskDbTemplate = new TaskDom4jDbTemplate();
+		DbTemplate<Picture> pictureDbTemplate = new PictureDom4jDbTemplate();
+		List<Task> tasks = taskDbTemplate.query();
+//		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
+		if(tasks != null){
+			for (Task task : tasks) {
+				task.pictures = pictureDbTemplate.query();
+				System.out.println(task);
+				System.out.println("");
+			}
 		}
-		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks);
+		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate);
 		textLabel.setText("初始化完成");
 		egDownloaderWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU

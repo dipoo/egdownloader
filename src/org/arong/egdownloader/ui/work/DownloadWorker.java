@@ -11,19 +11,15 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
-
-import com.db4o.query.Predicate;
 /**
  * 下载线程类，执行耗时的下载任务
  * @author 阿荣
@@ -47,7 +43,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 		JTable table = ((EgDownloaderWindow)mainWindow).runningTable;
 		InputStream is;
-		final String taskId = task.getId();
 		if(pics.size() != 0){
 			for(int i = 0; i < pics.size(); i ++){
 				pic = pics.get(i);
@@ -75,12 +70,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						//保存数据
 						if(this.isCancelled())//是否暂停
 							return null;
-						final String picId = pic.getId();
-						Db4oTemplate.update(new Predicate<Picture>() {
-							public boolean match(Picture pic_) {
-								return pic_.getId().equals(picId);//更新条件
-							}
-						}, pic, ComponentConst.PICTURE_DATA_PATH);
+						//更新图片信息
+						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
 						
 						table.updateUI();
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成");
@@ -111,11 +102,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		}else{
 			//设置任务状态为已完成
 			task.setStatus(TaskStatus.COMPLETED);
-			Db4oTemplate.update(new Predicate<Task>() {
-				public boolean match(Task task_) {
-					return task_.getId().equals(taskId);//更新条件
-				}
-			}, task, ComponentConst.TASK_DATA_PATH);
+			//更新任务到文件
+			((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 		}
 		return null;
 	}

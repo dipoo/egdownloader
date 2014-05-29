@@ -22,6 +22,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -62,9 +64,13 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	
 	public Setting setting;
 	public List<Task> tasks;
+	
+	public DbTemplate<Task> taskDbTemplate;
+	public DbTemplate<Picture> pictureDbTemplate;
 
-	public EgDownloaderWindow(Setting setting, List<Task> tasks) {
-		
+	public EgDownloaderWindow(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate) {
+		this.taskDbTemplate = taskDbTemplate;
+		this.pictureDbTemplate = pictureDbTemplate;
 		//加载配置数据
 		this.setting = setting;
 		//加载任务列表

@@ -17,4 +17,18 @@ public enum TaskStatus {
 	private TaskStatus(String status){
 		this.status = status;
 	}
+	public static TaskStatus parseTaskStatus(String status){
+		if(TaskStatus.UNSTARTED.getStatus().equals(status)){
+			return TaskStatus.UNSTARTED;
+		}else if(TaskStatus.STOPED.getStatus().equals(status)){
+			return TaskStatus.STOPED;
+		}else if(TaskStatus.STARTED.getStatus().equals(status)){
+			return TaskStatus.STARTED;
+		}else if(TaskStatus.COMPLETED.getStatus().equals(status)){
+			return TaskStatus.COMPLETED;
+		}else if(TaskStatus.DELETED.getStatus().equals(status)){
+			return TaskStatus.DELETED;
+		}
+		return null;
+	}
 }
