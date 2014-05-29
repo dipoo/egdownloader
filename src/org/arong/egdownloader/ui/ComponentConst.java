@@ -30,6 +30,12 @@ public final class ComponentConst {
 	
 	public final static String PICTURE_DATA_PATH = DATA_PATH + "/picture.db";//图片数据保存路径
 	
+	public final static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
+	
+	public final static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
+	
+	public final static String PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
+	
 	public final static String RESOURCES_PATH = "/resources/";
 	
 	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
