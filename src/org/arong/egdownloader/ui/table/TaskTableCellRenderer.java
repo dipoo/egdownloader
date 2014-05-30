@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -38,7 +39,6 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else{
 			fontColor = Color.DARK_GRAY;
 		}
-		
 		if(column == 0){//第一列：图标
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(30);
@@ -62,7 +62,10 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(70);
 			tc.setMaxWidth(80);
-			return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", fontColor, font, JLabel.LEFT);
+			//return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", fontColor, font, JLabel.LEFT);
+			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 1).toString()));
+			bar.setValue(Integer.parseInt(value.toString()));
+			return bar;
 		}/*else if(column == 4){//第五列：大小
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(60);
