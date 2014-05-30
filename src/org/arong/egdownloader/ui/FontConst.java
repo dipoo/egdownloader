@@ -7,7 +7,7 @@ package org.arong.egdownloader.ui;
 public class FontConst {
 	public static String[] DEFAULT_FONT = new String[] { "Table.font",
 		"TableHeader.font", "CheckBox.font", "Tree.font", "Viewport.font",
-		"ProgressBar.font", "RadioButtonMenuItem.font",
+		/*"ProgressBar.font",*/ "RadioButtonMenuItem.font",
 		"ToolBar.font",
 		"ColorChooser.font",
 		"ToggleButton.font",

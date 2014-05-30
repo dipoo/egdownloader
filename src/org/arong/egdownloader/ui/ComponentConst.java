@@ -14,7 +14,7 @@ import org.arong.egdownloader.version.Version;
  *
  */
 public final class ComponentConst {
-	public final static int CLIENT_WIDTH = 640;//主窗口宽
+	public final static int CLIENT_WIDTH = 800;//主窗口宽
 	
 	public final static int CLIENT_HEIGHT = 480;//主窗口高
 	

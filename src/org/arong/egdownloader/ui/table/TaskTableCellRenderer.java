@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.math.BigDecimal;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -30,6 +31,8 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 	private Color startedColor;
 	private Color stopedColor;
 	private Color completedColor;
+	private Color progressBarBg = Color.WHITE;
+	private Color progressBarBorder = new Color(51,153,255);
 	private Font font = new Font("微软雅黑", Font.PLAIN, 11);
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
@@ -46,10 +49,10 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
 		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(400);
-			tc.setMaxWidth(450);
-			if(value != null && value.toString().length() > 55){
-				JLabel nameLabel = new AJLabel(value.toString().substring(0, 55) + " ......", fontColor, font, JLabel.LEFT);
+			tc.setPreferredWidth(540);
+			tc.setMaxWidth(540);
+			if(value != null && value.toString().length() > 70){
+				JLabel nameLabel = new AJLabel(value.toString().substring(0, 70) + " ......", fontColor, font, JLabel.LEFT);
 				nameLabel.setToolTipText(value.toString());//设置鼠标移过提示
 				return nameLabel;
 			}
@@ -60,36 +63,34 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			//return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("picture"), fontColor, JLabel.LEFT);
 		}else if(column == 3){//第四列：进度
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(70);
-			tc.setMaxWidth(80);
-			//return new AJLabel(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, 2)) + ")", fontColor, font, JLabel.LEFT);
+			tc.setPreferredWidth(120);
+			tc.setMaxWidth(140);
 			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 1).toString()));
+			bar.setBackground(progressBarBg);
+			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 1)) + ")");
+			bar.setStringPainted(true);
+			bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
 			bar.setValue(Integer.parseInt(value.toString()));
 			return bar;
-		}/*else if(column == 4){//第五列：大小
-			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(60);
-			tc.setMaxWidth(80);
-			//return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("size"), fontColor, JLabel.LEFT);
-		}*/else if(column == 4){//第六列：状态
+		}else if(column == 4){//第五列：状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  40 : 62);
 			tc.setMaxWidth(80);
 			if(value.toString().equals(TaskStatus.UNSTARTED.getStatus())){
 				if(unstartedColor == null) unstartedColor = new Color(95,57,45);
-				return new AJLabel(value.toString(), unstartedColor, font, JLabel.LEFT);
+				return new AJLabel(value.toString(), unstartedColor, font, JLabel.CENTER);
 			}
 			if(value.toString().equals(TaskStatus.STARTED.getStatus())){
 				if(startedColor == null) startedColor = new Color(65,146,225);
-				return new AJLabel(value.toString(), startedColor, font, JLabel.LEFT);
+				return new AJLabel(value.toString(), startedColor, font, JLabel.CENTER);
 			}
 			if(value.toString().equals(TaskStatus.STOPED.getStatus())){
 				if(stopedColor == null) stopedColor = new Color(0,1,89);
-				return new AJLabel(value.toString(), stopedColor, font, JLabel.LEFT);
+				return new AJLabel(value.toString(), stopedColor, font, JLabel.CENTER);
 			}
 			if(value.toString().equals(TaskStatus.COMPLETED.getStatus())){
 				if(completedColor == null) completedColor = new Color(65,145,65);
-				return new AJLabel(value.toString(), completedColor, font, JLabel.LEFT);
+				return new AJLabel(value.toString(), completedColor, font, JLabel.CENTER);
 			}
 		}
 		return new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);
@@ -97,6 +98,6 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 	
 	private String getSchedule(Object current, Object total){
 		Double d = Double.parseDouble(current.toString()) / Double.parseDouble(total.toString()) * 100;
-		return new BigDecimal(d).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%";
+		return d > 100 ? "100.0%" : new BigDecimal(d).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%";
 	}
 }

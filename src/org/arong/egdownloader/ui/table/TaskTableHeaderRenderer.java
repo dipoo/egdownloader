@@ -20,14 +20,14 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		switch (column){
-			case 0: 
+			case 0://数目
 				return new AJLabel(table.getRowCount() + "", null, color, JLabel.CENTER);
-			case 2:	
+			case 2://图片数
 				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
-			/*case 3:
-				return new AJLabel(value.toString(), null, color, JLabel.LEFT);*/
-			case 3:
-				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
+			case 3://下载进度
+				return new AJLabel(value.toString(), null, color, JLabel.CENTER);
+			case 4://状态
+				return new AJLabel(value.toString(), null, color, JLabel.CENTER);	
 			default:
 				return new AJLabel(value.toString(), color);
 		}

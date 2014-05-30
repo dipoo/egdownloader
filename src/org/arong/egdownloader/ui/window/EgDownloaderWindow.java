@@ -127,17 +127,17 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				newTaskMenu, deleteTasksMenu, settingMenu, searchMenu, aboutMenu);
 		
 		// 正在下载table
-		runningTable = new TaskingTable(5, 40, getWidth() - 20,
+		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
 				(tasks == null ? 0 :tasks.size()) * 28, tasks, this);
 		tablePane = new JScrollPane(runningTable);
-		tablePane.setBounds(new Rectangle(5, 40, 620, 400));
+		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
 		AJMenu deletePopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("tool"), new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(deletePopupMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
-		emptyTableTips.setBounds(0, 160, 640, 100);
+		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		// 添加各个子组件
 		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyTableTips);
