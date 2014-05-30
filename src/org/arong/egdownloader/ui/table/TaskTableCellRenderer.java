@@ -51,8 +51,8 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(540);
 			tc.setMaxWidth(540);
-			if(value != null && value.toString().length() > 70){
-				JLabel nameLabel = new AJLabel(value.toString().substring(0, 70) + " ......", fontColor, font, JLabel.LEFT);
+			if(value != null && value.toString().length() > 80){
+				JLabel nameLabel = new AJLabel(value.toString().substring(0, 80) + " ......", fontColor, font, JLabel.LEFT);
 				nameLabel.setToolTipText(value.toString());//设置鼠标移过提示
 				return nameLabel;
 			}
