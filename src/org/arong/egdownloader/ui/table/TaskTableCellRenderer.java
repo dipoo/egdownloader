@@ -49,7 +49,9 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setPreferredWidth(400);
 			tc.setMaxWidth(450);
 			if(value != null && value.toString().length() > 55){
-				return new AJLabel(value.toString().substring(0, 55) + " ......", fontColor, font, JLabel.LEFT);
+				JLabel nameLabel = new AJLabel(value.toString().substring(0, 55) + " ......", fontColor, font, JLabel.LEFT);
+				nameLabel.setToolTipText(value.toString());//设置鼠标移过提示
+				return nameLabel;
 			}
 		}else if(column == 2){//第三列：图片总数
 			TableColumn tc = table.getColumnModel().getColumn(column);
