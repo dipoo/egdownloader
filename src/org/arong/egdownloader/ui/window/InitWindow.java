@@ -54,12 +54,9 @@ public class InitWindow extends JFrame {
 		DbTemplate<Task> taskDbTemplate = new TaskDom4jDbTemplate();
 		DbTemplate<Picture> pictureDbTemplate = new PictureDom4jDbTemplate();
 		List<Task> tasks = taskDbTemplate.query();
-//		List<Task> tasks = Db4oTemplate.query(Task.class, ComponentConst.TASK_DATA_PATH);
 		if(tasks != null){
 			for (Task task : tasks) {
 				task.pictures = pictureDbTemplate.query();
-				System.out.println(task);
-				System.out.println("");
 			}
 		}
 		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate);

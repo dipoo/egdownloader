@@ -26,26 +26,24 @@ public class TaskingTable extends JTable {
 	private static final long serialVersionUID = 8917533573337061263L;
 	private List<Task> tasks;
 	private EgDownloaderWindow mainWindow;
-	private TableModel tableModel;
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		this.tasks = (tasks == null ? new ArrayList<Task>() : tasks);
-		this.tableModel = new TaskTableModel(this.tasks);
+		
 		if(this.tasks.size() > ComponentConst.MAX_TASK_PAGE){
 			height = ComponentConst.MAX_TASK_PAGE * 25;
 		}
 		this.setBounds(x, y, width, height);
 //		this.setShowGrid(true);//显示单元格边框
-//		this.setCellSelectionEnabled(true);//选择单元格
-		this.setRowMargin(10);
+//		this.setCellSelectionEnabled(false);//选择单元格
 		this.setCursor(CursorManager.getPointerCursor());//光标变手型
 		this.getTableHeader().setReorderingAllowed(false);//不可移动列
 		this.setBackground(Color.WHITE);
 		
 //		this.setOpaque(false);//设为透明
-		
-		this.setModel(this.tableModel);//设置数据模型
+		TableModel tableModel = new TaskTableModel(this.tasks);
+		this.setModel(tableModel);//设置数据模型
 		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, renderer);//设置渲染器
@@ -99,14 +97,6 @@ public class TaskingTable extends JTable {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
-	}
-
-	public TableModel getTableModel() {
-		return tableModel;
-	}
-
-	public void setTableModel(TableModel tableModel) {
-		this.tableModel = tableModel;
 	}
 
 	public EgDownloaderWindow getMainWindow() {

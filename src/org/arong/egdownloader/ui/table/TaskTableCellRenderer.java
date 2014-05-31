@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.math.BigDecimal;
 
@@ -32,8 +33,9 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 	private Color stopedColor;
 	private Color completedColor;
 	private Color progressBarBg = Color.WHITE;
-	private Color progressBarBorder = new Color(51,153,255);
+	private Color progressBarBorder = new Color(47,110,178);
 	private Font font = new Font("微软雅黑", Font.PLAIN, 11);
+	private Font blodFont = new Font("微软雅黑", Font.BOLD, 11);
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
@@ -60,15 +62,20 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(60);
 			tc.setMaxWidth(80);
-			//return new AJLabel(value.toString(), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("picture"), fontColor, JLabel.LEFT);
+			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
 		}else if(column == 3){//第四列：进度
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(120);
 			tc.setMaxWidth(140);
+			if(value == null || Integer.parseInt(value.toString()) == 0){
+				return new AJLabel("0(0.0%)", fontColor, blodFont, JLabel.CENTER);
+			}
 			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 1).toString()));
 			bar.setBackground(progressBarBg);
 			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 1)) + ")");
 			bar.setStringPainted(true);
+			bar.setFont(blodFont);bar.setPreferredSize(new Dimension(110, 13));
+			bar.setForeground(progressBarBorder);
 			bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
 			bar.setValue(Integer.parseInt(value.toString()));
 			return bar;
@@ -78,19 +85,19 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setMaxWidth(80);
 			if(value.toString().equals(TaskStatus.UNSTARTED.getStatus())){
 				if(unstartedColor == null) unstartedColor = new Color(95,57,45);
-				return new AJLabel(value.toString(), unstartedColor, font, JLabel.CENTER);
+				return new AJLabel(value.toString(), unstartedColor, blodFont, JLabel.CENTER);
 			}
 			if(value.toString().equals(TaskStatus.STARTED.getStatus())){
 				if(startedColor == null) startedColor = new Color(65,146,225);
-				return new AJLabel(value.toString(), startedColor, font, JLabel.CENTER);
+				return new AJLabel(value.toString(), startedColor, blodFont, JLabel.CENTER);
 			}
 			if(value.toString().equals(TaskStatus.STOPED.getStatus())){
 				if(stopedColor == null) stopedColor = new Color(0,1,89);
-				return new AJLabel(value.toString(), stopedColor, font, JLabel.CENTER);
+				return new AJLabel(value.toString(), stopedColor, blodFont, JLabel.CENTER);
 			}
 			if(value.toString().equals(TaskStatus.COMPLETED.getStatus())){
 				if(completedColor == null) completedColor = new Color(65,145,65);
-				return new AJLabel(value.toString(), completedColor, font, JLabel.CENTER);
+				return new AJLabel(value.toString(), completedColor, blodFont, JLabel.CENTER);
 			}
 		}
 		return new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);

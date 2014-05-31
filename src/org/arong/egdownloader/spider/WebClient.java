@@ -38,7 +38,7 @@ public class WebClient {
 		cookie += "ipb_member_id=1059070;";
 		cookie += "ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
 		String s;
-		s = postRequestWithCookie("http://exhentai.org/hathdler.php?gid=446779&t=553f5c4086", cookie);
+		s = postRequestWithCookie("http://exhentai.org/", cookie);
 		System.out.println(s);
 		
 	}

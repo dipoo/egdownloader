@@ -145,8 +145,6 @@ public class AddFormDialog extends JDialog {
 					} catch (WebClientException e) {
 						e.printStackTrace();
 					}
-					
-					
 				}
 			}
 		}), (this.getWidth() - 100) / 2, 130, 100, 30);
