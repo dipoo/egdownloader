@@ -85,12 +85,14 @@ public class Task {
 	public void setStatus(TaskStatus status) {
 		this.status = status;
 	}
+	
 	public String toString() {
-		return "Task [url=" + url + ", name=" + name + ", saveDir=" + saveDir
-				+ ", createTime=" + createTime + ", completedTime="
-				+ completedTime + ", total=" + total + ", current=" + current
-				+ ", size=" + size + ", status=" + status + ", pictures="
-				+ pictures + "]";
+		return "Task [id=" + id + ", url=" + url + ", name=" + name
+				+ ", saveDir=" + saveDir + ", createTime=" + createTime
+				+ ", completedTime=" + completedTime + ", total=" + total
+				+ ", current=" + current + ", size=" + size + ", status="
+				+ status + ", downloadWorker="
+				+ downloadWorker + ", pictures=" + pictures + "]";
 	}
 
 	public String getId() {

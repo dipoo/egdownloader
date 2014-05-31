@@ -156,6 +156,19 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		}
 		return null;
 	}
+	
+	public List<Picture> query(String name, String value) {
+		@SuppressWarnings("unchecked")
+		List<Node> nodes = dom.selectNodes("/pictures/picture[@" + name + "='" + value + "']");
+		List<Picture> pics = null;
+		if(nodes != null && nodes.size() > 0){
+			pics = new ArrayList<Picture>();
+			for (Node node : nodes) {
+				pics.add(node2Picture(node));
+			}
+		}
+		return pics;
+	}
 
 	public Picture get(Object id) {
 		Node node = dom.selectSingleNode("/pictures/picture[@id='" + id.toString() + "']");
@@ -211,5 +224,5 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		Picture pic = picTemplate.get("c834e3c9-7dbb-4cb6-818a-6939753b40bc");
 		System.out.println(pic);
 	}
-	
+
 }

@@ -2,7 +2,6 @@ package org.arong.egdownloader.ui;
 
 import java.awt.Font;
 
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.arong.egdownloader.ui.window.InitWindow;
@@ -28,12 +27,12 @@ public class Main {
 		} catch (Exception e) {
 
 		}
-		//new InitWindow();
+		new InitWindow();
 		// 异步执行
-		SwingUtilities.invokeLater(new Runnable() {
+		/*SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new InitWindow();
 			}
-		});
+		});*/
 	}
 }

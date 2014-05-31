@@ -157,6 +157,19 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		}
 		return null;
 	}
+	
+	public List<Task> query(String name, String value) {
+		@SuppressWarnings("unchecked")
+		List<Node> nodes = dom.selectNodes("/tasks/task[@" + name + "='" + value + "']");
+		List<Task> tasks = null;
+		if(nodes != null && nodes.size() > 0){
+			tasks = new ArrayList<Task>();
+			for (Node node : nodes) {
+				tasks.add(node2Task(node));
+			}
+		}
+		return tasks;
+	}
 
 	public Task get(Object id) {
 		Node node = dom.selectSingleNode("/tasks/task[@id='" + id.toString() + "']");
@@ -207,4 +220,5 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	public static void main(String[] args) {
 		System.out.println(TaskStatus.parseTaskStatus("未开始"));
 	}
+
 }

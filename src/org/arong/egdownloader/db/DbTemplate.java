@@ -13,6 +13,7 @@ public interface DbTemplate<T> {
 	public boolean delete(T t);
 	public List<T> query();
 	public List<T> query(Object id);
+	public List<T> query(String name, String value);
 	public T get(Object id);
 	public boolean exsits(String name, String value);
 }

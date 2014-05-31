@@ -32,7 +32,7 @@ public class DeleteTaskWork implements IListenerTask {
 			for(int i = 0; i < rows.length; i ++){
 				if(table.getTasks().size() >= (rows[i] - i)){
 					task = table.getTasks().get(rows[i] - i);
-					System.out.println("删除：" + task.getName());
+//					System.out.println("删除：" + task.getName());
 					//操作数据库
 					if(task.pictures != null && task.pictures.size() > 0){
 						for(Picture pic : task.pictures){
