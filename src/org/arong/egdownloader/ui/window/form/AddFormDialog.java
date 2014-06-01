@@ -19,7 +19,6 @@ import javax.swing.JTextField;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ParseEngine;
-import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
@@ -119,10 +118,8 @@ public class AddFormDialog extends JDialog {
 						task = ParseEngine.buildTask(url, saveDir, setting);
 						if(task != null){
 							//保存到数据库
+							window.pictureDbTemplate.store(task.pictures);//保存图片信息
 							window.taskDbTemplate.store(task);//保存任务
-							for(Picture pic :task.pictures){//保存图片信息
-								window.pictureDbTemplate.store(pic);
-							}
 							//保存到内存
 							TaskingTable taskTable = (TaskingTable)window.runningTable;
 							taskTable.getTasks().add(task);

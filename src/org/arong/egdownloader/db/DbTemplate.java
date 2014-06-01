@@ -9,6 +9,7 @@ import java.util.List;
  */
 public interface DbTemplate<T> {
 	public boolean store(T t);
+	public boolean store(List<T> list);
 	public boolean update(T t);
 	public boolean delete(T t);
 	public boolean delete(List<T> list);

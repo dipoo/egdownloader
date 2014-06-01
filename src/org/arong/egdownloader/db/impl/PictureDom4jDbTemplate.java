@@ -89,6 +89,28 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		}
 		return true;
 	}
+	
+	public boolean store(List<Picture> pics) {
+		if(pics == null || pics.size() == 0){
+			return false;
+		}
+		while(locked){
+			store(pics);
+		}
+		locked = true;
+		for (Picture t : pics) {
+			Element ele = picture2Element(t);
+			Dom4jUtil.appendElement(dom.getRootElement(), ele);
+		}
+		try {
+			Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+			locked = false;
+		} catch (Exception e) {
+			locked = false;
+			return false;
+		}
+		return true;
+	}
 
 	public boolean update(Picture t) {
 		while(locked){
@@ -132,11 +154,11 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	}
 	
 	public boolean delete(List<Picture> pics) {
-		while(locked){
-			delete(pics);
-		}
 		if(pics == null || pics.size() == 0){
 			return false;
+		}
+		while(locked){
+			delete(pics);
 		}
 		locked = true;
 		Node node = null;

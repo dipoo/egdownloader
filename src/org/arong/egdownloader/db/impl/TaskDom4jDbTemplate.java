@@ -90,6 +90,29 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		}
 		return true;
 	}
+	
+	public boolean store(List<Task> tasks) {
+		if(tasks == null || tasks.size() == 0){
+			return false;
+		}
+		while(locked){
+			store(tasks);
+		}
+		locked = true;
+		for (Task t : tasks) {
+			Element ele = task2Element(t);
+			Dom4jUtil.appendElement(dom.getRootElement(), ele);
+		}
+		
+		try {
+			Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+			locked = false;
+		} catch (Exception e) {
+			locked = false;
+			return false;
+		}
+		return true;
+	}
 
 	public boolean update(Task t) {
 		while(locked){
@@ -133,11 +156,11 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	}
 	
 	public boolean delete(List<Task> tasks) {
-		while(locked){
-			delete(tasks);
-		}
 		if(tasks == null || tasks.size() == 0){
 			return false;
+		}
+		while(locked){
+			delete(tasks);
 		}
 		locked = true;
 		Node node = null;
