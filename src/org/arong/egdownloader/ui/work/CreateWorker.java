@@ -61,18 +61,26 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		} catch (SocketTimeoutException e){
 			window.creatingWindow.dispose();
 			addFormWindow.dispose();
+			window.setEnabled(true);
+			window.setVisible(true);
 			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
 		} catch (ConnectTimeoutException e){
 			window.creatingWindow.dispose();
 			addFormWindow.dispose();
+			window.setEnabled(true);
+			window.setVisible(true);
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
 		} catch (SpiderException e) {
 			window.creatingWindow.dispose();
 			addFormWindow.dispose();
+			window.setEnabled(true);
+			window.setVisible(true);
 			e.printStackTrace();
 		} catch (WebClientException e) {
 			window.creatingWindow.dispose();
 			addFormWindow.dispose();
+			window.setEnabled(true);
+			window.setVisible(true);
 			e.printStackTrace();
 		}
 		return null;
