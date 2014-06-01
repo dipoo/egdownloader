@@ -131,6 +131,37 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		}
 		return false;
 	}
+	
+	public boolean delete(List<Task> tasks) {
+		while(locked){
+			delete(tasks);
+		}
+		if(tasks == null || tasks.size() == 0){
+			return false;
+		}
+		locked = true;
+		Node node = null;
+		boolean delete = false;
+		for (Task t : tasks) {
+			node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
+			if(node != null){
+				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
+				delete = true;
+			}
+		}
+		if(delete){
+			try {
+				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				locked = false;
+				return true;
+			} catch (Exception e) {
+				locked = false;
+				return false;
+			}
+		}
+		locked = false;
+		return false;
+	}
 
 	public List<Task> query() {
 		@SuppressWarnings("unchecked")

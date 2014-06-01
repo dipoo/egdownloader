@@ -2,6 +2,8 @@ package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -29,21 +31,27 @@ public class DeleteTaskWork implements IListenerTask {
 		int option = JOptionPane.showConfirmDialog(null, "确定要删除" + (rows.length > 1 ? "这些" : "这个") + "任务吗");
 		if(option == 0){
 			Task task;
+			List<Picture> pics = new ArrayList<Picture>();
+			List<Task> tasks = new ArrayList<Task>();
 			for(int i = 0; i < rows.length; i ++){
-				if(table.getTasks().size() >= (rows[i] - i)){
-					task = table.getTasks().get(rows[i] - i);
-//					System.out.println("删除：" + task.getName());
-					//操作数据库
+				if(table.getTasks().size() >= (rows[i])){
+					task = table.getTasks().get(rows[i]);
+					tasks.add(task);
+					System.out.println("删除：" + task.getName());
 					if(task.pictures != null && task.pictures.size() > 0){
-						for(Picture pic : task.pictures){
-							mainWindow.pictureDbTemplate.delete(pic);//删除图片信息
-						}
+						pics.addAll(task.pictures);
 					}
-					mainWindow.taskDbTemplate.delete(task);//删除任务
-					//更新内存
-					table.getTasks().remove(rows[i] - i);
 				}
 				
+			}
+			//操作数据库
+			if(tasks.size() > 0){
+				if(pics.size() > 0){
+					mainWindow.pictureDbTemplate.delete(pics);//删除图片信息
+				}
+				mainWindow.taskDbTemplate.delete(tasks);//删除任务
+				//更新内存
+				table.getTasks().removeAll(tasks);
 			}
 			table.clearSelection();//使之不选中任何行
 			table.updateUI();//刷新表格

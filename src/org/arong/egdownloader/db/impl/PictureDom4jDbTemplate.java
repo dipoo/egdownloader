@@ -130,6 +130,37 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		}
 		return false;
 	}
+	
+	public boolean delete(List<Picture> pics) {
+		while(locked){
+			delete(pics);
+		}
+		if(pics == null || pics.size() == 0){
+			return false;
+		}
+		locked = true;
+		Node node = null;
+		boolean delete = false;
+		for (Picture t : pics) {
+			node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
+			if(node != null){
+				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
+				delete = true;
+			}
+		}
+		if(delete){
+			try {
+				Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+				locked = false;
+				return true;
+			} catch (Exception e) {
+				locked = false;
+				return false;
+			}
+		}
+		locked = false;
+		return false;
+	}
 
 	public List<Picture> query() {
 		@SuppressWarnings("unchecked")

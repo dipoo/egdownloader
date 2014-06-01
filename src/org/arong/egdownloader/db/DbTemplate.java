@@ -11,6 +11,7 @@ public interface DbTemplate<T> {
 	public boolean store(T t);
 	public boolean update(T t);
 	public boolean delete(T t);
+	public boolean delete(List<T> list);
 	public List<T> query();
 	public List<T> query(Object id);
 	public List<T> query(String name, String value);
