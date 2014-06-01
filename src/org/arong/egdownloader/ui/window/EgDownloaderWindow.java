@@ -56,7 +56,8 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	public JFrame toolsMenuWindow;
 	public JDialog aboutMenuWindow;
 	public JDialog addFormWindow;
-
+	public JDialog creatingWindow;
+	
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
 	public JScrollPane tablePane;

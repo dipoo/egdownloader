@@ -3,10 +3,9 @@ package org.arong.egdownloader.ui.window.form;
 import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
-import java.net.SocketTimeoutException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,12 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Setting;
-import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.spider.SpiderException;
-import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -30,8 +24,9 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
-import org.arong.egdownloader.ui.table.TaskingTable;
+import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 新建下载任务窗口
@@ -52,7 +47,11 @@ public class AddFormDialog extends JDialog {
 	private JLabel tipLabel;
 	private JFileChooser saveDirChooser;
 	
+	public JFrame mainWindow;
+	
+	
 	public AddFormDialog(final JFrame mainWindow){
+		this.mainWindow = mainWindow;
 		this.setTitle("新建任务");
 		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
 		this.setSize(480, 210);
@@ -60,18 +59,12 @@ public class AddFormDialog extends JDialog {
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setLocationRelativeTo(mainWindow);
-		this.addWindowListener(new WindowListener() {
-			public void windowOpened(WindowEvent e) {}
-			public void windowIconified(WindowEvent e) {}
-			public void windowDeiconified(WindowEvent e) {}
+		this.addWindowListener(new WindowAdapter() {
 			public void windowDeactivated(WindowEvent e) {
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
 			}
-			public void windowClosing(WindowEvent e) {}
-			public void windowClosed(WindowEvent e) {}
-			public void windowActivated(WindowEvent e) {}
 		});
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
@@ -111,37 +104,11 @@ public class AddFormDialog extends JDialog {
 					String url = this_.urlField.getText().trim();
 					String saveDir = this_.saveDirField.getText().trim();
 					//假设url合法:http://exhentai.org/g/446779/553f5c4086/
-					EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
-					Setting setting = window.setting;//获得配置信息
-					Task task = null;
-					try {
-						task = ParseEngine.buildTask(url, saveDir, setting);
-						if(task != null){
-							//保存到数据库
-							window.pictureDbTemplate.store(task.pictures);//保存图片信息
-							window.taskDbTemplate.store(task);//保存任务
-							//保存到内存
-							TaskingTable taskTable = (TaskingTable)window.runningTable;
-							taskTable.getTasks().add(task);
-							this_.emptyField();//清空下载地址
-							//关闭form,刷新table
-							this_.dispose();
-							window.tablePane.setVisible(true);//将表格panel显示出来
-							window.emptyTableTips.setVisible(false);//将空任务label隐藏
-							taskTable.updateUI();
-							window.setVisible(true);
-						}
-					} catch (SocketTimeoutException e){
-						this_.dispose();
-						JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
-					} catch (ConnectTimeoutException e){
-						this_.dispose();
-						JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
-					} catch (SpiderException e) {
-						e.printStackTrace();
-					} catch (WebClientException e) {
-						e.printStackTrace();
+					if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
+						((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
 					}
+					CreateWorker worker = new CreateWorker(url, saveDir, mainWindow);
+					worker.execute();
 				}
 			}
 		}), (this.getWidth() - 100) / 2, 130, 100, 30);
