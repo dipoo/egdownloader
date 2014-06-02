@@ -134,6 +134,38 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		}
 		return false;
 	}
+	
+	public boolean update(List<Task> tasks) {
+		if(tasks == null || tasks.size() == 0){
+			return false;
+		}
+		while(locked){
+			update(tasks);
+		}
+		locked = true;
+		Node node = null;
+		boolean update = false;
+		for (Task t : tasks) {
+			node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
+			if(node != null){
+				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil.appendElement(dom.getRootElement(), task2Element(t));
+				update = true;
+			}
+		}
+		if(update){
+			try {
+				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				locked = false;
+				return true;
+			} catch (Exception e) {
+				locked = false;
+				return false;
+			}
+		}
+		locked = false;
+		return false;
+	}
 
 	public boolean delete(Task t) {
 		while(locked){
@@ -271,8 +303,4 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setStatus(TaskStatus.parseTaskStatus(ele.attributeValue("status")));
 		return task;
 	}
-	public static void main(String[] args) {
-		System.out.println(TaskStatus.parseTaskStatus("未开始"));
-	}
-
 }

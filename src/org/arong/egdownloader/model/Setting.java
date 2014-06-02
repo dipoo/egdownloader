@@ -1,10 +1,14 @@
 package org.arong.egdownloader.model;
+
+import java.util.UUID;
+
 /**
  * 采集配置信息
  * @author 阿荣
  * @since 2014-05-25
  */
 public class Setting {
+	private String id = UUID.randomUUID().toString();
 	private String defaultSaveDir = System.getProperty("user.dir") + "\\egdownloaderSave";//默认保存路劲
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
 	private String gidPrefix = "/g/";//url地址中获取gid值的前缀
@@ -134,5 +138,11 @@ public class Setting {
 				+ ", showPicPrefix=" + showPicPrefix + ", showPicSuffix="
 				+ showPicSuffix + ", realUrlPrefix=" + realUrlPrefix
 				+ ", realUrlSuffix=" + realUrlSuffix + "]";
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 }

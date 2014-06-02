@@ -132,6 +132,10 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		}
 		return false;
 	}
+	
+	public boolean update(List<Picture> t) {
+		return false;
+	}
 
 	public boolean delete(Picture t) {
 		while(locked){
@@ -270,12 +274,6 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		pic.setRunning("true".equals(ele.attributeValue("isRunning")) ? true : false);
 		pic.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
 		return pic;
-	}
-
-	public static void main(String[] args) {
-		PictureDom4jDbTemplate picTemplate = new PictureDom4jDbTemplate();
-		Picture pic = picTemplate.get("c834e3c9-7dbb-4cb6-818a-6939753b40bc");
-		System.out.println(pic);
 	}
 
 }

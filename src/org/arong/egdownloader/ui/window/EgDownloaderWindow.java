@@ -4,12 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -48,7 +46,7 @@ import org.arong.egdownloader.version.Version;
  * @author 阿荣
  * @since 2014-05-21
  */
-public class EgDownloaderWindow extends JFrame implements ActionListener {
+public class EgDownloaderWindow extends JFrame {
 
 	private static final long serialVersionUID = 8904976570969033245L;
 	
@@ -68,10 +66,12 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 	
 	public DbTemplate<Task> taskDbTemplate;
 	public DbTemplate<Picture> pictureDbTemplate;
+	public DbTemplate<Setting> settingDbTemplate;
 
-	public EgDownloaderWindow(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate) {
+	public EgDownloaderWindow(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
 		this.taskDbTemplate = taskDbTemplate;
 		this.pictureDbTemplate = pictureDbTemplate;
+		this.settingDbTemplate = settingDbTemplate;
 		//加载配置数据
 		this.setting = setting;
 		//加载任务列表
@@ -147,10 +147,7 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 		}else{
 			emptyTableTips.setVisible(false);
 		}
-		this.addWindowFocusListener(new WindowFocusListener() {
-			public void windowLostFocus(WindowEvent e) {
-			}
-
+		this.addWindowFocusListener(new WindowAdapter() {
 			public void windowGainedFocus(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				if (window.addFormWindow != null) {
@@ -164,9 +161,15 @@ public class EgDownloaderWindow extends JFrame implements ActionListener {
 				}
 			}
 		});
-	}
-
-	public void actionPerformed(ActionEvent e) {
-
+		//关闭监听
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
+				//保存数据
+//				window.settingDbTemplate.update(window.setting);
+				window.taskDbTemplate.update(window.tasks);
+				System.exit(0);
+			}
+		});
 	}
 }

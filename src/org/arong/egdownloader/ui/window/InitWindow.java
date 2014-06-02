@@ -7,9 +7,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import org.arong.db4o.Db4oTemplate;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
@@ -47,8 +47,9 @@ public class InitWindow extends JFrame {
 		if(!data_path.exists()){
 			data_path.mkdirs();
 		}
-		List<Setting> settings = Db4oTemplate.query(Setting.class, ComponentConst.SETTING_DATA_PATH);
-		Setting setting = settings.size() > 0 ? settings.get(0) : new Setting();
+		DbTemplate<Setting> settingDbTemplate = new SettingDom4jDbTemplate();
+		List<Setting> settings = settingDbTemplate.query();
+		Setting setting = settings != null && settings.size() > 0 ? settings.get(0) : new Setting();
 		textLabel.setForeground(new Color(123,23,89));
 		textLabel.setText("2、读取任务列表");
 		DbTemplate<Task> taskDbTemplate = new TaskDom4jDbTemplate();
@@ -59,7 +60,7 @@ public class InitWindow extends JFrame {
 				task.pictures = pictureDbTemplate.query("tid", task.getId());
 			}
 		}
-		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate);
+		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 		textLabel.setText("初始化完成");
 		egDownloaderWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
