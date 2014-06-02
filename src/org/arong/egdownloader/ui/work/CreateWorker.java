@@ -13,6 +13,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.table.TaskingTable;
+import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 /**
@@ -36,7 +37,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
 		addFormWindow.setVisible(false);
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
-		window.setEnabled(false);
+		window.creatingWindow.toFront();
 		Setting setting = window.setting;//获得配置信息
 		Task task = null;
 		try {
@@ -50,6 +51,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				taskTable.getTasks().add(task);
 				addFormWindow.emptyField();//清空下载地址
 				//关闭form,刷新table
+				((CreatingWindow)(window.creatingWindow)).reset();
 				window.creatingWindow.dispose();
 				addFormWindow.dispose();
 				window.tablePane.setVisible(true);//将表格panel显示出来
@@ -59,29 +61,21 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.setVisible(true);
 			}
 		} catch (SocketTimeoutException e){
+			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
-			addFormWindow.dispose();
-			window.setEnabled(true);
-			window.setVisible(true);
 			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
 		} catch (ConnectTimeoutException e){
+			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
-			addFormWindow.dispose();
-			window.setEnabled(true);
-			window.setVisible(true);
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
 		} catch (SpiderException e) {
+			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
-			addFormWindow.dispose();
-			window.setEnabled(true);
-			window.setVisible(true);
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (WebClientException e) {
+			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
-			addFormWindow.dispose();
-			window.setEnabled(true);
-			window.setVisible(true);
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 		return null;
 	}

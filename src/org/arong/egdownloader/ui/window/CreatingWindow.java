@@ -49,12 +49,20 @@ public class CreatingWindow extends JDialog {
 		});
 		
 		nameLabel = new AJLabel("名称：", Color.BLACK, 10, 5, 380, 20);
-		
+		nameLabel.setVisible(false);
 		totalLabel = new AJLabel("图片：", Color.BLACK, 10, 25, 100, 20);
-		
-		bar = new AJProgressBar(150, 25, 200, 20, 0, 100);
-		
+		totalLabel.setVisible(false);
+		bar = new AJProgressBar(100, 25, 200, 20, 0, 100);
+		bar.setStringPainted(true);
 		ComponentUtil.addComponents(getContentPane(), nameLabel, totalLabel, bar);
+	}
+	
+	public void reset(){
+		nameLabel.setText("名称：");
+		totalLabel.setText("图片：");
+		nameLabel.setVisible(false);
+		totalLabel.setVisible(false);
+		bar.setValue(0);
 	}
 
 }

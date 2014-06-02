@@ -63,6 +63,8 @@ public final class ParseEngine {
 		System.out.println("name:" + name);
 		creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + name);
 		creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + total_);
+		creatingWindow.nameLabel.setVisible(true);
+		creatingWindow.totalLabel.setVisible(true);
 		String fileList = Spider.getTextFromSource(hentaiHomeSource, setting.getFileListPrefix(), setting.getFileListSuffix());
 //		System.out.println(fileList);
 		
