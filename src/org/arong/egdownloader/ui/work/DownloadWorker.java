@@ -59,6 +59,11 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						int size = is.available();
+						if(size < 1000){
+							pic.setRealUrl(null);
+							System.out.println(pic.getName() + ":403");
+							continue;
+						}
 						FileUtil.storeStream(task.getSaveDir() + "name", pic.getName(), is);//保存到目录
 						if(this.isCancelled())//是否暂停
 							return null;

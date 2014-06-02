@@ -65,9 +65,7 @@ public class TaskingTable extends JTable {
 						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
 							task.setStatus(TaskStatus.STARTED);
-							if(task.downloadWorker == null || task.downloadWorker.isCancelled() || task.downloadWorker.getTask() == null){
-								task.downloadWorker = new DownloadWorker(task, table.getMainWindow());
-							}
+							task.downloadWorker = new DownloadWorker(task, table.getMainWindow());
 							task.downloadWorker.execute();
 						}
 						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
@@ -81,7 +79,9 @@ public class TaskingTable extends JTable {
 							}
 						}
 						table.updateUI();
+						System.out.println(task.downloadWorker);
 					}
+					
 				}
 				//右键
 				else if(e.getButton() == MouseEvent.BUTTON3){
