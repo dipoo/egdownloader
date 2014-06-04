@@ -97,12 +97,18 @@ public class EgDownloaderWindow extends JFrame {
 							public void doWork(Window mainWindow, MouseEvent e) {
 								EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
 								this_.setEnabled(false);
-								if (this_.addFormWindow == null) {
-									this_.addFormWindow = new AddFormDialog(
-											this_);
-								} else {
+								if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
+									this_.creatingWindow.setVisible(true);
+									this_.creatingWindow.toFront();
+								}else{
+									if (this_.addFormWindow == null) {
+										this_.addFormWindow = new AddFormDialog(
+												this_);
+									}
 									this_.addFormWindow.setVisible(true);
+									this_.addFormWindow.toFront();
 								}
+								
 							}
 						}));
 		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
@@ -153,17 +159,23 @@ public class EgDownloaderWindow extends JFrame {
 				if (window.aboutMenuWindow != null) {
 					window.aboutMenuWindow.dispose();
 				}
+				if(window.creatingWindow != null && window.creatingWindow.isVisible()){
+					window.creatingWindow.requestFocus();
+				}else if(window.addFormWindow != null && window.addFormWindow.isVisible()){
+					window.addFormWindow.requestFocus();
+				}
 			}
+
 		});
 		//关闭监听
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				//保存数据
-//				window.settingDbTemplate.update(window.setting);
 				window.taskDbTemplate.update(window.tasks);
 				System.exit(0);
 			}
 		});
+		
 	}
 }

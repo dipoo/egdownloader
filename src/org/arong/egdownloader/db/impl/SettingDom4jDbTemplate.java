@@ -182,9 +182,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir"));
 		t.setCookieInfo(ele.attributeValue("cookieInfo"));
 		t.setGidPrefix(ele.attributeValue("gidPrefix"));
-		t.getHentaiHome().setUri(ele.attributeValue("uri"));
-		t.getHentaiHome().setFirstParameterName(ele.attributeValue("firstParameterName"));
-		t.getHentaiHome().setSecondParameterName(ele.attributeValue("secondParameterName"));
+		t.getHentaiHome().setUri(ele.attributeValue("hentaiHome.uri"));
+		t.getHentaiHome().setFirstParameterName(ele.attributeValue("hentaiHome.firstParameterName"));
+		t.getHentaiHome().setSecondParameterName(ele.attributeValue("hentaiHome.secondParameterName"));
 		t.setTotalPrefix(ele.attributeValue("totalPrefix"));
 		t.setNamePrefix(ele.attributeValue("namePrefix"));
 		t.setFileListPrefix(ele.attributeValue("fileListPrefix"));

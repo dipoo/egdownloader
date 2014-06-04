@@ -55,7 +55,6 @@ public class AddFormDialog extends JDialog {
 		this.setTitle("新建任务");
 		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
 		this.setSize(480, 210);
-		this.setVisible(true);
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setLocationRelativeTo(mainWindow);

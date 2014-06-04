@@ -35,9 +35,8 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
-		addFormWindow.setVisible(false);
+		addFormWindow.dispose();
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
-		window.creatingWindow.toFront();
 		Setting setting = window.setting;//获得配置信息
 		Task task = null;
 		try {
