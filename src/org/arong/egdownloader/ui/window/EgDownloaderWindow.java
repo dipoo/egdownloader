@@ -96,13 +96,13 @@ public class EgDownloaderWindow extends JFrame {
 						new IListenerTask() {
 							public void doWork(Window mainWindow, MouseEvent e) {
 								EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
+								this_.setEnabled(false);
 								if (this_.addFormWindow == null) {
 									this_.addFormWindow = new AddFormDialog(
 											this_);
 								} else {
 									this_.addFormWindow.setVisible(true);
 								}
-								this_.setEnabled(false);
 							}
 						}));
 		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
@@ -150,12 +150,6 @@ public class EgDownloaderWindow extends JFrame {
 		this.addWindowFocusListener(new WindowAdapter() {
 			public void windowGainedFocus(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
-				if (window.addFormWindow != null) {
-					window.addFormWindow.dispose();
-				}
-				if (window.toolsMenuWindow != null) {
-					window.toolsMenuWindow.dispose();
-				}
 				if (window.aboutMenuWindow != null) {
 					window.aboutMenuWindow.dispose();
 				}
