@@ -38,6 +38,7 @@ import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.ListTaskWork;
+import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
 import org.arong.egdownloader.version.Version;
 
 /**
@@ -140,7 +141,7 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
 		AJMenu detailPopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
-		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
+		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
