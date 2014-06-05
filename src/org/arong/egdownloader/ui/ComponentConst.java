@@ -87,6 +87,7 @@ public final class ComponentConst {
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
 	public final static String POPUP_DETAIL_MENU_TEXT = "查看";
+	public final static String POPUP_OPENFOLDER_MENU_TEXT = "打开文件夹";
 	
 	
 	/*AboutMenuWindow内的组件*/

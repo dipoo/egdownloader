@@ -25,7 +25,8 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 	public AJMenuItem(String text, String icon){
 		this.setText(text);
 		this.setCursor(CursorManager.getPointerCursor());
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(icon != null)
+			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
 	
 	public AJMenuItem(String text, String name, Component... components){

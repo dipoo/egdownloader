@@ -55,12 +55,12 @@ public class TaskingTable extends JTable {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
 				TaskingTable table = (TaskingTable)e.getSource();
+				//获取点击的行数
+				int rowIndex = table.rowAtPoint(e.getPoint());
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//双击事件
 					if(e.getClickCount() == 2){
-						//获取点击的行数
-						int rowIndex = table.rowAtPoint(e.getPoint());
 						Task task = table.getTasks().get(rowIndex);
 						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
@@ -79,12 +79,14 @@ public class TaskingTable extends JTable {
 							}
 						}
 						table.updateUI();
-						System.out.println(task.downloadWorker);
 					}
 					
 				}
 				//右键
 				else if(e.getButton() == MouseEvent.BUTTON3){
+					//使之选中
+					table.setRowSelectionInterval(rowIndex, rowIndex);
+					table.updateUI();
 					table.getMainWindow().tablePopupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}

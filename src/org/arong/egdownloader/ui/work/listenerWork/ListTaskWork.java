@@ -12,8 +12,8 @@ public class ListTaskWork implements IListenerTask {
 	public void doWork(Window window, MouseEvent e) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
-		int rowIndex = table.rowAtPoint(e.getPoint());
-		table.setRowSelectionInterval(rowIndex, rowIndex);
+//		int rowIndex = table.rowAtPoint(e.getPoint());
+		System.out.println("查看");
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
 	}

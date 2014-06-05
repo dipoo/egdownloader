@@ -46,18 +46,22 @@ public class AJButton extends JButton {
 		this.setMargin(new Insets(0, 0, 0, 0));
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
-		this.addActionListener(actionListener);
+		if(actionListener != null)
+			this.addActionListener(actionListener);
 	}
 	
 	public AJButton(String text, String name, String icon, ActionListener actionListener,
 			int x, int y, int width, int height) {
 		this(text, name, actionListener, x, y, width, height);
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(icon != null)
+			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
 	public AJButton(String text, String name, String icon, MouseListener mouseListener,
 			int x, int y, int width, int height) {
 		this(text, name, null, x, y, width, height);
-		this.addMouseListener(mouseListener);
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(mouseListener != null)
+			this.addMouseListener(mouseListener);
+		if(icon != null)
+			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
 }

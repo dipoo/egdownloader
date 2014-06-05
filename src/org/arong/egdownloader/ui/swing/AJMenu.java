@@ -35,8 +35,9 @@ public class AJMenu extends JMenu {
 	}
 	public AJMenu(String text, String name, String icon, MouseListener listener){
 		this(text, name, listener);
-		//设置图标
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(icon != null)
+			//设置图标
+			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
 	/**
 	 * 用于带有下拉项的菜单,这样的菜单没有添加鼠标监听,而是由其子项来各自监听<br>

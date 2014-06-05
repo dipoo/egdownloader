@@ -139,10 +139,10 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
-		AJMenu deletePopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("tool"), new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
+		AJMenu detailPopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
+		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(deletePopupMenuItem);
+		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
