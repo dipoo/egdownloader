@@ -56,6 +56,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog aboutMenuWindow;
 	public JDialog addFormWindow;
 	public JDialog creatingWindow;
+	public JDialog detailWindow;
 	
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
