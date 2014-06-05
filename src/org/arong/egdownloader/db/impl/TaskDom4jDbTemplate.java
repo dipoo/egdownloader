@@ -283,7 +283,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		ele.addAttribute("completedTime", t.getCompletedTime());
 		ele.addAttribute("total", t.getTotal() + "");
 		ele.addAttribute("current", t.getCurrent() + "");
-		ele.addAttribute("size", t.getSize() + "");
+//		ele.addAttribute("size", t.getSize() + "");
 		ele.addAttribute("status", t.getStatus().getStatus() + "");
 		return ele;
 	}
@@ -299,7 +299,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setCompletedTime(ele.attributeValue("completedTime"));
 		task.setTotal(ele.attributeValue("total") == null ? 0 : Integer.parseInt(ele.attributeValue("total")));
 		task.setCurrent(ele.attributeValue("current") == null ? 0 : Integer.parseInt(ele.attributeValue("current")));
-		task.setSize(ele.attributeValue("size") == null ? 0 : Integer.parseInt(ele.attributeValue("size")));
+//		task.setSize(ele.attributeValue("size") == null ? 0 : Integer.parseInt(ele.attributeValue("size")));
 		task.setStatus(TaskStatus.parseTaskStatus(ele.attributeValue("status")));
 		return task;
 	}

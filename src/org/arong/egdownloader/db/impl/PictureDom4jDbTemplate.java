@@ -250,12 +250,12 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		ele.addAttribute("num", t.getNum());
 		ele.addAttribute("name", t.getName());
 		ele.addAttribute("url", t.getUrl());
-		ele.addAttribute("realUrl", t.getRealUrl());
+//		ele.addAttribute("realUrl", t.getRealUrl());
 		ele.addAttribute("size", t.getSize() + "");
 		ele.addAttribute("time", t.getTime());
 		ele.addAttribute("saveAsName", t.isSaveAsName() + "");
 		ele.addAttribute("isCompleted", t.isCompleted() + "");
-		ele.addAttribute("isRunning", t.isRunning() + "");
+//		ele.addAttribute("isRunning", t.isRunning() + "");
 		return ele;
 	}
 	
@@ -267,11 +267,11 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		pic.setName(ele.attributeValue("name"));
 		pic.setNum(ele.attributeValue("num"));
 		pic.setUrl(ele.attributeValue("url"));
-		pic.setRealUrl(ele.attributeValue("realUrl"));
+//		pic.setRealUrl(ele.attributeValue("realUrl"));
 		pic.setSize(ele.attributeValue("size") == null ? 1 : Integer.parseInt(ele.attributeValue("size")));
 		pic.setTime(ele.attributeValue("time"));
 		pic.setCompleted("true".equals(ele.attributeValue("isCompleted")) ? true : false);
-		pic.setRunning("true".equals(ele.attributeValue("isRunning")) ? true : false);
+//		pic.setRunning("true".equals(ele.attributeValue("isRunning")) ? true : false);
 		pic.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
 		return pic;
 	}
