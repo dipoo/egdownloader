@@ -38,7 +38,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		//设置任务状态为下载中
 		task.setStatus(TaskStatus.STARTED);
-		List<Picture> pics = task.pictures;
+		List<Picture> pics = task.getPictures();
 		Picture pic;
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 		JTable table = ((EgDownloaderWindow)mainWindow).runningTable;
@@ -82,12 +82,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成");
 					}catch (SocketTimeoutException e){
 						//碰到异常
-						System.out.println("读取流超时，重试");
+						System.out.println("读取流超时，滞后重试");
 						//继续下一个
 						continue;
 					}catch (ConnectTimeoutException e){
 						//碰到异常
-						System.out.println("连接超时，重试");
+						System.out.println("连接超时，滞后重试");
 						//继续下一个
 						continue;
 					}catch (Exception e){

@@ -65,15 +65,15 @@ public class TaskingTable extends JTable {
 						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
 							task.setStatus(TaskStatus.STARTED);
-							task.downloadWorker = new DownloadWorker(task, table.getMainWindow());
-							task.downloadWorker.execute();
+							task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
+							task.getDownloadWorker().execute();
 						}
 						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
 						else if(task.getStatus() == TaskStatus.STARTED){
 							task.setStatus(TaskStatus.STOPED);
-							if(task.downloadWorker != null){
-								task.downloadWorker.cancel(true);
-								task.downloadWorker = null;//swingworker不能复用，需要重新建立
+							if(task.getDownloadWorker() != null){
+								task.getDownloadWorker().cancel(true);
+								task.setDownloadWorker(null);//swingworker不能复用，需要重新建立
 								//更新任务数据
 								table.mainWindow.taskDbTemplate.update(task);
 							}

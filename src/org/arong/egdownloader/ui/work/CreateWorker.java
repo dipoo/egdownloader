@@ -43,7 +43,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			task = ParseEngine.buildTask(url, saveDir, setting, window.creatingWindow);
 			if(task != null){
 				//保存到数据库
-				window.pictureDbTemplate.store(task.pictures);//保存图片信息
+				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
 				window.taskDbTemplate.store(task);//保存任务
 				//保存到内存
 				TaskingTable taskTable = (TaskingTable)window.runningTable;

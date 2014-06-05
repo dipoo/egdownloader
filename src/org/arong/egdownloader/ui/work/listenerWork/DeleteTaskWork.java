@@ -38,8 +38,8 @@ public class DeleteTaskWork implements IListenerTask {
 					task = table.getTasks().get(rows[i]);
 					tasks.add(task);
 					System.out.println("删除：" + task.getName());
-					if(task.pictures != null && task.pictures.size() > 0){
-						pics.addAll(task.pictures);
+					if(task.getPictures() != null && task.getPictures().size() > 0){
+						pics.addAll(task.getPictures());
 					}
 				}
 				

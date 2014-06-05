@@ -34,7 +34,7 @@ public final class FileUtil {
 		}
 	}
 	
-	public static boolean storeStream(String path, String name, InputStream in){
+	public static boolean storeStream(String path, String name, InputStream in) throws IOException{
     	File dir = new File(path);
     	FileUtil.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
@@ -52,7 +52,7 @@ public final class FileUtil {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (bos != null) {
 				try {

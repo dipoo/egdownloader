@@ -21,8 +21,8 @@ public class Task {
 	private int current = 0;//已下载完成总数
 	private int size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
-	public List<Picture> pictures;
-	public DownloadWorker downloadWorker;//下载线程实例,不保存，不提供get/set方法
+	private List<Picture> pictures;
+	private DownloadWorker downloadWorker;//下载线程实例,不保存，不提供get/set方法
 	
 	public Task(){}
 	
@@ -102,4 +102,21 @@ public class Task {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public List<Picture> getPictures() {
+		return pictures;
+	}
+
+	public void setPictures(List<Picture> pictures) {
+		this.pictures = pictures;
+	}
+
+	public DownloadWorker getDownloadWorker() {
+		return downloadWorker;
+	}
+
+	public void setDownloadWorker(DownloadWorker downloadWorker) {
+		this.downloadWorker = downloadWorker;
+	}
+	
 }

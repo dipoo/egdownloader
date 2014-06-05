@@ -77,7 +77,7 @@ public final class ParseEngine {
 		task.setTotal(total);
 		task.setName(name);
 		task.setSaveDir(saveDir + "/" + name);
-		task.pictures = pictures;
+		task.setPictures(pictures);
 		return task;
 	}
 	

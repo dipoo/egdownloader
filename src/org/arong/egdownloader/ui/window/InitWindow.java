@@ -57,7 +57,7 @@ public class InitWindow extends JFrame {
 		List<Task> tasks = taskDbTemplate.query();
 		if(tasks != null){
 			for (Task task : tasks) {
-				task.pictures = pictureDbTemplate.query("tid", task.getId());
+				task.setPictures(pictureDbTemplate.query("tid", task.getId()));
 			}
 		}
 		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
