@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 
 /**
  * 目录文件工具类
@@ -88,4 +89,24 @@ public final class FileUtil {
 		}
     	return size;
     }
+	/**
+	 * 将字节数转化为合适的单位字符串
+	 * @param size
+	 * @return
+	 */
+	public static String showSizeStr(int size){
+		String s = "0B";
+		double d = (double)size;
+		DecimalFormat df = new DecimalFormat("#####0.00");
+		if(size < 1024){
+			s = d + "B";
+		}else if(d < 1024 * 1024 ){
+			s = df.format(d / 1024.0) + "K";
+		}else if(d < 1024 * 1024 * 1024){
+			s = df.format(d / (1024.0 * 1024.0)) + "M";
+		}else if(d < 1024 * 1024 * 1024 * 1024){
+			s = df.format(d / (1024.0 * 1024.0 * 1024.0)) + "G";
+		}
+		return s;
+	}
 }

@@ -30,6 +30,7 @@ public class PictureTable extends JTable {
 		this.setBackground(Color.WHITE);
 		
 		this.setModel(new PictureTableModel(task.getPictures()));
+		this.setDefaultRenderer(Object.class, new PictureTableCellRenderer());
 	}
 
 	public Task getTask() {

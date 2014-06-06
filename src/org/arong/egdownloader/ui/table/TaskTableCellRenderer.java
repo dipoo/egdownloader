@@ -19,7 +19,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 
 /**
- * 单元格渲染器
+ * 任务表格单元格渲染器
  * @author 阿荣
  * @since 2014-05-23
  */
