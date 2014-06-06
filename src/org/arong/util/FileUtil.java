@@ -34,11 +34,20 @@ public final class FileUtil {
 		}
 	}
 	
-	public static boolean storeStream(String path, String name, InputStream in) throws IOException{
+	/**
+	 * 存储文件流，返回文件的大小
+	 * @param path
+	 * @param name
+	 * @param in
+	 * @return
+	 * @throws IOException
+	 */
+	public static int storeStream(String path, String name, InputStream in) throws IOException{
     	File dir = new File(path);
     	FileUtil.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
     	BufferedOutputStream bos = null;
+    	int size = 0;
     	try {
     		File fs = new File(path + "/" + name);
 			bis = new BufferedInputStream(in);
@@ -46,6 +55,7 @@ public final class FileUtil {
 			byte[] buff = new byte[1024];
 			int len = 0;
 			while ((len = bis.read(buff)) != -1) {
+				size += len;
 				bos.write(buff, 0, len);
 			}
 			bos.flush();
@@ -76,6 +86,6 @@ public final class FileUtil {
 				}
 			}
 		}
-    	return false;
+    	return size;
     }
 }
