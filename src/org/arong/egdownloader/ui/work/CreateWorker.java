@@ -47,7 +47,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.taskDbTemplate.store(task);//保存任务
 				//保存到内存
 				TaskingTable taskTable = (TaskingTable)window.runningTable;
-				taskTable.getTasks().add(task);
+				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
 				addFormWindow.emptyField();//清空下载地址
 				//关闭form,刷新table
 				((CreatingWindow)(window.creatingWindow)).reset();

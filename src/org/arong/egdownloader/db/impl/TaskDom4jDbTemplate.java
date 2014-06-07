@@ -5,7 +5,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.arong.egdownloader.db.DbTemplate;
@@ -226,6 +230,21 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 			for (Node node : nodes) {
 				tasks.add(node2Task(node));
 			}
+			//按照创建日期进行降序排序
+			Collections.sort(tasks, new Comparator<Task>() {
+				private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				public int compare(Task o1, Task o2) {
+					try {
+						if(sdf.parse(o1.getCreateTime()).after(sdf.parse(o2.getCreateTime()))){
+							return -1;
+						}else{
+							return 1;
+						}
+					} catch (ParseException e) {
+						return 0;
+					}
+				}
+			});
 			return tasks;
 		}
 		return null;
