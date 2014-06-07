@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
@@ -28,7 +27,7 @@ public class OpenFolderTaskWork implements IListenerTask {
 		if(TaskStatus.UNSTARTED != task.getStatus()){
 			try {
 				Desktop.getDesktop().open(new File(task.getSaveDir()));
-			} catch (IOException e1) {
+			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, "文件夹已被删除");
 				mainWindow.tablePopupMenu.setVisible(false);
 			}
