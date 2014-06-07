@@ -30,7 +30,7 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 		}else{
 			fontColor = Color.DARK_GRAY;
 		}
-		String val = value.toString();
+		String val = value == null ? "" : value.toString();
 		if(column == 0){//第一列：图标
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(60);

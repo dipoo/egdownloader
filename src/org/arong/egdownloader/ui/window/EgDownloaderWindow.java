@@ -165,9 +165,10 @@ public class EgDownloaderWindow extends JFrame {
 					window.creatingWindow.requestFocus();
 				}else if(window.addFormWindow != null && window.addFormWindow.isVisible()){
 					window.addFormWindow.requestFocus();
+				}else if(window.detailWindow != null && window.detailWindow.isVisible()){
+					window.detailWindow.requestFocus();
 				}
 			}
-
 		});
 		//关闭监听
 		this.addWindowListener(new WindowAdapter() {

@@ -55,4 +55,8 @@ public class PictureTableModel extends DefaultTableModel {
 	public Class<?> getColumnClass(int columnIndex) {
 		return java.lang.String.class;
 	}
+	
+	public void setPictures(List<Picture> pictures) {
+		this.pictures = pictures;
+	}
 }

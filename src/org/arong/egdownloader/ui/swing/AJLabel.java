@@ -20,7 +20,8 @@ public class AJLabel extends JLabel {
 	
 	public AJLabel(String text, Color color) {
 		super(text);
-		this.setForeground(color);
+		if(color != null)
+			this.setForeground(color);
 	}
 	/**
 	 * 封装JLabel，使构造函数可以设置文本，坐标，大小及字体颜色
