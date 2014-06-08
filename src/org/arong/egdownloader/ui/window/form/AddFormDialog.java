@@ -102,12 +102,15 @@ public class AddFormDialog extends JDialog {
 				}else{
 					String url = this_.urlField.getText().trim();
 					String saveDir = this_.saveDirField.getText().trim();
-					//假设url合法:http://exhentai.org/g/446779/553f5c4086/
-					if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
-						((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
+					if(isValidUrl(((EgDownloaderWindow)this_.mainWindow).setting, url)){
+						if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
+							((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
+						}
+						CreateWorker worker = new CreateWorker(url, saveDir, mainWindow);
+						worker.execute();
+					}else{
+						JOptionPane.showMessageDialog(this_, "下载地址不合法");
 					}
-					CreateWorker worker = new CreateWorker(url, saveDir, mainWindow);
-					worker.execute();
 				}
 			}
 		}), (this.getWidth() - 100) / 2, 130, 100, 30);
@@ -118,5 +121,26 @@ public class AddFormDialog extends JDialog {
 	}
 	public void emptyField(){
 		urlField.setText("");
+	}
+	private static boolean isValidUrl(Setting setting, String url){
+		if(url != null){
+			//假设url合法:http://exhentai.org/g/446779/553f5c4086/
+			if(url.matches("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")){
+				//获取http://exhentai.org/部分
+				String host;
+				if(url.lastIndexOf("/") > 7){
+					String protocal = "http://";
+					if(url.indexOf("https") != -1){
+						protocal = "https://";
+					}
+					String url_ = url.substring(url.indexOf(protocal) + 7, url.length());
+					host = "http://" + url_.substring(0, url_.indexOf("/"));
+				}else{
+					host = url;
+				}
+				return url.matches(host + setting.getGidPrefix() + "[a-zA-Z0-9]+/[a-zA-Z0-9]+/*");
+			}
+		}
+		return false;
 	}
 }
