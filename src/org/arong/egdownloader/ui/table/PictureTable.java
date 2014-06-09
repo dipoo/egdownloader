@@ -28,6 +28,7 @@ public class PictureTable extends JTable {
 		this.setCursor(CursorManager.getPointerCursor());//光标变手型
 		this.getTableHeader().setReorderingAllowed(false);//不可移动列
 		this.setBackground(Color.WHITE);
+		this.setCellSelectionEnabled(false);//选择单元格
 		
 		this.setModel(new PictureTableModel(task.getPictures()));
 		this.setDefaultRenderer(Object.class, new PictureTableCellRenderer());

@@ -22,7 +22,7 @@ public class PictureTableModel extends DefaultTableModel {
 	}
 
 	public int getColumnCount() {
-		return 6;//6列
+		return ComponentConst.PICTURE_TABLE_HEADER.length;//6列
 	}
 
 	public String getColumnName(int column) {
