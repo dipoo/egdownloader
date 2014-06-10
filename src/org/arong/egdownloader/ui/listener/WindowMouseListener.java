@@ -17,9 +17,10 @@ public class WindowMouseListener implements MouseListener {
 	public WindowMouseListener(Window window){
 		this.window = window;
 	}
-	//鼠标单击,隐藏次窗口
+	//鼠标单击,释放此窗口
 	public void mouseClicked(MouseEvent e) {
-		this.window.setVisible(false);
+		//this.window.setVisible(false);
+		this.window.dispose();
 	}
 
 	public void mousePressed(MouseEvent e) {

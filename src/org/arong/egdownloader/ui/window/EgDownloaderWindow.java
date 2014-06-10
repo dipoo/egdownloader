@@ -52,7 +52,7 @@ public class EgDownloaderWindow extends JFrame {
 	private static final long serialVersionUID = 8904976570969033245L;
 	
 	JMenuBar jMenuBar;// 菜单栏
-	public JFrame toolsMenuWindow;
+	public JFrame settingWindow;
 	public JDialog aboutMenuWindow;
 	public JDialog addFormWindow;
 	public JDialog creatingWindow;
@@ -123,17 +123,17 @@ public class EgDownloaderWindow extends JFrame {
 				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("setting"),
 				menuMouseListener);
-		JMenu searchMenu = new AJMenu(ComponentConst.TOOLS_MENU_TEXT,
+		/*JMenu searchMenu = new AJMenu(ComponentConst.TOOLS_MENU_TEXT,
 				ComponentConst.TOOLS_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("tool"),
-				menuMouseListener);
+				menuMouseListener);*/
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
 				ComponentConst.ABOUT_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("user"),
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, deleteTasksMenu, settingMenu, searchMenu, aboutMenu);
+				newTaskMenu, deleteTasksMenu, settingMenu, /*searchMenu,*/ aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,

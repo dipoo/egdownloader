@@ -9,6 +9,7 @@ import javax.swing.JMenu;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.AboutMenuWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SettingWindow;
 import org.arong.egdownloader.ui.window.ToolsMenuWindow;
 
 /**
@@ -35,15 +36,15 @@ public class MenuMouseListener implements MouseListener {
 			JMenu menu = (JMenu) e.getSource();
 			String menuName = menu.getName();
 			// 如果点击的是工具菜单，则将关于窗口显示出来，倘若关于窗口为null就先实例化
-			if (ComponentConst.TOOLS_MENU_NAME.equals(menuName)) {
-				if (mainWindow.toolsMenuWindow == null) {
-					ToolsMenuWindow aboutWindow = new ToolsMenuWindow(mainWindow);
-					mainWindow.toolsMenuWindow = aboutWindow;
+			if (ComponentConst.SETTING_MENU_NAME.equals(menuName)) {
+				if (mainWindow.settingWindow == null) {
+					SettingWindow aboutWindow = new SettingWindow(mainWindow);
+					mainWindow.settingWindow = aboutWindow;
 				}
-				mainWindow.toolsMenuWindow.setLocationRelativeTo(mainWindow);
+				mainWindow.settingWindow.setLocationRelativeTo(mainWindow);
 				// 设置关于窗口置于最顶层
-				mainWindow.toolsMenuWindow.toFront();
-				mainWindow.toolsMenuWindow.setVisible(true);
+				mainWindow.settingWindow.toFront();
+				mainWindow.settingWindow.setVisible(true);
 			}
 			// 如果点击的是关于菜单，则将关于窗口显示出来，倘若关于窗口为null就先实例化
 			else if (ComponentConst.ABOUT_MENU_NAME.equals(menuName)) {
