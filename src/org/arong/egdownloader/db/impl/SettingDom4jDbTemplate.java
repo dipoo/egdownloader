@@ -93,12 +93,12 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 			update(t);
 		}
 		locked = true;
-		Node node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
+		Node node = dom.selectSingleNode("/settings/setting[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
 				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
 				Dom4jUtil.appendElement(dom.getRootElement(), setting2Element(t));
-				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				Dom4jUtil.writeDOM2XML(ComponentConst.SETTING_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
