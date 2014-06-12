@@ -15,4 +15,8 @@ public class AJTextField extends JTextField {
 		this.setName(name);
 		this.setBounds(x, y, width, height);
 	}
+	public AJTextField(String text,String name, int x, int y, int width, int height){
+		this(name, x, y, width, height);
+		this.setText(text);
+	}
 }
