@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -74,7 +76,7 @@ public class AddFormDialog extends JDialog {
 		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 80, 60, 30);
 		saveDirField = new AJTextField("saveDirField", 65, 80, 320, 30);
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-		saveDirField.setText(setting.getDefaultSaveDir());
+		saveDirField.setText(setting.getDefaultSaveDir() + "\\" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog, MouseEvent e) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
