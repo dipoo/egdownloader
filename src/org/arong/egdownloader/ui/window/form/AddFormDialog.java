@@ -104,12 +104,18 @@ public class AddFormDialog extends JDialog {
 				}else{
 					String url = this_.urlField.getText().trim();
 					String saveDir = this_.saveDirField.getText().trim();
-					if(isValidUrl(((EgDownloaderWindow)this_.mainWindow).setting, url)){
-						if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
-							((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
+					EgDownloaderWindow mainWindow = (EgDownloaderWindow)this_.mainWindow;
+					if(isValidUrl(mainWindow.setting, url)){
+						//重复性验证
+						if(! mainWindow.taskDbTemplate.exsits("url", url)){
+							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
+								((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
+							}
+							CreateWorker worker = new CreateWorker(url, saveDir, mainWindow);
+							worker.execute();
+						}else{
+							JOptionPane.showMessageDialog(this_, "此下载地址已存在");
 						}
-						CreateWorker worker = new CreateWorker(url, saveDir, mainWindow);
-						worker.execute();
 					}else{
 						JOptionPane.showMessageDialog(this_, "下载地址不合法");
 					}
