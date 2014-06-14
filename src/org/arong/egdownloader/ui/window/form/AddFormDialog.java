@@ -106,6 +106,10 @@ public class AddFormDialog extends JDialog {
 					String saveDir = this_.saveDirField.getText().trim();
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)this_.mainWindow;
 					if(isValidUrl(mainWindow.setting, url)){
+						//存到数据库中的地址统一不以/结尾，方便验证重复
+						if("/".equals(url.substring(url.length() - 1, url.length()))){
+							url = url.substring(0, url.length() - 1);
+						}
 						//重复性验证
 						if(! mainWindow.taskDbTemplate.exsits("url", url)){
 							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
