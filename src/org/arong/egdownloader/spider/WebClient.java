@@ -33,14 +33,34 @@ import org.apache.commons.httpclient.methods.PostMethod;
  */
 public class WebClient {
 	
-	public static void main(String[] args) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
+	public static void main(String[] args) throws WebClientException, IOException {
 		String cookie = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;";
 		cookie += "ipb_member_id=1059070;";
 		cookie += "ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
+		String url = "http://exhentai.org/g/437858/c37a1af147/";
 		String s;
-		s = postRequestWithCookie("http://exhentai.org/", cookie);
+		long t1 = System.currentTimeMillis();
+		s = postRequestWithCookie("http://exhentai.org/g/437858/c37a1af147/", cookie);
+		//s = postRequestWithCookie(url, "GBK");
+		long t2 = System.currentTimeMillis();
 		System.out.println(s);
-		
+		int l1 = s.getBytes().length;
+		System.out.println("总大小：" + l1);
+		//http://exhentai.org/s/
+		s = s.substring(0, s.indexOf("http://exhentai.org/s/"));
+		int l2 = s.getBytes().length;
+		System.out.println("位置:" + l2);
+		System.out.println();
+		System.out.println();
+		long t3 = System.currentTimeMillis();
+		InputStream is = postRequestAsStreamWithCookie("http://exhentai.org/g/437858/c37a1af147/", cookie);
+		//InputStream is = postRequestAsStreamWithCookie(url, "GBK");
+		s = read(is, 11871);
+		long t4 = System.currentTimeMillis();
+		System.out.println(s);
+//		s = postRequestWithCookie("http://exhentai.org/g/437858/c37a1af147/", "utf-8", null, cookie/*, s.getBytes().length*/);
+		System.out.println("获取字符串所用时间：" + (t2 - t1) + "ms");
+		System.out.println("获取字节流所用时间：" + (t4 - t3) + "ms");
 	}
 	
 	public static String postRequest(String url) throws ConnectTimeoutException, SocketTimeoutException{
@@ -69,6 +89,7 @@ public class WebClient {
 		}
 		return null;
 	}
+	
 
 	/**
 	 * @param url
@@ -118,27 +139,113 @@ public class WebClient {
 			// 如果服务器成功地返回响应
 			if (statusCode == 200 || statusCode == 201) {
 				// 获取服务器响应字符串
-				try{
-					long length = postMethod.getResponseContentLength();
-					InputStream in = postMethod.getResponseBodyAsStream();
-					long size = length == -1 ? 4096 : length;
-	                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                    byte[] bytes = new byte[(int) size];
-	                    int read;
-	                    while ((read = in.read(bytes)) >= 0) {
-	                        out.write(bytes, 0, read);
-	                    }
-	                    result = new String(out.toByteArray(), encoding);
-	                    in.close();
-	                    out.close();
+				result = postMethod.getResponseBodyAsString();
+				/*long length = postMethod.getResponseContentLength();
+				InputStream in = postMethod.getResponseBodyAsStream();
+				long size = length == -1 ? 4096 : length;
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                byte[] bytes = new byte[(int) size];
+                int read;
+                while ((read = in.read(bytes)) >= 0) {
+                    out.write(bytes, 0, read);
+                }
+                result = new String(out.toByteArray(), encoding);
+                in.close();
+                out.close();*/
 					
-				}catch(UnsupportedEncodingException e){
-					throw new WebClientException(url + "-不支持的编码字符串：" + encoding);
-				}
 			}else if (statusCode == 302) {
                 // 重定向
                 String location = postMethod.getResponseHeader("Location").getValue();
                 return postRequestWithCookie(location, encoding, rawParams, cookieInfo);
+            }
+		} catch (SocketTimeoutException e1){
+			throw e1;
+		} catch (ConnectTimeoutException e1){
+			throw e1;
+		} catch (HttpException e1) {
+			throw new ConnectTimeoutException(url + "：连接异常");
+		} catch (IOException e1) {
+			throw new WebClientException(url + "：IO异常，请检查网络是否正常");
+		}
+		return result;
+	}
+	
+	public static InputStream postRequestAsStream(String url) throws ConnectTimeoutException, SocketTimeoutException{
+		try {
+			return postRequestAsStreamWithCookie(url, "utf-8", null, null);
+		} catch (WebClientException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static InputStream postRequestAsStream(String url, String encoding) throws ConnectTimeoutException, SocketTimeoutException{
+		try {
+			return postRequestAsStreamWithCookie(url, encoding, null, null);
+		} catch (WebClientException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static InputStream postRequestAsStreamWithCookie(String url, String cookieInfo) throws ConnectTimeoutException, SocketTimeoutException{
+		try {
+			return postRequestAsStreamWithCookie(url, "utf-8", null, cookieInfo);
+		} catch (WebClientException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * @param url
+	 *            发送请求的URL
+	 * @param params
+	 *            请求参数
+	 * @return 服务器响应字符串
+	 * @throws WebClientException 
+	 * @throws ConnectTimeoutException 
+	 * @throws SocketTimeoutException 
+	 */
+	public static InputStream postRequestAsStreamWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
+		HttpClient httpClient = new HttpClient();
+		// 创建HttpPost对象。
+		PostMethod postMethod = new PostMethod(url);
+		postMethod.setDoAuthentication(true);
+		postMethod.setFollowRedirects(false);
+		//如果参数不为空则添加参数
+		if(rawParams != null){
+			// 如果传递参数个数比较多的话可以对传递的参数进行封装
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			for (String key : rawParams.keySet()) {
+				// 封装请求参数
+				params.add(new NameValuePair(key, rawParams.get(key)));
+			}
+			NameValuePair[] array = new NameValuePair[params.size()];
+			// 设置请求参数
+			postMethod.setRequestBody(params.toArray(array));
+		}
+		//设置cookie
+		if(cookieInfo != null){
+			postMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
+			postMethod.setRequestHeader("Cookie", cookieInfo);
+		}
+		//设置连接超时为20秒
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(20000);
+		//设置读取超时为20秒
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(20000);
+		int statusCode = 0;
+		InputStream result = null;
+		try {
+			statusCode = httpClient.executeMethod(postMethod);
+			// 如果服务器成功地返回响应
+			if (statusCode == 200 || statusCode == 201) {
+				// 获取服务器响应流
+				result = postMethod.getResponseBodyAsStream();
+			}else if (statusCode == 302) {
+                // 重定向
+                String location = postMethod.getResponseHeader("Location").getValue();
+                return postRequestAsStreamWithCookie(location, encoding, rawParams, cookieInfo);
             }
 		} catch (SocketTimeoutException e1){
 			throw e1;
@@ -366,5 +473,36 @@ public class WebClient {
 		}
        
         return sbr.toString();
+    }
+    
+    public static String read(final InputStream in, final Integer start){
+        byte[] buffer = new byte[4092];
+        int offset = 0;
+        int cursize = 0;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+//    		in.skip(start);
+			while ((offset = in.read(buffer)) != -1) {
+				cursize += offset;
+				if(cursize >= start){
+					out.write(buffer, 0, offset);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        try {
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+       
+        try {
+			return new String(out.toByteArray(), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+        return null;
     }
 }
