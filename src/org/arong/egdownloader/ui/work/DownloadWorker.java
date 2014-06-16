@@ -60,6 +60,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(size < 1000){
 							pic.setRealUrl(null);
 							System.out.println(pic.getName() + ":403");
+							is.close();
+							continue;
+						}else if(size < 1010){
+							pic.setRealUrl(null);
+							System.out.println(pic.getName() + ":509");
+							is.close();
 							continue;
 						}
 						size = FileUtil.storeStream(task.getSaveDir(), pic.getName(), is);//保存到目录
