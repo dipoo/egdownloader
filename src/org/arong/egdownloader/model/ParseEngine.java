@@ -21,6 +21,76 @@ import org.arong.egdownloader.ui.window.CreatingWindow;
  */
 public final class ParseEngine {
 //	private static String url = "http://exhentai.org/g/704576/f85149de1a/";
+	public static Task buildTask_new(String url, String saveDir, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
+		CreatingWindow creatingWindow = (CreatingWindow)window;
+		Task task = new Task(url, saveDir);
+		task.setId(UUID.randomUUID().toString());
+		
+		String host = url.substring(0, url.indexOf(setting.getGidPrefix()));
+		System.out.println("host:" + host);
+		// 446779
+		String gid = Spider.substring(url, setting.getGidPrefix()).substring(0,
+				Spider.substring(url, setting.getGidPrefix()).indexOf("/"));
+		// 553f5c4086
+		String t = Spider.substring(url, gid + "/")
+				.substring(0, Spider.substring(url, gid + "/").length())
+				.replaceAll("/", "");
+		//http://exhentai.org/hathdler.php?gid=446779&t=553f5c4086
+		String hentaiHomeUrl = host + "/" + setting.getHentaiHome().getUri()
+				+ "?" + setting.getHentaiHome().getFirstParameterName() + "="
+				+ gid + "&" + setting.getHentaiHome().getSecondParameterName()
+				+ "=" + t;
+		System.out.println("hentaiHomeUrl:" + hentaiHomeUrl);
+		//EHG-446779.hathdl文件内容
+		String hentaiHomeSource = WebClient.postRequestWithCookie(hentaiHomeUrl, setting.getCookieInfo());
+//		System.out.println(hentaiHomeSource);
+		//数量
+		String total_ = Spider.getTextFromSource(hentaiHomeSource, setting.getTotalPrefix(), "\n");
+		System.out.println("total:" + total_);
+		String name = Spider.getTextFromSource(hentaiHomeSource, setting.getNamePrefix(), "\n");
+		System.out.println("name:" + name);
+		creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + name);
+		creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + total_);
+		creatingWindow.nameLabel.setVisible(true);
+		creatingWindow.totalLabel.setVisible(true);
+		String fileList = Spider.getTextFromSource(hentaiHomeSource, setting.getFileListPrefix(), setting.getFileListSuffix());
+//		System.out.println(fileList);
+		
+		int total = Integer.parseInt(total_.trim());
+		creatingWindow.bar.setMaximum(total);
+		//获取图片集合
+		/*List<Picture> pictures = getPictures(task, fileList, total);
+		setPicturesUrl(url, pictures, setting, creatingWindow);*/
+		task.setTotal(total);
+		List<Picture> pictures = getPictures_new(host, setting.getShowPicPrefix(), gid, fileList.trim(), task, creatingWindow);
+		//setid
+		task.setName(name);
+		task.setSaveDir(saveDir + "/" + name);
+		task.setPictures(pictures);
+		return task;
+	}
+	private static List<Picture> getPictures_new(String host, String showPicPrefix, String gid, String fileList,
+			Task task, CreatingWindow creatingWindow) {
+		List<Picture> pictures = new ArrayList<Picture>();
+		String[] rows = fileList.split("\n");
+		String[] rowInfos;
+		for(int i = 0; i < rows.length; i ++){
+			//1 39fd09ca334866a6e80248da147ed1a39666b956-267169-1200-813-jpg Img_000.jpg
+			rowInfos = rows[i].split(" ");
+			Picture picture = new Picture();
+			picture.setTid(task.getId());
+			picture.setId(UUID.randomUUID().toString());
+			//设置图片浏览地址,组成规则：域名+(漫画浏览地址的前缀)showPicPrefix+gid+神马的前10个字符+短杠+序号
+			picture.setUrl(host + showPicPrefix + rowInfos[1].substring(0, 10)+ "/" + gid  + "-" + rowInfos[0]);
+			//设置图片名称
+			picture.setName(rowInfos[2]);
+			//设置编号
+			picture.setNum(genNum(task.getTotal(), i));
+			pictures.add(picture);
+			creatingWindow.bar.setValue(i + 1);
+		}
+		return pictures;
+	}
 	/**
 	 * 步骤：
 	 * 1、验证url的合法性。http://exhentai.org/g/446779/553f5c4086/
@@ -87,7 +157,7 @@ public final class ParseEngine {
 			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
 		} catch (Exception e) {
 			System.out.println("getdownloadUrl异常");
-			url = getdownloadUrl(sourceUrl, setting);
+			return getdownloadUrl(sourceUrl, setting);
 		}
 		System.out.println(url);
 		return url;

@@ -40,7 +40,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		Setting setting = window.setting;//获得配置信息
 		Task task = null;
 		try {
-			task = ParseEngine.buildTask(url, saveDir, setting, window.creatingWindow);
+			task = ParseEngine.buildTask_new(url, saveDir, setting, window.creatingWindow);
 			if(task != null){
 				//保存到数据库
 				window.pictureDbTemplate.store(task.getPictures());//保存图片信息

@@ -60,6 +60,4 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 		}
 		return new AJLabel(val, fontColor, font, JLabel.LEFT);
 	}
-	
-
 }
