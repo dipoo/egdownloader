@@ -21,7 +21,7 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 5170655726223645364L;
 	
 	private Color fontColor;
-	private Font font = new Font("微软雅黑", Font.PLAIN, 11);
+	private Font font = new Font("宋体", Font.PLAIN, 11);
 	
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
@@ -31,31 +31,31 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			fontColor = Color.DARK_GRAY;
 		}
 		String val = value == null ? "" : value.toString();
-		if(column == 0){//第一列：图标
+		if(column == 0){//第一列：序号
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(60);
-			tc.setMaxWidth(80);
+			tc.setPreferredWidth(40);
+			tc.setMaxWidth(40);
 			return new JLabel(value.toString(), JLabel.LEFT);
 		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(200);
-			tc.setMaxWidth(250);
+			tc.setPreferredWidth(260);
+			tc.setMaxWidth(300);
 		}else if(column == 2){//第三列：大小
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(60);
-			tc.setMaxWidth(80);
+			tc.setPreferredWidth(50);
+			tc.setMaxWidth(60);
 			val = FileUtil.showSizeStr(Integer.parseInt(val));
 		}else if(column == 3){//第四列：状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(60);
+			tc.setPreferredWidth(50);
 			tc.setMaxWidth(80);
 		}else if(column == 4){//第五列：地址
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(350);
-			tc.setMaxWidth(400);
+			tc.setPreferredWidth(320);
+			tc.setMaxWidth(320);
 		}else if(column == 5){//第五列：时间
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(120);
+			tc.setPreferredWidth(150);
 			tc.setMaxWidth(150);
 		}
 		return new AJLabel(val, fontColor, font, JLabel.LEFT);
