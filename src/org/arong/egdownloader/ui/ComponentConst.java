@@ -90,6 +90,7 @@ public final class ComponentConst {
 	
 	public final static String POPUP_DETAIL_MENU_TEXT = "查看";
 	public final static String POPUP_OPENFOLDER_MENU_TEXT = "打开文件夹";
+	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "打开下载网页";
 	
 	
 	/*AboutMenuWindow内的组件*/

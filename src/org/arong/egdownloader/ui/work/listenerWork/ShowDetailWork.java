@@ -21,7 +21,7 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
  * @author 阿荣
  * @since 2014-06-18
  */
-public class ListTaskWork implements IListenerTask {
+public class ShowDetailWork implements IListenerTask {
 
 	public void doWork(Window window, MouseEvent e) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;

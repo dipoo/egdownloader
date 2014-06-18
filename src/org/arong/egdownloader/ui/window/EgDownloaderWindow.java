@@ -37,7 +37,8 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
-import org.arong.egdownloader.ui.work.listenerWork.ListTaskWork;
+import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
+import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
 import org.arong.egdownloader.version.Version;
 
@@ -141,10 +142,14 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
-		AJMenu detailPopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ListTaskWork()));
+		//右键菜单：查看
+		AJMenu detailPopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ShowDetailWork()));
+		//右键菜单：打开文件夹
 		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
+		//右键菜单：打开网页
+		AJMenu openWebPageMenuItem = new AJMenu(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenWebPageWork()));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem);
+		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem, openWebPageMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
