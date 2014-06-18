@@ -16,7 +16,11 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DetailWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
-
+/**
+ * 下载任务详细信息窗口
+ * @author 阿荣
+ * @since 2014-06-18
+ */
 public class ListTaskWork implements IListenerTask {
 
 	public void doWork(Window window, MouseEvent e) {

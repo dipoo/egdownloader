@@ -46,7 +46,7 @@ public class DetailWindow extends JDialog {
 		
 		this.addWindowListener(new WindowAdapter() {
 
-			public void windowDeactivated(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {
 				DetailWindow this_ = (DetailWindow) e.getSource();
 				this_.dispose();
 			}
