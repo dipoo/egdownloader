@@ -62,14 +62,18 @@ public final class ParseEngine {
 		/*List<Picture> pictures = getPictures(task, fileList, total);
 		setPicturesUrl(url, pictures, setting, creatingWindow);*/
 		task.setTotal(total);
-		List<Picture> pictures = getPictures_new(host, setting.getShowPicPrefix(), gid, fileList.trim(), task, creatingWindow);
+		List<Picture> pictures = getPictures_new(host, setting, gid, fileList.trim(), task, creatingWindow);
+		if(pictures.size() == 0){
+			//采用下载页分页采集法
+			pictures = getPictures(task, fileList, total);
+		}
 		//setid
 		task.setName(name);
 		task.setSaveDir(saveDir + "/" + name);
 		task.setPictures(pictures);
 		return task;
 	}
-	private static List<Picture> getPictures_new(String host, String showPicPrefix, String gid, String fileList,
+	private static List<Picture> getPictures_new(String host, Setting setting, String gid, String fileList,
 			Task task, CreatingWindow creatingWindow) {
 		List<Picture> pictures = new ArrayList<Picture>();
 		String[] rows = fileList.split("\n");
@@ -81,13 +85,27 @@ public final class ParseEngine {
 			picture.setTid(task.getId());
 			picture.setId(UUID.randomUUID().toString());
 			//设置图片浏览地址,组成规则：域名+(漫画浏览地址的前缀)showPicPrefix+gid+神马的前10个字符+短杠+序号
-			picture.setUrl(host + showPicPrefix + rowInfos[1].substring(0, 10)+ "/" + gid  + "-" + rowInfos[0]);
+			picture.setUrl(host + setting.getShowPicPrefix() + rowInfos[1].substring(0, 10)+ "/" + gid  + "-" + rowInfos[0]);
+			//检测地址是否正确（两次检测）
+			if(i == 0){
+				try {
+					Spider.getTextFromSource(WebClient.postRequestWithCookie(picture.getUrl(), setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
+				} catch (Exception e) {
+					try {
+						Spider.getTextFromSource(WebClient.postRequestWithCookie(picture.getUrl(), setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
+					} catch (Exception e1) {
+						System.out.println("采用下载页分页采集法");
+						break;
+					}
+				}
+			}
 			//设置图片名称
 			picture.setName(rowInfos[2]);
 			//设置编号
 			picture.setNum(genNum(task.getTotal(), i));
 			pictures.add(picture);
 			creatingWindow.bar.setValue(i + 1);
+			
 		}
 		return pictures;
 	}
