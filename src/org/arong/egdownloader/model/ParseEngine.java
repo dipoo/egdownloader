@@ -66,6 +66,7 @@ public final class ParseEngine {
 		if(pictures.size() == 0){
 			//采用下载页分页采集法
 			pictures = getPictures(task, fileList, total);
+			setPicturesUrl(url, pictures, setting, creatingWindow);
 		}
 		//setid
 		task.setName(name);
