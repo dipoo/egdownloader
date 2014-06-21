@@ -37,6 +37,7 @@ public class ShowDetailWork implements IListenerTask {
 			mainWindow.detailWindow = new DetailWindow(new PictureTable(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400,task , mainWindow));
 		}else{
 			((PictureTableModel)dw.pictureTable.getModel()).setPictures(task.getPictures());
+			dw.pictureTable.setTask(task);//将新任务绑定到图片表格中
 		}
 		dw = (DetailWindow) mainWindow.detailWindow;
 		dw.resetTile(task.getTotal() + "");
