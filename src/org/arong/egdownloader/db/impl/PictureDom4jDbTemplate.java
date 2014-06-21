@@ -133,7 +133,35 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		return false;
 	}
 	
-	public boolean update(List<Picture> t) {
+	public boolean update(List<Picture> pics) {
+		if(pics == null || pics.size() == 0){
+			return false;
+		}
+		while(locked){
+			update(pics);
+		}
+		locked = true;
+		Node node = null;
+		boolean update = false;
+		for (Picture t : pics) {
+			node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
+			if(node != null){
+				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil.appendElement(dom.getRootElement(), picture2Element(t));
+				update = true;
+			}
+		}
+		if(update){
+			try {
+				Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+				locked = false;
+				return true;
+			} catch (Exception e) {
+				locked = false;
+				return false;
+			}
+		}
+		locked = false;
 		return false;
 	}
 

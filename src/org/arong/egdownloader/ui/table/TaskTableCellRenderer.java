@@ -67,7 +67,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(120);
 			tc.setMaxWidth(140);
-			if(value == null || Integer.parseInt(value.toString()) == 0){
+			if(value == null || Integer.parseInt(value.toString()) < 1){
 				return new AJLabel("0(0.0%)", fontColor, blodFont, JLabel.CENTER);
 			}
 			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 1).toString()));
