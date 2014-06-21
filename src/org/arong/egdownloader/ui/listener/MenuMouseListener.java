@@ -10,7 +10,6 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.AboutMenuWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SettingWindow;
-import org.arong.egdownloader.ui.window.ToolsMenuWindow;
 
 /**
  * 用于监听菜单的鼠标事件，主要是菜单单击事件<br>

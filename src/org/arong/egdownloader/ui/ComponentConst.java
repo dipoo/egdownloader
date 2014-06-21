@@ -88,24 +88,13 @@ public final class ComponentConst {
 	public final static String ABOUT_MENU_TEXT = "关于";
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
-	public final static String POPUP_DETAIL_MENU_TEXT = "查看";
-	public final static String POPUP_OPENFOLDER_MENU_TEXT = "打开文件夹";
-	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "打开下载网页";
+	public final static String POPUP_DETAIL_MENU_TEXT = "详细信息";
+	public final static String POPUP_OPENFOLDER_MENU_TEXT = "文件夹";
+	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "下载页";
+	public final static String POPUP_CHECKRESET_MENU_TEXT = "查漏补缺";
 	
 	
 	/*AboutMenuWindow内的组件*/
 	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME + "</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" + Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" + Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED + "</b><br>官方网站：https://github.com/dipoo/egdownloader";
 	
-	/*DecodeAndEncodeWindow内的组件*/
-	public final static String DECODE_BUTTON_NAME = "decodeButton";
-	public final static String ENCODE_BUTTON_NAME = "encodeButton";
-	public final static String SHOULU_URL_BUTTON_NAME = "shouluUrlButton";
-	
-	
-	public final static String DECODE_AND_ENCODE_INPUT_BORDER_TEXT = "加密或解密的文本";
-	public final static String DECODE_AND_ENCODE_OUTPUT_BORDER_TEXT = "加密或解密的结果";
-	public final static String ENCODE_BUTTON_TEXT = "加密";
-	public final static String DECODE_BUTTON_TEXT = "解密";
-	
-	public final static String TOOLS_WINDOW_TITLE = "工具";
 }

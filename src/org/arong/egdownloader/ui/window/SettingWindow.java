@@ -3,8 +3,6 @@ package org.arong.egdownloader.ui.window;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -17,7 +15,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import org.arong.egdownloader.model.Setting;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -30,7 +27,7 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
  * @author 阿荣
  * @since 2014-06-10
  */
-public class SettingWindow extends JFrame implements ActionListener{
+public class SettingWindow extends JFrame{
 	
 		private static final long serialVersionUID = -2290486210441887526L;
 
@@ -115,24 +112,6 @@ public class SettingWindow extends JFrame implements ActionListener{
 			settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
 			addComponents(settingTabPanel);
 			this.setVisible(true);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			Object source = e.getSource();
-
-			if (source instanceof JButton) {
-				JButton button = (JButton) source;
-				String buttonName = button.getName();
-				/* 加密解密 */
-				// 加密
-				if (ComponentConst.ENCODE_BUTTON_NAME.equals(buttonName)) {
-					return;
-				}
-				// 解密
-				else if (ComponentConst.DECODE_BUTTON_NAME.equals(buttonName)) {
-					
-				}
-			}
 		}
 
 		/**
