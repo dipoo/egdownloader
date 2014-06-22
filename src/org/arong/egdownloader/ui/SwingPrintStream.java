@@ -24,11 +24,23 @@ public class SwingPrintStream extends PrintStream {
 
 	// 重写write方法，这是什么模式？装饰？代理？
 	public void write(byte[] buf, int off, int len) {
+		filter(logTextArea);
 		final String message = new String(buf, off, len);
 		logTextArea.append(message);
 		// 让光标置于最下方
 		logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
 		logTextArea.paintImmediately(logTextArea.getBounds());
+	}
+	
+	/**
+	 * 当控制台的字符过多，则截断
+	 * @param logTextArea
+	 */
+	private void filter(JTextArea logTextArea){
+		String text = logTextArea.getText();
+		if(text.length() > 1000){
+			logTextArea.setText(text.substring(text.length() - 1000, text.length()));
+		}
 	}
 
 }

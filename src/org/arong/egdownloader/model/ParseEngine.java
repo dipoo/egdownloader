@@ -13,6 +13,7 @@ import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.window.CreatingWindow;
+import org.arong.util.Tracker;
 
 /**
  * Task分析引擎
@@ -54,7 +55,6 @@ public final class ParseEngine {
 		creatingWindow.nameLabel.setVisible(true);
 		creatingWindow.totalLabel.setVisible(true);
 		String fileList = Spider.getTextFromSource(hentaiHomeSource, setting.getFileListPrefix(), setting.getFileListSuffix());
-//		System.out.println(fileList);
 		
 		int total = Integer.parseInt(total_.trim());
 		creatingWindow.bar.setMaximum(total);
@@ -95,7 +95,7 @@ public final class ParseEngine {
 					try {
 						Spider.getTextFromSource(WebClient.postRequestWithCookie(picture.getUrl(), setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
 					} catch (Exception e1) {
-						System.out.println("采用下载页分页采集法");
+						Tracker.println(ParseEngine.class, task.getName() + ":采用下载页分页采集法");
 						break;
 					}
 				}
@@ -155,7 +155,6 @@ public final class ParseEngine {
 		creatingWindow.nameLabel.setVisible(true);
 		creatingWindow.totalLabel.setVisible(true);
 		String fileList = Spider.getTextFromSource(hentaiHomeSource, setting.getFileListPrefix(), setting.getFileListSuffix());
-//		System.out.println(fileList);
 		
 		int total = Integer.parseInt(total_.trim());
 		creatingWindow.bar.setMaximum(total);
@@ -170,13 +169,13 @@ public final class ParseEngine {
 		return task;
 	}
 	
-	public static String getdownloadUrl(String sourceUrl, Setting setting) throws Exception{
+	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws Exception{
 		String url = null;
 		try {
 			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
 		} catch (Exception e) {
-			System.out.println("getdownloadUrl异常");
-			return getdownloadUrl(sourceUrl, setting);
+			Tracker.println(ParseEngine.class, taskName + ":getdownloadUrl异常");
+			return getdownloadUrl(taskName, sourceUrl, setting);
 		}
 		System.out.println(url);
 		return url;

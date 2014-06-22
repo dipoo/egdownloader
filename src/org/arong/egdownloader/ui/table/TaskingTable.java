@@ -16,6 +16,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
+import org.arong.util.Tracker;
 /**
  * 正在下载任务表格
  * @author 阿荣
@@ -71,6 +72,7 @@ public class TaskingTable extends JTable {
 						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
 						else if(task.getStatus() == TaskStatus.STARTED){
 							task.setStatus(TaskStatus.STOPED);
+							Tracker.println(getClass(), task.getName() + ":已暂停");
 							if(task.getDownloadWorker() != null){
 								task.getDownloadWorker().cancel(true);
 								task.setDownloadWorker(null);//swingworker不能复用，需要重新建立

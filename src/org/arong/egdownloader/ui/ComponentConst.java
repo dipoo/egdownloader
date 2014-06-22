@@ -85,6 +85,7 @@ public final class ComponentConst {
 	public final static String DELETE_MENU_TEXT = "删除";
 	public final static String SETTING_MENU_TEXT = "配置";
 	public final static String TOOLS_MENU_TEXT = "搜索";
+	public final static String CONSOLE_MENU_TEXT = "控制台";
 	public final static String ABOUT_MENU_TEXT = "关于";
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
