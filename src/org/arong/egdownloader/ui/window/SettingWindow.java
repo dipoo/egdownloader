@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +37,10 @@ public class SettingWindow extends JFrame{
 		JPanel basicPanel;
 		JLabel saveDirLabel;
 		public JTextField saveDirField;
+		JLabel saveAsNameLabel;
+		public JCheckBox saveAsNameBox;
+		JLabel maxThreadLabel;
+		public JTextField maxThreadField;
 		JButton basicBtn;
 		/* HenTai@Home设置 */
 		JPanel henTaiHomePanel;
@@ -45,6 +50,16 @@ public class SettingWindow extends JFrame{
 		public JTextField h_firstParameterNameTextField;
 		JLabel h_secondParameterNameLabel;
 		public JTextField h_secondParameterNameTextField;
+		
+		JLabel h_totalPrefixLabel;
+		public JTextField h_totalPrefixTextField;
+		JLabel h_namePrefixLabel;
+		public JTextField h_namePrefixTextField;
+		JLabel h_fileListPrefixLabel;
+		public JTextField h_fileListPrefixTextField;
+		JLabel h_fileListSuffixLabel;
+		public JTextField h_fileListSuffixTextField;
+		
 		JButton h_Btn;
 
 		public SettingWindow(JFrame mainWindow) {
@@ -54,13 +69,18 @@ public class SettingWindow extends JFrame{
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-			settingTabPanel.setBounds(20, 5, 600, 460);
+			settingTabPanel.setBounds(20, 5, 600, 400);
 			/* 基本配置 */
 			basicPanel = new JPanel();
 			basicPanel.setLayout(null);
 			basicPanel.setBackground(Color.WHITE);
-			saveDirLabel = new AJLabel("保存目录：", null, 25, 30, 60, 30);
-			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 85, 30, 400, 30);
+			saveDirLabel = new AJLabel("保存目录：", null, 25, 30, 100, 30);
+			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
+			saveAsNameLabel = new AJLabel("以真实名称保存：", null, 25, 60, 100, 30);
+			saveAsNameBox = new JCheckBox("2", true);
+			saveAsNameBox.setBounds(125, 60, 30, 30);
+			maxThreadLabel = new AJLabel("最多开启任务数：", null, 25, 90, 100, 30);
+			maxThreadField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 90, 100, 30);
 			MouseListener basicBtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -75,14 +95,23 @@ public class SettingWindow extends JFrame{
 				}
 			});
 			basicBtn = new AJButton("保存", "", null, basicBtnListener, 270, 220, 60, 30);
-			addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, basicBtn);
+		addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, basicBtn,
+				saveAsNameLabel, saveAsNameBox, maxThreadLabel, maxThreadField);
 			/* HenTai@Home设置 */
-			h_uriLabel = new AJLabel("URI:", null, 25, 30, 60, 30);
-			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 85, 30, 400, 30);
-			h_firstParameterNameLabel = new AJLabel("gid:", null, 25, 60, 60, 30);
-			h_firstParameterNameTextField = new AJTextField(setting.getHentaiHome().getFirstParameterName(), null, 85, 70, 400, 30);
-			h_secondParameterNameLabel = new AJLabel("t:", null, 25, 110, 60, 30);
-			h_secondParameterNameTextField = new AJTextField(setting.getHentaiHome().getSecondParameterName(), null, 85, 110, 400, 30);
+			h_uriLabel = new AJLabel("URI:", null, 25, 30, 80, 30);
+			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 105, 30, 400, 30);
+			h_firstParameterNameLabel = new AJLabel("gid:", null, 25, 70, 80, 30);
+			h_firstParameterNameTextField = new AJTextField(setting.getHentaiHome().getFirstParameterName(), null, 105, 70, 400, 30);
+			h_secondParameterNameLabel = new AJLabel("t:", null, 25, 110, 80, 30);
+			h_secondParameterNameTextField = new AJTextField(setting.getHentaiHome().getSecondParameterName(), null, 105, 110, 400, 30);
+			h_totalPrefixLabel = new AJLabel("totalPrefix:", null, 25, 150, 80, 30);
+			h_totalPrefixTextField = new AJTextField(setting.getTotalPrefix(), null, 105, 150, 120, 30);
+			h_namePrefixLabel = new AJLabel("namePrefix:", null, 300, 150, 80, 30);
+			h_namePrefixTextField = new AJTextField(setting.getNamePrefix(), null, 385, 150, 120, 30);
+			h_fileListPrefixLabel = new AJLabel("filePrefix:", null, 25, 190, 80, 30);
+			h_fileListPrefixTextField = new AJTextField(setting.getFileListPrefix(), null, 105, 190, 120, 30);
+			h_fileListSuffixLabel = new AJLabel("fileSuffix:", null, 300, 190, 80, 30);
+			h_fileListSuffixTextField = new AJTextField(setting.getFileListSuffix(), null, 385, 190, 120, 30);
 			MouseListener h_BtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -103,10 +132,14 @@ public class SettingWindow extends JFrame{
 					
 				}
 			});
-			h_Btn = new AJButton("保存", "", null, h_BtnListener, 45, 220, 60, 30);
+			h_Btn = new AJButton("保存", "", null, h_BtnListener, 45, 280, 60, 30);
 			henTaiHomePanel = new AJPanel(h_uriLabel, h_uriTextField,
 				h_firstParameterNameLabel, h_firstParameterNameTextField,
-				h_secondParameterNameLabel, h_secondParameterNameTextField, h_Btn);
+				h_secondParameterNameLabel, h_secondParameterNameTextField,
+				h_totalPrefixLabel, h_totalPrefixTextField, h_namePrefixLabel, 
+				h_namePrefixTextField, h_fileListPrefixLabel, 
+				h_fileListPrefixTextField, h_fileListSuffixLabel, 
+				h_fileListSuffixTextField, h_Btn);
 
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
