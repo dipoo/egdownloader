@@ -60,6 +60,26 @@ public class SettingWindow extends JFrame{
 		JLabel h_fileListSuffixLabel;
 		public JTextField h_fileListSuffixTextField;
 		
+		/*下载设置*/
+		JPanel downloadPanel;
+		JLabel d_pageCountLabel;
+		public JTextField d_pageCountTextField;
+		JLabel d_pageParamLabel;
+		public JTextField d_pageParamTextField;
+		JLabel d_sourcePrefixLabel;
+		public JTextField d_sourcePrefixTextField;
+		JLabel d_sourceSuffixLabel;
+		public JTextField d_sourceSuffixTextField;
+		
+		JLabel d_showPicPrefixLabel;
+		public JTextField d_showPicPrefixTextField;
+		JLabel d_showPicSuffixLabel;
+		public JTextField d_showPicSuffixTextField;
+		JLabel d_realUrlPrefixLabel;
+		public JTextField d_realUrlPrefixTextField;
+		JLabel d_realUrlSuffixLabel;
+		public JTextField d_realUrlSuffixTextField;
+		
 		JButton h_Btn;
 
 		public SettingWindow(JFrame mainWindow) {
@@ -70,6 +90,7 @@ public class SettingWindow extends JFrame{
 			this.setLocationRelativeTo(null);
 			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 			settingTabPanel.setBounds(20, 5, 600, 400);
+			
 			/* 基本配置 */
 			basicPanel = new JPanel();
 			basicPanel.setLayout(null);
@@ -140,9 +161,35 @@ public class SettingWindow extends JFrame{
 				h_namePrefixTextField, h_fileListPrefixLabel, 
 				h_fileListPrefixTextField, h_fileListSuffixLabel, 
 				h_fileListSuffixTextField, h_Btn);
-
+			/*下载设置*/
+			d_pageCountLabel = new AJLabel("每页数目：", null, 25, 30, 100, 30);
+			d_pageCountTextField = new AJTextField(setting.getPageCount() + "", "", 125, 30, 100, 30);
+			d_pageParamLabel = new AJLabel("分页参数：", null, 250, 30, 100, 30);
+			d_pageParamTextField = new AJTextField(setting.getPageParam() + "", "", 350, 30, 100, 30);
+			d_sourcePrefixLabel = new AJLabel("sourcePrefix：", null, 25, 70, 100, 30);
+			d_sourcePrefixTextField = new AJTextField(setting.getSourcePrefix() + "", "", 125, 70, 100, 30);
+			d_sourceSuffixLabel = new AJLabel("sourceSuffix：", null, 250, 70, 100, 30);
+			d_sourceSuffixTextField = new AJTextField(setting.getSourceSuffix() + "", "", 350, 70, 100, 30);
+			d_showPicPrefixLabel = new AJLabel("showPicPrefix：", null, 25, 110, 100, 30);
+			d_showPicPrefixTextField = new AJTextField(setting.getShowPicPrefix() + "", "", 125, 110, 100, 30);
+			d_showPicSuffixLabel = new AJLabel("showPicSuffix：", null, 250, 110, 100, 30);
+			d_showPicSuffixTextField = new AJTextField(setting.getShowPicSuffix() + "", "", 350, 110, 100, 30);
+			
+			d_realUrlPrefixLabel = new AJLabel("realUrlPrefix：", null, 25, 150, 100, 30);
+			d_realUrlPrefixTextField = new AJTextField(setting.getRealUrlPrefix() + "", "", 125, 150, 100, 30);
+			d_realUrlSuffixLabel = new AJLabel("realUrlSuffix：", null, 250, 150, 100, 30);
+			d_realUrlSuffixTextField = new AJTextField(setting.getRealUrlSuffix() + "", "", 350, 150, 100, 30);
+			
+			
+			downloadPanel = new AJPanel(d_pageCountLabel, d_pageCountTextField, d_pageParamLabel,
+					d_pageParamTextField, d_sourcePrefixLabel, d_sourcePrefixTextField,
+					d_sourceSuffixLabel, d_sourceSuffixTextField, d_showPicPrefixLabel,
+					d_showPicPrefixTextField, d_showPicSuffixLabel, d_showPicSuffixTextField,
+					d_realUrlPrefixLabel, d_realUrlPrefixTextField, d_realUrlSuffixLabel, d_realUrlSuffixTextField);
+			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
+			settingTabPanel.add("下载设置", downloadPanel);
 			addComponents(settingTabPanel);
 			this.setVisible(true);
 		}
