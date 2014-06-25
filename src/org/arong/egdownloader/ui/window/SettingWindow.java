@@ -41,6 +41,9 @@ public class SettingWindow extends JFrame{
 		public JCheckBox saveAsNameBox;
 		JLabel maxThreadLabel;
 		public JTextField maxThreadField;
+		JLabel cookieLabel;
+		public JTextField cookieField;
+		JButton cookieButton;
 		JButton basicBtn;
 		/* HenTai@Home设置 */
 		JPanel henTaiHomePanel;
@@ -97,11 +100,18 @@ public class SettingWindow extends JFrame{
 			basicPanel.setBackground(Color.WHITE);
 			saveDirLabel = new AJLabel("保存目录：", null, 25, 30, 100, 30);
 			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
-			saveAsNameLabel = new AJLabel("以真实名称保存：", null, 25, 60, 100, 30);
+			saveAsNameLabel = new AJLabel("以真实名称保存：", null, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("2", true);
-			saveAsNameBox.setBounds(125, 60, 30, 30);
-			maxThreadLabel = new AJLabel("最多开启任务数：", null, 25, 90, 100, 30);
-			maxThreadField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 90, 100, 30);
+			saveAsNameBox.setBounds(125, 70, 30, 30);
+			maxThreadLabel = new AJLabel("最多开启任务数：", null, 25, 110, 100, 30);
+			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 100, 30);
+			cookieLabel = new AJLabel("登录信息：", null, 25, 150, 100, 30);
+			cookieField = new AJTextField(setting.getCookieInfo(), "", 125, 150, 360, 30);
+			cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					
+				}
+			}), 500, 150, 60, 30);
 			MouseListener basicBtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -116,8 +126,9 @@ public class SettingWindow extends JFrame{
 				}
 			});
 			basicBtn = new AJButton("保存", "", null, basicBtnListener, 270, 220, 60, 30);
-		addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, basicBtn,
-				saveAsNameLabel, saveAsNameBox, maxThreadLabel, maxThreadField);
+		addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
+				saveAsNameLabel, saveAsNameBox, maxThreadLabel, maxThreadField,
+				cookieLabel, cookieField, cookieButton, basicBtn);
 			/* HenTai@Home设置 */
 			h_uriLabel = new AJLabel("URI:", null, 25, 30, 80, 30);
 			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 105, 30, 400, 30);

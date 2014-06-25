@@ -19,7 +19,6 @@ public class WindowMouseListener implements MouseListener {
 	}
 	//鼠标单击,释放此窗口
 	public void mouseClicked(MouseEvent e) {
-		//this.window.setVisible(false);
 		this.window.dispose();
 	}
 

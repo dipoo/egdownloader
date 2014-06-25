@@ -155,6 +155,8 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("id", t.getId());
 		ele.addAttribute("defaultSaveDir", t.getDefaultSaveDir());
 		ele.addAttribute("cookieInfo", t.getCookieInfo());
+		ele.addAttribute("saveAsName", t.isSaveAsName() + "");
+		ele.addAttribute("maxThread", t.getMaxThread() + "");
 		ele.addAttribute("gidPrefix", t.getGidPrefix());
 		ele.addAttribute("hentaiHome.uri", t.getHentaiHome().getUri());
 		ele.addAttribute("hentaiHome.firstParameterName", t.getHentaiHome().getFirstParameterName());
@@ -181,7 +183,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setId(ele.attributeValue("id"));
 		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir"));
 		t.setCookieInfo(ele.attributeValue("cookieInfo"));
+		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
 		t.setGidPrefix(ele.attributeValue("gidPrefix"));
+		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
 		t.getHentaiHome().setUri(ele.attributeValue("hentaiHome.uri"));
 		t.getHentaiHome().setFirstParameterName(ele.attributeValue("hentaiHome.firstParameterName"));
 		t.getHentaiHome().setSecondParameterName(ele.attributeValue("hentaiHome.secondParameterName"));
