@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
@@ -27,6 +28,7 @@ public class TaskingTable extends JTable {
 	private static final long serialVersionUID = 8917533573337061263L;
 	private List<Task> tasks;
 	private EgDownloaderWindow mainWindow;
+	private int runningNum = 0;
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
@@ -65,9 +67,15 @@ public class TaskingTable extends JTable {
 						Task task = table.getTasks().get(rowIndex);
 						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
+							int maxThread = table.getMainWindow().setting.getMaxThread();
+							if(table.getRunningNum() >= maxThread){
+								JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
+								return;
+							}
 							task.setStatus(TaskStatus.STARTED);
 							task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
 							task.getDownloadWorker().execute();
+							table.setRunningNum(table.getRunningNum() + 1);
 						}
 						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
 						else if(task.getStatus() == TaskStatus.STARTED){
@@ -78,6 +86,7 @@ public class TaskingTable extends JTable {
 								task.setDownloadWorker(null);//swingworker不能复用，需要重新建立
 								//更新任务数据
 								table.mainWindow.taskDbTemplate.update(task);
+								table.setRunningNum(table.getRunningNum() - 1);
 							}
 						}
 						table.updateUI();
@@ -109,6 +118,14 @@ public class TaskingTable extends JTable {
 
 	public void setMainWindow(EgDownloaderWindow mainWindow) {
 		this.mainWindow = mainWindow;
+	}
+
+	public int getRunningNum() {
+		return runningNum;
+	}
+
+	public void setRunningNum(int runningNum) {
+		this.runningNum = runningNum;
 	}
 
 	

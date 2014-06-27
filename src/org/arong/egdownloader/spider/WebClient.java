@@ -181,7 +181,7 @@ public class WebClient {
 		String result = "";
 		try {
 			statusCode = httpClient.executeMethod(postMethod);
-			System.out.println("statusCode:" + statusCode);
+//			System.out.println("statusCode:" + statusCode);
 			// 如果服务器成功地返回响应
 			if (statusCode == 200 || statusCode == 201) {
 				// 查看 cookie 信息  

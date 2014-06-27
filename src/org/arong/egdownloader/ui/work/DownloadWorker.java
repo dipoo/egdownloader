@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JTable;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -17,6 +16,7 @@ import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
@@ -42,7 +42,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		List<Picture> pics = task.getPictures();
 		Picture pic;
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-		JTable table = ((EgDownloaderWindow)mainWindow).runningTable;
+		TaskingTable table = (TaskingTable) ((EgDownloaderWindow)mainWindow).runningTable;
 		InputStream is;
 		if(pics.size() != 0){
 			for(int i = 0; i < pics.size(); i ++){
@@ -117,6 +117,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			task.setStatus(TaskStatus.COMPLETED);
 			//更新任务到文件
 			((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
+			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 		}
 		return null;
 	}
