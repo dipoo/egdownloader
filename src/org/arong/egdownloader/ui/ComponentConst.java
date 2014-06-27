@@ -62,6 +62,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("picture", "_picture.png");
 		SKIN_ICON.put("user", "_user.png");
 		SKIN_ICON.put("empty", "_empty.png");
+		SKIN_ICON.put("save", "_save.png");
 		
 	}
 	/*MainWindow内的组件*/

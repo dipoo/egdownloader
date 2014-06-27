@@ -1,6 +1,5 @@
 package org.arong.egdownloader.ui.swing;
 
-import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JPanel;
@@ -15,7 +14,6 @@ public class AJPanel extends JPanel {
 
 	public AJPanel(Component...components){
 		this.setLayout(null);
-		this.setBackground(Color.WHITE);
 		if(components.length > 0){
 			for(int i= 0; i < components.length; i++){
 				if(components[i] != null){
