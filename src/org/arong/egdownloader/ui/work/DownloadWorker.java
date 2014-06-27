@@ -29,21 +29,31 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	
 	private JFrame mainWindow;
 	private Task task;
-	
+	private int exceptionNum = 0;
 	public DownloadWorker(Task task, JFrame mainWindow){
 		this.mainWindow = mainWindow;
 		this.task = task;
 	}
 	
 	protected Void doInBackground() throws Exception {
+		TaskingTable table = (TaskingTable) ((EgDownloaderWindow)mainWindow).runningTable;
+		if(exceptionNum >= getNum(task.getTotal() - task.getCurrent())){
+			Tracker.println(DownloadWorker.class, task.getName() + ":配额不足或者下载异常，停止下载。");
+			//设置任务状态为下载中
+			task.setStatus(TaskStatus.STOPED);
+			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+			table.updateUI();
+			return null;
+		}
+		exceptionNum = 0;
 		//设置任务状态为下载中
 		task.setStatus(TaskStatus.STARTED);
 		Tracker.println(getClass(), task.getName() + ":开始下载");
 		List<Picture> pics = task.getPictures();
 		Picture pic;
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-		TaskingTable table = (TaskingTable) ((EgDownloaderWindow)mainWindow).runningTable;
 		InputStream is;
+		
 		if(pics.size() != 0){
 			for(int i = 0; i < pics.size(); i ++){
 				pic = pics.get(i);
@@ -53,6 +63,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null;
 						pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 						if(pic.getRealUrl() == null){
+							exceptionNum ++;
 							continue;
 						}
 						if(this.isCancelled())//是否暂停
@@ -65,11 +76,13 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							pic.setRealUrl(null);
 							System.out.println(pic.getName() + ":403");
 							is.close();
+							exceptionNum ++;
 							continue;
 						}else if(size < 1010){
 							pic.setRealUrl(null);
 							System.out.println(pic.getName() + ":509");
 							is.close();
+							exceptionNum ++;
 							continue;
 						}
 						size = FileUtil.storeStream(task.getSaveDir(), pic.getName(), is);//保存到目录
@@ -118,10 +131,20 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			//更新任务到文件
 			((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+			table.updateUI();
 		}
 		return null;
 	}
 	public Task getTask() {
 		return task;
+	}
+	
+	/**
+	 * 按照80%计算停止下载的403/509图片数
+	 * @param total
+	 * @return
+	 */
+	private int getNum(int total){
+		return total * 80 / 100;
 	}
 }
