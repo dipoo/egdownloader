@@ -24,6 +24,7 @@ public class Main {
 			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
 			BeautyEyeLNFHelper.launchBeautyEyeLNF();
 			UIManager.put("RootPane.setupButtonVisible", false);
+//			WebLookAndFeel.install();
 		} catch (Exception e) {
 
 		}
