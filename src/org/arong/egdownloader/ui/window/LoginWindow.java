@@ -44,10 +44,8 @@ public class LoginWindow extends JDialog {
 		this.setLocationRelativeTo(null);
 		JLabel userLabel = new AJLabel("用户名：", Color.BLUE, 10, 20, 60, 30);
 		userTextField = new AJTextField("", 60, 20, 200, 30);
-		userTextField.setText("waprong");
 		JLabel pwdLabel = new AJLabel("密   码：", Color.BLUE, 10, 60, 60, 30);
 		pwdPasswordField = new JPasswordField();
-		pwdPasswordField.setText("19890226");
 		pwdPasswordField.setBounds(60, 60, 200, 30);
 		JButton loginButton = new AJButton("登录", "", null, new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window window, MouseEvent e) {
