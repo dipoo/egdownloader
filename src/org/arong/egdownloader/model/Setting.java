@@ -27,6 +27,7 @@ public class Setting {
 	private String showPicSuffix = "\"";//浏览漫画的地址后缀
 	private String realUrlPrefix = "<img id=\"img\" src=\"";
 	private String realUrlSuffix = "\"";
+	private String loginUrl = "https://forums.e-hentai.org/index.php?act=Login&CODE=01";
 	
 	public String getRealUrlPrefix() {
 		return realUrlPrefix;
@@ -158,5 +159,11 @@ public class Setting {
 	}
 	public void setMaxThread(int maxThread) {
 		this.maxThread = maxThread;
+	}
+	public String getLoginUrl() {
+		return loginUrl;
+	}
+	public void setLoginUrl(String loginUrl) {
+		this.loginUrl = loginUrl;
 	}
 }

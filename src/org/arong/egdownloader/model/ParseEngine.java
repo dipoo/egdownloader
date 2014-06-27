@@ -172,10 +172,12 @@ public final class ParseEngine {
 	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws Exception{
 		String url = null;
 		try {
-			url = Spider.getTextFromSource(WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo()),  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
+			String s = WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo());
+			url = Spider.getTextFromSource(s,  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
 		} catch (Exception e) {
 			Tracker.println(ParseEngine.class, taskName + ":getdownloadUrl异常");
-			return getdownloadUrl(taskName, sourceUrl, setting);
+			//return getdownloadUrl(taskName, sourceUrl, setting);
+			return null;
 		}
 		System.out.println(url);
 		return url;

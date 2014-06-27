@@ -52,6 +52,9 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+						if(pic.getRealUrl() == null){
+							continue;
+						}
 						if(this.isCancelled())//是否暂停
 							return null;
 						is =  WebClient.getStreamUseJava(pic.getRealUrl());

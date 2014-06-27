@@ -10,6 +10,7 @@ import javax.swing.JButton;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.util.Tracker;
 
 /**
  * 封装JButton,使构造函数可以设置text值,name值,注册监听器,坐标,大小<br>
@@ -53,15 +54,25 @@ public class AJButton extends JButton {
 	public AJButton(String text, String name, String icon, ActionListener actionListener,
 			int x, int y, int width, int height) {
 		this(text, name, actionListener, x, y, width, height);
-		if(icon != null)
-			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(icon != null){
+			try{
+				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+		}
 	}
 	public AJButton(String text, String name, String icon, MouseListener mouseListener,
 			int x, int y, int width, int height) {
 		this(text, name, null, x, y, width, height);
 		if(mouseListener != null)
 			this.addMouseListener(mouseListener);
-		if(icon != null)
-			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(icon != null){
+			try{
+				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+			}catch(Exception e){
+				Tracker.println(getClass(), e.getMessage());
+			}
+		}
 	}
 }
