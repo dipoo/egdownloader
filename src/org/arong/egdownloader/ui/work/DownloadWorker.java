@@ -85,7 +85,13 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							exceptionNum ++;
 							continue;
 						}
-						size = FileUtil.storeStream(task.getSaveDir(), pic.getName(), is);//保存到目录
+						String name = pic.getName();
+						if(! setting.isSaveAsName()){
+							if(name.indexOf(".") != -1){
+								name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
+							}
+						}
+						size = FileUtil.storeStream(task.getSaveDir(), name, is);//保存到目录
 						if(this.isCancelled())//是否暂停
 							return null;
 						//Picture [id=41b2c042-7560-422b-a521-e76b56720a77, num=01, name=P213_.jpg, url=http://exhentai.org/s/b0f5fe0e5c/698928-1, realUrl=http://36.233.48.163:8888/h/b0f5fe0e5c10d164456ed3f2000d8b0ef258ab5d-1385766-1279-1850-jpg/keystamp=1401206100-f2b9d0361c/P213_.jpg, size=0, time=null, saveAsName=true, isCompleted=false, isRunning=false]
