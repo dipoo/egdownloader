@@ -58,6 +58,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				taskTable.updateUI();
 				window.setEnabled(true);
 				window.setVisible(true);
+			}else{
+				window.creatingWindow.dispose();
+				JOptionPane.showMessageDialog(null, "创建异常");
 			}
 		} catch (SocketTimeoutException e){
 			((CreatingWindow)(window.creatingWindow)).reset();

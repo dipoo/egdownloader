@@ -267,7 +267,7 @@ public class SettingWindow extends JFrame{
 					String sourcePrefix = settingWindow.d_sourcePrefixTextField.getText();
 					String sourceSuffix = settingWindow.d_sourceSuffixTextField.getText();
 					String showPicPrefix = settingWindow.d_showPicPrefixTextField.getText();
-					String showPicSuffix = settingWindow.d_showPicPrefixTextField.getText();
+					String showPicSuffix = settingWindow.d_showPicSuffixTextField.getText();
 					String realUrlPrefix = settingWindow.d_realUrlPrefixTextField.getText();
 					String realUrlSuffix = settingWindow.d_realUrlSuffixTextField.getText();
 					Pattern p = Pattern.compile("[0-9]+");

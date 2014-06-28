@@ -150,6 +150,9 @@ public final class ParseEngine {
 		System.out.println("total:" + total_);
 		String name = Spider.getTextFromSource(hentaiHomeSource, setting.getNamePrefix(), "\n");
 		System.out.println("name:" + name);
+		if(total_ == null || name == null){
+			return null;
+		}
 		creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + name);
 		creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + total_);
 		creatingWindow.nameLabel.setVisible(true);
