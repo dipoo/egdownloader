@@ -37,14 +37,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		TaskingTable table = (TaskingTable) ((EgDownloaderWindow)mainWindow).runningTable;
-		if(exceptionNum >= getNum(task.getTotal() - task.getCurrent())){
-			Tracker.println(DownloadWorker.class, task.getName() + ":配额不足或者下载异常，停止下载。");
-			//设置任务状态为下载中
-			task.setStatus(TaskStatus.STOPED);
-			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
-			table.updateUI();
-			return null;
-		}
 		exceptionNum = 0;
 		//设置任务状态为下载中
 		task.setStatus(TaskStatus.STARTED);
@@ -130,6 +122,14 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		if(task.getCurrent() < pics.size()){
 			if(this.isCancelled())//是否暂停
 				return null;
+			if(exceptionNum >= (task.getTotal() - task.getCurrent())){
+				Tracker.println(DownloadWorker.class, task.getName() + ":配额不足或者下载异常，停止下载。");
+				//设置任务状态为下载中
+				task.setStatus(TaskStatus.STOPED);
+				table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+				table.updateUI();
+				return null;
+			}
 			doInBackground();
 		}else{
 			//设置任务状态为已完成
@@ -145,12 +145,4 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		return task;
 	}
 	
-	/**
-	 * 按照80%计算停止下载的403/509图片数
-	 * @param total
-	 * @return
-	 */
-	private int getNum(int total){
-		return total * 80 / 100;
-	}
 }

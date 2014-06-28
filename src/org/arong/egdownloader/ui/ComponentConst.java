@@ -97,6 +97,11 @@ public final class ComponentConst {
 	
 	
 	/*AboutMenuWindow内的组件*/
-	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME + "</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" + Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" + Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED + "</b><br>官方网站：https://github.com/dipoo/egdownloader";
+	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME +
+			"</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" +
+			Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" +
+			Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED +
+			"</b><br>项目地址：https://github.com/dipoo/egdownloader" + 
+			"<br/><font color='blue'>有任何问题，请到项目托管地址发issue。</font>";
 	
 }
