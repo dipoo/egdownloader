@@ -479,6 +479,90 @@ public class WebClient {
     }
     
     /**
+     * 向指定url发送请求并获得响应数据(使用原生JDK API)
+     * 
+     * @param urlString
+     * @param encoding
+     * @param parameter
+     * @return
+     * @throws IOException
+     */
+    public static String getCookieUseJava(final String urlString,
+            final String encoding)
+            throws IOException {
+
+        String nURL = (urlString.startsWith("http://") || urlString
+                .startsWith("https://")) ? urlString : ("http:" + urlString)
+                .intern();
+        String method = "GET";
+        String post = null;
+        String digest = null;
+
+        String cookie = "";
+
+        boolean foundRedirect = false;
+
+        Map<String, String> headers = new HashMap<String, String>();
+
+        URL url = new URL(nURL);
+
+        try{
+	        do {
+	
+	            HttpURLConnection urlConnection = (HttpURLConnection) url
+	                    .openConnection();
+	            // 添加访问授权
+	            if (digest != null) {
+	                urlConnection.setRequestProperty("Authorization", digest);
+	            }
+	            urlConnection.setDoOutput(true);
+	            urlConnection.setDoInput(true);
+	            urlConnection.setUseCaches(false);
+	            urlConnection.setInstanceFollowRedirects(false);
+	            urlConnection.setRequestMethod(method);
+	            //模拟http头文件
+	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
+	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
+	            //追加http头文件
+	            Set<Entry<String, String>> headersSet = headers.entrySet();
+	            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
+	                Entry<String, String> entry = (Entry<String, String>) it.next();
+	                urlConnection.setRequestProperty((String) entry.getKey(),
+	                        (String) entry.getValue());
+	            }
+	            if (post != null) {
+	                OutputStreamWriter outRemote = new OutputStreamWriter(
+	                        urlConnection.getOutputStream());
+	                outRemote.write(post);
+	                outRemote.flush();
+	            }
+	            // 获得响应状态
+	            int responseCode = urlConnection.getResponseCode();
+	            if (responseCode == 302) {
+	                // 重定向
+	                String location = urlConnection.getHeaderField("Location");
+	                url = new URL(location);
+	                foundRedirect = true;
+	            } else {
+	                if (responseCode == 200 || responseCode == 201) {
+	                	 String key = null;
+	                     for (int i = 1; (key = urlConnection.getHeaderFieldKey(i)) != null; i++){
+	                   	  System.out.print(key+":");
+	                   	  System.out.println(urlConnection.getHeaderField(key)); 
+	                     }
+	                	cookie = urlConnection.getHeaderField("set-cookie");
+	                }
+	                foundRedirect = false;
+	            }
+	            // 如果重定向则继续
+	        } while (foundRedirect);
+        }catch (SocketTimeoutException e) {
+        	//捕获到超时，不再请资源，返回null
+		}
+        return cookie;
+    }
+    
+    /**
      * 转化InputStream为String
      * 
      * @param in
@@ -547,5 +631,18 @@ public class WebClient {
 			e.printStackTrace();
 		}
         return null;
+    }
+    
+    public static String getUrlStr(String url, Map<String, ?> params){
+    	if(params != null){
+    		Iterator<String> it = params.keySet().iterator();
+    		String key;
+    		while (it.hasNext()) {
+				key = it.next();
+				url += key + "=" + params.get(key) + "&";
+			}
+    		url = url.substring(0, url.length() - 1);
+    	}
+    	return url;
     }
 }
