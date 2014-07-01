@@ -4,4 +4,4 @@
 
 百度网盘：[egdownloader.exe](http://pan.baidu.com/s/1c0jEecw) 下载。
 
-![结构](./ui.jpg)
+![结构](./ui.png)
