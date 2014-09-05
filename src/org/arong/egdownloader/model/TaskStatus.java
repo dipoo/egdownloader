@@ -5,6 +5,7 @@ package org.arong.egdownloader.model;
  * @since 2014-05-23
  */
 public enum TaskStatus {
+	UNCREATED("未创建"),
 	UNSTARTED("未开始"),
 	STOPED("已暂停"),
 	STARTED("下载中"),
@@ -18,7 +19,9 @@ public enum TaskStatus {
 		this.status = status;
 	}
 	public static TaskStatus parseTaskStatus(String status){
-		if(TaskStatus.UNSTARTED.getStatus().equals(status)){
+		if(TaskStatus.UNCREATED.getStatus().equals(status)){
+			return TaskStatus.UNCREATED;
+		}else if(TaskStatus.UNSTARTED.getStatus().equals(status)){
 			return TaskStatus.UNSTARTED;
 		}else if(TaskStatus.STOPED.getStatus().equals(status)){
 			return TaskStatus.STOPED;

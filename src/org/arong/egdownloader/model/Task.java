@@ -14,12 +14,15 @@ public class Task {
 	private String id;//id
 	private String url;//下载地址
 	private String name;//名称
+	private String subname;//字名称
+	private String coverUrl;//封面路径
 	private String saveDir;//保存目录
+	private String language;//漫画语言
 	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String completedTime;//完成时间
 	private int total;//图片总数
 	private int current = 0;//已下载完成总数
-	private int size;//总大小
+	private String size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private List<Picture> pictures;
 	private DownloadWorker downloadWorker;//下载线程实例,不保存，不提供get/set方法
@@ -42,6 +45,29 @@ public class Task {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getSubname() {
+		return subname;
+	}
+
+	public void setSubname(String subname) {
+		this.subname = subname;
+	}
+
+	public String getCoverUrl() {
+		return coverUrl;
+	}
+
+	public void setCoverUrl(String coverUrl) {
+		this.coverUrl = coverUrl;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 	public String getSaveDir() {
 		return saveDir;
@@ -73,10 +99,10 @@ public class Task {
 	public void setCurrent(int current) {
 		this.current = current;
 	}
-	public int getSize() {
+	public String getSize() {
 		return size;
 	}
-	public void setSize(int size) {
+	public void setSize(String size) {
 		this.size = size;
 	}
 	public TaskStatus getStatus() {

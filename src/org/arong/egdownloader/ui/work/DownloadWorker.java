@@ -78,11 +78,11 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							continue;
 						}
 						String name = pic.getName();
-						if(! setting.isSaveAsName()){
+						/*if(! setting.isSaveAsName()){
 							if(name.indexOf(".") != -1){
 								name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
 							}
-						}
+						}*/
 						size = FileUtil.storeStream(task.getSaveDir(), name, is);//保存到目录
 						if(this.isCancelled())//是否暂停
 							return null;

@@ -297,12 +297,15 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		ele.addAttribute("id", t.getId());
 		ele.addAttribute("url", t.getUrl());
 		ele.addAttribute("name", t.getName());
+		ele.addAttribute("subname", t.getSubname());
+		ele.addAttribute("coverUrl", t.getCoverUrl());
+		ele.addAttribute("language", t.getLanguage());
 		ele.addAttribute("saveDir", t.getSaveDir());
 		ele.addAttribute("createTime", t.getCreateTime());
 		ele.addAttribute("completedTime", t.getCompletedTime());
 		ele.addAttribute("total", t.getTotal() + "");
 		ele.addAttribute("current", t.getCurrent() + "");
-//		ele.addAttribute("size", t.getSize() + "");
+		ele.addAttribute("size", t.getSize());
 		ele.addAttribute("status", t.getStatus().getStatus() + "");
 		return ele;
 	}
@@ -313,12 +316,15 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setId(ele.attributeValue("id"));
 		task.setUrl(ele.attributeValue("url"));
 		task.setName(ele.attributeValue("name"));
+		task.setSubname(ele.attributeValue("subname"));
+		task.setCoverUrl(ele.attributeValue("coverUrl"));
+		task.setLanguage(ele.attributeValue("language"));
 		task.setSaveDir(ele.attributeValue("saveDir"));
 		task.setCreateTime(ele.attributeValue("createTime"));
 		task.setCompletedTime(ele.attributeValue("completedTime"));
 		task.setTotal(ele.attributeValue("total") == null ? 0 : Integer.parseInt(ele.attributeValue("total")));
 		task.setCurrent(ele.attributeValue("current") == null ? 0 : Integer.parseInt(ele.attributeValue("current")));
-//		task.setSize(ele.attributeValue("size") == null ? 0 : Integer.parseInt(ele.attributeValue("size")));
+		task.setSize(ele.attributeValue("size"));
 		//如果任务为下载中，则加载到内存中设置为已暂停，由用户手动开启任务
 		TaskStatus ts = TaskStatus.parseTaskStatus(ele.attributeValue("status"));
 		if(ts == TaskStatus.STARTED){
