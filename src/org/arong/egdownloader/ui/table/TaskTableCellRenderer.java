@@ -44,13 +44,13 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else{
 			fontColor = Color.DARK_GRAY;
 		}
+		TableColumn tc = table.getColumnModel().getColumn(column);
 		if(column == 0){//第一列：图标
-			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(30);
 			tc.setMaxWidth(40);
-			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
+			JLabel l = new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
+			return l;
 		}else if(column == 1){//第二列：名称
-			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(600);
 			tc.setMaxWidth(600);
 			if(value != null && value.toString().length() > 90){
@@ -59,25 +59,22 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 				return nameLabel;
 			}
 		}else if(column == 2){//第三列：图片总数
-			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(60);
 			tc.setMaxWidth(80);
 			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
 		}else if(column == 3){//第三列：语言
-			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(60);
 			tc.setMaxWidth(80);
 			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
 		}else if(column == 4){//第四列：进度
-			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(120);
 			tc.setMaxWidth(140);
 			if(value == null || Integer.parseInt(value.toString()) < 1){
 				return new AJLabel("0(0.0%)", fontColor, blodFont, JLabel.CENTER);
 			}
-			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 1).toString()));
+			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 2).toString()));
 			bar.setBackground(progressBarBg);
-			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 1)) + ")");
+			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 2)) + ")");
 			bar.setStringPainted(true);
 			bar.setFont(blodFont);bar.setPreferredSize(new Dimension(110, 13));
 			bar.setForeground(progressBarBorder);
@@ -85,7 +82,6 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			bar.setValue(Integer.parseInt(value.toString()));
 			return bar;
 		}else if(column == 5){//第五列：状态
-			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  40 : 62);
 			tc.setMaxWidth(80);
 			if(value.toString().equals(TaskStatus.UNSTARTED.getStatus())){
