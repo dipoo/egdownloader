@@ -27,12 +27,10 @@ import org.arong.util.FileUtil;
 public class CreateWorker extends SwingWorker<Void, Void>{
 	
 	private JFrame mainWindow;
-	private String url;
-	private String saveDir;
-	public CreateWorker(String url, String saveDir, JFrame mainWindow){
+	private Task task;
+	public CreateWorker(Task task, JFrame mainWindow){
 		this.mainWindow = mainWindow;
-		this.url = url;
-		this.saveDir = saveDir;
+		this.task = task;
 	}
 	
 	protected Void doInBackground() throws Exception {
@@ -41,10 +39,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		addFormWindow.dispose();
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
 		Setting setting = window.setting;//获得配置信息
-		Task task = null;
 		InputStream is;
 		try {
-			task = ParseEngine.buildTask_new(url, saveDir, setting, window.creatingWindow);
+			task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
 			if(task != null){
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());

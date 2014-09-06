@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.arong.egdownloader.model.Setting;
+import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -48,6 +49,8 @@ public class AddFormDialog extends JDialog {
 	private JButton addTaskBtn;
 	private JLabel tipLabel;
 	private JFileChooser saveDirChooser;
+	private JLabel tagLabel;
+	private JTextField tagField;
 	
 	public JFrame mainWindow;
 	
@@ -56,7 +59,7 @@ public class AddFormDialog extends JDialog {
 		this.mainWindow = mainWindow;
 		this.setTitle("新建任务");
 		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
-		this.setSize(480, 210);
+		this.setSize(480, 250);
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setLocationRelativeTo(mainWindow);
@@ -73,8 +76,10 @@ public class AddFormDialog extends JDialog {
 		
 		urlLabel = new AJLabel("下载地址", Color.BLUE, 5, 40, 60, 30);
 		urlField = new AJTextField("urlField", 65, 40, 395, 30);
-		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 80, 60, 30);
-		saveDirField = new AJTextField("saveDirField", 65, 80, 320, 30);
+		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 120, 60, 30);
+		saveDirField = new AJTextField("saveDirField", 65, 120, 320, 30);
+		tagLabel = new AJLabel("标签", Color.BLUE, 5, 80, 60, 30);
+		tagField = new AJTextField("tag", 65, 80, 395, 30);
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 		saveDirField.setText(setting.getDefaultSaveDir() + "\\" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
@@ -92,18 +97,22 @@ public class AddFormDialog extends JDialog {
                     this_.saveDirField.setText(path);
                 }
 			}
-		}) , 400, 80, 60, 30);
+		}) , 400, 120, 60, 30);
 		
 		addTaskBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog, MouseEvent event) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
-				if("".equals(this_.urlField.getText().trim())){
+				String url = this_.urlField.getText().trim();
+				String saveDir = this_.saveDirField.getText().trim();
+				String tag = this_.tagField.getText().trim();
+				if("".equals(url)){
 					JOptionPane.showMessageDialog(this_, "请填写下载地址");
-				}else if("".equals(this_.saveDirField.getText().trim())){
+				}else if("".equals(saveDir)){
 					JOptionPane.showMessageDialog(this_, "请选择保存路径");
 				}else{
-					String url = this_.urlField.getText().trim();
-					String saveDir = this_.saveDirField.getText().trim();
+					if("".equals(tag)){
+						tag = "一般";
+					}
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)this_.mainWindow;
 					if(isValidUrl(mainWindow.setting, url)){
 						//存到数据库中的地址统一不以/结尾，方便验证重复
@@ -115,7 +124,9 @@ public class AddFormDialog extends JDialog {
 							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
 								((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
 							}
-							CreateWorker worker = new CreateWorker(url, saveDir, mainWindow);
+							Task task = new Task(url, saveDir);
+							task.setTag(tag);
+							CreateWorker worker = new CreateWorker(task, mainWindow);
 							worker.execute();
 						}else{
 							JOptionPane.showMessageDialog(this_, "此下载地址已存在");
@@ -125,11 +136,11 @@ public class AddFormDialog extends JDialog {
 					}
 				}
 			}
-		}), (this.getWidth() - 100) / 2, 130, 100, 30);
+		}), (this.getWidth() - 100) / 2, 170, 100, 30);
 		saveDirChooser = new JFileChooser("/");
 		saveDirChooser.setDialogTitle("选择保存目录");//选择框标题
 		saveDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//只能选择目录
-		ComponentUtil.addComponents(this.getContentPane(), addTaskBtn, urlLabel, urlField, saveDirLabel, saveDirField, chooserBtn, tipLabel);
+		ComponentUtil.addComponents(this.getContentPane(), addTaskBtn, urlLabel, urlField, tagLabel, tagField, saveDirLabel, saveDirField, chooserBtn, tipLabel);
 	}
 	public void emptyField(){
 		urlField.setText("");
