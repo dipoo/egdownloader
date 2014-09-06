@@ -37,14 +37,14 @@ public class TaskTableModel extends AbstractTableModel {
 			case 0 :
 				return "";
 			case 1 :
-				return "" + tasks.get(rowIndex).getName();
+				return "[" + tasks.get(rowIndex).getTag() + "]" + tasks.get(rowIndex).getName();
 			case 2 :
 				return tasks.get(rowIndex).getTotal();
 			case 3 :
+				return tasks.get(rowIndex).getLanguage();
+			case 4 :
 				return tasks.get(rowIndex).getCurrent();
-			/*case 4 :
-				return (tasks.get(rowIndex).getSize() / 1024);*/
-			case 4 :	
+			case 5 :	
 				return tasks.get(rowIndex).getStatus().getStatus();
 			default :
 				return "";

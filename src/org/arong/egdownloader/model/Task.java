@@ -18,6 +18,7 @@ public class Task {
 	private String coverUrl;//封面路径
 	private String saveDir;//保存目录
 	private String language;//漫画语言
+	private String tag;//标签
 	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String completedTime;//完成时间
 	private int total;//图片总数
@@ -143,6 +144,14 @@ public class Task {
 
 	public void setDownloadWorker(DownloadWorker downloadWorker) {
 		this.downloadWorker = downloadWorker;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	
 }

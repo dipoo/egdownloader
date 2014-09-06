@@ -31,7 +31,7 @@ public class DetailWindow extends JDialog {
 	public DetailWindow(PictureTable pictureTable){
 		this.pictureTable = pictureTable;
 		this.setTitle("任务详细信息");
-		this.setSize(800, 480);
+		this.setSize(ComponentConst.CLIENT_WIDTH, 480);
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);

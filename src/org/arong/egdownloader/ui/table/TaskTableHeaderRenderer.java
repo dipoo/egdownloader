@@ -24,9 +24,11 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 				return new AJLabel(table.getRowCount() + "", null, color, JLabel.CENTER);
 			case 2://图片数
 				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
-			case 3://下载进度
+			case 3://语言
 				return new AJLabel(value.toString(), null, color, JLabel.CENTER);
-			case 4://状态
+			case 4://下载进度
+				return new AJLabel(value.toString(), null, color, JLabel.CENTER);
+			case 5://状态
 				return new AJLabel(value.toString(), null, color, JLabel.CENTER);	
 			default:
 				return new AJLabel(value.toString(), color);

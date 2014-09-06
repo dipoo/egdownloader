@@ -14,7 +14,7 @@ import org.arong.egdownloader.version.Version;
  *
  */
 public final class ComponentConst {
-	public final static int CLIENT_WIDTH = 800;//主窗口宽
+	public final static int CLIENT_WIDTH = 1024;//主窗口宽
 	
 	public final static int CLIENT_HEIGHT = 480;//主窗口高
 	
@@ -40,7 +40,7 @@ public final class ComponentConst {
 	
 	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
 	
-	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目(P)", "已下载"/*, "大小(M)"*/, "状态"};
+	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目(P)", "语言", "已下载", "状态"};
 	
 	public final static String[] PICTURE_TABLE_HEADER = {"序号", "名称", "大小", "状态", "地址", "下载时间"};
 	
