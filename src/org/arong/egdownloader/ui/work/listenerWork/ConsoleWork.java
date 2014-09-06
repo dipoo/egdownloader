@@ -35,7 +35,7 @@ public class ConsoleWork implements IListenerTask {
 			this.consoleTextArea = jea;
 			JScrollPane consolePane = new JScrollPane(jea);
 			TitledBorder border = BorderFactory.createTitledBorder("控制台");
-			consolePane.setBounds(5, 450, ComponentConst.CLIENT_WIDTH - 20, 150);
+			consolePane.setBounds(5, 450, ComponentConst.CLIENT_WIDTH - 20, 190);
 			consolePane.setAutoscrolls(true);
 			consolePane.setBorder(border);
 			consolePane.setVisible(false);
@@ -52,13 +52,13 @@ public class ConsoleWork implements IListenerTask {
 		if(mainWindow.consolePane.isVisible()){
 			mainWindow.consolePane.setVisible(false);
 			//重设主窗口大小
-			mainWindow.setSize(ComponentConst.CLIENT_WIDTH, mainWindow.getHeight() - 160);
+			mainWindow.setSize(ComponentConst.CLIENT_WIDTH, mainWindow.getHeight() - 200);
 		}
 		//如果控制台是隐藏的，则显示
 		else{
 			mainWindow.consolePane.setVisible(true);
 			//重设主窗口大小
-			mainWindow.setSize(ComponentConst.CLIENT_WIDTH, mainWindow.getHeight() + 160);
+			mainWindow.setSize(ComponentConst.CLIENT_WIDTH, mainWindow.getHeight() + 200);
 		}
 	}
 

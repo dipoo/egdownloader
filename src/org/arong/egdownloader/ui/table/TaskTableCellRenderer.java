@@ -51,10 +51,10 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			return new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
 		}else if(column == 1){//第二列：名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(540);
-			tc.setMaxWidth(540);
-			if(value != null && value.toString().length() > 80){
-				JLabel nameLabel = new AJLabel(value.toString().substring(0, 80) + " ......", fontColor, font, JLabel.LEFT);
+			tc.setPreferredWidth(600);
+			tc.setMaxWidth(600);
+			if(value != null && value.toString().length() > 90){
+				JLabel nameLabel = new AJLabel(value.toString().substring(0, 90) + " ......", fontColor, font, JLabel.LEFT);
 				nameLabel.setToolTipText(value.toString());//设置鼠标移过提示
 				return nameLabel;
 			}
@@ -63,7 +63,12 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setPreferredWidth(60);
 			tc.setMaxWidth(80);
 			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
-		}else if(column == 3){//第四列：进度
+		}else if(column == 3){//第三列：语言
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(60);
+			tc.setMaxWidth(80);
+			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
+		}else if(column == 4){//第四列：进度
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(120);
 			tc.setMaxWidth(140);
@@ -79,7 +84,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
 			bar.setValue(Integer.parseInt(value.toString()));
 			return bar;
-		}else if(column == 4){//第五列：状态
+		}else if(column == 5){//第五列：状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  40 : 62);
 			tc.setMaxWidth(80);
