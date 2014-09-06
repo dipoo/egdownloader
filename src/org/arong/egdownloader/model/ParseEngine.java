@@ -21,11 +21,10 @@ import org.arong.util.Tracker;
  * @since 2014-05-25
  */
 public final class ParseEngine {
-	public static Task buildTask_new(String url, String saveDir, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
+	public static Task buildTask_new(Task task, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
 		CreatingWindow creatingWindow = (CreatingWindow)window;
-		Task task = new Task(url, saveDir);
 		task.setId(UUID.randomUUID().toString());
-		String source = WebClient.postRequestWithCookie(url, setting.getCookieInfo());
+		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//获取名称
 		task.setName(Spider.getTextFromSource(source, setting.getTask_name()[0], setting.getTask_name()[1]));
 		//获取字名称
@@ -49,7 +48,7 @@ public final class ParseEngine {
 		creatingWindow.nameLabel.setVisible(true);
 		creatingWindow.totalLabel.setVisible(true);
 		creatingWindow.bar.setMaximum(task.getTotal());
-		task.setSaveDir(saveDir + "/" + task.getName());
+		task.setSaveDir(task.getSaveDir() + "/" + task.getName());
 		//获取图片集合
 		//计算页数(每40张一页)
         int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;

@@ -19,7 +19,7 @@ public class CoverWindow extends JDialog {
 	private JLabel coverLabel = null;
 	public CoverWindow(Task task) {
 		ImageIcon icon = new ImageIcon(task.getSaveDir() + "/cover.jpg");
-		this.setTitle("封面");
+		this.setTitle("漫画封面");
 		this.setSize(icon.getIconWidth() + 20, icon.getIconHeight() + 45);
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
