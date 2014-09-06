@@ -15,6 +15,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.util.Tracker;
@@ -90,6 +91,18 @@ public class TaskingTable extends JTable {
 							}
 						}
 						table.updateUI();
+					}else{//单击事件
+						int column = table.columnAtPoint(e.getPoint());
+						if(column == 0){
+							EgDownloaderWindow window = table.getMainWindow();
+							Task task = table.getTasks().get(rowIndex);
+							CoverWindow cw = (CoverWindow) window.coverWindow;
+							if(cw == null){
+								window.detailWindow = new CoverWindow(task);
+								cw = (CoverWindow) window.detailWindow;
+							}
+							cw.setVisible(true);
+						}
 					}
 					
 				}
