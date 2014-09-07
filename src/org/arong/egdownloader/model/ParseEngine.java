@@ -80,7 +80,7 @@ public final class ParseEngine {
                 String prefix = setting.getPicture_intercept()[1];//截取的标志
                 picSource = Spider.substring(picSource, prefix);
                 if(i == page - 1){
-					currCount = task.getTotal() - (page - 1) * setting.getPageCount();
+					currCount = task.getTotal();// - (page - 1) * setting.getPageCount();
 				}else{
 					currCount = (i + 1) * setting.getPageCount();
 				}

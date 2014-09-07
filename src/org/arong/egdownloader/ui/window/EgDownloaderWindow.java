@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -153,6 +154,18 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane.getViewport().setBackground(new Color(254,254,254));
 		//右键菜单：查看详细
 		AJMenu detailPopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ShowDetailWork()));
+		//右键菜单：复制网址
+		AJMenu copyUrlPopupMenuItem = new AJMenu(ComponentConst.POPUP_COPYURL_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
+			public void doWork(Window window, MouseEvent e) {
+				EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+				TaskingTable table = (TaskingTable) mainWindow.runningTable;
+				int index = table.getSelectedRow();
+				Task task = table.getTasks().get(index);
+				StringSelection ss = new StringSelection(task.getUrl());
+				table.getToolkit().getSystemClipboard().setContents(ss, ss);
+				mainWindow.tablePopupMenu.setVisible(false);
+			}
+		}));
 		//右键菜单：打开文件夹
 		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
 		//右键菜单：打开网页
@@ -160,7 +173,7 @@ public class EgDownloaderWindow extends JFrame {
 		//右键菜单：查漏补缺
 		AJMenu checkResetMenuItem = new AJMenu(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new CheckResetWork()));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem, openWebPageMenuItem, checkResetMenuItem);
+		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, copyUrlPopupMenuItem, openFolderPopupMenuItem, openWebPageMenuItem, checkResetMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
