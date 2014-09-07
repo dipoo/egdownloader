@@ -49,7 +49,13 @@ public class InitWindow extends JFrame {
 		}
 		DbTemplate<Setting> settingDbTemplate = new SettingDom4jDbTemplate();
 		List<Setting> settings = settingDbTemplate.query();
-		Setting setting = settings != null && settings.size() > 0 ? settings.get(0) : new Setting();
+		Setting setting = null;
+		if(settings == null || settings.size() == 0){
+			setting = new Setting();
+			settingDbTemplate.store(setting);
+		}else{
+			setting = settings.get(0);
+		}
 		textLabel.setForeground(new Color(123,23,89));
 		textLabel.setText("2、读取任务列表");
 		DbTemplate<Task> taskDbTemplate = new TaskDom4jDbTemplate();
