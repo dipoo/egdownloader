@@ -13,6 +13,7 @@ import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.window.CreatingWindow;
+import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
 
 /**
@@ -35,6 +36,7 @@ public final class ParseEngine {
         String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
         task.setTotal(Integer.parseInt(temp.split("@")[0].trim()));
         task.setSize(temp.split("@")[1].trim());
+        System.out.println(task.getSaveDir() + "/" + FileUtil.filterDir(task.getName()));
         //获取漫画语言
         task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
         Tracker.println(ParseEngine.class, task.getName());
@@ -48,7 +50,8 @@ public final class ParseEngine {
 		creatingWindow.nameLabel.setVisible(true);
 		creatingWindow.totalLabel.setVisible(true);
 		creatingWindow.bar.setMaximum(task.getTotal());
-		task.setSaveDir(task.getSaveDir() + "/" + task.getName());
+		task.setSaveDir(task.getSaveDir() + "/" + FileUtil.filterDir(task.getName()));
+		
 		//获取图片集合
 		//计算页数(每40张一页)
         int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;

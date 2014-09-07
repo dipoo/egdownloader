@@ -50,6 +50,7 @@ public final class FileUtil {
     	BufferedOutputStream bos = null;
     	int size = 0;
     	try {
+    		System.out.println(filterDir(name));
     		File fs = new File(path + "/" + name);
 			bis = new BufferedInputStream(in);
 			bos = new BufferedOutputStream(new FileOutputStream(fs));
@@ -108,5 +109,17 @@ public final class FileUtil {
 			s = df.format(d / (1024.0 * 1024.0 * 1024.0)) + "G";
 		}
 		return s;
+	}
+	
+	public static String filterDir(String dir){
+		try{
+		if("".equals(dir.trim()) || dir == null){
+			return "新建文件夹";
+		}
+		return dir.replaceAll("\\|", "").replaceAll("\\*", "");
+		}catch(Exception e){
+			Tracker.println(FileUtil.class, e.getMessage());
+		}
+		return null;
 	}
 }
