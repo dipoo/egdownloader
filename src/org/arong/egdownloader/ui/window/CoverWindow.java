@@ -38,4 +38,9 @@ public class CoverWindow extends JDialog {
 			
 		});
 	}
+	public void showCover(Task task){
+		ImageIcon icon = new ImageIcon(task.getSaveDir() + "/cover.jpg");
+		this.setSize(icon.getIconWidth() + 20, icon.getIconHeight() + 45);
+		coverLabel.setIcon(icon);
+	}
 }

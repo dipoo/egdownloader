@@ -98,9 +98,10 @@ public class TaskingTable extends JTable {
 							Task task = table.getTasks().get(rowIndex);
 							CoverWindow cw = (CoverWindow) window.coverWindow;
 							if(cw == null){
-								window.detailWindow = new CoverWindow(task);
-								cw = (CoverWindow) window.detailWindow;
+								window.coverWindow = new CoverWindow(task);
+								cw = (CoverWindow) window.coverWindow;
 							}
+							cw.showCover(task);
 							cw.setVisible(true);
 						}
 					}

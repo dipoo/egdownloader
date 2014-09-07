@@ -34,7 +34,7 @@ public class ShowDetailWork implements IListenerTask {
 		}
 		DetailWindow dw = (DetailWindow) mainWindow.detailWindow;
 		if(dw == null){
-			mainWindow.detailWindow = new DetailWindow(new PictureTable(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400,task , mainWindow));
+			mainWindow.detailWindow = new DetailWindow(new PictureTable(5, 70, ComponentConst.CLIENT_WIDTH - 20, 400,task , mainWindow));
 		}else{
 			((PictureTableModel)dw.pictureTable.getModel()).setPictures(task.getPictures());
 			dw.pictureTable.setTask(task);//将新任务绑定到图片表格中
@@ -42,6 +42,10 @@ public class ShowDetailWork implements IListenerTask {
 		dw = (DetailWindow) mainWindow.detailWindow;
 		dw.resetTile(task.getTotal() + "");
 		dw.taskNameLabel.setText(task.getName());
+		dw.taskSubnameLabel.setText(task.getSubname());
+		dw.taskLanguageLabel.setText(task.getLanguage());
+		dw.taskCreateLabel.setText(task.getCreateTime());
+		dw.taskCompletedLabel.setText(task.getCompletedTime());
 		dw.pictureTable.updateUI();
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
