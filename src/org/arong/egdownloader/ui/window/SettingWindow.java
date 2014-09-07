@@ -115,7 +115,7 @@ public class SettingWindow extends JFrame{
 			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
 			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
 			cookieField = new AJTextField(setting.getCookieInfo(), "", 125, 190, 360, 30);
-			/*cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+			cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
@@ -126,7 +126,7 @@ public class SettingWindow extends JFrame{
 						settingWindow.loginWindow.setVisible(true);
 					}
 				}
-			}), 500, 190, 60, 30);*/
+			}), 500, 190, 60, 30);
 			MouseListener basicBtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -170,7 +170,7 @@ public class SettingWindow extends JFrame{
 		addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
 				saveAsNameLabel, saveAsNameBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieField,
-				/*cookieButton,*/ basicBtn);
+				cookieButton, basicBtn);
 			/* HenTai@Home设置 */
 			h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
 			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 105, 30, 400, 30);

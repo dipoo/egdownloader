@@ -46,6 +46,7 @@ public class ShowDetailWork implements IListenerTask {
 		dw.taskLanguageLabel.setText(task.getLanguage());
 		dw.taskCreateLabel.setText(task.getCreateTime());
 		dw.taskCompletedLabel.setText(task.getCompletedTime());
+		dw.taskSizeLabel.setText(task.getSize());
 		dw.pictureTable.updateUI();
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);

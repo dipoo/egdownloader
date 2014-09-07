@@ -65,7 +65,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else if(column == 3){//第三列：语言
 			tc.setPreferredWidth(60);
 			tc.setMaxWidth(80);
-			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
+			return new AJLabel(value == null ? "" : value.toString(), fontColor, blodFont, JLabel.LEFT);
 		}else if(column == 4){//第四列：进度
 			tc.setPreferredWidth(120);
 			tc.setMaxWidth(140);

@@ -28,7 +28,7 @@ public final class ParseEngine {
 		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//获取名称
 		task.setName(Spider.getTextFromSource(source, setting.getTask_name()[0], setting.getTask_name()[1]));
-		//获取字名称
+		//获取子名称
         task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
         //获取封面路径
         task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
@@ -107,6 +107,23 @@ public final class ParseEngine {
 			
 		}
 		return pics;
+	}
+	/**
+	 * 重建任务，主要重新采集语言、封面、小标题等信息
+	 * @param task
+	 * @since v0.40
+	 */
+	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException{
+		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+		//获取子名称
+        task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
+        //获取封面路径
+        task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
+        //获取大小
+        String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
+        task.setSize(temp.split("@")[1].trim());
+        //获取漫画语言
+        task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
 	}
 	
 	public static Task buildTask_new_old(String url, String saveDir, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{

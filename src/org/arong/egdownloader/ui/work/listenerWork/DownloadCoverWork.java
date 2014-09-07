@@ -10,7 +10,9 @@ import java.net.SocketTimeoutException;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -33,6 +35,9 @@ public class DownloadCoverWork implements IListenerTask {
 		if(cover == null || !cover.exists()){
 			InputStream is;
 			try {
+				if(task.getCoverUrl() == null){
+					ParseEngine.rebuildTask(task, mainWindow.setting);
+				}
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
 				FileUtil.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
@@ -42,6 +47,8 @@ public class DownloadCoverWork implements IListenerTask {
 			} catch (ConnectTimeoutException e){
 				JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
 			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			} catch (SpiderException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());
 			} finally{
 				mainWindow.tablePopupMenu.setVisible(false);
