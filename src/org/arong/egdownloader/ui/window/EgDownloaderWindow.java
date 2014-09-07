@@ -40,6 +40,7 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
 import org.arong.egdownloader.ui.work.listenerWork.ConsoleWork;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
+import org.arong.egdownloader.ui.work.listenerWork.DownloadCoverWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
 import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
@@ -170,10 +171,12 @@ public class EgDownloaderWindow extends JFrame {
 		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
 		//右键菜单：打开网页
 		AJMenu openWebPageMenuItem = new AJMenu(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenWebPageWork()));
+		//右键菜单：下载封面
+		AJMenu downloadCoverMenuItem = new AJMenu(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new DownloadCoverWork()));
 		//右键菜单：查漏补缺
 		AJMenu checkResetMenuItem = new AJMenu(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new CheckResetWork()));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, copyUrlPopupMenuItem, openFolderPopupMenuItem, openWebPageMenuItem, checkResetMenuItem);
+		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, copyUrlPopupMenuItem, openFolderPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem, checkResetMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
