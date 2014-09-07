@@ -134,6 +134,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		}else{
 			//设置任务状态为已完成
 			task.setStatus(TaskStatus.COMPLETED);
+			task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			//更新任务到文件
 			((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1

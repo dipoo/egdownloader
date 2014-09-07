@@ -31,6 +31,7 @@ public class DetailWindow extends JDialog {
 	public JLabel taskLanguageLabel;
 	public JLabel taskCreateLabel;
 	public JLabel taskCompletedLabel;
+	public JLabel taskSizeLabel;
 	
 	public DetailWindow(PictureTable pictureTable){
 		this.pictureTable = pictureTable;
@@ -50,10 +51,13 @@ public class DetailWindow extends JDialog {
 		taskCreateLabel = new AJLabel("", null, 310, 5, 150, 110);
 		JLabel l5 = new AJLabel("完成时间：", Color.BLUE, 470, 5, 60, 110);
 		taskCompletedLabel = new AJLabel("", null, 540, 5, 150, 110);
+		JLabel l6 = new AJLabel("漫画大小：", Color.BLUE, 700, 5, 60, 110);
+		taskSizeLabel = new AJLabel("", null, 770, 5, 150, 110);
 		picturePane = new JScrollPane(pictureTable);
 		picturePane.setBounds(new Rectangle(5, 80, ComponentConst.CLIENT_WIDTH - 20, 480));
 		picturePane.getViewport().setBackground(new Color(254,254,254));
-		ComponentUtil.addComponents(getContentPane(),l1, taskNameLabel, picturePane, l2, taskSubnameLabel, l3, l4, l5, taskLanguageLabel, taskCreateLabel, taskCompletedLabel);
+		ComponentUtil.addComponents(getContentPane(),l1, taskNameLabel, picturePane, l2, taskSubnameLabel,
+				l3, l4, l5, l6, taskLanguageLabel, taskCreateLabel, taskCompletedLabel, taskSizeLabel);
 		
 		this.addWindowListener(new WindowAdapter() {
 
