@@ -50,7 +50,6 @@ public final class FileUtil {
     	BufferedOutputStream bos = null;
     	int size = 0;
     	try {
-    		System.out.println(filterDir(name));
     		File fs = new File(path + "/" + name);
 			bis = new BufferedInputStream(in);
 			bos = new BufferedOutputStream(new FileOutputStream(fs));
@@ -64,6 +63,7 @@ public final class FileUtil {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			if (bos != null) {

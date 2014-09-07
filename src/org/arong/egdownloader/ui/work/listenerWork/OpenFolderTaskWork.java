@@ -28,6 +28,7 @@ public class OpenFolderTaskWork implements IListenerTask {
 			try {
 				Desktop.getDesktop().open(new File(task.getSaveDir()));
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "文件夹已被删除");
 				mainWindow.tablePopupMenu.setVisible(false);
 			}

@@ -100,8 +100,9 @@ public class TaskingTable extends JTable {
 							if(cw == null){
 								window.coverWindow = new CoverWindow(task);
 								cw = (CoverWindow) window.coverWindow;
+							}else{
+								cw.showCover(task);
 							}
-							cw.showCover(task);
 							cw.setVisible(true);
 						}
 					}
