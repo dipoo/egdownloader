@@ -55,8 +55,8 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setMaxWidth(320);
 		}else if(column == 5){//第五列：时间
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(150);
-			tc.setMaxWidth(150);
+			tc.setPreferredWidth(180);
+			tc.setMaxWidth(180);
 		}
 		return new AJLabel(val, fontColor, font, JLabel.LEFT);
 	}
