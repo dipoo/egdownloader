@@ -79,6 +79,9 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	}
 	
 	public boolean store(Task t) {
+		if(t == null){
+			return false;
+		}
 		while(locked){
 			store(t);
 		}
@@ -119,6 +122,9 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	}
 
 	public boolean update(Task t) {
+		if(t == null){
+			return false;
+		}
 		while(locked){
 			update(t);
 		}
@@ -136,6 +142,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 				return false;
 			}
 		}
+		locked = false;
 		return false;
 	}
 	
@@ -188,6 +195,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 				return false;
 			}
 		}
+		locked = false;
 		return false;
 	}
 	

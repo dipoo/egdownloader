@@ -24,7 +24,9 @@ import org.arong.util.Tracker;
 public final class ParseEngine {
 	public static Task buildTask_new(Task task, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
 		CreatingWindow creatingWindow = (CreatingWindow)window;
-		task.setId(UUID.randomUUID().toString());
+		if(task.getId() == null){
+			task.setId(UUID.randomUUID().toString());
+		}
 		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//获取名称
 		task.setName(Spider.getTextFromSource(source, setting.getTask_name()[0], setting.getTask_name()[1]));
@@ -59,8 +61,6 @@ public final class ParseEngine {
         String picSource = Spider.getTextFromSource(source, setting.getPicture_listSource()[0], setting.getPicture_listSource()[1]);
         List<Picture> pictures = null;
         try{
-        	//int s = 0;
-        	//int i = 6 / s;
         	pictures = collectpictrues(task, setting, page, picSource, creatingWindow);
         }catch(Exception e){
         	//e.printStackTrace();

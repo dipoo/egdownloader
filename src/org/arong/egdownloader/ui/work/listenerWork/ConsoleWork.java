@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.BorderUIResource;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.SwingPrintStream;
@@ -34,11 +35,12 @@ public class ConsoleWork implements IListenerTask {
 			jea.setFont(new Font("宋体", Font.PLAIN, 12));
 			this.consoleTextArea = jea;
 			JScrollPane consolePane = new JScrollPane(jea);
-			TitledBorder border = BorderFactory.createTitledBorder("控制台");
+			TitledBorder border = BorderFactory.createTitledBorder(BorderUIResource.getEtchedBorderUIResource(), "控制台");
 			consolePane.setBounds(5, 450, ComponentConst.CLIENT_WIDTH - 20, 190);
 			consolePane.setAutoscrolls(true);
 			consolePane.setBorder(border);
 			consolePane.setVisible(false);
+			
 			mainWindow.getContentPane().add(consolePane);
 			mainWindow.consolePane = consolePane;
 			try {
