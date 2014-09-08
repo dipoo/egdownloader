@@ -18,6 +18,7 @@ import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
+import org.arong.egdownloader.ui.work.ReCreateWorker;
 import org.arong.util.Tracker;
 /**
  * 正在下载任务表格
@@ -89,6 +90,12 @@ public class TaskingTable extends JTable {
 								table.mainWindow.taskDbTemplate.update(task);
 								table.setRunningNum(table.getRunningNum() - 1);
 							}
+						}
+						//如果状态为未创建，则开启创建线程
+						else if(task.getStatus() == TaskStatus.UNCREATED){
+							Tracker.println(getClass(), task.getName() + ":重新采集");
+							task.setReCreateWorker(new ReCreateWorker(task, table.getMainWindow()));
+							task.getReCreateWorker().execute();
 						}
 						table.updateUI();
 					}else{//单击事件

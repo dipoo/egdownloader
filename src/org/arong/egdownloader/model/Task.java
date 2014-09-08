@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.arong.egdownloader.ui.work.DownloadWorker;
+import org.arong.egdownloader.ui.work.ReCreateWorker;
 /**
  * 任务模型
  * @author 阿荣
@@ -26,7 +27,8 @@ public class Task {
 	private String size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private List<Picture> pictures;
-	private DownloadWorker downloadWorker;//下载线程实例,不保存，不提供get/set方法
+	private DownloadWorker downloadWorker;//下载线程实例,不保存
+	private ReCreateWorker reCreateWorker;//重新创建线程实例,不保存
 	
 	public Task(){}
 	
@@ -152,6 +154,14 @@ public class Task {
 
 	public void setTag(String tag) {
 		this.tag = tag;
+	}
+
+	public ReCreateWorker getReCreateWorker() {
+		return reCreateWorker;
+	}
+
+	public void setReCreateWorker(ReCreateWorker reCreateWorker) {
+		this.reCreateWorker = reCreateWorker;
 	}
 	
 }

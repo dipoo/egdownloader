@@ -59,9 +59,11 @@ public final class ParseEngine {
         String picSource = Spider.getTextFromSource(source, setting.getPicture_listSource()[0], setting.getPicture_listSource()[1]);
         List<Picture> pictures = null;
         try{
+        	//int s = 0;
+        	//int i = 6 / s;
         	pictures = collectpictrues(task, setting, page, picSource, creatingWindow);
         }catch(Exception e){
-        	e.printStackTrace();
+        	//e.printStackTrace();
         	//未采集状态
         	task.setStatus(TaskStatus.UNCREATED);
         }
