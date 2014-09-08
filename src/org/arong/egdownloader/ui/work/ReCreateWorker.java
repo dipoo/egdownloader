@@ -40,16 +40,18 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 		}
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
 		Setting setting = window.setting;//获得配置信息
-		InputStream is;
+		InputStream is = null;
 		try {
 			task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
-			if(task != null){
-				//下载封面
-				is =  WebClient.getStreamUseJava(task.getCoverUrl());
-				FileUtil.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
+			if(task != null && task.getPictures() != null){
+				if(task.getCoverUrl() == null){
+					//下载封面
+					is =  WebClient.getStreamUseJava(task.getCoverUrl());
+					FileUtil.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
+				}
+				
 				//保存到数据库
 				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
-				window.taskDbTemplate.store(task);//保存任务
 				//保存到内存
 				TaskingTable taskTable = (TaskingTable)window.runningTable;
 				//关闭form,刷新table
@@ -62,6 +64,7 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 				//下载
 				int maxThread = setting.getMaxThread();
 				TaskingTable table = (TaskingTable)window.runningTable;
+				
 				if(table.getRunningNum() >= maxThread){
 					JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
 					return null;
@@ -72,7 +75,7 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 				table.setRunningNum(table.getRunningNum() + 1);
 			}else{
 				window.creatingWindow.dispose();
-				JOptionPane.showMessageDialog(null, "创建异常");
+				JOptionPane.showMessageDialog(null, "重建任务异常");
 			}
 		} catch (SocketTimeoutException e){
 			((CreatingWindow)(window.creatingWindow)).reset();
@@ -90,6 +93,10 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, e.getMessage());
+		} finally{
+			if(is != null){
+				is.close();
+			}
 		}
 		return null;
 	}

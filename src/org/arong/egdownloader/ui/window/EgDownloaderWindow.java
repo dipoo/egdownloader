@@ -95,6 +95,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.getContentPane().setLayout(null);
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
 		this.setResizable(false);
+		this.setBackground(Color.WHITE);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 

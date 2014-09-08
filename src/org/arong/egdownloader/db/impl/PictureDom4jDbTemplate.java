@@ -74,6 +74,9 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	}
 
 	public boolean store(Picture t) {
+		if(t == null){
+			return false;
+		}
 		while(locked){
 			store(t);
 		}
@@ -113,6 +116,9 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	}
 
 	public boolean update(Picture t) {
+		if(t == null){
+			return false;
+		}
 		while(locked){
 			update(t);
 		}
@@ -130,6 +136,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 				return false;
 			}
 		}
+		locked = false;
 		return false;
 	}
 	
@@ -166,6 +173,9 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	}
 
 	public boolean delete(Picture t) {
+		if(t == null){
+			return false;
+		}
 		while(locked){
 			delete(t);
 		}
@@ -182,6 +192,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 				return false;
 			}
 		}
+		locked = false;
 		return false;
 	}
 	

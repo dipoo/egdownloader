@@ -96,9 +96,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null;
 						//更新图片信息
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
-						
-						table.updateUI();
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成");
+						table.updateUI();
 					}catch (SocketTimeoutException e){
 						//碰到异常
 						System.out.println("读取流超时，滞后重试");
