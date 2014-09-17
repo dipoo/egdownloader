@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -36,6 +37,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 	private Color progressBarBorder = new Color(47,110,178);
 	private Font font = new Font("微软雅黑", Font.PLAIN, 11);
 	private Font blodFont = new Font("微软雅黑", Font.BOLD, 11);
+	private Task task;
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
@@ -45,6 +47,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			fontColor = Color.DARK_GRAY;
 		}
 		TableColumn tc = table.getColumnModel().getColumn(column);
+		task = ((TaskingTable)table).getTasks().get(row); 
 		if(column == 0){//第一列：图标
 			tc.setPreferredWidth(30);
 			tc.setMaxWidth(40);
@@ -53,9 +56,28 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else if(column == 1){//第二列：名称
 			tc.setPreferredWidth(600);
 			tc.setMaxWidth(600);
-			if(value != null && value.toString().length() > 90){
-				JLabel nameLabel = new AJLabel(value.toString().substring(0, 90) + " ......", fontColor, font, JLabel.LEFT);
+			if(task.getSubname() !=null && !"".equals(task.getSubname().trim())){
+				String subname = task.getSubname().trim();
+				JLabel nameLabel = null;
+				if(subname.length() > 230){
+					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[" + task.getTag() + "]</font>" + subname.substring(0, 223) + " ......</html>", fontColor, font, JLabel.LEFT);
+				}else{
+					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[" + task.getTag() + "]</font>" + subname + "</html>", fontColor, font, JLabel.LEFT);
+				}
+				if(value != null){
+					nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
+				}else{
+					nameLabel.setToolTipText(subname);//设置鼠标移过提示
+				}
+				return nameLabel;
+			}
+			else if(value != null && value.toString().length() > 120){
+				JLabel nameLabel = new AJLabel(value.toString().substring(0, 113) + " ......</html>", fontColor, font, JLabel.LEFT);
 				nameLabel.setToolTipText(value.toString());//设置鼠标移过提示
+				return nameLabel;
+			}else{
+				JLabel nameLabel = new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);
+				nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
 				return nameLabel;
 			}
 		}else if(column == 2){//第三列：图片总数
