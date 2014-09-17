@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -31,6 +33,7 @@ public class TaskingTable extends JTable {
 	private List<Task> tasks;
 	private EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
+	private int sort = 0;//0为名称排序，1为时间排序
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
@@ -53,6 +56,54 @@ public class TaskingTable extends JTable {
 		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, renderer);//设置渲染器
 		this.getTableHeader().setDefaultRenderer(new TaskTableHeaderRenderer());
+		//表头监听
+		this.getTableHeader().addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				if (e.getSource() == getTableHeader()) {
+					TaskingTable table = (TaskingTable)getTableHeader().getTable();
+                    getTableHeader().removeMouseListener(this);  
+                    int i = columnAtPoint(e.getPoint());  
+                    //点击名称列，重新排序
+                    if(i == 1){
+                    	if(sort == 0){
+                    		sort = 1;
+                    		//时间排序
+                    		if(table.getMainWindow().tasks != null){
+                    			//按照名称排序
+                    			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                    				@Override
+                    				public int compare(Task o1, Task o2) {
+                    					return o2.getCreateTime().toLowerCase().compareTo(o1.getCreateTime().toLowerCase());
+                    				}
+                    			});
+                    			table.setTasks(table.getMainWindow().tasks);
+                    			table.updateUI();
+                    		}
+                    	}else{
+                    		sort = 0;
+                    		//名称排序
+                    		if(table.getMainWindow().tasks != null){
+                    			//按照名称排序
+                    			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                    				@Override
+                    				public int compare(Task o1, Task o2) {
+                    					return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                    				}
+                    			});
+                    			table.setTasks(table.getMainWindow().tasks);
+                    			table.updateUI();
+                    		}
+                    	}
+                    }
+                    getTableHeader().addMouseListener(this);
+                }  
+			}
+		});
+		//单元格监听
 		this.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {}
 			public void mousePressed(MouseEvent e) {}
