@@ -37,7 +37,7 @@ public class TaskTableModel extends AbstractTableModel {
 			case 0 :
 				return "";
 			case 1 :
-				return (tasks.get(rowIndex).getTag() == null ? "" : "[" + tasks.get(rowIndex).getTag() + "]") + tasks.get(rowIndex).getName();
+				return (tasks.get(rowIndex).getTag() == null ? "" : "<html><font color=\"#248FB7\">[" + tasks.get(rowIndex).getTag() + "]</font>") + tasks.get(rowIndex).getName() + "</html>";
 			case 2 :
 				return tasks.get(rowIndex).getTotal();
 			case 3 :
