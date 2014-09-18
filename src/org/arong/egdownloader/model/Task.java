@@ -20,6 +20,7 @@ public class Task {
 	private String saveDir;//保存目录
 	private String language;//漫画语言
 	private String tag;//标签
+	private boolean readed;//已读
 	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String completedTime;//完成时间
 	private int total;//图片总数
@@ -63,6 +64,14 @@ public class Task {
 
 	public void setCoverUrl(String coverUrl) {
 		this.coverUrl = coverUrl;
+	}
+
+	public boolean isReaded() {
+		return readed;
+	}
+
+	public void setReaded(boolean readed) {
+		this.readed = readed;
 	}
 
 	public String getLanguage() {

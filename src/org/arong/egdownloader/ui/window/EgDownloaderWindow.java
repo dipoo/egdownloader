@@ -37,6 +37,7 @@ import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
 import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
 import org.arong.egdownloader.ui.work.listenerWork.ConsoleWork;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
@@ -176,8 +177,10 @@ public class EgDownloaderWindow extends JFrame {
 		AJMenu downloadCoverMenuItem = new AJMenu(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new DownloadCoverWork()));
 		//右键菜单：查漏补缺
 		AJMenu checkResetMenuItem = new AJMenu(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new CheckResetWork()));
+		//右键菜单：更改阅读状态
+		AJMenu changeReadedMenuItem = new AJMenu(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ChangeReadedWork()));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, copyUrlPopupMenuItem, openFolderPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem, checkResetMenuItem);
+		tablePopupMenu = new AJPopupMenu(openFolderPopupMenuItem, detailPopupMenuItem, copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem, checkResetMenuItem, changeReadedMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));

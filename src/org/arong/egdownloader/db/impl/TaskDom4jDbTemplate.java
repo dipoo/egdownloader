@@ -310,6 +310,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		ele.addAttribute("language", t.getLanguage());
 		ele.addAttribute("saveDir", t.getSaveDir());
 		ele.addAttribute("tag", t.getTag());
+		ele.addAttribute("readed", t.isReaded() + "");
 		ele.addAttribute("createTime", t.getCreateTime());
 		ele.addAttribute("completedTime", t.getCompletedTime());
 		ele.addAttribute("total", t.getTotal() + "");
@@ -330,6 +331,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setLanguage(ele.attributeValue("language"));
 		task.setSaveDir(ele.attributeValue("saveDir"));
 		task.setTag(ele.attributeValue("tag"));
+		task.setReaded("true".equals(ele.attributeValue("readed")) ? true : false);
 		task.setCreateTime(ele.attributeValue("createTime"));
 		task.setCompletedTime(ele.attributeValue("completedTime"));
 		task.setTotal(ele.attributeValue("total") == null ? 0 : Integer.parseInt(ele.attributeValue("total")));

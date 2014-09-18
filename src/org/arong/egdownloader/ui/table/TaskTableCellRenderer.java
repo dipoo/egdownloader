@@ -49,12 +49,21 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		TableColumn tc = table.getColumnModel().getColumn(column);
 		task = ((TaskingTable)table).getTasks().get(row); 
 		if(column == 0){//第一列：图标
-			tc.setPreferredWidth(30);
-			tc.setMaxWidth(40);
+			tc.setPreferredWidth(50);
+			tc.setMaxWidth(60);
 			JLabel l = new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
+			//是否已读
+			if(task.isReaded()){
+				l.setText("√");
+				l.setToolTipText("已经阅读过了");//设置鼠标移过提示
+				l.setForeground(Color.BLUE);
+			}else{
+				l.setText("×");
+				l.setForeground(progressBarBg);
+			}
 			return l;
 		}else if(column == 1){//第二列：名称
-			tc.setPreferredWidth(600);
+			tc.setPreferredWidth(580);
 			tc.setMaxWidth(600);
 			if(task.getSubname() !=null && !"".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
