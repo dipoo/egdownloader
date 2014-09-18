@@ -67,6 +67,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog checkingWindow;
 	public JDialog coverWindow;
 	public JDialog editWindow;
+	public JDialog deletingWindow;
 	
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
@@ -216,6 +217,8 @@ public class EgDownloaderWindow extends JFrame {
 					window.detailWindow.requestFocus();
 				}else if(window.editWindow != null && window.editWindow.isVisible()){
 					window.editWindow.requestFocus();
+				}else if(window.deletingWindow != null && window.deletingWindow.isVisible()){
+					window.deletingWindow.requestFocus();
 				}
 			}
 		});
