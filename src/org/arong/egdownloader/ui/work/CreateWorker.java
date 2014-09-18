@@ -36,9 +36,10 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
-		addFormWindow.dispose();
+		addFormWindow.setVisible(false);
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
 		Setting setting = window.setting;//获得配置信息
+		window.setEnabled(false);
 		InputStream is;
 		try {
 			task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
@@ -54,34 +55,27 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
 				addFormWindow.emptyField();//清空下载地址
 				//关闭form,刷新table
-				((CreatingWindow)(window.creatingWindow)).reset();
-				window.creatingWindow.dispose();
 				addFormWindow.dispose();
 				window.tablePane.setVisible(true);//将表格panel显示出来
 				window.emptyTableTips.setVisible(false);//将空任务label隐藏
 				taskTable.updateUI();
-				window.setEnabled(true);
-				window.setVisible(true);
 			}else{
-				window.creatingWindow.dispose();
 				JOptionPane.showMessageDialog(null, "创建异常");
 			}
 		} catch (SocketTimeoutException e){
-			((CreatingWindow)(window.creatingWindow)).reset();
-			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
 		} catch (ConnectTimeoutException e){
-			((CreatingWindow)(window.creatingWindow)).reset();
-			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
 		} catch (SpiderException e) {
-			((CreatingWindow)(window.creatingWindow)).reset();
-			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (WebClientException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			addFormWindow.dispose();
+			window.setEnabled(true);
+			window.setVisible(true);
 		}
 		return null;
 	}

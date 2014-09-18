@@ -47,9 +47,15 @@ public final class ParseEngine {
         Tracker.println(ParseEngine.class, task.getSize());
         Tracker.println(ParseEngine.class, task.getCoverUrl());
 		creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + task.getName());
+		creatingWindow.subnameLabel.setText(creatingWindow.subnameLabel.getText() + task.getSubname());
 		creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + task.getTotal());
+		creatingWindow.sizeLabel.setText(creatingWindow.sizeLabel.getText() + task.getSize());
+		creatingWindow.languageLabel.setText(creatingWindow.languageLabel.getText() + task.getLanguage());
 		creatingWindow.nameLabel.setVisible(true);
+		creatingWindow.subnameLabel.setVisible(true);
 		creatingWindow.totalLabel.setVisible(true);
+		creatingWindow.sizeLabel.setVisible(true);
+		creatingWindow.languageLabel.setVisible(true);
 		creatingWindow.bar.setMaximum(task.getTotal());
 		task.setSaveDir(task.getSaveDir() + "/" + FileUtil.filterDir(task.getName()));
 		
