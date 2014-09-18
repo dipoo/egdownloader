@@ -97,6 +97,7 @@ public final class ComponentConst {
 	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = "下载漫画封面";
 	public final static String POPUP_CHECKRESET_MENU_TEXT = "查漏补缺";
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = "更改阅读状态";
+	public final static String POPUP_EDIT_MENU_TEXT = "编辑任务信息";
 	
 	
 	/*AboutMenuWindow内的组件*/

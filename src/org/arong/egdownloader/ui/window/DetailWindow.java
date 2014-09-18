@@ -43,7 +43,7 @@ public class DetailWindow extends JDialog {
 		
 		JLabel l1 = new AJLabel("名称：", Color.BLUE, 5, 5, 40, 30);
 		taskNameLabel = new AJLabel("", null, 60, 5, ComponentConst.CLIENT_WIDTH - 80, 30);
-		JLabel l2 = new AJLabel("子名称：", Color.BLUE, 5, 5, 50, 70);
+		JLabel l2 = new AJLabel("子标题：", Color.BLUE, 5, 5, 50, 70);
 		taskSubnameLabel = new AJLabel("", null, 60, 5, ComponentConst.CLIENT_WIDTH - 80, 70);
 		JLabel l3 = new AJLabel("漫画语言：", Color.BLUE, 5, 5, 60, 110);
 		taskLanguageLabel = new AJLabel("", null, 80, 5, 150, 110);
