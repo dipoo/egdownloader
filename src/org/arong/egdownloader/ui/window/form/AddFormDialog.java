@@ -64,10 +64,18 @@ public class AddFormDialog extends JDialog {
 		this.setLayout(null);
 		this.setLocationRelativeTo(mainWindow);
 		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				//关闭后显示主界面
+				mainWindow.setVisible(true);
+				mainWindow.setEnabled(true);
+			}
 			public void windowDeactivated(WindowEvent e) {
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
+			}
+			public void windowActivated(WindowEvent e) {
+				mainWindow.setEnabled(false);
 			}
 		});
 		setDefaultCloseOperation(HIDE_ON_CLOSE);

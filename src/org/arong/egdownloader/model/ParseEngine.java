@@ -29,9 +29,13 @@ public final class ParseEngine {
 		}
 		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//获取名称
-		task.setName(Spider.getTextFromSource(source, setting.getTask_name()[0], setting.getTask_name()[1]));
+		if(task.getName() == null){
+			task.setName(Spider.getTextFromSource(source, setting.getTask_name()[0], setting.getTask_name()[1]));
+		}
 		//获取子名称
-        task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
+		if(task.getSubname() == null){
+			task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
+		}
         //获取封面路径
         task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
         //获取数目及大小

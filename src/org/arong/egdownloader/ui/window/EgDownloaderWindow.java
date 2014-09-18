@@ -45,6 +45,7 @@ import org.arong.egdownloader.ui.work.listenerWork.DownloadCoverWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
 import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
+import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
 import org.arong.egdownloader.version.Version;
 
 /**
@@ -65,6 +66,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog detailWindow;
 	public JDialog checkingWindow;
 	public JDialog coverWindow;
+	public JDialog editWindow;
 	
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
@@ -114,8 +116,7 @@ public class EgDownloaderWindow extends JFrame {
 									this_.creatingWindow.toFront();
 								}else{
 									if (this_.addFormWindow == null) {
-										this_.addFormWindow = new AddFormDialog(
-												this_);
+										this_.addFormWindow = new AddFormDialog(this_);
 									}
 									this_.addFormWindow.setVisible(true);
 									this_.addFormWindow.toFront();
@@ -170,17 +171,27 @@ public class EgDownloaderWindow extends JFrame {
 			}
 		}));
 		//右键菜单：打开文件夹
-		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
+		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, "", null,
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
 		//右键菜单：打开网页
-		AJMenu openWebPageMenuItem = new AJMenu(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenWebPageWork()));
+		AJMenu openWebPageMenuItem = new AJMenu(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, "", null,
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenWebPageWork()));
 		//右键菜单：下载封面
-		AJMenu downloadCoverMenuItem = new AJMenu(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new DownloadCoverWork()));
+		AJMenu downloadCoverMenuItem = new AJMenu(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, "", null,
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new DownloadCoverWork()));
 		//右键菜单：查漏补缺
-		AJMenu checkResetMenuItem = new AJMenu(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new CheckResetWork()));
+		AJMenu checkResetMenuItem = new AJMenu(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, "", null,
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new CheckResetWork()));
 		//右键菜单：更改阅读状态
-		AJMenu changeReadedMenuItem = new AJMenu(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, "", null, new OperaBtnMouseListener(this, MouseAction.CLICK,new ChangeReadedWork()));
+		AJMenu changeReadedMenuItem = new AJMenu(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, "", null,
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new ChangeReadedWork()));
+		//右键菜单：编辑任务信息
+		AJMenu editMenuItem = new AJMenu(ComponentConst.POPUP_EDIT_MENU_TEXT, "", null,
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new ShowEditWork()));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(openFolderPopupMenuItem, detailPopupMenuItem, copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem, checkResetMenuItem, changeReadedMenuItem);
+		tablePopupMenu = new AJPopupMenu(openFolderPopupMenuItem, detailPopupMenuItem,
+				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
+				checkResetMenuItem, changeReadedMenuItem, editMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
@@ -203,6 +214,8 @@ public class EgDownloaderWindow extends JFrame {
 					window.addFormWindow.requestFocus();
 				}else if(window.detailWindow != null && window.detailWindow.isVisible()){
 					window.detailWindow.requestFocus();
+				}else if(window.editWindow != null && window.editWindow.isVisible()){
+					window.editWindow.requestFocus();
 				}
 			}
 		});

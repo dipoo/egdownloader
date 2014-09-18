@@ -35,11 +35,11 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
+		window.setEnabled(false);
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
 		addFormWindow.setVisible(false);
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
 		Setting setting = window.setting;//获得配置信息
-		window.setEnabled(false);
 		InputStream is;
 		try {
 			task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
