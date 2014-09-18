@@ -90,12 +90,13 @@ public final class ComponentConst {
 	public final static String ABOUT_MENU_TEXT = "关于";
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
-	public final static String POPUP_DETAIL_MENU_TEXT = "详细信息";
+	public final static String POPUP_DETAIL_MENU_TEXT = "查看详细信息";
 	public final static String POPUP_COPYURL_MENU_TEXT = "复制下载地址";
-	public final static String POPUP_OPENFOLDER_MENU_TEXT = "文件夹";
-	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "下载页";
-	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = "下载封面";
+	public final static String POPUP_OPENFOLDER_MENU_TEXT = "打开文件夹";
+	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "浏览下载页";
+	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = "下载漫画封面";
 	public final static String POPUP_CHECKRESET_MENU_TEXT = "查漏补缺";
+	public final static String POPUP_CHANGEREADED_MENU_TEXT = "更改阅读状态";
 	
 	
 	/*AboutMenuWindow内的组件*/
