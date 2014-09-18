@@ -66,9 +66,9 @@ public class TaskingTable extends JTable {
 				if (e.getSource() == getTableHeader()) {
 					TaskingTable table = (TaskingTable)getTableHeader().getTable();
                     getTableHeader().removeMouseListener(this);  
-                    int i = columnAtPoint(e.getPoint());  
+                    int column = columnAtPoint(e.getPoint());  
                     //点击名称列，重新排序
-                    if(i == 1){
+                    if(column == 1){
                     	if(sort == 0){
                     		sort = 1;
                     		//时间排序
@@ -98,6 +98,86 @@ public class TaskingTable extends JTable {
                     			table.updateUI();
                     		}
                     	}
+                    }
+                    //漫画总数排序
+                    else if(column == 2){
+                    	if(table.getMainWindow().tasks != null){
+                			//按照名称排序
+                			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                				@Override
+                				public int compare(Task o1, Task o2) {
+                					if(o1.getTotal() > o2.getTotal())
+                						return -1;
+                					if(o1.getTotal() < o2.getTotal())
+                						return 1;
+                					return 0;
+                				}
+                			});
+                			table.setTasks(table.getMainWindow().tasks);
+                			table.updateUI();
+                		}
+                    }
+                    //漫画语言排序
+                    else if(column == 3){
+                    	if(table.getMainWindow().tasks != null){
+                			//按照名称排序
+                			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                				@Override
+                				public int compare(Task o1, Task o2) {
+                					return o1.getLanguage().toLowerCase().compareTo(o2.getLanguage().toLowerCase());
+                				}
+                			});
+                			table.setTasks(table.getMainWindow().tasks);
+                			table.updateUI();
+                		}
+                    }
+                    //漫画下载进度排序
+                    else if(column == 4){
+                    	if(table.getMainWindow().tasks != null){
+                			//按照名称排序
+                			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                				@Override
+                				public int compare(Task o1, Task o2) {
+                					double j1 = Double.parseDouble(o1.getCurrent() + "") / Double.parseDouble(o1.getTotal() + "") * 100;
+                					double j2 = Double.parseDouble(o2.getCurrent() + "") / Double.parseDouble(o2.getTotal() + "") * 100;
+                					if(j1 > j2)
+                						return -1;
+                					if(j1 < j2)
+                						return 1;
+                					return 0;
+                				}
+                			});
+                			table.setTasks(table.getMainWindow().tasks);
+                			table.updateUI();
+                		}
+                    }
+                    //漫画下载状态排序
+                    else if(column == 5){
+                    	if(table.getMainWindow().tasks != null){
+                			//按照名称排序
+                			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                				@Override
+                				public int compare(Task o1, Task o2) {
+                					return o1.getStatus().toString().compareTo(o2.getStatus().toString());
+                				}
+                			});
+                			table.setTasks(table.getMainWindow().tasks);
+                			table.updateUI();
+                		}
+                    }
+                    //漫画阅读状态排序
+                    else if(column == 0){
+                    	if(table.getMainWindow().tasks != null){
+                			//按照名称排序
+                			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
+                				@Override
+                				public int compare(Task o1, Task o2) {
+                					return (o2.isReaded() + "").toLowerCase().compareTo((o1.isReaded() + "").toLowerCase());
+                				}
+                			});
+                			table.setTasks(table.getMainWindow().tasks);
+                			table.updateUI();
+                		}
                     }
                     getTableHeader().addMouseListener(this);
                 }  

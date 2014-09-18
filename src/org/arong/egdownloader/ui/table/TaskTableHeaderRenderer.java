@@ -24,21 +24,28 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 		switch (column){
 			case 0://数目
 				l = new AJLabel(table.getRowCount() + "", null, color, JLabel.CENTER);
-				l.setToolTipText("漫画总数");
+				l.setToolTipText("漫画总数(按照阅读状态排序)");
 				return l;
 			case 1://名称
 				l = new AJLabel(value.toString() + "", null, color, JLabel.LEFT);
-				l.setCursor(CursorManager.getPointerCursor());
 				l.setToolTipText("切换排序（名称/创建时间）");
 				return l;
 			case 2://图片数
-				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
+				l = new AJLabel(value.toString(), null, color, JLabel.LEFT);
+				l.setToolTipText("按照漫画总数降序排序");
+				return l;
 			case 3://语言
-				return new AJLabel(value.toString(), null, color, JLabel.LEFT);
+				l =  new AJLabel(value.toString(), null, color, JLabel.LEFT);
+				l.setToolTipText("按照漫画语言排序");
+				return l;
 			case 4://下载进度
-				return new AJLabel(value.toString(), null, color, JLabel.CENTER);
+				l =  new AJLabel(value.toString(), null, color, JLabel.CENTER);
+				l.setToolTipText("按照漫画进度降序排序");
+				return l;
 			case 5://状态
-				return new AJLabel(value.toString(), null, color, JLabel.CENTER);	
+				l = new AJLabel(value.toString(), null, color, JLabel.CENTER);
+				l.setToolTipText("按照漫画下载状态排序");
+				return l;
 			default:
 				return new AJLabel(value.toString(), color);
 		}
