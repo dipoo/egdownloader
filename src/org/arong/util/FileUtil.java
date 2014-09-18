@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.UUID;
 
 /**
  * 目录文件工具类
@@ -113,13 +114,42 @@ public final class FileUtil {
 	
 	public static String filterDir(String dir){
 		try{
-		if("".equals(dir.trim()) || dir == null){
-			return "新建文件夹";
-		}
-		return dir.replaceAll("\\|", "").replaceAll("\\*", "");
+			dir = dir.trim();
+			if("".equals(dir) || dir == null){
+				return "新建文件夹";
+			}
+			//过滤windows下的文件夹保留单词
+			if("auk".equalsIgnoreCase(dir) || "com1".equalsIgnoreCase(dir)
+					|| "com2".equalsIgnoreCase(dir) || "com3".equalsIgnoreCase(dir)
+					|| "com4".equalsIgnoreCase(dir) || "com5".equalsIgnoreCase(dir)
+					|| "com6".equalsIgnoreCase(dir) || "com7".equalsIgnoreCase(dir)
+					|| "com8".equalsIgnoreCase(dir) || "com9".equalsIgnoreCase(dir)
+					|| "con".equalsIgnoreCase(dir) || "nul".equalsIgnoreCase(dir)
+					|| "lpt1".equalsIgnoreCase(dir)|| "lpt2".equalsIgnoreCase(dir)
+					|| "lpt3".equalsIgnoreCase(dir)|| "lpt4".equalsIgnoreCase(dir)
+					|| "lpt5".equalsIgnoreCase(dir)|| "lpt6".equalsIgnoreCase(dir)
+					|| "lpt7".equalsIgnoreCase(dir)|| "lpt8".equalsIgnoreCase(dir)
+					|| "lpt9".equalsIgnoreCase(dir)){
+				dir += "-" + UUID.randomUUID().toString();
+				return dir;
+			}
+			//过滤windows下的文件夹无效字符
+			else{
+				return dir.replaceAll("\\|", "-")
+						.replaceAll("\\*", "-")
+						.replaceAll("\\.", "-")
+						.replaceAll("\\<", "-")
+						.replaceAll("\\>", "-")
+						.replaceAll("\\?", "-")
+						.replaceAll("\\:", "-")
+						.replaceAll("\\/", "-")
+						.replaceAll("\\\\", "-");
+			}
+			
 		}catch(Exception e){
 			Tracker.println(FileUtil.class, e.getMessage());
 		}
 		return null;
 	}
+	
 }
