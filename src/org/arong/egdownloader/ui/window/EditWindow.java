@@ -62,9 +62,10 @@ public class EditWindow extends JDialog {
 				String tag = tagField.getText().trim();
 				if("".equals(name)){
 					JOptionPane.showMessageDialog(null, "请填写任务名称");
-				}else if("".equals(subname)){
-					JOptionPane.showMessageDialog(null, "请填写任务子标题");
 				}else{
+					if("".equals(subname)){
+						subname = null;
+					}
 					if("".equals(tag)){
 						tag = "一般";
 					}

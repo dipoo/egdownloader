@@ -326,11 +326,11 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setId(ele.attributeValue("id"));
 		task.setUrl(ele.attributeValue("url"));
 		task.setName(ele.attributeValue("name"));
-		task.setSubname(ele.attributeValue("subname"));
+		task.setSubname(ele.attributeValue("subname") == null ? "" : ele.attributeValue("subname"));
 		task.setCoverUrl(ele.attributeValue("coverUrl"));
-		task.setLanguage(ele.attributeValue("language"));
+		task.setLanguage(ele.attributeValue("language") == null ? "" : ele.attributeValue("language"));
 		task.setSaveDir(ele.attributeValue("saveDir"));
-		task.setTag(ele.attributeValue("tag"));
+		task.setTag(ele.attributeValue("tag") == null ? "一般" : ele.attributeValue("tag"));
 		task.setReaded("true".equals(ele.attributeValue("readed")) ? true : false);
 		task.setCreateTime(ele.attributeValue("createTime"));
 		task.setCompletedTime(ele.attributeValue("completedTime"));

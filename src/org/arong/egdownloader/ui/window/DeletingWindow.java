@@ -43,6 +43,8 @@ public class DeletingWindow extends JDialog {
 			public void windowDeactivated(WindowEvent e) {
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
+				DeletingWindow window = (DeletingWindow) e.getSource();
+				window.dispose();
 			}
 			public void windowActivated(WindowEvent e) {
 				mainWindow.setEnabled(false);
