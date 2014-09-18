@@ -46,8 +46,11 @@ public class CreatingWindow extends JDialog {
 				window.mainWindow.setVisible(true);
 				window.dispose();
 			}
+			public void windowDeactivated(WindowEvent e) {
+				mainWindow.setVisible(true);
+				mainWindow.setEnabled(true);
+			}
 			public void windowActivated(WindowEvent e) {
-				super.windowActivated(e);
 				mainWindow.setEnabled(false);
 			}
 		});

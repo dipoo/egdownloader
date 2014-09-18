@@ -48,13 +48,6 @@ public class EditWindow extends JDialog {
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		this.addWindowListener(new WindowAdapter() {
-			public void windowDeactivated(WindowEvent e) {
-				//关闭后显示主界面
-				mainWindow.setVisible(true);
-				mainWindow.setEnabled(true);
-			}
-		});
 		
 		nameLabel = new AJLabel("名称：", Color.BLUE, 5, 10, 40, 30);
 		nameField = new AJTextField("", 65, 10, 395, 30);

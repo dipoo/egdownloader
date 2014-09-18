@@ -2,15 +2,13 @@ package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.arong.egdownloader.model.Picture;
-import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.table.TaskingTable;
+import org.arong.egdownloader.ui.window.DeletingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.work.DeleteWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 
 /**
@@ -30,36 +28,17 @@ public class DeleteTaskWork implements IListenerTask {
 		}
 		int option = JOptionPane.showConfirmDialog(null, "确定要删除" + (rows.length > 1 ? "这些" : "这个") + "任务吗");
 		if(option == 0){
-			Task task;
-			List<Picture> pics = new ArrayList<Picture>();
-			List<Task> tasks = new ArrayList<Task>();
-			for(int i = 0; i < rows.length; i ++){
-				if(table.getTasks().size() >= (rows[i])){
-					task = table.getTasks().get(rows[i]);
-					tasks.add(task);
-					System.out.println("删除：" + task.getName());
-					if(task.getPictures() != null && task.getPictures().size() > 0){
-						pics.addAll(task.getPictures());
-					}
-				}
-				
+			mainWindow.setEnabled(false);
+			DeletingWindow w = (DeletingWindow) mainWindow.deletingWindow;
+			if(w == null){
+				mainWindow.deletingWindow = new DeletingWindow(mainWindow);
 			}
-			//操作数据库
-			if(tasks.size() > 0){
-				if(pics.size() > 0){
-					mainWindow.pictureDbTemplate.delete(pics);//删除图片信息
-				}
-				mainWindow.taskDbTemplate.delete(tasks);//删除任务
-				//更新内存
-				table.getTasks().removeAll(tasks);
-			}
-			table.clearSelection();//使之不选中任何行
-			table.updateUI();//刷新表格
-			if(table.getTasks().size() == 0){
-				mainWindow.tablePane.setVisible(false);//将任务panel隐藏
-				mainWindow.emptyTableTips.setVisible(true);//将控任务label显示
-			}
-			mainWindow.setVisible(true);
+			w = (DeletingWindow) mainWindow.deletingWindow;
+			w.setData("    0/" + rows.length);
+			w.setInfo("正在收集任务图片");
+			w.setVisible(true);
+			//执行删除线程
+			new DeleteWorker(mainWindow, table, w, rows).execute();
 		}
 		
 	}
