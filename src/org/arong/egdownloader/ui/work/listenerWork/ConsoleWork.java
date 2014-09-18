@@ -62,6 +62,7 @@ public class ConsoleWork implements IListenerTask {
 			//重设主窗口大小
 			mainWindow.setSize(ComponentConst.CLIENT_WIDTH, mainWindow.getHeight() + 200);
 		}
+		mainWindow.setLocationRelativeTo(null);//使窗口居中
 	}
 
 }
