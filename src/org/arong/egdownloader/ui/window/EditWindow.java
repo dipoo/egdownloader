@@ -90,10 +90,11 @@ public class EditWindow extends JDialog {
 				mainWindow.setEnabled(true);
 				this_.dispose();
 			}
-			public void windowDeactivated(WindowEvent e) {
+			//窗体由激活状态变成非激活状态
+			/*public void windowDeactivated(WindowEvent e) {
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
-			}
+			}*/
 			public void windowActivated(WindowEvent e) {
 				mainWindow.setEnabled(false);
 			}
@@ -110,5 +111,10 @@ public class EditWindow extends JDialog {
 	}
 	public void setTask(Task task) {
 		this.task = task;
+	}
+	public void dispose() {
+		mainWindow.setEnabled(true);
+		mainWindow.setVisible(true);
+		super.dispose();
 	}
 }
