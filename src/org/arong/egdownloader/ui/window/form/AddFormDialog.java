@@ -71,13 +71,14 @@ public class AddFormDialog extends JDialog {
 				AddFormDialog w = (AddFormDialog)e.getSource();
 				w.dispose();
 			}
-			public void windowDeactivated(WindowEvent e) {
+			//窗体由激活状态变成非激活状态
+			/*public void windowDeactivated(WindowEvent e) {
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
 				AddFormDialog w = (AddFormDialog)e.getSource();
 				w.dispose();
-			}
+			}*/
 			public void windowActivated(WindowEvent e) {
 				mainWindow.setEnabled(false);
 			}
@@ -177,5 +178,10 @@ public class AddFormDialog extends JDialog {
 			}
 		}
 		return false;
+	}
+	public void dispose() {
+		mainWindow.setEnabled(true);
+		mainWindow.setVisible(true);
+		super.dispose();
 	}
 }

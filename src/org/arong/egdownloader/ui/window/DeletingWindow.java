@@ -40,12 +40,13 @@ public class DeletingWindow extends JDialog {
 				window.mainWindow.setVisible(true);
 				window.dispose();
 			}
-			public void windowDeactivated(WindowEvent e) {
+			//窗体由激活状态变成非激活状态
+			/*public void windowDeactivated(WindowEvent e) {
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
 				DeletingWindow window = (DeletingWindow) e.getSource();
 				window.dispose();
-			}
+			}*/
 			public void windowActivated(WindowEvent e) {
 				mainWindow.setEnabled(false);
 			}
