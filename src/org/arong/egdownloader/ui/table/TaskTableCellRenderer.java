@@ -52,14 +52,14 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setPreferredWidth(50);
 			tc.setMaxWidth(60);
 			JLabel l = new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
+			l.setText("" + (row + 1));
+			l.setForeground(Color.BLUE);
 			//是否已读
 			if(task.isReaded()){
-				l.setText("√");
+				l.setText(l.getText() + "√");
 				l.setToolTipText("已经阅读过了");//设置鼠标移过提示
-				l.setForeground(Color.BLUE);
 			}else{
-				l.setText("×");
-				l.setForeground(progressBarBg);
+				l.setText(l.getText() + "  ");
 			}
 			return l;
 		}else if(column == 1){//第二列：名称
