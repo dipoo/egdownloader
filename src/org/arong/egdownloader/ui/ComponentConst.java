@@ -63,7 +63,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("user", "_user.png");
 		SKIN_ICON.put("empty", "_empty.png");
 		SKIN_ICON.put("save", "_save.png");
-		
+		SKIN_ICON.put("opera", "_opera.png");
 	}
 	/*MainWindow内的组件*/
 	//组件的name值
@@ -85,7 +85,8 @@ public final class ComponentConst {
 	public final static String ADD_MENU_TEXT = "新建";
 	public final static String DELETE_MENU_TEXT = "删除";
 	public final static String SETTING_MENU_TEXT = "配置";
-	public final static String TOOLS_MENU_TEXT = "搜索";
+	public final static String OPERA_MENU_TEXT = "操作";
+	public final static String SEARCH_MENU_TEXT = "搜索";
 	public final static String CONSOLE_MENU_TEXT = "控制台";
 	public final static String ABOUT_MENU_TEXT = "关于";
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
@@ -97,7 +98,9 @@ public final class ComponentConst {
 	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = "下载漫画封面";
 	public final static String POPUP_CHECKRESET_MENU_TEXT = "查漏补缺";
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = "更改阅读状态";
-	public final static String POPUP_EDIT_MENU_TEXT = "编辑任务信息";
+	public final static String POPUP_EDIT_MENU_TEXT = "编辑任务";
+	public final static String POPUP_RESET_MENU_TEXT = "重置任务";
+	public final static String POPUP_COMPLETED_MENU_TEXT = "完成任务";
 	
 	
 	/*AboutMenuWindow内的组件*/

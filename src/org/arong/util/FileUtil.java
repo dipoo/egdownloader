@@ -65,7 +65,6 @@ public final class FileUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw e;
 		} finally {
 			if (bos != null) {
 				try {

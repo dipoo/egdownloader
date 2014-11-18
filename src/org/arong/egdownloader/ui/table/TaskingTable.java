@@ -230,6 +230,7 @@ public class TaskingTable extends JTable {
 						table.updateUI();
 					}else{//单击事件
 						int column = table.columnAtPoint(e.getPoint());
+						//显示预览图
 						if(column == 0){
 							EgDownloaderWindow window = table.getMainWindow();
 							Task task = table.getTasks().get(rowIndex);

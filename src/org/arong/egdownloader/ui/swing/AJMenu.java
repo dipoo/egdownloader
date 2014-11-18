@@ -39,6 +39,11 @@ public class AJMenu extends JMenu {
 			//设置图标
 			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
+	public AJMenu(String text, Color color, MouseListener listener){
+		this(text, "", listener);
+		this.setForeground(color);
+		
+	}
 	/**
 	 * 用于带有下拉项的菜单,这样的菜单没有添加鼠标监听,而是由其子项来各自监听<br>
 	 * 默认每个子项间由分割线
