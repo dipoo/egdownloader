@@ -136,14 +136,14 @@ public final class ParseEngine {
         //获取漫画语言
         task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
 	}
-	
+	//废弃
 	public static Task buildTask_new_old(String url, String saveDir, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
 		CreatingWindow creatingWindow = (CreatingWindow)window;
 		Task task = new Task(url, saveDir);
 		task.setId(UUID.randomUUID().toString());
 		
 		String host = url.substring(0, url.indexOf(setting.getGidPrefix()));
-		System.out.println("host:" + host);
+		Tracker.println("host:" + host);
 		// 446779
 		String gid = Spider.substring(url, setting.getGidPrefix()).substring(0,
 				Spider.substring(url, setting.getGidPrefix()).indexOf("/"));
@@ -156,15 +156,15 @@ public final class ParseEngine {
 				+ "?" + setting.getHentaiHome().getFirstParameterName() + "="
 				+ gid + "&" + setting.getHentaiHome().getSecondParameterName()
 				+ "=" + t;
-		System.out.println("hentaiHomeUrl:" + hentaiHomeUrl);
+		Tracker.println("hentaiHomeUrl:" + hentaiHomeUrl);
 		//EHG-446779.hathdl文件内容
 		String hentaiHomeSource = WebClient.postRequestWithCookie(hentaiHomeUrl, setting.getCookieInfo());
-//		System.out.println(hentaiHomeSource);
+//		Tracker.println(hentaiHomeSource);
 		//数量
 		String total_ = Spider.getTextFromSource(hentaiHomeSource, setting.getTotalPrefix(), "\n");
-		System.out.println("total:" + total_);
+		Tracker.println("total:" + total_);
 		String name = Spider.getTextFromSource(hentaiHomeSource, setting.getNamePrefix(), "\n");
-		System.out.println("name:" + name);
+		Tracker.println("name:" + name);
 		creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + name);
 		creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + total_);
 		creatingWindow.nameLabel.setVisible(true);
@@ -189,6 +189,7 @@ public final class ParseEngine {
 		task.setPictures(pictures);
 		return task;
 	}
+	//废弃
 	private static List<Picture> getPictures_new(String host, Setting setting, String gid, String fileList,
 			Task task, CreatingWindow creatingWindow) {
 		List<Picture> pictures = new ArrayList<Picture>();
@@ -243,7 +244,7 @@ public final class ParseEngine {
 		task.setId(UUID.randomUUID().toString());
 		
 		String host = url.substring(0, url.indexOf(setting.getGidPrefix()));
-		System.out.println("host:" + host);
+		Tracker.println("host:" + host);
 		// 446779
 		String gid = Spider.substring(url, setting.getGidPrefix()).substring(0,
 				Spider.substring(url, setting.getGidPrefix()).indexOf("/"));
@@ -256,15 +257,15 @@ public final class ParseEngine {
 				+ "?" + setting.getHentaiHome().getFirstParameterName() + "="
 				+ gid + "&" + setting.getHentaiHome().getSecondParameterName()
 				+ "=" + t;
-		System.out.println("hentaiHomeUrl:" + hentaiHomeUrl);
+		Tracker.println("hentaiHomeUrl:" + hentaiHomeUrl);
 		//EHG-446779.hathdl文件内容
 		String hentaiHomeSource = WebClient.postRequestWithCookie(hentaiHomeUrl, setting.getCookieInfo());
-//		System.out.println(hentaiHomeSource);
+//		Tracker.println(hentaiHomeSource);
 		//数量
 		String total_ = Spider.getTextFromSource(hentaiHomeSource, setting.getTotalPrefix(), "\n");
-		System.out.println("total:" + total_);
+		Tracker.println("total:" + total_);
 		String name = Spider.getTextFromSource(hentaiHomeSource, setting.getNamePrefix(), "\n");
-		System.out.println("name:" + name);
+		Tracker.println("name:" + name);
 		if(total_ == null || name == null){
 			return null;
 		}
@@ -297,7 +298,7 @@ public final class ParseEngine {
 			//return getdownloadUrl(taskName, sourceUrl, setting);
 			return null;
 		}
-		System.out.println(url);
+		Tracker.println(url);
 		return url;
 	}
 	
@@ -345,7 +346,7 @@ public final class ParseEngine {
 					showUrl = showUrlPrefix + urlList.substring(0, urlList.indexOf(setting.getShowPicSuffix()));
 					pictures.get(picIndex).setNum(genNum(total, picIndex));
 					pictures.get(picIndex).setUrl(showUrl);
-					System.out.println(showUrl);
+					Tracker.println(showUrl);
 					if(urlList.indexOf(showUrlPrefix) != -1){
 						urlList = Spider.substring(urlList, showUrlPrefix);
 					}
