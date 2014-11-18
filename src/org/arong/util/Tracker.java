@@ -14,4 +14,8 @@ public final class Tracker {
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		System.out.println(sdf.format(new Date()) + "-" + clazz.getSimpleName() + "-" + message);
 	}
+	public static void println(String message){
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+		System.out.println(sdf.format(new Date()) + "-" + message);
+	}
 }
