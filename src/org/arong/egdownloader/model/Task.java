@@ -109,7 +109,7 @@ public class Task {
 		return current;
 	}
 	public void setCurrent(int current) {
-		this.current = current;
+		this.current = current > total ? total : current < 0 ? 0 : current;
 	}
 	public String getSize() {
 		return size;
