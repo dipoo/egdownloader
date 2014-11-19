@@ -34,6 +34,7 @@ import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
+import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
@@ -74,6 +75,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog editWindow;
 	public JDialog deletingWindow;
 	public JDialog resetAllTaskWindow;
+	public JDialog simpleSearchWindow;
 	
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
@@ -145,21 +147,18 @@ public class EgDownloaderWindow extends JFrame {
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("opera"), null);
 		operaMenu.add(new ResetMenuItem("重置所有任务", this));
+		operaMenu.add(new SimpleSearchMenuItem("简单搜索", this));
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 				+ ComponentConst.SKIN_ICON.get("select"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,new ConsoleWork()));
-		/*JMenu searchMenu = new AJMenu(ComponentConst.TOOLS_MENU_TEXT,
-				ComponentConst.TOOLS_MENU_NAME, ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("tool"),
-				menuMouseListener);*/
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
 				ComponentConst.ABOUT_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("user"),
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, deleteTasksMenu, settingMenu, operaMenu, /*searchMenu,*/ consoleMenu, aboutMenu);
+				newTaskMenu, deleteTasksMenu, settingMenu, operaMenu, consoleMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
@@ -273,6 +272,8 @@ public class EgDownloaderWindow extends JFrame {
 					window.editWindow.requestFocus();
 				}else if(window.deletingWindow != null && window.deletingWindow.isVisible()){
 					window.deletingWindow.requestFocus();
+				}else if(window.simpleSearchWindow != null && window.simpleSearchWindow.isVisible()){
+					window.simpleSearchWindow.requestFocus();
 				}
 			}
 		});
