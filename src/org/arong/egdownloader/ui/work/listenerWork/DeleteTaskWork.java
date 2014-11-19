@@ -36,9 +36,10 @@ public class DeleteTaskWork implements IListenerTask {
 			w = (DeletingWindow) mainWindow.deletingWindow;
 			w.setData("    0/" + rows.length);
 			w.setInfo("正在收集任务图片");
+			int o = JOptionPane.showConfirmDialog(null, "是否删除下载的文件？");
 			w.setVisible(true);
 			//执行删除线程
-			new DeleteWorker(mainWindow, table, w, rows).execute();
+			new DeleteWorker(mainWindow, table, w, rows, o == 0).execute();
 		}
 		
 	}
