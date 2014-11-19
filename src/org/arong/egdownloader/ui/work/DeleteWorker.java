@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.work;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +23,13 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 	private TaskingTable table;
 	private DeletingWindow w;
 	private int[] rows;
-	public DeleteWorker(JFrame mainWindow, TaskingTable table, DeletingWindow w, int[] rows){
+	private boolean deleteFile;
+	public DeleteWorker(JFrame mainWindow, TaskingTable table, DeletingWindow w, int[] rows, boolean deleteFile){
 		this.window = mainWindow;
 		this.table = table;
 		this.rows = rows;
 		this.w = w;
+		this.deleteFile = deleteFile;
 	}
 	
 	protected Void doInBackground() throws Exception {
@@ -53,6 +56,16 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					w.setInfo("正在删除任务图片");
 					mainWindow.pictureDbTemplate.delete(pics);//删除图片信息
 				}
+				//删除文件
+				if(deleteFile){
+					File file = null;
+					for(int i = 0; i < tasks.size(); i ++){
+						file = new File(tasks.get(i).getSaveDir());
+						if(file.exists()){
+							this.deleteFile(file);
+						}
+					}
+				}
 				w.setInfo("正在删除任务");
 				mainWindow.taskDbTemplate.delete(tasks);//删除任务
 				//更新内存
@@ -71,4 +84,17 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 		return null;
 	}
 
+	private void deleteFile(File file){ 
+		if(file.exists()){                    //判断文件是否存在
+		   if(file.isFile()){                    //判断是否是文件
+		     file.delete();                       //delete()方法 你应该知道 是删除的意思;
+		   }else if(file.isDirectory()){              //否则如果它是一个目录
+		     File files[] = file.listFiles();               //声明目录下所有的文件 files[];
+		     for(int i=0;i<files.length;i++){            //遍历目录下所有的文件
+		      this.deleteFile(files[i]);             //把每个文件 用这个方法进行迭代
+		     } 
+		   } 
+		    file.delete(); 
+		} 
+	} 
 }
