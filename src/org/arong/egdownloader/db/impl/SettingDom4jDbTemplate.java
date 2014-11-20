@@ -175,6 +175,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("realUrlPrefix", t.getRealUrlPrefix());
 		ele.addAttribute("realUrlSuffix", t.getRealUrlSuffix());
 		ele.addAttribute("loginUrl", t.getLoginUrl());
+		ele.addAttribute("tags", t.getTags());
 		
 		return ele;
 	}
@@ -204,6 +205,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setRealUrlPrefix(ele.attributeValue("realUrlPrefix"));
 		t.setRealUrlSuffix(ele.attributeValue("realUrlSuffix"));
 		t.setLoginUrl(ele.attributeValue("loginUrl"));
+		if(ele.attributeValue("tags") != null){
+			t.setTags(ele.attributeValue("tags"));
+		}
 		return t;
 	}
 	

@@ -2,6 +2,8 @@ package org.arong.egdownloader.ui.window.form;
 
 import java.awt.Color;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -11,6 +13,7 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -25,12 +28,14 @@ import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
+import org.arong.egdownloader.ui.swing.AJComboBox;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.util.ArrayUtil;
 /**
  * 新建下载任务窗口
  * @author 阿荣
@@ -51,9 +56,29 @@ public class AddFormDialog extends JDialog {
 	private JFileChooser saveDirChooser;
 	private JLabel tagLabel;
 	private JTextField tagField;
+	private JComboBox tagComboBox;
 	
 	public JFrame mainWindow;
 	
+	public void initOrUpdateTagComboBox(Setting setting){
+		if(setting.getTags() != null){
+			String[] tags = setting.getTags().split("\\$￥");
+			if(tagComboBox == null){
+				tagComboBox = new AJComboBox(true, new ActionListener() {
+					public void actionPerformed(ActionEvent ae) {
+						AJComboBox s = (AJComboBox) ae.getSource();
+						tagField.setText(s.getSelectedItem().toString());
+					}
+				}, "", 370, 80, 90, 30, 5, tags);
+				tagField.setSize(300, 30);
+				ComponentUtil.addComponents(this.getContentPane(), tagComboBox);
+			}else{
+				this.getContentPane().remove(tagComboBox);
+				tagComboBox = null;
+				initOrUpdateTagComboBox(setting);
+			}
+		}
+	}
 	
 	public AddFormDialog(final JFrame mainWindow){
 		this.mainWindow = mainWindow;
@@ -92,8 +117,10 @@ public class AddFormDialog extends JDialog {
 		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 120, 60, 30);
 		saveDirField = new AJTextField("saveDirField", 65, 120, 320, 30);
 		tagLabel = new AJLabel("标签", Color.BLUE, 5, 80, 60, 30);
-		tagField = new AJTextField("tag", 65, 80, 395, 30);
-		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
+		final Setting setting = ((EgDownloaderWindow)mainWindow).setting;
+		tagField = new AJTextField("tag", 65, 80, setting.getTags() != null ? 300 : 395, 30);//395
+		initOrUpdateTagComboBox(setting);
+		
 		saveDirField.setText(setting.getDefaultSaveDir() + "\\" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog, MouseEvent e) {
@@ -137,6 +164,29 @@ public class AddFormDialog extends JDialog {
 							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
 								((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
 							}
+							
+							//分析tag（如果不存在，则添加到标签记忆中,如果存在，则将此标签置于最前面）
+							String tags = setting.getTags();
+							if(! "一般".equals(tag)){
+								if(tags == null){
+									setting.setTags(tag);
+									//保存配置文件
+									mainWindow.settingDbTemplate.update(setting);
+								}else{
+									String[] tagsArr = tags.split("\\" + Setting.TAGSPLIT);
+									if(!ArrayUtil.exists(tagsArr, tag)){
+										setting.setTags(tag + Setting.TAGSPLIT + setting.getTags());
+									}else{
+										//置于最前面
+										tags = change(tags.split("\\" + Setting.TAGSPLIT), tag, Setting.TAGSPLIT);
+										setting.setTags(tags);
+									}
+									//保存配置文件
+									mainWindow.settingDbTemplate.update(setting);
+								}
+								initOrUpdateTagComboBox(setting);
+							}
+							//开始采集
 							Task task = new Task(url, saveDir);
 							task.setTag(tag);
 							CreateWorker worker = new CreateWorker(task, mainWindow);
@@ -153,7 +203,8 @@ public class AddFormDialog extends JDialog {
 		saveDirChooser = new JFileChooser("/");
 		saveDirChooser.setDialogTitle("选择保存目录");//选择框标题
 		saveDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//只能选择目录
-		ComponentUtil.addComponents(this.getContentPane(), addTaskBtn, urlLabel, urlField, tagLabel, tagField, saveDirLabel, saveDirField, chooserBtn, tipLabel);
+		ComponentUtil.addComponents(this.getContentPane(), addTaskBtn, urlLabel, urlField, tagLabel, tagField,
+				 saveDirLabel, saveDirField, chooserBtn, tipLabel);
 	}
 	public void emptyField(){
 		urlField.setText("");
@@ -179,6 +230,16 @@ public class AddFormDialog extends JDialog {
 		}
 		return false;
 	}
+	//将存在的标签放到最前前面
+	private String change(String[] arr, String s, String split){
+    	String str = "";
+    	for(int i = 0; i < arr.length; i ++){
+    		if(!s.equals(arr[i])){
+    			str += split + arr[i];
+    		}
+    	}
+    	return s + str;
+    }
 	public void dispose() {
 		mainWindow.setEnabled(true);
 		mainWindow.setVisible(true);
