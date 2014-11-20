@@ -8,6 +8,7 @@ import java.util.UUID;
  * @since 2014-05-25
  */
 public class Setting {
+	public final static String TAGSPLIT = "$￥";//标签分隔符
 	private String id = UUID.randomUUID().toString();
 	private String defaultSaveDir = "save";//默认保存路劲
 	private boolean saveAsName;//是否以真实名称保存
@@ -26,6 +27,7 @@ public class Setting {
 	private String[] picture_name = {"title=\"", "\" src="};//名称
 	private String[] picture_realUrl = {"<img id=\"img\" src=\"", "</html>", "http", "\""};//真实下载地址,1、2为第一次截取，3、4为最终截取
 	
+	private String tags;//标签记忆，以$￥符号分割
 	
 	
 	private String gidPrefix = "/g/";//url地址中获取gid值的前缀
@@ -242,5 +244,11 @@ public class Setting {
 	}
 	public void setLoginUrl(String loginUrl) {
 		this.loginUrl = loginUrl;
+	}
+	public String getTags() {
+		return tags;
+	}
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 }
