@@ -10,7 +10,8 @@ public enum TaskStatus {
 	STOPED("已暂停"),
 	STARTED("下载中"),
 	COMPLETED("已完成"),
-	DELETED("已删除");
+	DELETED("已删除"),
+	WAITING("排队等待");
 	private String status;
 	public String getStatus(){
 		return status;
@@ -31,6 +32,8 @@ public enum TaskStatus {
 			return TaskStatus.COMPLETED;
 		}else if(TaskStatus.DELETED.getStatus().equals(status)){
 			return TaskStatus.DELETED;
+		}else if(TaskStatus.WAITING.getStatus().equals(status)){
+			return TaskStatus.WAITING;
 		}
 		return null;
 	}
