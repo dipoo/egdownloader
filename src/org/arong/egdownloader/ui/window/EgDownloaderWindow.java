@@ -33,6 +33,7 @@ import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
+import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -148,6 +149,7 @@ public class EgDownloaderWindow extends JFrame {
 						+ ComponentConst.SKIN_ICON.get("opera"), null);
 		operaMenu.add(new ResetMenuItem("重置所有任务", this));
 		operaMenu.add(new SimpleSearchMenuItem("简单搜索", this));
+		operaMenu.add(new OpenRootMenuItem("打开根目录", this));
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 				+ ComponentConst.SKIN_ICON.get("select"),
