@@ -34,6 +34,7 @@ public class TaskingTable extends JTable {
 	private EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
 	private int sort = 0;//0为名称排序，1为时间排序
+	private List<Task> waitingTasks;//排队等待的任务
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
@@ -202,6 +203,7 @@ public class TaskingTable extends JTable {
 							int maxThread = table.getMainWindow().setting.getMaxThread();
 							if(table.getRunningNum() >= maxThread){
 								JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
+								table.addWaitingTask(task);
 								return;
 							}
 							task.setStatus(TaskStatus.STARTED);
@@ -220,6 +222,12 @@ public class TaskingTable extends JTable {
 								table.mainWindow.taskDbTemplate.update(task);
 								table.setRunningNum(table.getRunningNum() - 1);
 							}
+						}
+						//如果状态为排队等待中，则将状态改为已暂停，并从排队等待列表中移除
+						else if(task.getStatus() == TaskStatus.WAITING){
+							task.setStatus(TaskStatus.STOPED);
+							Tracker.println(getClass(), task.getName() + ":已暂停");
+							table.waitingTasks.remove(task);
 						}
 						//如果状态为未创建，则开启创建线程
 						else if(task.getStatus() == TaskStatus.UNCREATED){
@@ -255,6 +263,19 @@ public class TaskingTable extends JTable {
 				}
 			}
 		});
+	}
+	/**
+	 * 添加排队等待的任务
+	 * @param task
+	 */
+	public void addWaitingTask(Task task){
+		if(waitingTasks == null){
+			waitingTasks = new ArrayList<Task>();
+		}
+		if(!waitingTasks.contains(task)){
+			task.setStatus(TaskStatus.WAITING);
+			waitingTasks.add(task);
+		}
 	}
 
 	public List<Task> getTasks() {

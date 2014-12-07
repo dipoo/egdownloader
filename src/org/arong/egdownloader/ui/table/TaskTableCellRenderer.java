@@ -131,6 +131,10 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 				if(completedColor == null) completedColor = new Color(65,145,65);
 				return new AJLabel(value.toString(), completedColor, blodFont, JLabel.CENTER);
 			}
+			if(value.toString().equals(TaskStatus.WAITING.getStatus())){
+				if(startedColor == null) startedColor = new Color(65,145,65);
+				return new AJLabel(value.toString(), startedColor, blodFont, JLabel.CENTER);
+			}
 		}
 		return new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);
 	}

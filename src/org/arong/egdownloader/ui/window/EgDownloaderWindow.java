@@ -36,6 +36,8 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
+import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
+import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
@@ -147,6 +149,8 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu operaMenu = new AJMenu(ComponentConst.OPERA_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("opera"), null);
+		operaMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
+		operaMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
 		operaMenu.add(new ResetMenuItem("重置所有任务", this));
 		operaMenu.add(new SimpleSearchMenuItem("简单搜索", this));
 		operaMenu.add(new OpenRootMenuItem("打开根目录", this));
