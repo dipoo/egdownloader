@@ -206,10 +206,7 @@ public class TaskingTable extends JTable {
 								table.addWaitingTask(task);
 								return;
 							}
-							task.setStatus(TaskStatus.STARTED);
-							task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
-							task.getDownloadWorker().execute();
-							table.setRunningNum(table.getRunningNum() + 1);
+							table.startTask(task);
 						}
 						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
 						else if(task.getStatus() == TaskStatus.STARTED){
@@ -280,13 +277,26 @@ public class TaskingTable extends JTable {
 		}
 	}
 	
+	/**
+	 * 开启任务下载
+	 * @param task 
+	 * @return void
+	 */
+	public void startTask(Task task){
+		task.setStatus(TaskStatus.STARTED);
+		task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
+		task.getDownloadWorker().execute();
+		this.setRunningNum(this.getRunningNum() + 1);
+	}
+	/**
+	 * 将排队等待中的第一个任务开启下载
+	 * @param task 
+	 * @return void
+	 */
 	public void startWaitingTask(Task task){
 		if(this.getWaitingTasks() != null && this.getWaitingTasks().size() > 0){
 			task = this.getWaitingTasks().get(0);//第一个任务
-			task.setStatus(TaskStatus.STARTED);
-			task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
-			task.getDownloadWorker().execute();
-			this.setRunningNum(this.getRunningNum() + 1);
+			this.startTask(task);
 			this.getWaitingTasks().remove(0);//将第一个任务移除排队列表
 		}
 	}
