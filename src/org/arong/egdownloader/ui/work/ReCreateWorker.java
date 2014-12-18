@@ -66,7 +66,9 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 				TaskingTable table = (TaskingTable)window.runningTable;
 				
 				if(table.getRunningNum() >= maxThread){
-					JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
+					//JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
+					//添加到排队等待列表
+					table.addWaitingTask(task);
 					return null;
 				}
 				task.setStatus(TaskStatus.STARTED);

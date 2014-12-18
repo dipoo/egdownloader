@@ -137,9 +137,11 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 				return null;
 			if(exceptionNum >= (task.getTotal() - task.getCurrent())){
 				Tracker.println(DownloadWorker.class, "【" + task.getName() + ":配额不足或者下载异常，停止下载。】");
-				//设置任务状态为下载中
+				//设置任务状态为已暂停
 				task.setStatus(TaskStatus.STOPED);
 				table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+				//开始任务等待列表中的第一个任务
+				table.startWaitingTask(task);
 				table.updateUI();
 				return null;
 			}
@@ -152,6 +154,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			//更新任务到文件
 			((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+			//开始任务等待列表中的第一个任务
+			table.startWaitingTask(task);
 			table.updateUI();
 		}
 		return null;
