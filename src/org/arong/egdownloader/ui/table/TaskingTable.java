@@ -275,6 +275,7 @@ public class TaskingTable extends JTable {
 			task.setStatus(TaskStatus.WAITING);
 			waitingTasks.add(task);
 		}
+		this.updateUI();
 	}
 	
 	/**
@@ -284,9 +285,16 @@ public class TaskingTable extends JTable {
 	 */
 	public void startTask(Task task){
 		task.setStatus(TaskStatus.STARTED);
-		task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
-		task.getDownloadWorker().execute();
+		//如果是未采集，则先开启采集
+		if(task.getPictures() == null || task.getPictures().size() == 0){
+			task.setReCreateWorker(new ReCreateWorker(task, this.getMainWindow()));
+			task.getReCreateWorker().execute();
+		}else{
+			task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
+			task.getDownloadWorker().execute();
+		}
 		this.setRunningNum(this.getRunningNum() + 1);
+		this.updateUI();
 	}
 	/**
 	 * 将排队等待中的第一个任务开启下载
