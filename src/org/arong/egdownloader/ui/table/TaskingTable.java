@@ -202,7 +202,7 @@ public class TaskingTable extends JTable {
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
 							int maxThread = table.getMainWindow().setting.getMaxThread();
 							if(table.getRunningNum() >= maxThread){
-								JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
+								//JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
 								table.addWaitingTask(task);
 								return;
 							}
