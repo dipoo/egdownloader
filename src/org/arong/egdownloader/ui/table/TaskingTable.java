@@ -222,6 +222,8 @@ public class TaskingTable extends JTable {
 								table.mainWindow.taskDbTemplate.update(task);
 								table.setRunningNum(table.getRunningNum() - 1);
 							}
+							//开启排队等待的第一个任务
+							table.startWaitingTask(task);
 						}
 						//如果状态为排队等待中，则将状态改为已暂停，并从排队等待列表中移除
 						else if(task.getStatus() == TaskStatus.WAITING){
@@ -277,6 +279,17 @@ public class TaskingTable extends JTable {
 			waitingTasks.add(task);
 		}
 	}
+	
+	public void startWaitingTask(Task task){
+		if(this.getWaitingTasks() != null && this.getWaitingTasks().size() > 0){
+			task = this.getWaitingTasks().get(0);//第一个任务
+			task.setStatus(TaskStatus.STARTED);
+			task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
+			task.getDownloadWorker().execute();
+			this.setRunningNum(this.getRunningNum() + 1);
+			this.getWaitingTasks().remove(0);//将第一个任务移除排队列表
+		}
+	}
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -302,5 +315,10 @@ public class TaskingTable extends JTable {
 		this.runningNum = runningNum;
 	}
 
-	
+	public List<Task> getWaitingTasks() {
+		return waitingTasks;
+	}
+	public void setWaitingTasks(List<Task> waitingTasks) {
+		this.waitingTasks = waitingTasks;
+	}
 }
