@@ -11,7 +11,6 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
@@ -71,10 +70,7 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 					table.addWaitingTask(task);
 					return null;
 				}
-				task.setStatus(TaskStatus.STARTED);
-				task.setDownloadWorker(new DownloadWorker(task, table.getMainWindow()));
-				task.getDownloadWorker().execute();
-				table.setRunningNum(table.getRunningNum() + 1);
+				table.startTask(task);
 			}else{
 				window.creatingWindow.dispose();
 				JOptionPane.showMessageDialog(null, "重建任务异常");
