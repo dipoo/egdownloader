@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.swing.JMenuItem;
 
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
 /**
  * 打开根目录
@@ -24,9 +25,12 @@ public class OpenRootMenuItem extends JMenuItem {
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				//EgDownloaderWindow mainWindow = window;
 				try {
-					Desktop.getDesktop().open(new File("/"));
+					String binPath = FileUtil.getAppPath(getClass());
+					if(binPath.endsWith("bin")){
+						binPath = binPath.substring(0, binPath.length() - 3);
+					}
+					Desktop.getDesktop().open(new File(binPath));//去掉bin
 				} catch (IOException e) {
 					e.printStackTrace();
 					Tracker.println("打开根目录出错");
