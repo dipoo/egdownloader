@@ -2,7 +2,7 @@ package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Desktop;
 import java.awt.Window;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JOptionPane;
@@ -11,15 +11,15 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 /**
  * 打开文件夹的操作任务类
  * @author 阿荣
  * @since 2014-06-05
  */
-public class OpenFolderTaskWork implements IListenerTask {
+public class OpenFolderTaskWork implements IMenuListenerTask {
 
-	public void doWork(Window window, MouseEvent e) {
+	public void doWork(Window window, ActionEvent e) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int rowIndex = table.getSelectedRow();
