@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.swing;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +26,7 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 	public AJMenuItem(String text, String icon){
 		this.setText(text);
 		this.setCursor(CursorManager.getPointerCursor());
-		if(icon != null)
+		if(icon != null && !"".equals(icon))
 			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
 	
@@ -40,9 +41,22 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 			}
 		}
 	}
+	
 	public AJMenuItem (String text, String icon, MouseListener listener){
 		this(text, icon);
 		this.addMouseListener(listener);
+	}
+	
+	public AJMenuItem (String text,  Color color, String icon, ActionListener listener){
+		this(text, icon);
+		this.setForeground(color);
+		this.addActionListener(listener);
+	}
+	
+	public AJMenuItem (String text, Color color, ActionListener listener){
+		this.setText(text);
+		this.setForeground(color);
+		this.addActionListener(listener);
 	}
 
 	public void actionPerformed(ActionEvent e) {

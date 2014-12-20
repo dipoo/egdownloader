@@ -1,7 +1,7 @@
 package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,16 +16,16 @@ import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.util.FileUtil;
 /**
  * 下载漫画封面（先检测是否存在，不存在才去下载）
  * @author 阿荣
  * @since 2014-09-07
  */
-public class DownloadCoverWork implements IListenerTask {
+public class DownloadCoverWork implements IMenuListenerTask {
 
-	public void doWork(Window window, MouseEvent e2) {
+	public void doWork(Window window, ActionEvent e2) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int index = table.getSelectedRow();

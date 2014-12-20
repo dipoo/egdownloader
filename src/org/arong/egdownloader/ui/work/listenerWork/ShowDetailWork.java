@@ -1,7 +1,7 @@
 package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,15 +15,15 @@ import org.arong.egdownloader.ui.table.PictureTableModel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DetailWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 /**
  * 下载任务详细信息窗口
  * @author 阿荣
  * @since 2014-06-18
  */
-public class ShowDetailWork implements IListenerTask {
+public class ShowDetailWork implements IMenuListenerTask {
 
-	public void doWork(Window window, MouseEvent e) {
+	public void doWork(Window window, ActionEvent e) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int index = table.getSelectedRow();

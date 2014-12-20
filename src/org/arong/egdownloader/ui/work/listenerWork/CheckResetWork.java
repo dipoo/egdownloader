@@ -1,7 +1,7 @@
 package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +14,15 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CheckingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 /**
  * 查缺补漏监听任务
  * @author 阿荣
  * @since 2014-06-21
  */
-public class CheckResetWork implements IListenerTask {
+public class CheckResetWork implements IMenuListenerTask {
 
-	public void doWork(Window window, MouseEvent e) {
+	public void doWork(Window window, ActionEvent e) {
 		EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		if(mainWindow.checkingWindow == null){
 			mainWindow.checkingWindow = new CheckingWindow();

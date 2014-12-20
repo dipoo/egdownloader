@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -30,6 +31,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
@@ -41,10 +43,12 @@ import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
+import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
 import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
 import org.arong.egdownloader.ui.work.listenerWork.ConsoleWork;
@@ -173,10 +177,14 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
 		//右键菜单：查看详细
-		AJMenu detailPopupMenuItem = new AJMenu(ComponentConst.POPUP_DETAIL_MENU_TEXT, menuItemColor, new OperaBtnMouseListener(this, MouseAction.CLICK,new ShowDetailWork()));
+		AJMenuItem detailPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("detail"),
+				new MenuItemActonListener(this, new ShowDetailWork()));
 		//右键菜单：复制网址
-		AJMenu copyUrlPopupMenuItem = new AJMenu(ComponentConst.POPUP_COPYURL_MENU_TEXT, menuItemColor, new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
-			public void doWork(Window window, MouseEvent e) {
+		AJMenuItem copyUrlPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_COPYURL_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("copy"),
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+			public void doWork(Window window, ActionEvent e) {
 				EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 				TaskingTable table = (TaskingTable) mainWindow.runningTable;
 				int index = table.getSelectedRow();
@@ -187,27 +195,34 @@ public class EgDownloaderWindow extends JFrame {
 			}
 		}));
 		//右键菜单：打开文件夹
-		AJMenu openFolderPopupMenuItem = new AJMenu(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenFolderTaskWork()));
+		AJMenuItem openFolderPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"),
+				new MenuItemActonListener(this, new OpenFolderTaskWork()));
 		//右键菜单：打开网页
-		AJMenu openWebPageMenuItem = new AJMenu(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new OpenWebPageWork()));
+		AJMenuItem openWebPageMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("browse"),
+				new MenuItemActonListener(this, new OpenWebPageWork()));
 		//右键菜单：下载封面
-		AJMenu downloadCoverMenuItem = new AJMenu(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new DownloadCoverWork()));
+		AJMenuItem downloadCoverMenuItem = new AJMenuItem(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+				new MenuItemActonListener(this, new DownloadCoverWork()));
 		//右键菜单：查漏补缺
-		AJMenu checkResetMenuItem = new AJMenu(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new CheckResetWork()));
+		AJMenuItem checkResetMenuItem = new AJMenuItem(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("check"),
+				new MenuItemActonListener(this, new CheckResetWork()));
 		//右键菜单：更改阅读状态
-		AJMenu changeReadedMenuItem = new AJMenu(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new ChangeReadedWork()));
+		AJMenuItem changeReadedMenuItem = new AJMenuItem(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("change"),
+				new MenuItemActonListener(this, new ChangeReadedWork()));
 		//右键菜单：编辑任务信息
-		AJMenu editMenuItem = new AJMenu(ComponentConst.POPUP_EDIT_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new ShowEditWork()));
+		AJMenuItem editMenuItem = new AJMenuItem(ComponentConst.POPUP_EDIT_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"),
+				new MenuItemActonListener(this, new ShowEditWork()));
 		//右键菜单：重置任务
-		AJMenu resetMenuItem = new AJMenu(ComponentConst.POPUP_RESET_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
-					public void doWork(Window window, MouseEvent e) {
+		AJMenuItem resetMenuItem = new AJMenuItem(ComponentConst.POPUP_RESET_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("reset"),
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						int index = table.getSelectedRow();
@@ -224,9 +239,10 @@ public class EgDownloaderWindow extends JFrame {
 					}
 				}));
 		//右键菜单：完成任务
-		AJMenu completedMenuItem = new AJMenu(ComponentConst.POPUP_COMPLETED_MENU_TEXT, menuItemColor,
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
-					public void doWork(Window window, MouseEvent e) {
+		AJMenuItem completedMenuItem = new AJMenuItem(ComponentConst.POPUP_COMPLETED_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("ok"),
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						int index = table.getSelectedRow();
@@ -249,7 +265,7 @@ public class EgDownloaderWindow extends JFrame {
 					}
 				}));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(openFolderPopupMenuItem, detailPopupMenuItem,
+		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
 				checkResetMenuItem, changeReadedMenuItem, editMenuItem, resetMenuItem, completedMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
