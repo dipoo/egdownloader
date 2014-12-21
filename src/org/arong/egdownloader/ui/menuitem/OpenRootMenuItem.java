@@ -29,6 +29,11 @@ public class OpenRootMenuItem extends JMenuItem {
 					String binPath = FileUtil.getAppPath(getClass());
 					if(binPath.endsWith("bin")){
 						binPath = binPath.substring(0, binPath.length() - 3);
+					}else{
+						String defaultSavePath = window.setting.getDefaultSaveDir();
+						FileUtil.ifNotExistsThenCreate(defaultSavePath);
+						File f = new File(defaultSavePath);
+						binPath = f.getAbsolutePath().replaceAll(defaultSavePath, "");
 					}
 					Desktop.getDesktop().open(new File(binPath));//去掉bin
 				} catch (IOException e) {
