@@ -36,7 +36,7 @@ public class SettingWindow extends JFrame{
 	
 		private static final long serialVersionUID = -2290486210441887526L;
 
-		JTabbedPane settingTabPanel = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane settingTabPanel = new JTabbedPane(JTabbedPane.LEFT);
 		public LoginWindow loginWindow;
 		/* 基本配置页签 */
 		JPanel basicPanel;
@@ -52,6 +52,7 @@ public class SettingWindow extends JFrame{
 		public JTextField cookieField;
 		JButton cookieButton;
 		JButton basicBtn;
+		
 		/* HenTai@Home设置 */
 		JPanel henTaiHomePanel;
 		JLabel h_uriLabel;
@@ -91,19 +92,62 @@ public class SettingWindow extends JFrame{
 		public JTextField d_realUrlSuffixTextField;
 		
 		JButton d_Btn;
+		
+		/* 引擎设置 */
+		JPanel enginePanel;
+		JLabel nameLabel;
+		public JTextField nameTextFieldPrefix;//名称前缀
+		public JTextField nameTextFieldSuffix;//名称后缀
+		JLabel subnameLabel;
+		public JTextField  subnameTextFieldPrefix;
+		public JTextField  subnameTextFieldSuffix;
+		JLabel coverLabel;
+		public JTextField  coverTextField;
+		JLabel totalSizeLabel;
+		public JTextField  totalSizeTextFieldPrefix;
+		public JTextField  totalSizeTextFieldSuffix;
+		JLabel languageLabel;
+		public JTextField languageTextFieldPrefix;
+		public JTextField languageTextFieldSuffix;
+		JLabel interceptLabel;
+		public JTextField interceptTextFieldPrefix;
+		public JTextField interceptTextFieldSuffix;
+		JLabel showUrlLabel;
+		public JTextField showUrlTextFieldPrefix;
+		public JTextField showUrlTextFieldSuffix;
+		JLabel picNameLabel;
+		public JTextField picNameTextFieldPrefix;
+		public JTextField picNameTextFieldSuffix;
+		JLabel realUrlLabel;
+		public JTextField realUrlTextField;
+		JButton e_Btn;
+		
+		Color labelColor = Color.DARK_GRAY;
 
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
+			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
+			/* 引擎配置 */
+			enginePanel = new JPanel();
+			enginePanel.setLayout(null);
+			nameLabel = new AJLabel("名称前后缀：", labelColor, 25, 30, 100, 30);
+			nameTextFieldPrefix = new AJTextField(setting.getTask_name()[0], "", 125, 30, 160, 30);
+			nameTextFieldSuffix = new AJTextField(setting.getTask_name()[1], "", 325, 30, 160, 30);
+			subnameLabel = new AJLabel("子名称前后缀：", labelColor, 25, 70, 100, 30);
+			subnameTextFieldPrefix = new AJTextField(setting.getTask_subname()[0] + "", "", 125, 70, 160, 30);
+			subnameTextFieldSuffix = new AJTextField(setting.getTask_subname()[1] + "", "", 325, 70, 160, 30);
+			addComponentsJpanel(enginePanel, nameLabel, nameTextFieldPrefix, nameTextFieldSuffix, subnameLabel, subnameTextFieldPrefix, subnameTextFieldSuffix);
+			
 			this.getContentPane().setLayout(null);
-			this.setSize(640, 450);
+			this.setSize(800, 450);
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
-			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-			settingTabPanel.setBounds(20, 5, 600, 400);
-			Color labelColor = Color.BLUE;
+			
+			settingTabPanel.setBounds(20, 5, 780, 400);
+			
 			/* 基本配置 */
 			basicPanel = new JPanel();
-			basicPanel.setLayout(null);
+			basicPanel.setLayout(null);  
 			saveDirLabel = new AJLabel("保存目录：", labelColor, 25, 30, 100, 30);
 			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
@@ -323,6 +367,7 @@ public class SettingWindow extends JFrame{
 					d_realUrlSuffixTextField, d_Btn);
 			
 			settingTabPanel.add("基本配置", basicPanel);
+			settingTabPanel.add("引擎配置", enginePanel);
 			settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
 			settingTabPanel.add("下载设置", downloadPanel);
 			addComponents(settingTabPanel);

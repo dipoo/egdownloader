@@ -151,7 +151,7 @@ public final class FileUtil {
 		return null;
 	}
 	
-	public static String getAppPath(Class cls) {
+	public static String getAppPath(Class<?> cls) {
         //检查用户传入的参数是否为空
         if (cls == null)
             throw new java.lang.IllegalArgumentException("参数不能为空！");
@@ -210,7 +210,6 @@ public final class FileUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println(realPath);
         return realPath;
     }//getAppPath定义结束
 	
