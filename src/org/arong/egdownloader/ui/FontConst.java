@@ -19,7 +19,7 @@ public class FontConst {
 		, "OptionPane.font", "MenuBar.font", "Button.font", "Label.font",
 		"PasswordField.font", "ScrollPane.font", "MenuItem.font",
 		/*"ToolTip.font",*/ "List.font", "EditorPane.font", "Table.font",
-		"TabbedPane.font", "RadioButton.font", "CheckBoxMenuItem.font",
+		/*"TabbedPane.font",*/ "RadioButton.font", "CheckBoxMenuItem.font",
 		"TextPane.font", "PopupMenu.font", "TitledBorder.font",
 		"ComboBox.font" };
 	// 调整默认字体
