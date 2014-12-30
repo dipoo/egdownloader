@@ -43,7 +43,9 @@ public class StopAllTaskMenuItem extends JMenuItem {
 					}
 				}
 				//清空排队等待列表
-				table.getWaitingTasks().clear();
+				if(table.getWaitingTasks() != null){
+					table.getWaitingTasks().clear();
+				}
 				//清空正在下载数
 				table.setRunningNum(0);
 				//刷新表格
