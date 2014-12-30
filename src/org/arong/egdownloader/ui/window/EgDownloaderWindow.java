@@ -59,6 +59,8 @@ import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
 import org.arong.egdownloader.ui.work.listenerWork.ResetTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
 import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
+import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
+import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
 
 /**
@@ -118,7 +120,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Color menuItemColor = new Color(0,0,85);
-		// 菜单
+		// 菜单：新建
 		JMenu newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("add"),
@@ -140,16 +142,26 @@ public class EgDownloaderWindow extends JFrame {
 								
 							}
 						}));
+		// 菜单：开始
+		JMenu startTasksMenu = new AJMenu(ComponentConst.START_MENU_TEXT,
+				"", ComponentConst.SKIN_NUM
+						+ ComponentConst.SKIN_ICON.get("download"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
+		// 菜单：暂停
+		JMenu stopTasksMenu = new AJMenu(ComponentConst.STOP_MENU_TEXT,
+				"", ComponentConst.SKIN_NUM
+						+ ComponentConst.SKIN_ICON.get("reset"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
+		// 菜单：删除
 		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("delete"), deleteBtnMouseListener);
-
+		// 菜单：设置
 		MouseListener menuMouseListener = new MenuMouseListener(this);
 		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
 				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("setting"),
 				menuMouseListener);
+		// 菜单：操作
 		JMenu operaMenu = new AJMenu(ComponentConst.OPERA_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("opera"), null);
@@ -158,17 +170,19 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new ResetMenuItem("重置所有任务", this));
 		operaMenu.add(new SimpleSearchMenuItem("简单搜索", this));
 		operaMenu.add(new OpenRootMenuItem("打开根目录", this));
+		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 				+ ComponentConst.SKIN_ICON.get("select"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,new ConsoleWork()));
+		// 菜单：关于
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
 				ComponentConst.ABOUT_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("user"),
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, deleteTasksMenu, settingMenu, operaMenu, consoleMenu, aboutMenu);
+				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, settingMenu, operaMenu, consoleMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,

@@ -199,41 +199,19 @@ public class TaskingTable extends JTable {
 						Task task = table.getTasks().get(rowIndex);
 						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
-							int maxThread = table.getMainWindow().setting.getMaxThread();
-							if(table.getRunningNum() >= maxThread){
-								//JOptionPane.showMessageDialog(null, "已达下载任务开启上限：" + maxThread);
-								table.addWaitingTask(task);
-								return;
-							}
 							table.startTask(task);
 						}
 						//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
-						else if(task.getStatus() == TaskStatus.STARTED){
-							task.setStatus(TaskStatus.STOPED);
-							Tracker.println(getClass(), task.getName() + ":已暂停");
-							if(task.getDownloadWorker() != null){
-								task.getDownloadWorker().cancel(true);
-								task.setDownloadWorker(null);//swingworker不能复用，需要重新建立
-								//更新任务数据
-								table.mainWindow.taskDbTemplate.update(task);
-								table.setRunningNum(table.getRunningNum() - 1);
-							}
-							//开启排队等待的第一个任务
-							table.startWaitingTask(task);
-						}
-						//如果状态为排队等待中，则将状态改为已暂停，并从排队等待列表中移除
-						else if(task.getStatus() == TaskStatus.WAITING){
-							task.setStatus(TaskStatus.STOPED);
-							Tracker.println(getClass(), task.getName() + ":已暂停");
-							table.waitingTasks.remove(task);
+						else if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
+							stopTask(task);
 						}
 						//如果状态为未创建，则开启创建线程
 						else if(task.getStatus() == TaskStatus.UNCREATED){
 							Tracker.println(getClass(), task.getName() + ":重新采集");
 							task.setReCreateWorker(new ReCreateWorker(task, table.getMainWindow()));
 							task.getReCreateWorker().execute();
+							table.updateUI();
 						}
-						table.updateUI();
 					}else{//单击事件
 						int column = table.columnAtPoint(e.getPoint());
 						//显示预览图
@@ -278,21 +256,25 @@ public class TaskingTable extends JTable {
 	}
 	
 	/**
-	 * 开启任务下载
+	 * 开启任务下载,如果达到下载上限，则添加到排队列表中
 	 * @param task 
 	 * @return void
 	 */
 	public void startTask(Task task){
-		task.setStatus(TaskStatus.STARTED);
-		//如果是未采集，则先开启采集
-		if(task.getPictures() == null || task.getPictures().size() == 0){
-			task.setReCreateWorker(new ReCreateWorker(task, this.getMainWindow()));
-			task.getReCreateWorker().execute();
+		if(this.getRunningNum() >= this.mainWindow.setting.getMaxThread()){
+			this.addWaitingTask(task);
 		}else{
-			task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
-			task.getDownloadWorker().execute();
+			task.setStatus(TaskStatus.STARTED);
+			//如果是未采集，则先开启采集
+			if(task.getPictures() == null || task.getPictures().size() == 0){
+				task.setReCreateWorker(new ReCreateWorker(task, this.getMainWindow()));
+				task.getReCreateWorker().execute();
+			}else{
+				task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
+				task.getDownloadWorker().execute();
+			}
+			this.setRunningNum(this.getRunningNum() + 1);
 		}
-		this.setRunningNum(this.getRunningNum() + 1);
 		this.updateUI();
 	}
 	/**
@@ -306,6 +288,36 @@ public class TaskingTable extends JTable {
 			this.startTask(task);
 			this.getWaitingTasks().remove(0);//将第一个任务移除排队列表
 		}
+		this.updateUI();
+	}
+	
+	/**
+	 * 暂停下载任务
+	 * @param task 
+	 * @return void
+	 */
+	public void stopTask(Task task){
+		//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
+		if(task.getStatus() == TaskStatus.STARTED){
+			task.setStatus(TaskStatus.STOPED);
+			Tracker.println(getClass(), task.getName() + ":已暂停");
+			if(task.getDownloadWorker() != null){
+				task.getDownloadWorker().cancel(true);
+				task.setDownloadWorker(null);//swingworker不能复用，需要重新建立
+				//更新任务数据
+				this.mainWindow.taskDbTemplate.update(task);
+				this.setRunningNum(this.getRunningNum() - 1);
+			}
+			//开启排队等待的第一个任务
+			this.startWaitingTask(task);
+		}
+		//如果状态为排队等待中，则将状态改为已暂停，并从排队等待列表中移除
+		else if(task.getStatus() == TaskStatus.WAITING){
+			task.setStatus(TaskStatus.STOPED);
+			Tracker.println(getClass(), task.getName() + ":已暂停");
+			this.waitingTasks.remove(task);
+		}
+		this.updateUI();
 	}
 
 	public List<Task> getTasks() {
