@@ -103,6 +103,8 @@ public class SettingWindow extends JFrame{
 		public JTextField  subnameTextFieldSuffix;
 		JLabel coverLabel;
 		public JTextField  coverTextField;
+		public JTextField  coverTextFieldPrefix;
+		public JTextField  coverTextFieldSuffix;
 		JLabel totalSizeLabel;
 		public JTextField  totalSizeTextFieldPrefix;
 		public JTextField  totalSizeTextFieldSuffix;
@@ -131,12 +133,33 @@ public class SettingWindow extends JFrame{
 			enginePanel = new JPanel();
 			enginePanel.setLayout(null);
 			nameLabel = new AJLabel("名称前后缀：", labelColor, 25, 30, 100, 30);
-			nameTextFieldPrefix = new AJTextField(setting.getTask_name()[0], "", 125, 30, 160, 30);
-			nameTextFieldSuffix = new AJTextField(setting.getTask_name()[1], "", 325, 30, 160, 30);
+			nameTextFieldPrefix = new AJTextField(setting.getTask_name()[0], "", 125, 30, 240, 30);
+			nameTextFieldSuffix = new AJTextField(setting.getTask_name()[1], "", 385, 30, 240, 30);
 			subnameLabel = new AJLabel("子名称前后缀：", labelColor, 25, 70, 100, 30);
-			subnameTextFieldPrefix = new AJTextField(setting.getTask_subname()[0] + "", "", 125, 70, 160, 30);
-			subnameTextFieldSuffix = new AJTextField(setting.getTask_subname()[1] + "", "", 325, 70, 160, 30);
-			addComponentsJpanel(enginePanel, nameLabel, nameTextFieldPrefix, nameTextFieldSuffix, subnameLabel, subnameTextFieldPrefix, subnameTextFieldSuffix);
+			subnameTextFieldPrefix = new AJTextField(setting.getTask_subname()[0] + "", "", 125, 70, 240, 30);
+			subnameTextFieldSuffix = new AJTextField(setting.getTask_subname()[1] + "", "", 385, 70, 240, 30);
+			coverLabel = new AJLabel("封面前后缀：", labelColor, 25, 110, 100, 30);
+			coverTextFieldPrefix = new AJTextField(setting.getTask_coverUrl()[0] + "", "", 125, 110, 240, 30);
+			coverTextFieldSuffix = new AJTextField(setting.getTask_coverUrl()[1] + "", "", 385, 110, 240, 30);
+			totalSizeLabel = new AJLabel("数目大小前后缀：", labelColor, 25, 150, 100, 30);
+			totalSizeTextFieldPrefix = new AJTextField(setting.getTask_total_size()[0] + "", "", 125, 150, 240, 30);
+			totalSizeTextFieldSuffix = new AJTextField(setting.getTask_total_size()[1] + "", "", 385, 150, 240, 30);
+			languageLabel = new AJLabel("语言前后缀：", labelColor, 25, 190, 100, 30);
+			languageTextFieldPrefix = new AJTextField(setting.getTask_language()[0] + "", "", 125, 190, 240, 30);
+			languageTextFieldSuffix = new AJTextField(setting.getTask_language()[1] + "", "", 385, 190, 240, 30);
+			interceptLabel = new AJLabel("截取列表前后缀：", labelColor, 25, 230, 100, 30);
+			interceptTextFieldPrefix = new AJTextField(setting.getPicture_intercept()[0] + "", "", 125, 230, 240, 30);
+			interceptTextFieldSuffix = new AJTextField(setting.getPicture_intercept()[1] + "", "", 385, 230, 240, 30);
+			showUrlLabel = new AJLabel("图片地址前后缀：", labelColor, 25, 270, 100, 30);
+			showUrlTextFieldPrefix = new AJTextField(setting.getPicture_showUrl()[0] + "", "", 125, 270, 240, 30);
+			showUrlTextFieldSuffix = new AJTextField(setting.getPicture_showUrl()[1] + "", "", 385, 270, 240, 30);
+			picNameLabel = new AJLabel("图片名称前后缀：", labelColor, 25, 310, 100, 30);
+			picNameTextFieldPrefix = new AJTextField(setting.getPicture_name()[0] + "", "", 125, 310, 240, 30);
+			picNameTextFieldSuffix = new AJTextField(setting.getPicture_name()[1] + "", "", 385, 310, 240, 30);
+			addComponentsJpanel(enginePanel, nameLabel, nameTextFieldPrefix, nameTextFieldSuffix, subnameLabel, subnameTextFieldPrefix, subnameTextFieldSuffix,
+					coverLabel, coverTextFieldPrefix, coverTextFieldSuffix, totalSizeLabel, totalSizeTextFieldPrefix, totalSizeTextFieldSuffix,
+					languageLabel, languageTextFieldPrefix, languageTextFieldSuffix, interceptLabel, interceptTextFieldPrefix, interceptTextFieldSuffix,
+					showUrlLabel, showUrlTextFieldPrefix, showUrlTextFieldSuffix, picNameLabel, picNameTextFieldPrefix, picNameTextFieldSuffix);
 			
 			this.getContentPane().setLayout(null);
 			this.setSize(800, 450);
