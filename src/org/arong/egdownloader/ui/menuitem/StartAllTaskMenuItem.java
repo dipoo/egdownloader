@@ -32,14 +32,8 @@ public class StartAllTaskMenuItem extends JMenuItem {
 					if(tasks.get(i).getStatus() == TaskStatus.UNSTARTED
 							|| tasks.get(i).getStatus() == TaskStatus.UNCREATED 
 							|| tasks.get(i).getStatus() == TaskStatus.STOPED){
-						//开启的任务数到达上限，则添加到排队等待列表
-						if(table.getRunningNum() >= window.setting.getMaxThread()){
-							//添加等待
-							table.addWaitingTask(tasks.get(i));
-						}else{
-							//开启任务
-							table.startTask(tasks.get(i));
-						}
+						//开启任务
+						table.startTask(tasks.get(i));
 					}
 				}
 				//刷新表格

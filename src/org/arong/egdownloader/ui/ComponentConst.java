@@ -90,6 +90,8 @@ public final class ComponentConst {
 	
 	//组件的text值
 	public final static String ADD_MENU_TEXT = "新建";
+	public final static String START_MENU_TEXT = "开始";
+	public final static String STOP_MENU_TEXT = "暂停";
 	public final static String DELETE_MENU_TEXT = "删除";
 	public final static String SETTING_MENU_TEXT = "配置";
 	public final static String OPERA_MENU_TEXT = "操作";
