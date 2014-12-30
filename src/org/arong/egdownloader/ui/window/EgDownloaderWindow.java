@@ -190,6 +190,28 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
+		//右键菜单：开始
+		AJMenuItem startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						int index = table.getSelectedRow();
+						table.startTask(table.getTasks().get(index));
+					}
+		}));
+		//右键菜单：暂停
+		AJMenuItem stopPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_STOP_MENU_TEXT, menuItemColor,
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("reset"),
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						int index = table.getSelectedRow();
+						table.stopTask(table.getTasks().get(index));
+					}
+		}));
 		//右键菜单：查看详细
 		AJMenuItem detailPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, menuItemColor,
 				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("detail"),
@@ -279,7 +301,7 @@ public class EgDownloaderWindow extends JFrame {
 					}
 				}));
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(detailPopupMenuItem, openFolderPopupMenuItem,
+		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
 				checkResetMenuItem, changeReadedMenuItem, editMenuItem, resetMenuItem, completedMenuItem);
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
