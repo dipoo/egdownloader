@@ -9,6 +9,10 @@ import java.util.UUID;
  */
 public class Setting {
 	public final static String TAGSPLIT = "$￥";//标签分隔符
+	
+	private String lastDownloadTime;
+	private String lastCreateTime;
+	
 	private String id = UUID.randomUUID().toString();
 	private String defaultSaveDir = "save";//默认保存路劲
 	private boolean saveAsName;//是否以真实名称保存
@@ -250,5 +254,17 @@ public class Setting {
 	}
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+	public String getLastDownloadTime() {
+		return lastDownloadTime;
+	}
+	public void setLastDownloadTime(String lastDownloadTime) {
+		this.lastDownloadTime = lastDownloadTime;
+	}
+	public String getLastCreateTime() {
+		return lastCreateTime;
+	}
+	public void setLastCreateTime(String lastCreateTime) {
+		this.lastCreateTime = lastCreateTime;
 	}
 }

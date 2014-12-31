@@ -50,6 +50,8 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				//保存到数据库
 				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
 				window.taskDbTemplate.store(task);//保存任务
+				//设置最后创建时间
+				setting.setLastCreateTime(task.getCreateTime());
 				//保存到内存
 				TaskingTable taskTable = (TaskingTable)window.runningTable;
 				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
