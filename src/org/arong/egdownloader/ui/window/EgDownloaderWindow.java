@@ -109,7 +109,8 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks = tasks;
 		
 		// 设置主窗口
-		this.setTitle(Version.NAME);
+		this.setTitle(Version.NAME + (setting.getLastCreateTime() != null ? "-最后创建于：" + setting.getLastCreateTime() + "-" : "")
+				+ (setting.getLastDownloadTime() != null ? "-最后下载于：" + setting.getLastDownloadTime() : ""));
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("download"))).getImage());
@@ -341,6 +342,7 @@ public class EgDownloaderWindow extends JFrame {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				//保存数据
 				window.taskDbTemplate.update(window.tasks);
+				window.settingDbTemplate.update(window.setting);
 				System.exit(0);
 			}
 		});

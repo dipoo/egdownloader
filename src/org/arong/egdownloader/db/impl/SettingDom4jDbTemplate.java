@@ -176,6 +176,8 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("realUrlSuffix", t.getRealUrlSuffix());
 		ele.addAttribute("loginUrl", t.getLoginUrl());
 		ele.addAttribute("tags", t.getTags());
+		ele.addAttribute("lastCreateTime", t.getLastCreateTime());
+		ele.addAttribute("lastDownloadTime", t.getLastDownloadTime());
 		
 		return ele;
 	}
@@ -208,6 +210,8 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
 		}
+		t.setLastCreateTime(ele.attributeValue("lastCreateTime"));
+		t.setLastDownloadTime(ele.attributeValue("lastDownloadTime"));
 		return t;
 	}
 	
