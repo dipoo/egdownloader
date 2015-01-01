@@ -156,6 +156,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("defaultSaveDir", t.getDefaultSaveDir());
 		ele.addAttribute("cookieInfo", t.getCookieInfo());
 		ele.addAttribute("saveAsName", t.isSaveAsName() + "");
+		ele.addAttribute("autoDownload", t.isAutoDownload() + "");
 		ele.addAttribute("maxThread", t.getMaxThread() + "");
 		ele.addAttribute("gidPrefix", t.getGidPrefix());
 		ele.addAttribute("hentaiHome.uri", t.getHentaiHome().getUri());
@@ -188,6 +189,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir"));
 		t.setCookieInfo(ele.attributeValue("cookieInfo"));
 		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
+		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")) ? true : false);
 		t.setGidPrefix(ele.attributeValue("gidPrefix"));
 		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
 		t.getHentaiHome().setUri(ele.attributeValue("hentaiHome.uri"));

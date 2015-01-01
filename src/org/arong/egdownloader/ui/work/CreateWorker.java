@@ -34,6 +34,12 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 	}
 	
 	protected Void doInBackground() throws Exception {
+		/**
+		 * 重新检测任务是否存在
+		 */
+		if(((EgDownloaderWindow)mainWindow).taskDbTemplate.exsits("url", task.getUrl())){
+			return null;
+		}
 		EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
 		window.setEnabled(false);
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
@@ -61,6 +67,10 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.tablePane.setVisible(true);//将表格panel显示出来
 				window.emptyTableTips.setVisible(false);//将空任务label隐藏
 				taskTable.updateUI();
+				//是否开启下载
+				if(setting.isAutoDownload()){
+					taskTable.startTask(task);
+				}
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");
 			}

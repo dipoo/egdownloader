@@ -44,6 +44,8 @@ public class SettingWindow extends JFrame{
 		public JTextField saveDirField;
 		JLabel saveAsNameLabel;
 		public JCheckBox saveAsNameBox;
+		JLabel autoDownloadLabel;
+		public JCheckBox autoDownloadBox;
 		JLabel maxThreadLabel;
 		public JTextField maxThreadField;
 		JLabel loginUrlLabel;
@@ -176,6 +178,9 @@ public class SettingWindow extends JFrame{
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
 			saveAsNameBox.setBounds(125, 70, 30, 30);
+			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 300, 70, 100, 30);
+			autoDownloadBox = new JCheckBox("", setting.isAutoDownload());
+			autoDownloadBox.setBounds(400, 70, 30, 30);
 			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 110, 100, 30);
 			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 100, 30);
 			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
@@ -202,6 +207,7 @@ public class SettingWindow extends JFrame{
 					String maxThread = settingWindow.maxThreadField.getText();
 					String loginUrl = settingWindow.loginUrlField.getText();
 					boolean saveAsName = settingWindow.saveAsNameBox.getSelectedObjects() == null ? false : true;//是否选择了
+					boolean autoDownload = settingWindow.autoDownloadBox.getSelectedObjects() == null ? false : true;
 					String cookieInfo = settingWindow.cookieField.getText();
 					Pattern p = Pattern.compile("[0-9]");
 					if("".equals(saveDir)){
@@ -225,6 +231,7 @@ public class SettingWindow extends JFrame{
 						}
 						mainWindow.setting.setDefaultSaveDir(saveDir);
 						mainWindow.setting.setSaveAsName(saveAsName);
+						mainWindow.setting.setAutoDownload(autoDownload);
 						mainWindow.setting.setMaxThread(Integer.parseInt(maxThread));
 						mainWindow.setting.setLoginUrl(loginUrl);
 						mainWindow.setting.setCookieInfo(cookieInfo);
@@ -235,7 +242,7 @@ public class SettingWindow extends JFrame{
 			});
 			basicBtn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), basicBtnListener, 250, 250, 60, 30);
 		addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
-				saveAsNameLabel, saveAsNameBox, maxThreadLabel, maxThreadField,
+				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieField,
 				cookieButton, basicBtn);
 			/* HenTai@Home设置 */

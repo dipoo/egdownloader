@@ -161,6 +161,11 @@ public class AddFormDialog extends JDialog {
 						}
 						//重复性验证
 						if(! mainWindow.taskDbTemplate.exsits("url", url)){
+							if(addTaskBtn.isEnabled()){
+								addTaskBtn.setEnabled(false);
+							}else{
+								return;
+							}
 							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
 								((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
 							}
@@ -191,6 +196,7 @@ public class AddFormDialog extends JDialog {
 							task.setTag(tag);
 							CreateWorker worker = new CreateWorker(task, mainWindow);
 							worker.execute();
+							addTaskBtn.setEnabled(true);
 						}else{
 							JOptionPane.showMessageDialog(this_, "此下载地址已存在");
 						}
