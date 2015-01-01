@@ -25,6 +25,7 @@ public class Setting {
 	private String[] task_coverUrl = {"<div id=\"gd1\"><img src=\"", "\" alt=\"\" /></div></div>"};//封面地址
 	private String[] task_total_size = {"Images:</td><td class=\"gdt2\">", "</td></tr><tr><td class=\"gdt1\">Resized:"};//数目及大小
 	private String[] task_language = {"Language:</td><td class=\"gdt2\">", "</td></tr></table></div><div id=\"gdr\""};//语言
+	private String[] task_type = {"png\" alt=\"", "\" class=\"ic"};//类别
 	
 	private String[] picture_listSource = {"</table><div id=\"gdt\">", "<div class=\"c\"></div></div><table"};//每页所有图片源码
 	private String[] picture_intercept = {"style=\"height", "\"gdtm"};//判断是否还有及截取剩余字符串
@@ -273,5 +274,11 @@ public class Setting {
 	}
 	public void setAutoDownload(boolean autoDownload) {
 		this.autoDownload = autoDownload;
+	}
+	public String[] getTask_type() {
+		return task_type;
+	}
+	public void setTask_type(String[] task_type) {
+		this.task_type = task_type;
 	}
 }

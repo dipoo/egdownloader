@@ -90,29 +90,33 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 				return nameLabel;
 			}
 		}else if(column == 2){//第三列：图片总数
-			tc.setPreferredWidth(60);
-			tc.setMaxWidth(80);
-			return new AJLabel(value.toString(), fontColor, blodFont, JLabel.LEFT);
+			tc.setPreferredWidth(50);
+			tc.setMaxWidth(60);
+			return new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);
 		}else if(column == 3){//第三列：语言
 			tc.setPreferredWidth(60);
 			tc.setMaxWidth(80);
-			return new AJLabel(value == null ? "" : value.toString(), fontColor, blodFont, JLabel.LEFT);
-		}else if(column == 4){//第四列：进度
-			tc.setPreferredWidth(120);
-			tc.setMaxWidth(140);
+			return new AJLabel(value == null ? "" : value.toString(), fontColor, font, JLabel.LEFT);
+		}else if(column == 4){//第三列：类别
+			tc.setPreferredWidth(60);
+			tc.setMaxWidth(80);
+			return new AJLabel(value == null ? "" : value.toString().toUpperCase(), fontColor, font, JLabel.LEFT);
+		}else if(column == 5){//第四列：进度
+			tc.setPreferredWidth(80);
+			tc.setMaxWidth(100);
 			if(value == null || Integer.parseInt(value.toString()) < 1){
 				return new AJLabel("0(0.0%)", fontColor, blodFont, JLabel.CENTER);
 			}
-			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 2).toString()));
+			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 3).toString()));
 			bar.setBackground(progressBarBg);
-			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 2)) + ")");
+			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 3)) + ")");
 			bar.setStringPainted(true);
 			bar.setFont(blodFont);bar.setPreferredSize(new Dimension(110, 13));
 			bar.setForeground(progressBarBorder);
 			bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
 			bar.setValue(Integer.parseInt(value.toString()));
 			return bar;
-		}else if(column == 5){//第五列：状态
+		}else if(column == 6){//第五列：状态
 			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  40 : 62);
 			tc.setMaxWidth(80);
 			if(value.toString().equals(TaskStatus.UNSTARTED.getStatus())){
