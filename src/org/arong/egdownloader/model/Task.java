@@ -19,6 +19,7 @@ public class Task {
 	private String coverUrl;//封面路径
 	private String saveDir;//保存目录
 	private String language;//漫画语言
+	private String type;//分类
 	private String tag;//标签
 	private boolean readed;//已读
 	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
@@ -171,6 +172,14 @@ public class Task {
 
 	public void setReCreateWorker(ReCreateWorker reCreateWorker) {
 		this.reCreateWorker = reCreateWorker;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

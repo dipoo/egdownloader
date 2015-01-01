@@ -38,11 +38,15 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 				l =  new AJLabel(value.toString(), null, color, JLabel.LEFT);
 				l.setToolTipText("按照漫画语言排序");
 				return l;
-			case 4://下载进度
+			case 4://类别
+				l =  new AJLabel(value.toString(), null, color, JLabel.LEFT);
+				l.setToolTipText("按照漫画类别排序");
+				return l;
+			case 5://下载进度
 				l =  new AJLabel(value.toString(), null, color, JLabel.CENTER);
 				l.setToolTipText("按照漫画进度降序排序");
 				return l;
-			case 5://状态
+			case 6://状态
 				l = new AJLabel(value.toString(), null, color, JLabel.CENTER);
 				l.setToolTipText("按照漫画下载状态排序");
 				return l;

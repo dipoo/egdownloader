@@ -308,6 +308,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		ele.addAttribute("subname", t.getSubname());
 		ele.addAttribute("coverUrl", t.getCoverUrl());
 		ele.addAttribute("language", t.getLanguage());
+		ele.addAttribute("type", t.getType());
 		ele.addAttribute("saveDir", t.getSaveDir());
 		ele.addAttribute("tag", t.getTag());
 		ele.addAttribute("readed", t.isReaded() + "");
@@ -329,6 +330,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setSubname(ele.attributeValue("subname") == null ? "" : ele.attributeValue("subname"));
 		task.setCoverUrl(ele.attributeValue("coverUrl"));
 		task.setLanguage(ele.attributeValue("language") == null ? "" : ele.attributeValue("language"));
+		task.setType(ele.attributeValue("type") == null ? "" : ele.attributeValue("type"));
 		task.setSaveDir(ele.attributeValue("saveDir"));
 		task.setTag(ele.attributeValue("tag") == null ? "一般" : ele.attributeValue("tag"));
 		task.setReaded("true".equals(ele.attributeValue("readed")) ? true : false);

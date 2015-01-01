@@ -36,6 +36,8 @@ public final class ParseEngine {
 		if(task.getSubname() == null){
 			task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
 		}
+		//获取漫画类别
+		task.setType(Spider.getTextFromSource(source, setting.getTask_type()[0], setting.getTask_type()[1]));
         //获取封面路径
         task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
         //获取数目及大小
@@ -128,6 +130,8 @@ public final class ParseEngine {
 		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//获取子名称
         task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
+        //获取类别
+        task.setType(Spider.getTextFromSource(source, setting.getTask_type()[0], setting.getTask_type()[1]));
         //获取封面路径
         task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
         //获取大小

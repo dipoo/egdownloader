@@ -109,7 +109,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks = tasks;
 		
 		// 设置主窗口
-		this.setTitle(Version.NAME + (setting.getLastCreateTime() != null ? "-最后创建于：" + setting.getLastCreateTime() + "-" : "")
+		this.setTitle(Version.NAME + (setting.getLastCreateTime() != null ? "-最后创建于：" + setting.getLastCreateTime() : "")
 				+ (setting.getLastDownloadTime() != null ? "-最后下载于：" + setting.getLastDownloadTime() : ""));
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
