@@ -63,6 +63,7 @@ import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
 import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
+import org.arong.util.Tracker;
 
 /**
  * 主线程类
@@ -200,6 +201,11 @@ public class EgDownloaderWindow extends JFrame {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						//如果正在重建，则不下载
+						if(table.isRebuild()){
+							Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
+							return;
+						}
 						int index = table.getSelectedRow();
 						table.startTask(table.getTasks().get(index));
 					}
@@ -211,6 +217,11 @@ public class EgDownloaderWindow extends JFrame {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						//如果正在重建，则不执行
+						if(table.isRebuild()){
+							Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
+							return;
+						}
 						int index = table.getSelectedRow();
 						table.stopTask(table.getTasks().get(index));
 					}

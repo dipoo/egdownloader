@@ -24,12 +24,6 @@ public final class ComponentConst {
 	
 	public final static String DATA_PATH = "data";//数据目录
 	
-	public final static String SETTING_DATA_PATH = DATA_PATH + "/setting.db";//配置文件保存路径
-	
-	public final static String TASK_DATA_PATH = DATA_PATH + "/task.db";//任务数据保存路径
-	
-	public final static String PICTURE_DATA_PATH = DATA_PATH + "/picture.db";//图片数据保存路径
-	
 	public final static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
 	
 	public final static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
@@ -119,7 +113,7 @@ public final class ComponentConst {
 			"</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" +
 			Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" +
 			Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED +
-			"</b><br>项目地址：https://github.com/dipoo/egdownloader" + 
+			"</b><br>项目地址：<a href='https://github.com/dipoo/egdownloader'>https://github.com/dipoo/egdownloader</a>" + 
 			"<br/><font color='blue'>有任何问题，请到项目托管地址发issue。</font>";
 	
 }
