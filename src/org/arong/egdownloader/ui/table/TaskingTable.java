@@ -32,7 +32,7 @@ public class TaskingTable extends JTable {
 	private List<Task> tasks;
 	private EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
-	private int sort = 0;//0为名称排序，1为时间排序
+	private int sort = 1;//0为名称排序，1为时间排序
 	private List<Task> waitingTasks;//排队等待的任务
 	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
