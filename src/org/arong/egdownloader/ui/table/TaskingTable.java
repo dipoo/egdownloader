@@ -289,9 +289,9 @@ public class TaskingTable extends JTable {
 	 * @param task 
 	 * @return void
 	 */
-	public void startWaitingTask(Task task){
+	public void startWaitingTask(){
 		if(this.getWaitingTasks() != null && this.getWaitingTasks().size() > 0){
-			task = this.getWaitingTasks().get(0);//第一个任务
+			Task task = this.getWaitingTasks().get(0);//第一个任务
 			this.startTask(task);
 			this.getWaitingTasks().remove(0);//将第一个任务移除排队列表
 		}
@@ -316,7 +316,7 @@ public class TaskingTable extends JTable {
 				this.setRunningNum(this.getRunningNum() - 1);
 			}
 			//开启排队等待的第一个任务
-			this.startWaitingTask(task);
+			this.startWaitingTask();
 		}
 		//如果状态为排队等待中，则将状态改为已暂停，并从排队等待列表中移除
 		else if(task.getStatus() == TaskStatus.WAITING){

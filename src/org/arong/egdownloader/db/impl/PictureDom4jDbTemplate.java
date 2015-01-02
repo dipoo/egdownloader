@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.arong.egdownloader.db.DbTemplate;
@@ -263,6 +265,12 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 				pics.add(node2Picture(node));
 			}
 		}
+		//排序
+		Collections.sort(pics, new Comparator<Picture>() {
+			public int compare(Picture o1, Picture o2) {
+				return o1.getNum().compareTo(o2.getNum());
+			}
+		});
 		return pics;
 	}
 

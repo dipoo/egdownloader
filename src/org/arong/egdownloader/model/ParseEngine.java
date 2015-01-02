@@ -44,6 +44,8 @@ public final class ParseEngine {
         String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
         task.setTotal(Integer.parseInt(temp.split("@")[0].trim()));
         task.setSize(temp.split("@")[1].trim());
+        //设置下载结束索引
+        task.setEnd(task.getTotal());
         //获取漫画语言
         task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
         Tracker.println(ParseEngine.class, task.getName());

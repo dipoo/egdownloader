@@ -28,6 +28,8 @@ public class Task {
 	private int current = 0;//已下载完成总数
 	private String size;//总大小
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
+	private int start = 1;//下载开始索引
+	private int end = total;//下载结束索引
 	private List<Picture> pictures;
 	private DownloadWorker downloadWorker;//下载线程实例,不保存
 	private ReCreateWorker reCreateWorker;//重新创建线程实例,不保存
@@ -180,6 +182,22 @@ public class Task {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
 	}
 	
 }
