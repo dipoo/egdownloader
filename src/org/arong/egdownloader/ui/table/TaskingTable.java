@@ -16,7 +16,6 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
-import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
