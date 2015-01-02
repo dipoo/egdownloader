@@ -16,6 +16,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
@@ -32,6 +33,7 @@ public class TaskingTable extends JTable {
 	private List<Task> tasks;
 	private EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
+	private boolean rebuild;
 	private int sort = 1;//0为名称排序，1为时间排序
 	private List<Task> waitingTasks;//排队等待的任务
 	
@@ -203,6 +205,10 @@ public class TaskingTable extends JTable {
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//双击事件
 					if(e.getClickCount() == 2){
+						if(table.rebuild){
+							Tracker.println(TaskingTable.class, "正在重建任务");
+							return;
+						}
 						Task task = table.getTasks().get(rowIndex);
 						//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
 						if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
@@ -326,6 +332,17 @@ public class TaskingTable extends JTable {
 		}
 		this.updateUI();
 	}
+	
+	/**
+	 *暂定所有下载任务 
+	 */
+	public void stopAllTasks(){
+		for(Task task: tasks){
+			if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
+				stopTask(task);
+			}
+		}
+	}
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -356,5 +373,11 @@ public class TaskingTable extends JTable {
 	}
 	public void setWaitingTasks(List<Task> waitingTasks) {
 		this.waitingTasks = waitingTasks;
+	}
+	public boolean isRebuild() {
+		return rebuild;
+	}
+	public void setRebuild(boolean rebuild) {
+		this.rebuild = rebuild;
 	}
 }

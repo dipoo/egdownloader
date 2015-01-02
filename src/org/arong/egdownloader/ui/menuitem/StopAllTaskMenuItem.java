@@ -27,6 +27,11 @@ public class StopAllTaskMenuItem extends JMenuItem {
 			public void actionPerformed(ActionEvent ae) {
 				//获取所有未完成、未开始的任务
 				TaskingTable table = (TaskingTable) window.runningTable;
+				//如果正在重建，则不执行
+				if(table.isRebuild()){
+					Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
+					return;
+				}
 				List<Task> tasks = table.getTasks();
 				Task task = null;
 				for(int i = 0; i < tasks.size(); i ++){

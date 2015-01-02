@@ -340,7 +340,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setCompletedTime(ele.attributeValue("completedTime"));
 		task.setTotal(ele.attributeValue("total") == null ? 0 : Integer.parseInt(ele.attributeValue("total")));
 		task.setCurrent(ele.attributeValue("current") == null ? 0 : Integer.parseInt(ele.attributeValue("current")));
-		task.setSize(ele.attributeValue("size"));
+		task.setSize(ele.attributeValue("size") == null ? "" : ele.attributeValue("size"));
 		//如果任务为下载中，则加载到内存中设置为已暂停，由用户手动开启任务
 		TaskStatus ts = TaskStatus.parseTaskStatus(ele.attributeValue("status"));
 		if(ts == TaskStatus.STARTED){
