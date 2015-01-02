@@ -148,11 +148,11 @@ public class EgDownloaderWindow extends JFrame {
 		// 菜单：开始
 		JMenu startTasksMenu = new AJMenu(ComponentConst.START_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("download"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
+						+ ComponentConst.SKIN_ICON.get("start"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
 		// 菜单：暂停
 		JMenu stopTasksMenu = new AJMenu(ComponentConst.STOP_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("reset"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
+						+ ComponentConst.SKIN_ICON.get("stop"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
 		// 菜单：删除
 		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
@@ -196,7 +196,7 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane.getViewport().setBackground(new Color(254,254,254));
 		//右键菜单：开始
 		AJMenuItem startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("start"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -212,7 +212,7 @@ public class EgDownloaderWindow extends JFrame {
 		}));
 		//右键菜单：暂停
 		AJMenuItem stopPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_STOP_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("reset"),
+				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("stop"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
