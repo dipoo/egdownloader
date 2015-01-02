@@ -35,26 +35,26 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		this.mainWindow = mainWindow;
 		this.task = task;
 	}
-	public static void main(String[] args) {
-		String s = "hjsdh.jpg";
-		s = s.substring(0, s.lastIndexOf(".")) + "_" + s.substring(s.lastIndexOf("."), s.length());
-		Tracker.println(s);
-	}
+	
 	protected Void doInBackground() throws Exception {
 		TaskingTable table = (TaskingTable) ((EgDownloaderWindow)mainWindow).runningTable;
 		exceptionNum = 0;
 		//设置任务状态为下载中
 		task.setStatus(TaskStatus.STARTED);
-		Tracker.println(getClass(), task.getName() + ":开始下载");
+		Tracker.println(getClass(), task.getName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载");
 		List<Picture> pics = task.getPictures();
+		
 		Picture pic;
 		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 		InputStream is;
 		File existNameFs;//判断是否有重复的文件名
 		if(pics.size() != 0){
-			for(int i = 0; i < pics.size(); i ++){
+			int success = 0;//下载完成个数
+			int requireNum = 0;//需要下载数（未下载数）
+			for(int i = (task.getStart() < 1 ? 0 : task.getStart() - 1); i < task.getEnd() && i < pics.size(); i ++){
 				pic = pics.get(i);
 				if(pic.getUrl() != null && ! pic.isRunning() && !pic.isCompleted()){
+					requireNum ++;
 					try{
 						if(this.isCancelled())//是否暂停
 							return null;
@@ -113,6 +113,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						//设置最后下载时间
 						setting.setLastDownloadTime(pic.getTime());
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成。");
+						success ++;
 						table.updateUI();
 					}catch (SocketTimeoutException e){
 						//碰到异常
@@ -132,34 +133,47 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}
 				}
 			}
-		}
-		//整个过程下来，如果没有下载完成，则递归
-		if(task.getCurrent() < pics.size()){
-			if(this.isCancelled())//是否暂停
-				return null;
-			if(exceptionNum >= (task.getTotal() - task.getCurrent())){
-				Tracker.println(DownloadWorker.class, "【" + task.getName() + ":配额不足或者下载异常，停止下载。】");
-				//设置任务状态为已暂停
-				task.setStatus(TaskStatus.STOPED);
+			
+			//整个过程下来，如果没有下载完成，则递归
+			if(task.getCurrent() < pics.size()){
+				if(this.isCancelled())//是否暂停
+					return null;
+				//是否达到下载区间要求,达到则暂停
+				if(success == requireNum){
+					Tracker.println(DownloadWorker.class, "【" + task.getName() + ":完成配置区间下载。】");
+					//设置任务状态为已暂停
+					task.setStatus(TaskStatus.STOPED);
+					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+					//开始任务等待列表中的第一个任务
+					table.startWaitingTask();
+					table.updateUI();
+					return null;
+				}
+				if(exceptionNum >= requireNum){
+					Tracker.println(DownloadWorker.class, "【" + task.getName() + ":配额不足或者下载异常，停止下载。】");
+					//设置任务状态为已暂停
+					task.setStatus(TaskStatus.STOPED);
+					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+					//开始任务等待列表中的第一个任务
+					table.startWaitingTask();
+					table.updateUI();
+					return null;
+				}
+				doInBackground();
+			}else{
+				//设置任务状态为已完成
+				task.setStatus(TaskStatus.COMPLETED);
+				Tracker.println(DownloadWorker.class ,"【" + task.getName() + "已下载完毕。】");
+				task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+				//更新任务到文件
+				((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 				table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 				//开始任务等待列表中的第一个任务
-				table.startWaitingTask(task);
+				table.startWaitingTask();
 				table.updateUI();
-				return null;
 			}
-			doInBackground();
-		}else{
-			//设置任务状态为已完成
-			task.setStatus(TaskStatus.COMPLETED);
-			Tracker.println(DownloadWorker.class ,"【" + task.getName() + "已下载完毕。】");
-			task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			//更新任务到文件
-			((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
-			table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
-			//开始任务等待列表中的第一个任务
-			table.startWaitingTask(task);
-			table.updateUI();
 		}
+		
 		return null;
 	}
 	public Task getTask() {

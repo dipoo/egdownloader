@@ -37,6 +37,10 @@ public class EditWindow extends JDialog {
 	private JTextField subnameField;
 	private JLabel tagLabel;
 	private JTextField tagField;
+	private JLabel startLabel;
+	private JTextField startField;
+	private JLabel endLabel;
+	private JTextField endField;
 	private Task task;
 	EgDownloaderWindow mainWindow;
 	
@@ -54,14 +58,29 @@ public class EditWindow extends JDialog {
 		subnameLabel = new AJLabel("子标题", Color.BLUE, 5, 55, 40, 30);
 		subnameField = new AJTextField("", 65, 55, 395, 30);
 		tagLabel = new AJLabel("标签：", Color.BLUE, 5, 100, 40, 30);
-		tagField = new AJTextField("", 65, 100, 395, 30);
+		tagField = new AJTextField("", 65, 100, 160, 30);
+		startLabel = new AJLabel("开始：", Color.BLUE, 250, 100, 40, 30);
+		startField = new AJTextField("", 290, 100, 60, 30);
+		endLabel = new AJLabel("结束：", Color.BLUE, 360, 100, 40, 30);
+		endField = new AJTextField("", 400, 100, 60, 30);
 		editTaskBtn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window dialog, MouseEvent event) {
 				String name = nameField.getText().trim();
 				String subname = subnameField.getText().trim();
 				String tag = tagField.getText().trim();
+				String start = startField.getText().trim();
+				String end = endField.getText().trim();
+				
 				if("".equals(name)){
 					JOptionPane.showMessageDialog(null, "请填写任务名称");
+				}else if(!start.matches("^[0-9]*[1-9][0-9]*$")){
+					JOptionPane.showMessageDialog(null, "[开始]请填写正整数");
+				}else if(!end.matches("^[0-9]*[1-9][0-9]*$")){
+					JOptionPane.showMessageDialog(null, "[结束]请填写正整数");
+				}else if(Integer.parseInt(start) > Integer.parseInt(end)){
+					JOptionPane.showMessageDialog(null, "[开始]不能大于[结束]");
+				}else if(Integer.parseInt(end) > task.getTotal()){
+					JOptionPane.showMessageDialog(null, "[结束]不能大于图片总数：" + task.getTotal());
 				}else{
 					if("".equals(subname)){
 						subname = null;
@@ -72,6 +91,8 @@ public class EditWindow extends JDialog {
 					task.setName(name);
 					task.setSubname(subname);
 					task.setTag(tag);
+					task.setStart(Integer.parseInt(start));
+					task.setEnd(Integer.parseInt(end));
 					//保存
 					mainWindow.taskDbTemplate.update(task);
 					//更新table
@@ -81,7 +102,8 @@ public class EditWindow extends JDialog {
 			}
 		}), 190, 145, 100, 30);
 		ComponentUtil.addComponents(getContentPane(), nameLabel, nameField,
-				subnameLabel, subnameField, tagLabel, tagField, editTaskBtn);
+				subnameLabel, subnameField, tagLabel, tagField, startLabel,
+				startField, endLabel, endField, editTaskBtn);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -105,6 +127,8 @@ public class EditWindow extends JDialog {
 		nameField.setText(task.getName());
 		subnameField.setText(task.getSubname());
 		tagField.setText(task.getTag());
+		startField.setText(task.getStart() + "");
+		endField.setText(task.getEnd() + "");
 	}
 	public Task getTask() {
 		return task;

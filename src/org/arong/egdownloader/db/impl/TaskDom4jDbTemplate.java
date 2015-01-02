@@ -318,6 +318,8 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		ele.addAttribute("current", t.getCurrent() + "");
 		ele.addAttribute("size", t.getSize());
 		ele.addAttribute("status", t.getStatus().getStatus() + "");
+		ele.addAttribute("start", t.getStart() + "");
+		ele.addAttribute("end", t.getEnd() + "");
 		return ele;
 	}
 	
@@ -345,6 +347,8 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 			ts = TaskStatus.STOPED;
 		}
 		task.setStatus(ts);
+		task.setStart(ele.attributeValue("start") == null ? 1 : Integer.parseInt(ele.attributeValue("start")));
+		task.setEnd(ele.attributeValue("end") == null ? task.getTotal() : Integer.parseInt(ele.attributeValue("end")));
 		return task;
 	}
 }
