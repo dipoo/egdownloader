@@ -2,8 +2,6 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -65,12 +63,12 @@ public class InitWindow extends JFrame {
 		List<Task> tasks = taskDbTemplate.query();
 		if(tasks != null){
 			//按照名称排序
-			Collections.sort(tasks, new Comparator<Task>() {
+			/*Collections.sort(tasks, new Comparator<Task>() {
 				@Override
 				public int compare(Task o1, Task o2) {
 					return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
 				}
-			});
+			});*/
 			for (Task task : tasks) {
 				task.setPictures(pictureDbTemplate.query("tid", task.getId()));
 			}
