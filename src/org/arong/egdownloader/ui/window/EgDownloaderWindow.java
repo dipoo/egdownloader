@@ -36,6 +36,7 @@ import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
+import org.arong.egdownloader.ui.menuitem.ReBuildAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
@@ -106,7 +107,7 @@ public class EgDownloaderWindow extends JFrame {
 		//加载配置数据
 		this.setting = setting;
 		//加载任务列表
-		this.tasks = tasks;
+		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
 		
 		// 设置主窗口
 		this.setTitle(Version.NAME + (setting.getLastCreateTime() != null ? "-最后创建于：" + setting.getLastCreateTime() : "")
@@ -169,6 +170,7 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
 		operaMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
 		operaMenu.add(new ResetMenuItem("重置所有任务", this));
+		operaMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
 		operaMenu.add(new SimpleSearchMenuItem("简单搜索", this));
 		operaMenu.add(new OpenRootMenuItem("打开根目录", this));
 		// 菜单：控制台

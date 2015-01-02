@@ -129,18 +129,22 @@ public final class ParseEngine {
 	 * @since v0.40
 	 */
 	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException{
-		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
-		//获取子名称
-        task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
-        //获取类别
-        task.setType(Spider.getTextFromSource(source, setting.getTask_type()[0], setting.getTask_type()[1]));
-        //获取封面路径
-        task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
-        //获取大小
-        String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
-        task.setSize(temp.split("@")[1].trim());
-        //获取漫画语言
-        task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
+		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
+				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
+			String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+			//获取子名称
+	        task.setSubname(Spider.getTextFromSource(source, setting.getTask_subname()[0], setting.getTask_subname()[1]));
+	        //获取类别
+	        task.setType(Spider.getTextFromSource(source, setting.getTask_type()[0], setting.getTask_type()[1]));
+	        //获取封面路径
+	        task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
+	        //获取大小
+	        String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
+	        task.setSize(temp.split("@")[1].trim());
+	        //获取漫画语言
+	        task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
+		}
+		
 	}
 	//废弃
 	public static Task buildTask_new_old(String url, String saveDir, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException{
