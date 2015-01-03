@@ -180,6 +180,30 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("lastCreateTime", t.getLastCreateTime());
 		ele.addAttribute("lastDownloadTime", t.getLastDownloadTime());
 		
+		ele.addAttribute("t_name1", t.getTask_name()[0]);
+		ele.addAttribute("t_name2", t.getTask_name()[1]);
+		ele.addAttribute("t_subname1", t.getTask_subname()[0]);
+		ele.addAttribute("t_subname2", t.getTask_subname()[1]);
+		ele.addAttribute("t_type1", t.getTask_type()[0]);
+		ele.addAttribute("t_type2", t.getTask_type()[1]);
+		ele.addAttribute("t_cover1", t.getTask_coverUrl()[0]);
+		ele.addAttribute("t_cover2", t.getTask_type()[1]);
+		ele.addAttribute("t_totalsize1", t.getTask_total_size()[0]);
+		ele.addAttribute("t_totalsize2", t.getTask_total_size()[1]);
+		ele.addAttribute("t_language1", t.getTask_language()[0]);
+		ele.addAttribute("t_language2", t.getTask_language()[1]);
+		ele.addAttribute("p_intercept1", t.getPicture_intercept()[0]);
+		ele.addAttribute("p_intercept2", t.getPicture_intercept()[1]);
+		ele.addAttribute("p_name1", t.getPicture_name()[0]);
+		ele.addAttribute("p_name2", t.getPicture_name()[1]);
+		ele.addAttribute("p_showUrl1", t.getPicture_showUrl()[0]);
+		ele.addAttribute("p_showUrl2", t.getPicture_showUrl()[1]);
+		ele.addAttribute("p_realUrl1", t.getPicture_realUrl()[0]);
+		ele.addAttribute("p_realUrl2", t.getPicture_realUrl()[1]);
+		ele.addAttribute("p_realUrl3", t.getPicture_realUrl()[2]);
+		ele.addAttribute("p_realUrl4", t.getPicture_realUrl()[3]);
+		
+		
 		return ele;
 	}
 	private Setting node2Setting(Node node) {
@@ -214,6 +238,30 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		}
 		t.setLastCreateTime(ele.attributeValue("lastCreateTime"));
 		t.setLastDownloadTime(ele.attributeValue("lastDownloadTime"));
+		
+		t.getTask_name()[0] = ele.attributeValue("t_name1") == null ? t.getTask_name()[0] : ele.attributeValue("t_name1");
+		t.getTask_name()[1] = ele.attributeValue("t_name2") == null ? t.getTask_name()[1] : ele.attributeValue("t_name2");
+		t.getTask_subname()[0] = ele.attributeValue("t_subname1") == null ? t.getTask_subname()[0] : ele.attributeValue("t_subname1");
+		t.getTask_subname()[1] = ele.attributeValue("t_subname2") == null ? t.getTask_subname()[1] : ele.attributeValue("t_subname2");
+		t.getTask_type()[0] = ele.attributeValue("t_type1") == null ? t.getTask_type()[0] : ele.attributeValue("t_type1");
+		t.getTask_type()[1] = ele.attributeValue("t_type2") == null ? t.getTask_type()[1] : ele.attributeValue("t_type2");
+		t.getTask_coverUrl()[0] = ele.attributeValue("t_coverUrl1") == null ? t.getTask_coverUrl()[0] : ele.attributeValue("t_coverUrl1");
+		t.getTask_coverUrl()[1] = ele.attributeValue("t_coverUrl2") == null ? t.getTask_coverUrl()[1] : ele.attributeValue("t_coverUrl2");
+		t.getTask_total_size()[0] = ele.attributeValue("t_totalsize1") == null ? t.getTask_total_size()[0] : ele.attributeValue("t_totalsize1");
+		t.getTask_total_size()[1] = ele.attributeValue("t_totalsize2") == null ? t.getTask_total_size()[1] : ele.attributeValue("t_totalsize2");
+		t.getTask_language()[0] = ele.attributeValue("t_language1") == null ? t.getTask_language()[0] : ele.attributeValue("t_language1");
+		t.getTask_language()[1] = ele.attributeValue("t_language2") == null ? t.getTask_language()[1] : ele.attributeValue("t_language2");
+		t.getPicture_intercept()[0] = ele.attributeValue("t_intercept1") == null ? t.getPicture_intercept()[0] : ele.attributeValue("t_intercept1");
+		t.getPicture_intercept()[1] = ele.attributeValue("t_intercept2") == null ? t.getPicture_intercept()[1] : ele.attributeValue("t_intercept2");
+		t.getPicture_name()[0] = ele.attributeValue("p_name1") == null ? t.getPicture_name()[0] : ele.attributeValue("p_name1");
+		t.getPicture_name()[1] = ele.attributeValue("p_name2") == null ? t.getPicture_name()[1] : ele.attributeValue("p_name2");
+		t.getPicture_showUrl()[0] = ele.attributeValue("p_showUrl1") == null ? t.getPicture_showUrl()[0] : ele.attributeValue("p_showUrl1");
+		t.getPicture_showUrl()[1] = ele.attributeValue("p_showUrl2") == null ? t.getPicture_showUrl()[1] : ele.attributeValue("p_showUrl2");
+		t.getPicture_realUrl()[0] = ele.attributeValue("p_realUrl1") == null ? t.getPicture_realUrl()[0] : ele.attributeValue("p_realUrl1");
+		t.getPicture_realUrl()[1] = ele.attributeValue("p_realUrl2") == null ? t.getPicture_realUrl()[1] : ele.attributeValue("p_realUrl2");
+		t.getPicture_realUrl()[2] = ele.attributeValue("p_realUrl3") == null ? t.getPicture_realUrl()[2] : ele.attributeValue("p_realUrl3");
+		t.getPicture_realUrl()[3] = ele.attributeValue("p_realUrl4") == null ? t.getPicture_realUrl()[3] : ele.attributeValue("p_realUrl4");
+		
 		return t;
 	}
 	

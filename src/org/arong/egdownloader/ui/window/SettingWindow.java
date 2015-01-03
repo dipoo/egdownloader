@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.regex.Pattern;
@@ -17,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -26,6 +26,7 @@ import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPanel;
 import org.arong.egdownloader.ui.swing.AJTextField;
+import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 配置窗口
@@ -53,7 +54,6 @@ public class SettingWindow extends JFrame{
 		JLabel cookieLabel;
 		public JTextField cookieField;
 		JButton cookieButton;
-		JButton basicBtn;
 		
 		/* HenTai@Home设置 */
 		JPanel henTaiHomePanel;
@@ -72,7 +72,6 @@ public class SettingWindow extends JFrame{
 		JLabel h_fileListSuffixLabel;
 		public JTextField h_fileListSuffixTextField;
 		
-		JButton h_Btn;
 		/*下载设置*/
 		JPanel downloadPanel;
 		JLabel d_pageCountLabel;
@@ -93,8 +92,6 @@ public class SettingWindow extends JFrame{
 		JLabel d_realUrlSuffixLabel;
 		public JTextField d_realUrlSuffixTextField;
 		
-		JButton d_Btn;
-		
 		/* 引擎设置 */
 		JPanel enginePanel;
 		JLabel nameLabel;
@@ -104,9 +101,11 @@ public class SettingWindow extends JFrame{
 		public JTextField  subnameTextFieldPrefix;
 		public JTextField  subnameTextFieldSuffix;
 		JLabel coverLabel;
-		public JTextField  coverTextField;
 		public JTextField  coverTextFieldPrefix;
 		public JTextField  coverTextFieldSuffix;
+		JLabel typeLabel;
+		public JTextField  typeTextFieldPrefix;
+		public JTextField  typeTextFieldSuffix;
 		JLabel totalSizeLabel;
 		public JTextField  totalSizeTextFieldPrefix;
 		public JTextField  totalSizeTextFieldSuffix;
@@ -123,10 +122,14 @@ public class SettingWindow extends JFrame{
 		public JTextField picNameTextFieldPrefix;
 		public JTextField picNameTextFieldSuffix;
 		JLabel realUrlLabel;
-		public JTextField realUrlTextField;
-		JButton e_Btn;
+		public JTextField realUrlTextField1;
+		public JTextField realUrlTextField2;
+		public JTextField realUrlTextField3;
+		public JTextField realUrlTextField4;
+		JButton save_Btn;
 		
-		Color labelColor = Color.DARK_GRAY;
+		Color labelColor = new Color(65,145,65);
+		Color bgColor = new Color(210,225,240);
 
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
@@ -140,35 +143,49 @@ public class SettingWindow extends JFrame{
 			subnameLabel = new AJLabel("子名称前后缀：", labelColor, 25, 70, 100, 30);
 			subnameTextFieldPrefix = new AJTextField(setting.getTask_subname()[0] + "", "", 125, 70, 240, 30);
 			subnameTextFieldSuffix = new AJTextField(setting.getTask_subname()[1] + "", "", 385, 70, 240, 30);
-			coverLabel = new AJLabel("封面前后缀：", labelColor, 25, 110, 100, 30);
-			coverTextFieldPrefix = new AJTextField(setting.getTask_coverUrl()[0] + "", "", 125, 110, 240, 30);
-			coverTextFieldSuffix = new AJTextField(setting.getTask_coverUrl()[1] + "", "", 385, 110, 240, 30);
-			totalSizeLabel = new AJLabel("数目大小前后缀：", labelColor, 25, 150, 100, 30);
-			totalSizeTextFieldPrefix = new AJTextField(setting.getTask_total_size()[0] + "", "", 125, 150, 240, 30);
-			totalSizeTextFieldSuffix = new AJTextField(setting.getTask_total_size()[1] + "", "", 385, 150, 240, 30);
-			languageLabel = new AJLabel("语言前后缀：", labelColor, 25, 190, 100, 30);
-			languageTextFieldPrefix = new AJTextField(setting.getTask_language()[0] + "", "", 125, 190, 240, 30);
-			languageTextFieldSuffix = new AJTextField(setting.getTask_language()[1] + "", "", 385, 190, 240, 30);
-			interceptLabel = new AJLabel("截取列表前后缀：", labelColor, 25, 230, 100, 30);
-			interceptTextFieldPrefix = new AJTextField(setting.getPicture_intercept()[0] + "", "", 125, 230, 240, 30);
-			interceptTextFieldSuffix = new AJTextField(setting.getPicture_intercept()[1] + "", "", 385, 230, 240, 30);
-			showUrlLabel = new AJLabel("图片地址前后缀：", labelColor, 25, 270, 100, 30);
-			showUrlTextFieldPrefix = new AJTextField(setting.getPicture_showUrl()[0] + "", "", 125, 270, 240, 30);
-			showUrlTextFieldSuffix = new AJTextField(setting.getPicture_showUrl()[1] + "", "", 385, 270, 240, 30);
-			picNameLabel = new AJLabel("图片名称前后缀：", labelColor, 25, 310, 100, 30);
-			picNameTextFieldPrefix = new AJTextField(setting.getPicture_name()[0] + "", "", 125, 310, 240, 30);
-			picNameTextFieldSuffix = new AJTextField(setting.getPicture_name()[1] + "", "", 385, 310, 240, 30);
-			addComponentsJpanel(enginePanel, nameLabel, nameTextFieldPrefix, nameTextFieldSuffix, subnameLabel, subnameTextFieldPrefix, subnameTextFieldSuffix,
-					coverLabel, coverTextFieldPrefix, coverTextFieldSuffix, totalSizeLabel, totalSizeTextFieldPrefix, totalSizeTextFieldSuffix,
-					languageLabel, languageTextFieldPrefix, languageTextFieldSuffix, interceptLabel, interceptTextFieldPrefix, interceptTextFieldSuffix,
-					showUrlLabel, showUrlTextFieldPrefix, showUrlTextFieldSuffix, picNameLabel, picNameTextFieldPrefix, picNameTextFieldSuffix);
+			typeLabel = new AJLabel("类别前后缀：", labelColor, 25, 110, 100, 30);
+			typeTextFieldPrefix = new AJTextField(setting.getTask_type()[0] + "", "", 125, 110, 240, 30);
+			typeTextFieldSuffix = new AJTextField(setting.getTask_type()[1] + "", "", 385, 110, 240, 30);
+			coverLabel = new AJLabel("封面前后缀：", labelColor, 25, 150, 100, 30);
+			coverTextFieldPrefix = new AJTextField(setting.getTask_coverUrl()[0] + "", "", 125, 150, 240, 30);
+			coverTextFieldSuffix = new AJTextField(setting.getTask_coverUrl()[1] + "", "", 385, 150, 240, 30);
+			totalSizeLabel = new AJLabel("数目大小前后缀：", labelColor, 25, 190, 100, 30);
+			totalSizeTextFieldPrefix = new AJTextField(setting.getTask_total_size()[0] + "", "", 125, 190, 240, 30);
+			totalSizeTextFieldSuffix = new AJTextField(setting.getTask_total_size()[1] + "", "", 385, 190, 240, 30);
+			languageLabel = new AJLabel("语言前后缀：", labelColor, 25, 230, 100, 30);
+			languageTextFieldPrefix = new AJTextField(setting.getTask_language()[0] + "", "", 125, 230, 240, 30);
+			languageTextFieldSuffix = new AJTextField(setting.getTask_language()[1] + "", "", 385, 230, 240, 30);
+			interceptLabel = new AJLabel("截取列表前后缀：", labelColor, 25, 270, 100, 30);
+			interceptTextFieldPrefix = new AJTextField(setting.getPicture_intercept()[0] + "", "", 125, 270, 240, 30);
+			interceptTextFieldSuffix = new AJTextField(setting.getPicture_intercept()[1] + "", "", 385, 270, 240, 30);
+			showUrlLabel = new AJLabel("图片地址前后缀：", labelColor, 25, 310, 100, 30);
+			showUrlTextFieldPrefix = new AJTextField(setting.getPicture_showUrl()[0] + "", "", 125, 310, 240, 30);
+			showUrlTextFieldSuffix = new AJTextField(setting.getPicture_showUrl()[1] + "", "", 385, 310, 240, 30);
+			picNameLabel = new AJLabel("图片名称前后缀：", labelColor, 25, 350, 100, 30);
+			picNameTextFieldPrefix = new AJTextField(setting.getPicture_name()[0] + "", "", 125, 350, 240, 30);
+			picNameTextFieldSuffix = new AJTextField(setting.getPicture_name()[1] + "", "", 385, 350, 240, 30);
+			realUrlLabel = new AJLabel("图片真实地址：", labelColor, 25, 390, 100, 30);
+			realUrlTextField1 = new AJTextField(setting.getPicture_realUrl()[0] + "", "", 125, 390, 115, 30);
+			realUrlTextField2 = new AJTextField(setting.getPicture_realUrl()[1] + "", "", 250, 390, 115, 30);
+			realUrlTextField3 = new AJTextField(setting.getPicture_realUrl()[2] + "", "", 385, 390, 115, 30);
+			realUrlTextField4 = new AJTextField(setting.getPicture_realUrl()[3] + "", "", 510, 390, 115, 30);
+			
+			addComponentsJpanel(enginePanel, nameLabel, nameTextFieldPrefix, nameTextFieldSuffix, subnameLabel, 
+					subnameTextFieldPrefix, subnameTextFieldSuffix, typeLabel, typeTextFieldPrefix, 
+					typeTextFieldSuffix, coverLabel, coverTextFieldPrefix, coverTextFieldSuffix, 
+					totalSizeLabel, totalSizeTextFieldPrefix, totalSizeTextFieldSuffix,
+					languageLabel, languageTextFieldPrefix, languageTextFieldSuffix, 
+					interceptLabel, interceptTextFieldPrefix, interceptTextFieldSuffix,
+					showUrlLabel, showUrlTextFieldPrefix, showUrlTextFieldSuffix, 
+					picNameLabel, picNameTextFieldPrefix, picNameTextFieldSuffix,
+					realUrlLabel, realUrlTextField1, realUrlTextField2, realUrlTextField3, realUrlTextField4);
 			
 			this.getContentPane().setLayout(null);
-			this.setSize(800, 450);
+			this.setSize(800, 480);
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 			
-			settingTabPanel.setBounds(20, 5, 780, 400);
+			settingTabPanel.setBounds(20, 0, 780, 450);
 			
 			/* 基本配置 */
 			basicPanel = new JPanel();
@@ -199,52 +216,10 @@ public class SettingWindow extends JFrame{
 					}
 				}
 			}), 500, 190, 60, 30);
-			MouseListener basicBtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
-				public void doWork(Window window, MouseEvent e) {
-					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-					SettingWindow settingWindow = (SettingWindow)mainWindow.settingWindow;
-					String saveDir = settingWindow.saveDirField.getText();
-					String maxThread = settingWindow.maxThreadField.getText();
-					String loginUrl = settingWindow.loginUrlField.getText();
-					boolean saveAsName = settingWindow.saveAsNameBox.getSelectedObjects() == null ? false : true;//是否选择了
-					boolean autoDownload = settingWindow.autoDownloadBox.getSelectedObjects() == null ? false : true;
-					String cookieInfo = settingWindow.cookieField.getText();
-					Pattern p = Pattern.compile("[0-9]");
-					if("".equals(saveDir)){
-						JOptionPane.showMessageDialog(null, "请填写保存目录");
-						return;
-					}else if("".equals(maxThread)){
-						JOptionPane.showMessageDialog(null, "请填写最多开启任务数");
-						return;
-					}else if(!p.matcher(maxThread).matches()){
-						JOptionPane.showMessageDialog(null, "最多开启任务数必须填写数字,或不能大于10");
-						return;
-					}else if("".equals(loginUrl)){
-						JOptionPane.showMessageDialog(null, "请填写登录地址");
-						return;
-					}else{
-						if("".equals(cookieInfo)){
-							int result = JOptionPane.showConfirmDialog(null, "登陆信息cookie不存在，确认要保存吗？");
-							if(result != 0){//不保存
-								return;
-							}
-						}
-						mainWindow.setting.setDefaultSaveDir(saveDir);
-						mainWindow.setting.setSaveAsName(saveAsName);
-						mainWindow.setting.setAutoDownload(autoDownload);
-						mainWindow.setting.setMaxThread(Integer.parseInt(maxThread));
-						mainWindow.setting.setLoginUrl(loginUrl);
-						mainWindow.setting.setCookieInfo(cookieInfo);
-						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-						JOptionPane.showMessageDialog(null, "保存成功");
-					}
-				}
-			});
-			basicBtn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), basicBtnListener, 250, 250, 60, 30);
-		addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
+		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieField,
-				cookieButton, basicBtn);
+				cookieButton);
 			/* HenTai@Home设置 */
 			h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
 			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 105, 30, 400, 30);
@@ -260,59 +235,13 @@ public class SettingWindow extends JFrame{
 			h_fileListPrefixTextField = new AJTextField(setting.getFileListPrefix(), null, 105, 190, 120, 30);
 			h_fileListSuffixLabel = new AJLabel("fileSuffix:", labelColor, 300, 190, 80, 30);
 			h_fileListSuffixTextField = new AJTextField(setting.getFileListSuffix(), null, 385, 190, 120, 30);
-			MouseListener h_BtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
-				public void doWork(Window window, MouseEvent e) {
-					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-					SettingWindow settingWindow = (SettingWindow)mainWindow.settingWindow;
-					String uri = settingWindow.h_uriTextField.getText();
-					String gid = settingWindow.h_firstParameterNameTextField.getText();
-					String t = settingWindow.h_secondParameterNameTextField.getText();
-					String totalPrefix = settingWindow.h_totalPrefixTextField.getText();
-					String namePrefix = settingWindow.h_namePrefixTextField.getText();
-					String fileListPrefix = settingWindow.h_fileListPrefixTextField.getText();
-					String fileListSuffix = settingWindow.h_fileListSuffixTextField.getText();
-					if("".equals(uri)){
-						JOptionPane.showMessageDialog(null, "请填写URI");
-						return;
-					}else if("".equals(gid)){
-						JOptionPane.showMessageDialog(null, "请填写gid");
-						return;
-					}else if("".equals(t)){
-						JOptionPane.showMessageDialog(null, "请填写t");
-						return;
-					}else if("".equals(totalPrefix)){
-						JOptionPane.showMessageDialog(null, "totalPrefix");
-						return;
-					}else if("".equals(namePrefix)){
-						JOptionPane.showMessageDialog(null, "namePrefix");
-						return;
-					}else if("".equals(fileListPrefix)){
-						JOptionPane.showMessageDialog(null, "fileListPrefix");
-						return;
-					}else if("".equals(fileListSuffix)){
-						JOptionPane.showMessageDialog(null, "fileListSuffix");
-						return;
-					}else{
-						mainWindow.setting.getHentaiHome().setUri(uri);
-						mainWindow.setting.getHentaiHome().setFirstParameterName(gid);
-						mainWindow.setting.getHentaiHome().setSecondParameterName(t);
-						mainWindow.setting.setTotalPrefix(totalPrefix);
-						mainWindow.setting.setNamePrefix(namePrefix);
-						mainWindow.setting.setFileListPrefix(fileListPrefix);
-						mainWindow.setting.setFileListSuffix(fileListSuffix);
-						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-						JOptionPane.showMessageDialog(null, "保存成功");
-					}
-				}
-			});
-			h_Btn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), h_BtnListener, 250, 250, 60, 30);
 			henTaiHomePanel = new AJPanel(h_uriLabel, h_uriTextField,
 				h_firstParameterNameLabel, h_firstParameterNameTextField,
 				h_secondParameterNameLabel, h_secondParameterNameTextField,
 				h_totalPrefixLabel, h_totalPrefixTextField, h_namePrefixLabel, 
 				h_namePrefixTextField, h_fileListPrefixLabel, 
 				h_fileListPrefixTextField, h_fileListSuffixLabel, 
-				h_fileListSuffixTextField, h_Btn);
+				h_fileListSuffixTextField);
 			/*下载设置*/
 			d_pageCountLabel = new AJLabel("每页数目：", labelColor, 25, 30, 100, 30);
 			d_pageCountTextField = new AJTextField(setting.getPageCount() + "", "", 125, 30, 120, 30);
@@ -332,75 +261,231 @@ public class SettingWindow extends JFrame{
 			d_realUrlSuffixLabel = new AJLabel("realUrlSuffix：", labelColor, 280, 150, 100, 30);
 			d_realUrlSuffixTextField = new AJTextField(setting.getRealUrlSuffix() + "", "", 380, 150, 120, 30);
 			
-			MouseListener d_BtnListener = new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
-				public void doWork(Window window, MouseEvent e) {
-					EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-					SettingWindow settingWindow = (SettingWindow)mainWindow.settingWindow;
-					String pageCount = settingWindow.d_pageCountTextField.getText();
-					String pageParam = settingWindow.d_pageParamTextField.getText();
-					String sourcePrefix = settingWindow.d_sourcePrefixTextField.getText();
-					String sourceSuffix = settingWindow.d_sourceSuffixTextField.getText();
-					String showPicPrefix = settingWindow.d_showPicPrefixTextField.getText();
-					String showPicSuffix = settingWindow.d_showPicSuffixTextField.getText();
-					String realUrlPrefix = settingWindow.d_realUrlPrefixTextField.getText();
-					String realUrlSuffix = settingWindow.d_realUrlSuffixTextField.getText();
-					Pattern p = Pattern.compile("[0-9]+");
-					if("".equals(pageCount)){
-						JOptionPane.showMessageDialog(null, "请填写每页数目");
-						return;
-					}else if(!p.matcher(pageCount).matches()){
-						JOptionPane.showMessageDialog(null, "每页数目必须填写数字");
-						return;
-					}else if("".equals(pageParam)){
-						JOptionPane.showMessageDialog(null, "请填写分页参数");
-						return;
-					}else if("".equals(sourcePrefix)){
-						JOptionPane.showMessageDialog(null, "请填写sourcePrefix");
-						return;
-					}else if("".equals(sourceSuffix)){
-						JOptionPane.showMessageDialog(null, "请填写sourceSuffix");
-						return;
-					}else if("".equals(showPicPrefix)){
-						JOptionPane.showMessageDialog(null, "请填写showPicPrefix");
-						return;
-					}else if("".equals(showPicSuffix)){
-						JOptionPane.showMessageDialog(null, "请填写showPicSuffix");
-						return;
-					}else if("".equals(realUrlPrefix)){
-						JOptionPane.showMessageDialog(null, "请填写realUrlPrefix");
-						return;
-					}else if("".equals(realUrlSuffix)){
-						JOptionPane.showMessageDialog(null, "请填写realUrlSuffix");
-						return;
-					}else{
-						mainWindow.setting.setPageCount(Integer.parseInt(pageCount));
-						mainWindow.setting.setPageParam(pageParam);
-						mainWindow.setting.setSourcePrefix(sourcePrefix);
-						mainWindow.setting.setSourceSuffix(sourceSuffix);
-						mainWindow.setting.setShowPicPrefix(showPicPrefix);
-						mainWindow.setting.setShowPicSuffix(showPicSuffix);
-						mainWindow.setting.setRealUrlPrefix(realUrlPrefix);
-						mainWindow.setting.setRealUrlSuffix(realUrlSuffix);
-						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-						JOptionPane.showMessageDialog(null, "保存成功");
-					}
-				}
-			});
-			
-			d_Btn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), d_BtnListener, 250, 250, 60, 30);
-			
 			downloadPanel = new AJPanel(d_pageCountLabel, d_pageCountTextField, d_pageParamLabel,
 					d_pageParamTextField, d_sourcePrefixLabel, d_sourcePrefixTextField,
 					d_sourceSuffixLabel, d_sourceSuffixTextField, d_showPicPrefixLabel,
 					d_showPicPrefixTextField, d_showPicSuffixLabel, d_showPicSuffixTextField,
 					d_realUrlPrefixLabel, d_realUrlPrefixTextField, d_realUrlSuffixLabel, 
-					d_realUrlSuffixTextField, d_Btn);
+					d_realUrlSuffixTextField);
+			
+			JPanel descPanel = new JPanel();
+			descPanel.setLayout(null);
+			JTextPane descTextPanel = new AJTextPane(ComponentConst.ABOUT_TEXTPANE_TEXT, Color.BLUE);
+			descTextPanel.setBounds(0, 0, 750, 480);
+			descPanel.add(descTextPanel);
 			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("引擎配置", enginePanel);
-			settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
-			settingTabPanel.add("下载设置", downloadPanel);
+			settingTabPanel.add("配置教程", descPanel);
+			//settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
+			//settingTabPanel.add("下载设置", downloadPanel);
+			
+			
+			save_Btn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+					Setting setting = mainWindow.setting;
+					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
+					int index = settingWindow.settingTabPanel.getSelectedIndex();
+					//基本设置
+					if(index == 0){
+						String saveDir = settingWindow.saveDirField.getText();
+						String maxThread = settingWindow.maxThreadField.getText();
+						String loginUrl = settingWindow.loginUrlField.getText();
+						boolean saveAsName = settingWindow.saveAsNameBox.getSelectedObjects() == null ? false : true;//是否选择了
+						boolean autoDownload = settingWindow.autoDownloadBox.getSelectedObjects() == null ? false : true;
+						String cookieInfo = settingWindow.cookieField.getText();
+						Pattern p = Pattern.compile("[0-9]");
+						if("".equals(saveDir)){
+							JOptionPane.showMessageDialog(null, "请填写保存目录");
+							return;
+						}else if("".equals(maxThread)){
+							JOptionPane.showMessageDialog(null, "请填写最多开启任务数");
+							return;
+						}else if(!p.matcher(maxThread).matches()){
+							JOptionPane.showMessageDialog(null, "最多开启任务数必须填写数字,或不能大于10");
+							return;
+						}else if("".equals(loginUrl)){
+							JOptionPane.showMessageDialog(null, "请填写登录地址");
+							return;
+						}else{
+							if("".equals(cookieInfo)){
+								int result = JOptionPane.showConfirmDialog(null, "登陆信息cookie不存在，确认要保存吗？");
+								if(result != 0){//不保存
+									return;
+								}
+							}
+							setting.setDefaultSaveDir(saveDir);
+							setting.setSaveAsName(saveAsName);
+							setting.setAutoDownload(autoDownload);
+							setting.setMaxThread(Integer.parseInt(maxThread));
+							setting.setLoginUrl(loginUrl);
+							setting.setCookieInfo(cookieInfo);
+							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
+							JOptionPane.showMessageDialog(null, "保存成功");
+						}
+					}
+					//引擎设置
+					else if(index == 1){
+						String name_1 = nameTextFieldPrefix.getText();
+						String name_2 = nameTextFieldSuffix.getText();
+						String subname_1 = subnameTextFieldPrefix.getText();
+						String subname_2 = subnameTextFieldSuffix.getText();
+						String type_1 = typeTextFieldPrefix.getText();
+						String type_2 = typeTextFieldSuffix.getText();
+						String cover_1 = coverTextFieldPrefix.getText();
+						String cover_2 = coverTextFieldSuffix.getText();
+						String totalSize_1 = totalSizeTextFieldPrefix.getText();
+						String totalSize_2 = totalSizeTextFieldSuffix.getText();
+						String language_1 = languageTextFieldPrefix.getText();
+						String language_2 = languageTextFieldSuffix.getText();
+						String intercept_1 = interceptTextFieldPrefix.getText();
+						String intercept_2 = interceptTextFieldSuffix.getText();
+						String showUrl_1 = showUrlTextFieldPrefix.getText();
+						String showUrl_2 = showUrlTextFieldSuffix.getText();
+						String picName_1 = picNameTextFieldPrefix.getText();
+						String picName_2 = picNameTextFieldSuffix.getText();
+						String realUrl_1 = realUrlTextField1.getText();
+						String realUrl_2 = realUrlTextField2.getText();
+						String realUrl_3 = realUrlTextField3.getText();
+						String realUrl_4 = realUrlTextField4.getText();
+						if("".equals(name_1) || "".equals(name_2) || "".equals(subname_1) ||
+								 "".equals(subname_2) || "".equals(type_1) || "".equals(type_2) ||
+								 "".equals(cover_1) || "".equals(cover_2) || "".equals(totalSize_1) ||
+								 "".equals(totalSize_2) || "".equals(language_1) || "".equals(language_2) ||
+								 "".equals(intercept_1) || "".equals(intercept_2) || "".equals(showUrl_1) ||
+								 "".equals(showUrl_2) || "".equals(picName_1) || "".equals(picName_2) ||
+								 "".equals(realUrl_1) || "".equals(realUrl_2) || "".equals(realUrl_3) ||
+								 "".equals(realUrl_4)){
+							JOptionPane.showMessageDialog(null, "请填写完整！");
+							return;
+						}else{
+							setting.getTask_name()[0] = name_1;
+							setting.getTask_name()[1] = name_2;
+							setting.getTask_subname()[0] = subname_1;
+							setting.getTask_subname()[1] = subname_2;
+							setting.getTask_type()[0] = type_1;
+							setting.getTask_type()[1] = type_2;
+							setting.getTask_coverUrl()[0] = cover_1;
+							setting.getTask_coverUrl()[1] = cover_2;
+							setting.getTask_total_size()[0] = totalSize_1;
+							setting.getTask_total_size()[1] = totalSize_2;
+							setting.getTask_language()[0] = language_1;
+							setting.getTask_language()[1] = language_2;
+							setting.getPicture_intercept()[0] = intercept_1;
+							setting.getPicture_intercept()[1] = intercept_2;
+							setting.getPicture_name()[0] = picName_1;
+							setting.getPicture_name()[1] = picName_2;
+							setting.getPicture_showUrl()[0] = showUrl_1;
+							setting.getPicture_showUrl()[1] = showUrl_2;
+							setting.getPicture_realUrl()[0] = realUrl_1;
+							setting.getPicture_realUrl()[1] = realUrl_2;
+							setting.getPicture_realUrl()[2] = realUrl_3;
+							setting.getPicture_realUrl()[3] = realUrl_4;
+							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
+							JOptionPane.showMessageDialog(null, "保存成功");
+						}
+					}
+					//hentai@home设置
+					else if(index == 2){
+						String uri = settingWindow.h_uriTextField.getText();
+						String gid = settingWindow.h_firstParameterNameTextField.getText();
+						String t = settingWindow.h_secondParameterNameTextField.getText();
+						String totalPrefix = settingWindow.h_totalPrefixTextField.getText();
+						String namePrefix = settingWindow.h_namePrefixTextField.getText();
+						String fileListPrefix = settingWindow.h_fileListPrefixTextField.getText();
+						String fileListSuffix = settingWindow.h_fileListSuffixTextField.getText();
+						if("".equals(uri)){
+							JOptionPane.showMessageDialog(null, "请填写URI");
+							return;
+						}else if("".equals(gid)){
+							JOptionPane.showMessageDialog(null, "请填写gid");
+							return;
+						}else if("".equals(t)){
+							JOptionPane.showMessageDialog(null, "请填写t");
+							return;
+						}else if("".equals(totalPrefix)){
+							JOptionPane.showMessageDialog(null, "totalPrefix");
+							return;
+						}else if("".equals(namePrefix)){
+							JOptionPane.showMessageDialog(null, "namePrefix");
+							return;
+						}else if("".equals(fileListPrefix)){
+							JOptionPane.showMessageDialog(null, "fileListPrefix");
+							return;
+						}else if("".equals(fileListSuffix)){
+							JOptionPane.showMessageDialog(null, "fileListSuffix");
+							return;
+						}else{
+							setting.getHentaiHome().setUri(uri);
+							setting.getHentaiHome().setFirstParameterName(gid);
+							setting.getHentaiHome().setSecondParameterName(t);
+							setting.setTotalPrefix(totalPrefix);
+							setting.setNamePrefix(namePrefix);
+							setting.setFileListPrefix(fileListPrefix);
+							setting.setFileListSuffix(fileListSuffix);
+							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
+							JOptionPane.showMessageDialog(null, "保存成功");
+						}
+					}
+					//下载设置
+					else if(index == 3){
+						String pageCount = settingWindow.d_pageCountTextField.getText();
+						String pageParam = settingWindow.d_pageParamTextField.getText();
+						String sourcePrefix = settingWindow.d_sourcePrefixTextField.getText();
+						String sourceSuffix = settingWindow.d_sourceSuffixTextField.getText();
+						String showPicPrefix = settingWindow.d_showPicPrefixTextField.getText();
+						String showPicSuffix = settingWindow.d_showPicSuffixTextField.getText();
+						String realUrlPrefix = settingWindow.d_realUrlPrefixTextField.getText();
+						String realUrlSuffix = settingWindow.d_realUrlSuffixTextField.getText();
+						Pattern p = Pattern.compile("[0-9]+");
+						if("".equals(pageCount)){
+							JOptionPane.showMessageDialog(null, "请填写每页数目");
+							return;
+						}else if(!p.matcher(pageCount).matches()){
+							JOptionPane.showMessageDialog(null, "每页数目必须填写数字");
+							return;
+						}else if("".equals(pageParam)){
+							JOptionPane.showMessageDialog(null, "请填写分页参数");
+							return;
+						}else if("".equals(sourcePrefix)){
+							JOptionPane.showMessageDialog(null, "请填写sourcePrefix");
+							return;
+						}else if("".equals(sourceSuffix)){
+							JOptionPane.showMessageDialog(null, "请填写sourceSuffix");
+							return;
+						}else if("".equals(showPicPrefix)){
+							JOptionPane.showMessageDialog(null, "请填写showPicPrefix");
+							return;
+						}else if("".equals(showPicSuffix)){
+							JOptionPane.showMessageDialog(null, "请填写showPicSuffix");
+							return;
+						}else if("".equals(realUrlPrefix)){
+							JOptionPane.showMessageDialog(null, "请填写realUrlPrefix");
+							return;
+						}else if("".equals(realUrlSuffix)){
+							JOptionPane.showMessageDialog(null, "请填写realUrlSuffix");
+							return;
+						}else{
+							setting.setPageCount(Integer.parseInt(pageCount));
+							setting.setPageParam(pageParam);
+							setting.setSourcePrefix(sourcePrefix);
+							setting.setSourceSuffix(sourceSuffix);
+							setting.setShowPicPrefix(showPicPrefix);
+							setting.setShowPicSuffix(showPicSuffix);
+							setting.setRealUrlPrefix(realUrlPrefix);
+							setting.setRealUrlSuffix(realUrlSuffix);
+							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
+							JOptionPane.showMessageDialog(null, "保存成功");
+						}
+					}
+				}
+			}), 30, 200, 60, 30);
+			
+			
+			this.getContentPane().add(save_Btn, -1);
 			addComponents(settingTabPanel);
+			
 			this.setVisible(true);
 			
 			this.addWindowListener(new WindowAdapter() {
