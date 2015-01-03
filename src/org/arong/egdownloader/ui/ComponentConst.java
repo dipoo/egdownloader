@@ -1,7 +1,5 @@
 package org.arong.egdownloader.ui;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -9,7 +7,6 @@ import java.util.Map;
 
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
 
 /**
  * 定义各个window的title值<br>
@@ -53,10 +50,18 @@ public final class ComponentConst {
 	public static String docHtml;
 	
 	static{
+		InputStream s = null;
 		try {
-			InputStream s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "doc.html");
+			s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "doc.html");
 			docHtml = WebClient.read(s, 0);
 		} finally{
+			if(s != null){
+				try {
+					s.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			if(docHtml == null)
 				docHtml = "没有找到doc.html文件";
 		}
