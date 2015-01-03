@@ -2,9 +2,11 @@ package org.arong.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -213,4 +215,25 @@ public final class FileUtil {
         return realPath;
     }//getAppPath定义结束
 	
+	/**
+	 * 将FileReader转换为字符串
+	 * @param reader
+	 * @return
+	 * @throws IOException
+	 */
+	public static String getTextFromReader(FileReader reader) throws IOException{
+		BufferedReader br = new BufferedReader(reader);
+		String txt = "";
+		while(true){
+		    String line = br.readLine();
+		    if(line == null){
+		        break;
+		    }
+		    txt += line;
+		}
+		if(br != null){
+			br.close();
+		}
+		return "".equals(txt) ? null : txt;
+	}
 }

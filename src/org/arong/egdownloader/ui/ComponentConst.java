@@ -1,9 +1,15 @@
 package org.arong.egdownloader.ui;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.version.Version;
+import org.arong.util.FileUtil;
 
 /**
  * 定义各个window的title值<br>
@@ -44,7 +50,17 @@ public final class ComponentConst {
 	
 	public final static Map<String, String> SKIN_ICON = new HashMap<String, String>();
 	
+	public static String docHtml;
+	
 	static{
+		try {
+			InputStream s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "doc.html");
+			docHtml = WebClient.read(s, 0);
+		} finally{
+			if(docHtml == null)
+				docHtml = "没有找到doc.html文件";
+		}
+		
 		SKIN_ICON.put("add", "_add.png");
 		SKIN_ICON.put("delete", "_delete.png");
 		SKIN_ICON.put("setting", "_setting.png");
