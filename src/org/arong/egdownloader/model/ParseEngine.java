@@ -50,6 +50,7 @@ public final class ParseEngine {
         task.setLanguage(Spider.getTextFromSource(source, setting.getTask_language()[0], setting.getTask_language()[1]));
         Tracker.println(ParseEngine.class, task.getName());
         Tracker.println(ParseEngine.class, task.getSubname());
+        Tracker.println(ParseEngine.class, task.getType());
         Tracker.println(ParseEngine.class, task.getLanguage());
         Tracker.println(ParseEngine.class, task.getTotal() + "");
         Tracker.println(ParseEngine.class, task.getSize());
