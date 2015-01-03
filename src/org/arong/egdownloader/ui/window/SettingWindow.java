@@ -134,7 +134,50 @@ public class SettingWindow extends JFrame{
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
 			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-			/* 引擎配置 */
+			
+			
+			this.getContentPane().setLayout(null);
+			this.setSize(800, 480);
+			this.setResizable(false);
+			this.setLocationRelativeTo(null);
+			
+			settingTabPanel.setBounds(20, 0, 780, 450);
+			
+			/* 基本配置 */
+			basicPanel = new JPanel();
+			basicPanel.setLayout(null);  
+			saveDirLabel = new AJLabel("保存目录：", labelColor, 25, 30, 100, 30);
+			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
+			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
+			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
+			saveAsNameBox.setBounds(125, 70, 30, 30);
+			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 300, 70, 100, 30);
+			autoDownloadBox = new JCheckBox("", setting.isAutoDownload());
+			autoDownloadBox.setBounds(400, 70, 30, 30);
+			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 110, 100, 30);
+			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 100, 30);
+			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
+			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
+			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
+			cookieField = new AJTextField(setting.getCookieInfo(), "", 125, 190, 360, 30);
+			cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
+					if(settingWindow.loginWindow == null){
+						settingWindow.loginWindow = new LoginWindow(mainWindow);
+						settingWindow.loginWindow.setVisible(true);
+					}else{
+						settingWindow.loginWindow.setVisible(true);
+					}
+				}
+			}), 500, 190, 60, 30);
+		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
+				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
+				loginUrlLabel, loginUrlField, cookieLabel, cookieField,
+				cookieButton);
+		    
+		    /* 引擎配置 */
 			enginePanel = new JPanel();
 			enginePanel.setLayout(null);
 			nameLabel = new AJLabel("名称前后缀：", labelColor, 25, 30, 100, 30);
@@ -179,47 +222,7 @@ public class SettingWindow extends JFrame{
 					showUrlLabel, showUrlTextFieldPrefix, showUrlTextFieldSuffix, 
 					picNameLabel, picNameTextFieldPrefix, picNameTextFieldSuffix,
 					realUrlLabel, realUrlTextField1, realUrlTextField2, realUrlTextField3, realUrlTextField4);
-			
-			this.getContentPane().setLayout(null);
-			this.setSize(800, 480);
-			this.setResizable(false);
-			this.setLocationRelativeTo(null);
-			
-			settingTabPanel.setBounds(20, 0, 780, 450);
-			
-			/* 基本配置 */
-			basicPanel = new JPanel();
-			basicPanel.setLayout(null);  
-			saveDirLabel = new AJLabel("保存目录：", labelColor, 25, 30, 100, 30);
-			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
-			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
-			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
-			saveAsNameBox.setBounds(125, 70, 30, 30);
-			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 300, 70, 100, 30);
-			autoDownloadBox = new JCheckBox("", setting.isAutoDownload());
-			autoDownloadBox.setBounds(400, 70, 30, 30);
-			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 110, 100, 30);
-			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 100, 30);
-			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
-			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
-			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
-			cookieField = new AJTextField(setting.getCookieInfo(), "", 125, 190, 360, 30);
-			cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
-				public void doWork(Window window, MouseEvent e) {
-					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
-					if(settingWindow.loginWindow == null){
-						settingWindow.loginWindow = new LoginWindow(mainWindow);
-						settingWindow.loginWindow.setVisible(true);
-					}else{
-						settingWindow.loginWindow.setVisible(true);
-					}
-				}
-			}), 500, 190, 60, 30);
-		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
-				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
-				loginUrlLabel, loginUrlField, cookieLabel, cookieField,
-				cookieButton);
+		    
 			/* HenTai@Home设置 */
 			h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
 			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 105, 30, 400, 30);
@@ -270,13 +273,12 @@ public class SettingWindow extends JFrame{
 			
 			JPanel descPanel = new JPanel();
 			descPanel.setLayout(null);
-			JTextPane descTextPanel = new AJTextPane(ComponentConst.ABOUT_TEXTPANE_TEXT, Color.BLUE);
-			descTextPanel.setBounds(0, 0, 750, 480);
+			JTextPane descTextPanel = new AJTextPane(ComponentConst.docHtml, Color.BLUE);
+			descTextPanel.setBounds(0, 0, 680, 480);
 			descPanel.add(descTextPanel);
-			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("引擎配置", enginePanel);
-			settingTabPanel.add("配置教程", descPanel);
+			settingTabPanel.add("配置说明", descPanel);
 			//settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
 			//settingTabPanel.add("下载设置", downloadPanel);
 			
