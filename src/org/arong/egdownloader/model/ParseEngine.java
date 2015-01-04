@@ -367,7 +367,7 @@ public final class ParseEngine {
 		}
 	}
 	
-	private static String genNum(int total, int index){
+	public static String genNum(int total, int index){
 		int bit = 2;
 		if(total <= 10){
 			bit = 2;

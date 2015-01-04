@@ -1,0 +1,58 @@
+﻿var mark = {//标志符
+	listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//每页所有图片源码
+	intercept : ['style="height', "gdtm"],//判断是否还有及截取剩余字符串
+	showUrl : ['no-repeat"><a href="', '"><img alt='],//显示url
+	name : ['title="', '" src='],//名称
+	realUrl : ['<img id="img" src="', '</html>', 'http', '"']//真实下载地址,1、2为第一次截取，3、4为最终截取
+};
+
+function parseJsonArray(array){
+	if(array == null)
+		return "";
+	var s = "[";
+	for(var i = 0; i < array.length; i ++){
+		s += "{";
+		for(var k in array[i]){
+			s += '"' + k + '":';
+			if(typeof array[i][k] == 'number'){
+				s += array[i][k] + ',';
+			}else if(typeof array[i][k] == 'boolean'){
+				s += array[i][k] + ',';
+			}else{
+				s += '"' + array[i][k] + '",';
+			}
+		}
+		s = s.substr(0, s.length - 1);
+		s += "},";
+	}
+	s = s.substr(0, s.length - 3);
+	return s + "]";
+}
+
+function interceptFromSource(source, prefix, suffix){
+	var s = source;
+	s = s.substr(s.indexOf(prefix) + prefix.length, s.length);
+    return s.substring(0, s.indexOf(suffix));
+}
+
+function subFromSource(source, prefix){
+	return source.substr(source.indexOf(prefix) + prefix.length, source.length);
+}
+    
+function collectpictrues(temp){
+	var newpics = [];
+	var prefix = mark.intercept[1];//截取的标志
+	temp = subFromSource(temp, prefix);
+	while(temp.indexOf(mark.intercept[0]) != -1){
+		var picture = {};
+		//获取图片浏览地址
+		picture.url = interceptFromSource(temp, mark.showUrl[0], mark.showUrl[1]);
+		//获取图片名称
+		picture.name = interceptFromSource(temp, mark.name[0], mark.name[1]);
+		newpics.push(picture);
+		temp = subFromSource(temp, prefix);
+	}
+	var pictures = newpics.concat(pictures);
+	return parseJsonArray(pictures);
+}       
+collectpictrues(htmlSource);
