@@ -35,15 +35,15 @@ public class ScriptParser {
 	private static File downloadScriptFile;
 	
 	public static File getCreateScriptFile(String filePath) {
-		return createScriptFile == null ? new File(filePath) : createScriptFile;
+		return createScriptFile == null ? createScriptFile = new File(filePath) : createScriptFile;
 	}
 	
 	public static File getCollectScriptFile(String filePath) {
-		return collectScriptFile == null ? new File(filePath) : collectScriptFile;
+		return collectScriptFile == null ? collectScriptFile = new File(filePath) : collectScriptFile;
 	}
 	
 	public static File getDownloadScriptFile(String filePath) {
-		return downloadScriptFile == null ? new File(filePath) : downloadScriptFile;
+		return downloadScriptFile == null ? downloadScriptFile = new File(filePath) : downloadScriptFile;
 	}
 	
 	/**
