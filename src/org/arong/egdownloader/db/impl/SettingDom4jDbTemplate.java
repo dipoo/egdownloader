@@ -200,10 +200,6 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("p_showUrl2", t.getPicture_showUrl()[1]);
 		ele.addAttribute("p_realUrl1", t.getPicture_realUrl()[0]);
 		ele.addAttribute("p_realUrl2", t.getPicture_realUrl()[1]);
-		ele.addAttribute("p_realUrl3", t.getPicture_realUrl()[2]);
-		ele.addAttribute("p_realUrl4", t.getPicture_realUrl()[3]);
-		
-		
 		return ele;
 	}
 	private Setting node2Setting(Node node) {
@@ -259,8 +255,6 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.getPicture_showUrl()[1] = ele.attributeValue("p_showUrl2") == null ? t.getPicture_showUrl()[1] : ele.attributeValue("p_showUrl2");
 		t.getPicture_realUrl()[0] = ele.attributeValue("p_realUrl1") == null ? t.getPicture_realUrl()[0] : ele.attributeValue("p_realUrl1");
 		t.getPicture_realUrl()[1] = ele.attributeValue("p_realUrl2") == null ? t.getPicture_realUrl()[1] : ele.attributeValue("p_realUrl2");
-		t.getPicture_realUrl()[2] = ele.attributeValue("p_realUrl3") == null ? t.getPicture_realUrl()[2] : ele.attributeValue("p_realUrl3");
-		t.getPicture_realUrl()[3] = ele.attributeValue("p_realUrl4") == null ? t.getPicture_realUrl()[3] : ele.attributeValue("p_realUrl4");
 		
 		return t;
 	}

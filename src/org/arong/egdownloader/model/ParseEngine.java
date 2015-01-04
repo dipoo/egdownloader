@@ -303,7 +303,7 @@ public final class ParseEngine {
 		String url = null;
 		try {
 			String s = WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo());
-			url = Spider.getTextFromSource(s,  setting.getRealUrlPrefix(), setting.getRealUrlSuffix());
+			url = Spider.getTextFromSource(s,  setting.getPicture_realUrl()[0], setting.getPicture_realUrl()[1]);
 		} catch (Exception e) {
 			Tracker.println(ParseEngine.class, taskName + ":getdownloadUrl异常");
 			//return getdownloadUrl(taskName, sourceUrl, setting);

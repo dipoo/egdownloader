@@ -17,7 +17,7 @@ public class Setting {
 	private String defaultSaveDir = "save";//默认保存路劲
 	private boolean saveAsName;//是否以真实名称保存
 	private boolean autoDownload;//创建任务后是否自动下载
-	private boolean openScript = true;//是否启用脚本
+	private boolean openScript;//是否启用脚本
 	private String createTaskScriptPath = "script/createTask.js";//创建任务脚本
 	private String collectPictureScriptPath = "script/collectPicture.js";//收集图片脚本
 	private String downloadScriptPath = "script/download.js";//任务下载脚本
@@ -35,7 +35,7 @@ public class Setting {
 	private String[] picture_intercept = {"style=\"height", "\"gdtm"};//判断是否还有及截取剩余字符串
 	private String[] picture_showUrl = {"no-repeat\"><a href=\"", "\"><img alt="};//显示url
 	private String[] picture_name = {"title=\"", "\" src="};//名称
-	private String[] picture_realUrl = {"<img id=\"img\" src=\"", "</html>", "http", "\""};//真实下载地址,1、2为第一次截取，3、4为最终截取
+	private String[] picture_realUrl = {"<img id=\"img\" src=\"", "\""};//真实下载地址
 	
 	private String tags;//标签记忆，以$￥符号分割
 	
