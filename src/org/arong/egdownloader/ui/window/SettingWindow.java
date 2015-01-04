@@ -124,8 +124,6 @@ public class SettingWindow extends JFrame{
 		JLabel realUrlLabel;
 		public JTextField realUrlTextField1;
 		public JTextField realUrlTextField2;
-		public JTextField realUrlTextField3;
-		public JTextField realUrlTextField4;
 		JButton save_Btn;
 		
 		Color labelColor = new Color(65,145,65);
@@ -207,11 +205,9 @@ public class SettingWindow extends JFrame{
 			picNameLabel = new AJLabel("图片名称前后缀：", labelColor, 25, 350, 100, 30);
 			picNameTextFieldPrefix = new AJTextField(setting.getPicture_name()[0] + "", "", 125, 350, 240, 30);
 			picNameTextFieldSuffix = new AJTextField(setting.getPicture_name()[1] + "", "", 385, 350, 240, 30);
-			realUrlLabel = new AJLabel("图片真实地址：", labelColor, 25, 390, 100, 30);
-			realUrlTextField1 = new AJTextField(setting.getPicture_realUrl()[0] + "", "", 125, 390, 115, 30);
-			realUrlTextField2 = new AJTextField(setting.getPicture_realUrl()[1] + "", "", 250, 390, 115, 30);
-			realUrlTextField3 = new AJTextField(setting.getPicture_realUrl()[2] + "", "", 385, 390, 115, 30);
-			realUrlTextField4 = new AJTextField(setting.getPicture_realUrl()[3] + "", "", 510, 390, 115, 30);
+			realUrlLabel = new AJLabel("真实地址前后缀：", labelColor, 25, 390, 100, 30);
+			realUrlTextField1 = new AJTextField(setting.getPicture_realUrl()[0] + "", "", 125, 390, 240, 30);
+			realUrlTextField2 = new AJTextField(setting.getPicture_realUrl()[1] + "", "", 385, 390, 240, 30);
 			
 			addComponentsJpanel(enginePanel, nameLabel, nameTextFieldPrefix, nameTextFieldSuffix, subnameLabel, 
 					subnameTextFieldPrefix, subnameTextFieldSuffix, typeLabel, typeTextFieldPrefix, 
@@ -221,7 +217,7 @@ public class SettingWindow extends JFrame{
 					interceptLabel, interceptTextFieldPrefix, interceptTextFieldSuffix,
 					showUrlLabel, showUrlTextFieldPrefix, showUrlTextFieldSuffix, 
 					picNameLabel, picNameTextFieldPrefix, picNameTextFieldSuffix,
-					realUrlLabel, realUrlTextField1, realUrlTextField2, realUrlTextField3, realUrlTextField4);
+					realUrlLabel, realUrlTextField1, realUrlTextField2);
 		    
 			/* HenTai@Home设置 */
 			h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
@@ -349,16 +345,13 @@ public class SettingWindow extends JFrame{
 						String picName_2 = picNameTextFieldSuffix.getText();
 						String realUrl_1 = realUrlTextField1.getText();
 						String realUrl_2 = realUrlTextField2.getText();
-						String realUrl_3 = realUrlTextField3.getText();
-						String realUrl_4 = realUrlTextField4.getText();
 						if("".equals(name_1) || "".equals(name_2) || "".equals(subname_1) ||
 								 "".equals(subname_2) || "".equals(type_1) || "".equals(type_2) ||
 								 "".equals(cover_1) || "".equals(cover_2) || "".equals(totalSize_1) ||
 								 "".equals(totalSize_2) || "".equals(language_1) || "".equals(language_2) ||
 								 "".equals(intercept_1) || "".equals(intercept_2) || "".equals(showUrl_1) ||
 								 "".equals(showUrl_2) || "".equals(picName_1) || "".equals(picName_2) ||
-								 "".equals(realUrl_1) || "".equals(realUrl_2) || "".equals(realUrl_3) ||
-								 "".equals(realUrl_4)){
+								 "".equals(realUrl_1) || "".equals(realUrl_2)){
 							JOptionPane.showMessageDialog(null, "请填写完整！");
 							return;
 						}else{
@@ -382,8 +375,6 @@ public class SettingWindow extends JFrame{
 							setting.getPicture_showUrl()[1] = showUrl_2;
 							setting.getPicture_realUrl()[0] = realUrl_1;
 							setting.getPicture_realUrl()[1] = realUrl_2;
-							setting.getPicture_realUrl()[2] = realUrl_3;
-							setting.getPicture_realUrl()[3] = realUrl_4;
 							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
 							JOptionPane.showMessageDialog(null, "保存成功");
 						}
