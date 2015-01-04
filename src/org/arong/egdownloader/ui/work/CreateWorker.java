@@ -1,14 +1,17 @@
 package org.arong.egdownloader.ui.work;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 
+import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ParseEngine;
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
@@ -25,7 +28,7 @@ import org.arong.util.FileUtil;
  * @since 2014-06-01
  */
 public class CreateWorker extends SwingWorker<Void, Void>{
-	
+	//http://exhentai.org/g/672439/1e00a4a2ec;http://exhentai.org/s/77ea7ec5bb/672439-1
 	private JFrame mainWindow;
 	private Task task;
 	public CreateWorker(Task task, JFrame mainWindow){
@@ -48,7 +51,19 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		Setting setting = window.setting;//获得配置信息
 		InputStream is;
 		try {
-			task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
+			if(setting.isOpenScript()){
+				if("".equals(setting.getCreateTaskScriptPath())){
+					JOptionPane.showMessageDialog(null, "创建任务脚本未指定");
+					return null;
+				}else if("".equals(setting.getCollectPictureScriptPath())){
+					JOptionPane.showMessageDialog(null, "收集图片脚本未指定");
+					return null;
+				}
+				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
+			}else{
+				task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
+			}
+			
 			if(task != null){
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
@@ -81,6 +96,10 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		} catch (SpiderException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (WebClientException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (ScriptException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();

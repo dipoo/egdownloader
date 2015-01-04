@@ -13,6 +13,7 @@ import javax.swing.SwingWorker;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Picture;
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
@@ -58,7 +59,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					try{
 						if(this.isCancelled())//是否暂停
 							return null;
-						pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+						if(setting.isOpenScript()){
+							pic.setRealUrl(ScriptParser.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+						}else{
+							pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+						}
+						
 						if(pic.getRealUrl() == null){
 							exceptionNum ++;
 							continue;

@@ -17,6 +17,10 @@ public class Setting {
 	private String defaultSaveDir = "save";//默认保存路劲
 	private boolean saveAsName;//是否以真实名称保存
 	private boolean autoDownload;//创建任务后是否自动下载
+	private boolean openScript = true;//是否启用脚本
+	private String createTaskScriptPath = "script/createTask.js";//创建任务脚本
+	private String collectPictureScriptPath = "script/collectPicture.js";//收集图片脚本
+	private String downloadScriptPath = "script/download.js";//任务下载脚本
 	private int maxThread = 5;
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
 	//前后缀
@@ -280,5 +284,29 @@ public class Setting {
 	}
 	public void setTask_type(String[] task_type) {
 		this.task_type = task_type;
+	}
+	public void setOpenScript(boolean openScript) {
+		this.openScript = openScript;
+	}
+	public boolean isOpenScript() {
+		return openScript;
+	}
+	public void setCreateTaskScriptPath(String createTaskScriptPath) {
+		this.createTaskScriptPath = createTaskScriptPath;
+	}
+	public String getCreateTaskScriptPath() {
+		return createTaskScriptPath;
+	}
+	public void setCollectPictureScriptPath(String collectPictureScriptPath) {
+		this.collectPictureScriptPath = collectPictureScriptPath;
+	}
+	public String getCollectPictureScriptPath() {
+		return collectPictureScriptPath;
+	}
+	public void setDownloadScriptPath(String downloadScriptPath) {
+		this.downloadScriptPath = downloadScriptPath;
+	}
+	public String getDownloadScriptPath() {
+		return downloadScriptPath;
 	}
 }

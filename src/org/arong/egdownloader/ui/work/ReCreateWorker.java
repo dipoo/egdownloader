@@ -9,6 +9,7 @@ import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ParseEngine;
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
@@ -41,7 +42,12 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 		Setting setting = window.setting;//获得配置信息
 		InputStream is = null;
 		try {
-			task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
+			if(setting.isOpenScript()){
+				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
+			}else{
+				task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
+			}
+			
 			if(task != null && task.getPictures() != null){
 				if(task.getCoverUrl() == null){
 					//下载封面
