@@ -1,5 +1,5 @@
 var mark = {//标志符
-	realUrl : ['<img id="img" src="', '" style=']//真实下载地址,1、2为第一次截取，3、4为最终截取
+	realUrl : ['<img id="img" src="', '" style=']//真实下载地址
 };
 
 function interceptFromSource(source, prefix, suffix){

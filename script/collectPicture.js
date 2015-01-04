@@ -2,8 +2,7 @@
 	listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//每页所有图片源码
 	intercept : ['style="height', "gdtm"],//判断是否还有及截取剩余字符串
 	showUrl : ['no-repeat"><a href="', '"><img alt='],//显示url
-	name : ['title="', '" src='],//名称
-	realUrl : ['<img id="img" src="', '</html>', 'http', '"']//真实下载地址,1、2为第一次截取，3、4为最终截取
+	name : ['title="', '" src=']//名称
 };
 
 function parseJsonArray(array){
