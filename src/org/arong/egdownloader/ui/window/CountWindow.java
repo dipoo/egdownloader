@@ -89,7 +89,6 @@ public class CountWindow extends JDialog {
 		p_completionRate = new BigDecimal(Double.parseDouble(p_complete + "") * 100 / Double.parseDouble(p_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		
 		String s = ComponentConst.countHtml;
-		System.out.println(s);
 		s = s.replace("@t_count", t_count + "").
 			replace("@t_historyCount", t_historyCount + "").
 			replace("@t_complete", t_complete + "").
