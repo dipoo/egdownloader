@@ -10,19 +10,18 @@ import java.util.UUID;
 public class Setting {
 	public final static String TAGSPLIT = "$￥";//标签分隔符
 	
-	private String lastDownloadTime;
-	private String lastCreateTime;
-	
 	private String id = UUID.randomUUID().toString();
 	private String defaultSaveDir = "save";//默认保存路劲
 	private boolean saveAsName;//是否以真实名称保存
 	private boolean autoDownload;//创建任务后是否自动下载
+	private int maxThread = 5;
+	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
+	
 	private boolean openScript;//是否启用脚本
 	private String createTaskScriptPath = "script/createTask.js";//创建任务脚本
 	private String collectPictureScriptPath = "script/collectPicture.js";//收集图片脚本
 	private String downloadScriptPath = "script/download.js";//任务下载脚本
-	private int maxThread = 5;
-	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
+	
 	//前后缀
 	private String[] task_name = {"<h1 id=\"gn\">", "</h1><h1"};//名称
 	private String[] task_subname = {"</h1><h1 id=\"gj\">", "</h1></div>"};//子名称
@@ -30,7 +29,6 @@ public class Setting {
 	private String[] task_total_size = {"Images:</td><td class=\"gdt2\">", "</td></tr><tr><td class=\"gdt1\">Resized:"};//数目及大小
 	private String[] task_language = {"Language:</td><td class=\"gdt2\">", "</td></tr></table></div><div id=\"gdr\""};//语言
 	private String[] task_type = {"png\" alt=\"", "\" class=\"ic"};//类别
-	
 	private String[] picture_listSource = {"</table><div id=\"gdt\">", "<div class=\"c\"></div></div><table"};//每页所有图片源码
 	private String[] picture_intercept = {"style=\"height", "\"gdtm"};//判断是否还有及截取剩余字符串
 	private String[] picture_showUrl = {"no-repeat\"><a href=\"", "\"><img alt="};//显示url
@@ -38,7 +36,6 @@ public class Setting {
 	private String[] picture_realUrl = {"<img id=\"img\" src=\"", "\""};//真实下载地址
 	
 	private String tags;//标签记忆，以$￥符号分割
-	
 	
 	private String gidPrefix = "/g/";//url地址中获取gid值的前缀
 	private HentaiHome hentaiHome = new HentaiHome();
@@ -55,6 +52,14 @@ public class Setting {
 	private String realUrlPrefix = "<img id=\"img\" src=\"";
 	private String realUrlSuffix = "\"";
 	private String loginUrl = "https://forums.e-hentai.org/index.php?act=Login&CODE=01";
+	
+	/**
+	 * 统计
+	 */
+	private int taskHistoryCount = 0;//历史任务总数
+	private int pictureHistoryCount = 0;//历史图片总数
+	private String lastDownloadTime;//最后下载时间
+	private String lastCreateTime;//最后创建时间
 	
 	
 	public String[] getTask_name() {
@@ -308,5 +313,17 @@ public class Setting {
 	}
 	public String getDownloadScriptPath() {
 		return downloadScriptPath;
+	}
+	public void setTaskHistoryCount(int taskHistoryCount) {
+		this.taskHistoryCount = taskHistoryCount;
+	}
+	public int getTaskHistoryCount() {
+		return taskHistoryCount;
+	}
+	public void setPictureHistoryCount(int pictureHistoryCount) {
+		this.pictureHistoryCount = pictureHistoryCount;
+	}
+	public int getPictureHistoryCount() {
+		return pictureHistoryCount;
 	}
 }

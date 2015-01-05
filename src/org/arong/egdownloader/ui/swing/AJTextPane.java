@@ -21,7 +21,9 @@ import javax.swing.text.html.HTMLEditorKit;
 public class AJTextPane extends JTextPane {
 
 	private static final long serialVersionUID = 5006884186865600388L;
-
+	public AJTextPane(){
+		super();
+	}
 	public AJTextPane(String text, Color color) {
 		EditorKit editorKit = new HTMLEditorKit();
 		this.setForeground(color);

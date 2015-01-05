@@ -69,10 +69,22 @@ public class InitWindow extends JFrame {
 					return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
 				}
 			});*/
+			int p_historyCount = 0;
 			for (Task task : tasks) {
 				task.setPictures(pictureDbTemplate.query("tid", task.getId()));
+				p_historyCount += task.getTotal();
+			}
+			/**
+			 * 为了兼容历史版本的db文件
+			 */
+			if(setting.getTaskHistoryCount() == 0){
+				setting.setTaskHistoryCount(tasks.size());
+			}
+			if(setting.getPictureHistoryCount() == 0){
+				setting.setPictureHistoryCount(p_historyCount);
 			}
 		}
+		
 		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 		textLabel.setText("初始化完成");
 		egDownloaderWindow.setVisible(true);

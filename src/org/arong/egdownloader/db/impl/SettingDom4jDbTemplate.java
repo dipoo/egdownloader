@@ -177,8 +177,11 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("realUrlSuffix", t.getRealUrlSuffix());
 		ele.addAttribute("loginUrl", t.getLoginUrl());
 		ele.addAttribute("tags", t.getTags());
+		
 		ele.addAttribute("lastCreateTime", t.getLastCreateTime());
 		ele.addAttribute("lastDownloadTime", t.getLastDownloadTime());
+		ele.addAttribute("taskHostoryCount", t.getTaskHistoryCount() + "");
+		ele.addAttribute("pictureHostoryCount", t.getPictureHistoryCount() + "");
 		
 		ele.addAttribute("t_name1", t.getTask_name()[0]);
 		ele.addAttribute("t_name2", t.getTask_name()[1]);
@@ -237,6 +240,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
 		}
+		
+		t.setTaskHistoryCount(ele.attributeValue("taskHostoryCount") == null ? 0 : Integer.parseInt(ele.attributeValue("taskHostoryCount")));
+		t.setPictureHistoryCount(ele.attributeValue("pictureHostoryCount") == null ? 0 : Integer.parseInt(ele.attributeValue("pictureHostoryCount")));
 		t.setLastCreateTime(ele.attributeValue("lastCreateTime"));
 		t.setLastDownloadTime(ele.attributeValue("lastDownloadTime"));
 		

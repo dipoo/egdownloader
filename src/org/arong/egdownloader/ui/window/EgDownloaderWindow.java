@@ -87,12 +87,14 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog deletingWindow;
 	public JDialog resetAllTaskWindow;
 	public JDialog simpleSearchWindow;
+	public JDialog countWindow;
 	
 	public JPopupMenu tablePopupMenu;
 	public JTable runningTable;
 	public JScrollPane tablePane;
 	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
+	
 	
 	public Setting setting;
 	public List<Task> tasks;
@@ -179,6 +181,23 @@ public class EgDownloaderWindow extends JFrame {
 				"", ComponentConst.SKIN_NUM
 				+ ComponentConst.SKIN_ICON.get("select"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,new ConsoleWork()));
+		// 菜单：统计
+		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
+				"", ComponentConst.SKIN_NUM
+				+ ComponentConst.SKIN_ICON.get("select"),
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
+					public void doWork(Window window, MouseEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						if (mainWindow.countWindow == null) {
+							JDialog countWindow = new CountWindow(mainWindow);
+							mainWindow.countWindow = countWindow;
+						}
+						mainWindow.countWindow.setLocationRelativeTo(mainWindow);
+						// 设置关于窗口置于最顶层
+						mainWindow.countWindow.toFront();
+						mainWindow.countWindow.setVisible(true);
+					}
+				}));
 		// 菜单：关于
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
 				ComponentConst.ABOUT_MENU_NAME, ComponentConst.SKIN_NUM
@@ -186,7 +205,7 @@ public class EgDownloaderWindow extends JFrame {
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, settingMenu, operaMenu, consoleMenu, aboutMenu);
+				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
@@ -333,6 +352,9 @@ public class EgDownloaderWindow extends JFrame {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				if (window.aboutMenuWindow != null) {
 					window.aboutMenuWindow.dispose();
+				}
+				if(window.countWindow != null){
+					window.countWindow.dispose();
 				}
 				if(window.creatingWindow != null && window.creatingWindow.isVisible()){
 					window.creatingWindow.requestFocus();

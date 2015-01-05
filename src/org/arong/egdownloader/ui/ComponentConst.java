@@ -49,6 +49,8 @@ public final class ComponentConst {
 	
 	public static String docHtml;
 	
+	public static String countHtml;
+	
 	static{
 		InputStream s = null;
 		try {
@@ -63,7 +65,21 @@ public final class ComponentConst {
 				}
 			}
 			if(docHtml == null)
-				docHtml = "没有找到doc.html文件";
+				docHtml = "没有找到" + RESOURCES_PATH + "doc.html文件";
+		}
+		try {
+			s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "count.html");
+			countHtml = WebClient.read(s, 0);
+		} finally{
+			if(s != null){
+				try {
+					s.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(countHtml == null)
+				countHtml = "没有找到" + RESOURCES_PATH + "count.html文件";
 		}
 		
 		SKIN_ICON.put("add", "_add.png");
@@ -114,6 +130,7 @@ public final class ComponentConst {
 	public final static String OPERA_MENU_TEXT = "操作";
 	public final static String SEARCH_MENU_TEXT = "搜索";
 	public final static String CONSOLE_MENU_TEXT = "控制台";
+	public final static String COUNT_MENU_TEXT = "统计";
 	public final static String ABOUT_MENU_TEXT = "关于";
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
