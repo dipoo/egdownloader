@@ -68,11 +68,18 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
 				FileUtil.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
+				
+				//设置最后创建时间
+				setting.setLastCreateTime(task.getCreateTime());
+				//设置历史任务总数
+				setting.setTaskHistoryCount(setting.getTaskHistoryCount() + 1);
+				//设置历史图片总数
+				setting.setPictureHistoryCount(setting.getPictureHistoryCount() + task.getTotal());
 				//保存到数据库
 				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
 				window.taskDbTemplate.store(task);//保存任务
-				//设置最后创建时间
-				setting.setLastCreateTime(task.getCreateTime());
+				window.settingDbTemplate.update(setting);//保存配置
+				
 				//保存到内存
 				TaskingTable taskTable = (TaskingTable)window.runningTable;
 				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
