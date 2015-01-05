@@ -194,7 +194,7 @@ public class ScriptParser {
 			param.put("htmlSource", source);
 			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
 		} catch (Exception e) {
-			Tracker.println(ScriptParser.class, taskName + ":getdownloadUrl异常");
+			Tracker.println(ScriptParser.class, taskName + ":getdownloadUrl异常,请检查下载配置或者脚本是否出现问题！");
 			return null;
 		}
 		Tracker.println(url);
