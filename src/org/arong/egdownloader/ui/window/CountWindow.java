@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -57,7 +58,7 @@ public class CountWindow extends JDialog {
 	
 	public void showCountPanel(){
 		htmlPanel.setText(transferHtml());
-		htmlPanel.setVisible(true);
+		this.setVisible(true);
 	}
 	
 	public String transferHtml(){
@@ -84,10 +85,11 @@ public class CountWindow extends JDialog {
 		}
 		t_uncomplete = t_count - t_complete;
 		p_uncomplete = p_count - p_complete;
-		t_completionRate = t_complete / t_count;
-		p_completionRate = p_complete / p_count;
+		t_completionRate = new BigDecimal(Double.parseDouble(t_complete + "") * 100 / Double.parseDouble(t_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		p_completionRate = new BigDecimal(Double.parseDouble(p_complete + "") * 100 / Double.parseDouble(p_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		
 		String s = ComponentConst.countHtml;
+		System.out.println(s);
 		s = s.replace("@t_count", t_count + "").
 			replace("@t_historyCount", t_historyCount + "").
 			replace("@t_complete", t_complete + "").

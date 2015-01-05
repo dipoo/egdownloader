@@ -113,8 +113,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
 		
 		// 设置主窗口
-		this.setTitle(Version.NAME + (setting.getLastCreateTime() != null ? "-最后创建于：" + setting.getLastCreateTime() : "")
-				+ (setting.getLastDownloadTime() != null ? "-最后下载于：" + setting.getLastDownloadTime() : ""));
+		this.setTitle(Version.NAME + "v" + Version.VERSION);
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("download"))).getImage());
@@ -195,7 +194,7 @@ public class EgDownloaderWindow extends JFrame {
 						mainWindow.countWindow.setLocationRelativeTo(mainWindow);
 						// 设置关于窗口置于最顶层
 						mainWindow.countWindow.toFront();
-						mainWindow.countWindow.setVisible(true);
+						((CountWindow)mainWindow.countWindow).showCountPanel();
 					}
 				}));
 		// 菜单：关于
