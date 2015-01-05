@@ -81,7 +81,7 @@ public class LoginWindow extends JDialog {
 							JOptionPane.showMessageDialog(null, "登录失败");
 							return;
 						}else{
-							settingWindow.cookieField.setText(cookieInfo);
+							settingWindow.cookieArea.setText(cookieInfo);
 							settingWindow.loginWindow.dispose();
 							settingWindow.setVisible(true);
 						}

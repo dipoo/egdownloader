@@ -12,7 +12,7 @@ public class FontConst {
 		"ColorChooser.font",
 		"ToggleButton.font",
 		"Panel.font",
-		"TextArea.font",
+		/*"TextArea.font"*,/
 		"Menu.font",
 		"TableHeader.font"
 		// ,"TextField.font"
