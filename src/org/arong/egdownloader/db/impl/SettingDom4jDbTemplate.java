@@ -200,14 +200,19 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("p_showUrl2", t.getPicture_showUrl()[1]);
 		ele.addAttribute("p_realUrl1", t.getPicture_realUrl()[0]);
 		ele.addAttribute("p_realUrl2", t.getPicture_realUrl()[1]);
+		
+		ele.addAttribute("openScript", t.isOpenScript() + "");
+		ele.addAttribute("createTaskScriptPath", t.getCreateTaskScriptPath());
+		ele.addAttribute("collectPictureScriptPath", t.getCollectPictureScriptPath());
+		ele.addAttribute("downloadScriptPath", t.getDownloadScriptPath());
 		return ele;
 	}
 	private Setting node2Setting(Node node) {
 		Element ele = (Element)node;
 		Setting t = new Setting();
-		t.setId(ele.attributeValue("id"));
-		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir"));
-		t.setCookieInfo(ele.attributeValue("cookieInfo"));
+		t.setId(ele.attributeValue("id") == null ? t.getId() : ele.attributeValue("id"));
+		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir") == null ? t.getDefaultSaveDir() : ele.attributeValue("defaultSaveDir"));
+		t.setCookieInfo(ele.attributeValue("cookieInfo") == null ? t.getCookieInfo() : ele.attributeValue("cookieInfo"));
 		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
 		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")) ? true : false);
 		t.setGidPrefix(ele.attributeValue("gidPrefix"));
@@ -221,14 +226,14 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setFileListSuffix(ele.attributeValue("fileListSuffix"));
 		t.setFileListPrefix(ele.attributeValue("fileListPrefix"));
 		t.setPageCount(ele.attributeValue("pageCount") == null ? 0 : Integer.parseInt(ele.attributeValue("pageCount")));
-		t.setPageParam(ele.attributeValue("pageParam"));
+		t.setPageParam(ele.attributeValue("pageParam") == null ? t.getPageParam() : ele.attributeValue("pageParam"));
 		t.setSourcePrefix(ele.attributeValue("sourcePrefix"));
 		t.setSourceSuffix(ele.attributeValue("sourceSuffix"));
 		t.setShowPicPrefix(ele.attributeValue("showPicPrefix"));
 		t.setShowPicSuffix(ele.attributeValue("showPicSuffix"));
 		t.setRealUrlPrefix(ele.attributeValue("realUrlPrefix"));
 		t.setRealUrlSuffix(ele.attributeValue("realUrlSuffix"));
-		t.setLoginUrl(ele.attributeValue("loginUrl"));
+		t.setLoginUrl(ele.attributeValue("loginUrl") == null ? t.getLoginUrl() : ele.attributeValue("loginUrl"));
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
 		}
@@ -256,6 +261,10 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.getPicture_realUrl()[0] = ele.attributeValue("p_realUrl1") == null ? t.getPicture_realUrl()[0] : ele.attributeValue("p_realUrl1");
 		t.getPicture_realUrl()[1] = ele.attributeValue("p_realUrl2") == null ? t.getPicture_realUrl()[1] : ele.attributeValue("p_realUrl2");
 		
+		t.setOpenScript("true".equals(ele.attributeValue("openScript")) ? true : false);
+		t.setCreateTaskScriptPath(ele.attributeValue("createTaskScriptPath") == null ? t.getCreateTaskScriptPath() : ele.attributeValue("createTaskScriptPath"));
+		t.setCollectPictureScriptPath(ele.attributeValue("collectPictureScriptPath") == null ? t.getCollectPictureScriptPath() : ele.attributeValue("collectPictureScriptPath"));
+		t.setDownloadScriptPath(ele.attributeValue("downloadScriptPath") == null ? t.getDownloadScriptPath() : ele.attributeValue("downloadScriptPath"));
 		return t;
 	}
 	

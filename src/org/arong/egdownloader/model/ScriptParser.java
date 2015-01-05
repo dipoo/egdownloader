@@ -57,13 +57,8 @@ public class ScriptParser {
 	    		engine.put(key, params.get(key));
 	    	}
 	    }
-	    try{
-		    Object result = engine.eval(new FileReader(scriptFile));
-		    return result;
-	    }catch (Exception e) {
-	    	e.printStackTrace();
-	    }
-		return null;
+	    Object result = engine.eval(new FileReader(scriptFile));
+	    return result;
 	}
 	
 	/**

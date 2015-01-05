@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -15,8 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -52,7 +56,7 @@ public class SettingWindow extends JFrame{
 		JLabel loginUrlLabel;
 		public JTextField loginUrlField;
 		JLabel cookieLabel;
-		public JTextField cookieField;
+		public JTextArea cookieArea;
 		JButton cookieButton;
 		
 		/* HenTai@Home设置 */
@@ -126,13 +130,41 @@ public class SettingWindow extends JFrame{
 		public JTextField realUrlTextField2;
 		JButton save_Btn;
 		
+		/* 脚本设置 */
+		JPanel scriptPanel;
+		JLabel openScriptLabel;
+		public JCheckBox openScriptBox;
+		public JLabel createJsLabel;
+		public JTextField createJsField;
+		public JLabel collectJsLabel;
+		public JTextField collectJsField;
+		public JLabel downloadJsLabel;
+		public JTextField downloadJsField;
+		
 		Color labelColor = new Color(65,145,65);
 		Color bgColor = new Color(210,225,240);
+		
+		public void showPathSettingPanel(boolean b){
+			if(b){
+				createJsLabel.setVisible(true);
+				createJsField.setVisible(true);
+				collectJsLabel.setVisible(true);
+				collectJsField.setVisible(true);
+				downloadJsLabel.setVisible(true);
+				downloadJsField.setVisible(true);
+			}else{
+				createJsLabel.setVisible(false);
+				createJsField.setVisible(false);
+				collectJsLabel.setVisible(false);
+				collectJsField.setVisible(false);
+				downloadJsLabel.setVisible(false);
+				downloadJsField.setVisible(false);
+			}
+		}
 
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
 			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-			
 			
 			this.getContentPane().setLayout(null);
 			this.setSize(800, 480);
@@ -149,15 +181,18 @@ public class SettingWindow extends JFrame{
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
 			saveAsNameBox.setBounds(125, 70, 30, 30);
-			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 300, 70, 100, 30);
+			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 360, 70, 100, 30);
 			autoDownloadBox = new JCheckBox("", setting.isAutoDownload());
-			autoDownloadBox.setBounds(400, 70, 30, 30);
+			autoDownloadBox.setBounds(460, 70, 30, 30);
 			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 110, 100, 30);
 			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 100, 30);
 			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
 			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
 			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
-			cookieField = new AJTextField(setting.getCookieInfo(), "", 125, 190, 360, 30);
+			cookieArea = new JTextArea(setting.getCookieInfo());
+			cookieArea.setBounds(125, 190, 360, 150);
+			cookieArea.setLineWrap(true);
+			cookieArea.setBorder(BorderFactory.createEtchedBorder());
 			cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -169,10 +204,10 @@ public class SettingWindow extends JFrame{
 						settingWindow.loginWindow.setVisible(true);
 					}
 				}
-			}), 500, 190, 60, 30);
+			}), 500, 250, 60, 30);
 		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
-				loginUrlLabel, loginUrlField, cookieLabel, cookieField,
+				loginUrlLabel, loginUrlField, cookieLabel, cookieArea,
 				cookieButton);
 		    
 		    /* 引擎配置 */
@@ -218,9 +253,31 @@ public class SettingWindow extends JFrame{
 					showUrlLabel, showUrlTextFieldPrefix, showUrlTextFieldSuffix, 
 					picNameLabel, picNameTextFieldPrefix, picNameTextFieldSuffix,
 					realUrlLabel, realUrlTextField1, realUrlTextField2);
-		    
+			/*脚本设置*/
+			scriptPanel = new JPanel();
+			scriptPanel.setLayout(null);
+			openScriptLabel = new AJLabel("是否开启脚本：", labelColor, 25, 30, 100, 30);
+			openScriptBox = new JCheckBox("", setting.isOpenScript());
+			openScriptBox.setBounds(125, 30, 30, 30);
+			createJsLabel = new AJLabel("创建任务脚本：", labelColor, 25, 70, 100, 30);
+			createJsField = new AJTextField(setting.getCreateTaskScriptPath(), "", 125, 70, 360, 30);
+			collectJsLabel = new AJLabel("收集图片脚本：", labelColor, 25, 110, 100, 30);
+			collectJsField = new AJTextField(setting.getCollectPictureScriptPath(), "", 125, 110, 360, 30);
+			downloadJsLabel = new AJLabel("下载任务脚本：", labelColor, 25, 150, 100, 30);
+			downloadJsField = new AJTextField(setting.getDownloadScriptPath(), "", 125, 150, 360, 30);
+			
+			openScriptBox.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					boolean selected = openScriptBox.getSelectedObjects() == null ? false : true;
+					showPathSettingPanel(selected);
+				}
+			});
+			showPathSettingPanel(setting.isOpenScript());
+			addComponentsJpanel(scriptPanel, openScriptLabel, openScriptBox, createJsLabel,
+					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField);
+			
 			/* HenTai@Home设置 */
-			h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
+			/*h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
 			h_uriTextField = new AJTextField(setting.getHentaiHome().getUri(), null, 105, 30, 400, 30);
 			h_firstParameterNameLabel = new AJLabel("gid:", labelColor, 25, 70, 80, 30);
 			h_firstParameterNameTextField = new AJTextField(setting.getHentaiHome().getFirstParameterName(), null, 105, 70, 400, 30);
@@ -240,7 +297,7 @@ public class SettingWindow extends JFrame{
 				h_totalPrefixLabel, h_totalPrefixTextField, h_namePrefixLabel, 
 				h_namePrefixTextField, h_fileListPrefixLabel, 
 				h_fileListPrefixTextField, h_fileListSuffixLabel, 
-				h_fileListSuffixTextField);
+				h_fileListSuffixTextField);*/
 			/*下载设置*/
 			d_pageCountLabel = new AJLabel("每页数目：", labelColor, 25, 30, 100, 30);
 			d_pageCountTextField = new AJTextField(setting.getPageCount() + "", "", 125, 30, 120, 30);
@@ -275,8 +332,10 @@ public class SettingWindow extends JFrame{
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("引擎配置", enginePanel);
 			settingTabPanel.add("配置说明", descPanel);
+			settingTabPanel.add("脚本配置", scriptPanel);
 			//settingTabPanel.add("HenTai@Home设置", henTaiHomePanel);
-			//settingTabPanel.add("下载设置", downloadPanel);
+			settingTabPanel.add("下载设置", downloadPanel);
+			
 			
 			
 			save_Btn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
@@ -292,7 +351,7 @@ public class SettingWindow extends JFrame{
 						String loginUrl = settingWindow.loginUrlField.getText();
 						boolean saveAsName = settingWindow.saveAsNameBox.getSelectedObjects() == null ? false : true;//是否选择了
 						boolean autoDownload = settingWindow.autoDownloadBox.getSelectedObjects() == null ? false : true;
-						String cookieInfo = settingWindow.cookieField.getText();
+						String cookieInfo = settingWindow.cookieArea.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
 							JOptionPane.showMessageDialog(null, "请填写保存目录");
@@ -379,8 +438,27 @@ public class SettingWindow extends JFrame{
 							JOptionPane.showMessageDialog(null, "保存成功");
 						}
 					}
+					//脚本设置
+					else if(index == 3){
+						boolean openScript = settingWindow.openScriptBox.getSelectedObjects() == null ? false : true;//是否选择了
+						String createScriptPath = settingWindow.createJsField.getText();
+						String collectScriptPath = settingWindow.collectJsField.getText();
+						String downloadScriptPath = settingWindow.downloadJsField.getText();
+						
+						if(openScript && ("".equals(createScriptPath.trim()) || "".equals(collectScriptPath.trim())
+								|| "".equals(downloadScriptPath.trim()))){
+							JOptionPane.showMessageDialog(null, "请填写完所有脚本路径！");
+							return;
+						}
+						setting.setOpenScript(openScript);
+						setting.setCreateTaskScriptPath(createScriptPath);
+						setting.setCollectPictureScriptPath(collectScriptPath);
+						setting.setDownloadScriptPath(downloadScriptPath);
+						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
+						JOptionPane.showMessageDialog(null, "保存成功");
+					}
 					//hentai@home设置
-					else if(index == 2){
+					/*else if(index == 5){
 						String uri = settingWindow.h_uriTextField.getText();
 						String gid = settingWindow.h_firstParameterNameTextField.getText();
 						String t = settingWindow.h_secondParameterNameTextField.getText();
@@ -420,9 +498,9 @@ public class SettingWindow extends JFrame{
 							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
 							JOptionPane.showMessageDialog(null, "保存成功");
 						}
-					}
+					}*/
 					//下载设置
-					else if(index == 3){
+					else if(index == 4){
 						String pageCount = settingWindow.d_pageCountTextField.getText();
 						String pageParam = settingWindow.d_pageParamTextField.getText();
 						String sourcePrefix = settingWindow.d_sourcePrefixTextField.getText();
@@ -473,7 +551,7 @@ public class SettingWindow extends JFrame{
 						}
 					}
 				}
-			}), 30, 200, 60, 30);
+			}), 32, 250, 60, 30);
 			
 			
 			this.getContentPane().add(save_Btn, -1);
