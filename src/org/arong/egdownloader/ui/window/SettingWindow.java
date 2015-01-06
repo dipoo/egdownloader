@@ -140,6 +140,7 @@ public class SettingWindow extends JFrame{
 		public JTextField collectJsField;
 		public JLabel downloadJsLabel;
 		public JTextField downloadJsField;
+		public JTextPane scriptDocPanel;
 		
 		Color labelColor = new Color(65,145,65);
 		Color bgColor = new Color(210,225,240);
@@ -152,6 +153,7 @@ public class SettingWindow extends JFrame{
 				collectJsField.setVisible(true);
 				downloadJsLabel.setVisible(true);
 				downloadJsField.setVisible(true);
+				scriptDocPanel.setVisible(true);
 			}else{
 				createJsLabel.setVisible(false);
 				createJsField.setVisible(false);
@@ -159,6 +161,7 @@ public class SettingWindow extends JFrame{
 				collectJsField.setVisible(false);
 				downloadJsLabel.setVisible(false);
 				downloadJsField.setVisible(false);
+				scriptDocPanel.setVisible(false);
 			}
 		}
 
@@ -265,6 +268,8 @@ public class SettingWindow extends JFrame{
 			collectJsField = new AJTextField(setting.getCollectPictureScriptPath(), "", 125, 110, 360, 30);
 			downloadJsLabel = new AJLabel("下载任务脚本：", labelColor, 25, 150, 100, 30);
 			downloadJsField = new AJTextField(setting.getDownloadScriptPath(), "", 125, 150, 360, 30);
+			scriptDocPanel = new AJTextPane(ComponentConst.SCRIPT_DESC_TEXT, labelColor);//Field(ComponentConst.SCRIPT_DESC_TEXT, "", 25, 200, 400, 100);
+			scriptDocPanel.setBounds(20, 200, 650, 200);
 			
 			openScriptBox.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
@@ -274,7 +279,7 @@ public class SettingWindow extends JFrame{
 			});
 			showPathSettingPanel(setting.isOpenScript());
 			addComponentsJpanel(scriptPanel, openScriptLabel, openScriptBox, createJsLabel,
-					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField);
+					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, scriptDocPanel);
 			
 			/* HenTai@Home设置 */
 			/*h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);
