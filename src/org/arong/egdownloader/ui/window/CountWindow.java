@@ -31,7 +31,7 @@ public class CountWindow extends JDialog {
 		this.window = window;
 		// 设置主窗口
 		this.setSize(700, 250);
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("user"))).getImage());
+		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("count"))).getImage());
 		this.setTitle("统计");
 		this.setVisible(true);
 		this.setResizable(false);

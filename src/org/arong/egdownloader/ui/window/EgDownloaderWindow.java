@@ -169,12 +169,16 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu operaMenu = new AJMenu(ComponentConst.OPERA_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("opera"), null);
-		operaMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
-		operaMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
-		operaMenu.add(new ResetMenuItem("重置所有任务", this));
-		operaMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
-		operaMenu.add(new SimpleSearchMenuItem("简单搜索", this));
-		operaMenu.add(new OpenRootMenuItem("打开根目录", this));
+		JMenu taskMenu = new AJMenu("所有任务",
+				"", "", null);
+		taskMenu.setForeground(new Color(0,0,85));
+		taskMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
+		taskMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
+		taskMenu.add(new ResetMenuItem("重置所有任务", this));
+		taskMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
+		operaMenu.add(taskMenu);
+		operaMenu.add(new SimpleSearchMenuItem(" 简单搜索", this));
+		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
@@ -183,7 +187,7 @@ public class EgDownloaderWindow extends JFrame {
 		// 菜单：统计
 		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
-				+ ComponentConst.SKIN_ICON.get("select"),
+				+ ComponentConst.SKIN_ICON.get("count"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
 					public void doWork(Window window, MouseEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
