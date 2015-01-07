@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.swing;
 import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
@@ -11,6 +12,7 @@ import javax.swing.JButton;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.util.Tracker;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 /**
  * 封装JButton,使构造函数可以设置text值,name值,注册监听器,坐标,大小<br>
@@ -42,13 +44,27 @@ public class AJButton extends JButton {
 		this.setName(name);
 		this.setToolTipText(text);
 		this.setBounds(x, y, width, height);
-		this.setForeground(Color.GRAY);
+		this.setForeground(Color.WHITE);
 		this.setFocusable(false);
 		this.setMargin(new Insets(0, 0, 0, 0));
+		this.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green));
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
 		if(actionListener != null)
 			this.addActionListener(actionListener);
+		this.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {
+				AJButton btn = (AJButton) e.getSource();
+				btn.setForeground(Color.WHITE);
+			}
+			public void mouseEntered(MouseEvent e) {
+				AJButton btn = (AJButton) e.getSource();
+				btn.setForeground(Color.BLACK);
+			}
+			public void mouseClicked(MouseEvent e) {}
+		});
 	}
 	
 	public AJButton(String text, String name, String icon, ActionListener actionListener,
