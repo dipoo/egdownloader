@@ -31,7 +31,7 @@ public class GroupWindow extends JFrame {
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		JLabel tipLabel = new AJLabel("请选择任务组", Color.BLUE, 100, 15, 100, 30);
-		JList list = new GroupList(groups);
+		JList list = new GroupList(groups, this);
 		JScrollPane listPane = new JScrollPane(list);
 		listPane.setBounds(new Rectangle(10, 50, 270, 300));
 		listPane.setAutoscrolls(true);
