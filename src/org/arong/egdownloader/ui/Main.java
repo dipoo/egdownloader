@@ -45,7 +45,7 @@ public class Main {
 					groups.add(file);
 				}
 			}
-			if(groups.size() > 1){
+			if(groups.size() > 0){
 				new GroupWindow(groups);
 			}else{
 				new InitWindow();

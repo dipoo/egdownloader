@@ -25,13 +25,13 @@ public final class ComponentConst {
 	
 	public final static int MARGIN_y = 32;//组件之间垂直间隔
 	
-	public final static String DATA_PATH = "data";//数据目录
+	public static String DATA_PATH = "data";//数据目录
 	
-	public final static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
+	public static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
 	
-	public final static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
+	public static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
 	
-	public final static String PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
+	public static String PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
 	
 	public final static String RESOURCES_PATH = "/resources/";
 	
@@ -164,5 +164,11 @@ public final class ComponentConst {
 			"<b>图片列表解析</b>：返回一个JSON数组字符串，如[{\"name\":\"名称\",\"url\":\"浏览地址\"}];<br>" + 
 			"<b>真实地址解析</b>：返回真实地址字符串。<br>" + 
 			"约定：JSON字符中中key必须有引号，而且引号为双引号。具体请参看script目录下的自带脚本。</div>";
+	
+	public static void changeDataXmlPath(){
+		SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
+		TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
+		PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
+	}
 	
 }
