@@ -111,7 +111,6 @@ public class EgDownloaderWindow extends JFrame {
 		this.setting = setting;
 		//加载任务列表
 		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
-		
 		// 设置主窗口
 		this.setTitle(Version.NAME + "v" + Version.VERSION);
 		this.setIconImage(new ImageIcon(getClass().getResource(
