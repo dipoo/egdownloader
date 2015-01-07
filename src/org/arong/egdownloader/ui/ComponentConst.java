@@ -104,6 +104,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("ok", "_ok.png");
 		SKIN_ICON.put("start", "_start.png");
 		SKIN_ICON.put("stop", "_stop.png");
+		SKIN_ICON.put("count", "_count.png");
 	}
 	/*MainWindow内的组件*/
 	//组件的name值
