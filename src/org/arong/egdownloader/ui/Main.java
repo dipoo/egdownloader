@@ -1,9 +1,13 @@
 package org.arong.egdownloader.ui;
 
 import java.awt.Font;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.UIManager;
 
+import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
@@ -28,7 +32,26 @@ public class Main {
 		} catch (Exception e) {
 
 		}
-		new InitWindow();
+		
+		File dataFile = new File(ComponentConst.DATA_PATH);
+		if(!dataFile.exists()){
+			dataFile.mkdirs();
+			new InitWindow();
+		}else{
+			File[] files = dataFile.listFiles();
+			List<File> groups = new ArrayList<File>();
+			for(File file : files){
+				if(file.isDirectory()){
+					groups.add(file);
+				}
+			}
+			if(groups.size() > 1){
+				new GroupWindow(groups);
+			}else{
+				new InitWindow();
+			}
+		}
+		
 		// 异步执行
 		/*SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
