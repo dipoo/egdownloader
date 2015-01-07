@@ -53,8 +53,9 @@ public class SimpleSearchWindow extends JDialog {
 			}
 		});
 		
-		JLabel keyLabel = new AJLabel("关键字：", Color.BLUE, 10, 40, 50, 40);
-		keyTextField = new AJTextField("", "", 70, 40, 430, 40);
+		JLabel descLabel = new AJLabel("Tips:搜索的结果会显示在控制台", Color.GRAY, 200, 10, 180, 30);
+		JLabel keyLabel = new AJLabel("关键字：", Color.BLUE, 10, 50, 50, 30);
+		keyTextField = new AJTextField("", "", 70, 50, 430, 30);
 		JButton searchBtn = new AJButton("搜索", "", new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String key = keyTextField.getText();
@@ -75,8 +76,8 @@ public class SimpleSearchWindow extends JDialog {
 				}
 				Tracker.println("[" + key + "]搜索完毕,结果【" + j + "】条。");
 			}
-		}, 510, 40, 60, 40);
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyTextField, searchBtn);
+		}, 510, 50, 60, 30);
+		ComponentUtil.addComponents(this.getContentPane(), descLabel, keyLabel, keyTextField, searchBtn);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
