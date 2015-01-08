@@ -1,18 +1,23 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -23,6 +28,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.border.TitledBorder;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
@@ -31,6 +38,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.SwingPrintStream;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -52,7 +60,6 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
 import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
-import org.arong.egdownloader.ui.work.listenerWork.ConsoleWork;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.DownloadCoverWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
@@ -118,7 +125,8 @@ public class EgDownloaderWindow extends JFrame {
 						+ ComponentConst.SKIN_ICON.get("download"))).getImage());
 		this.getContentPane().setLayout(null);
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
-		this.setResizable(false);
+		this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
+		//this.setResizable(false);
 		this.setBackground(Color.WHITE);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -179,10 +187,10 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new SimpleSearchMenuItem(" 简单搜索", this));
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
-		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
+		/*JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 				+ ComponentConst.SKIN_ICON.get("select"),
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new ConsoleWork()));
+				new OperaBtnMouseListener(this, MouseAction.CLICK,new ConsoleWork()));*/
 		// 菜单：统计
 		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
@@ -207,7 +215,7 @@ public class EgDownloaderWindow extends JFrame {
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
+				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, settingMenu, operaMenu, /*consoleMenu,*/ countMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
@@ -342,13 +350,36 @@ public class EgDownloaderWindow extends JFrame {
 		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
+		
+		/**
+		 * 控制台
+		 */
+		JTextArea jea = new JTextArea();
+		jea.setEditable(false);
+		jea.setAutoscrolls(true);
+		jea.setLineWrap(true);
+		jea.setBorder(null);
+		jea.setFont(new Font("宋体", Font.PLAIN, 12));
+		consolePane = new JScrollPane(jea);
+		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
+		consolePane.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
+		consolePane.setAutoscrolls(true);
+		consolePane.setBorder(border);
+		try {
+			//将syso信息推送到控制台
+			new SwingPrintStream(System.out, jea);
+		} catch (FileNotFoundException e1) {
+			JOptionPane.showMessageDialog(this, "控制台初始化错误！");
+		}
+		
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyTableTips);
+		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyTableTips, consolePane);
 		if(tasks == null || tasks.size() == 0){
 			tablePane.setVisible(false);
 		}else{
 			emptyTableTips.setVisible(false);
 		}
+		//聚焦监听
 		this.addWindowFocusListener(new WindowAdapter() {
 			public void windowGainedFocus(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
@@ -372,6 +403,50 @@ public class EgDownloaderWindow extends JFrame {
 					window.simpleSearchWindow.requestFocus();
 				}
 			}
+		});
+		//窗口大小变化监听
+		this.addComponentListener(new ComponentListener() {
+			public void componentShown(ComponentEvent e) {}
+			public void componentMoved(ComponentEvent e) {}
+			public void componentHidden(ComponentEvent e) {}
+			public void componentResized(ComponentEvent e) {
+				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
+				//设置菜单大小
+				if(jMenuBar != null){
+					jMenuBar.setSize(window.getWidth(), jMenuBar.getHeight());
+				}
+				//设置表格的大小
+				if(runningTable != null){
+					int height = window.getHeight() - 280;
+					tablePane.setSize(window.getWidth() - 20, height);
+					runningTable.setSize(window.getWidth() - 20, height);
+					//runningTable.updateUI();
+				}
+				//设置空提示label位置
+				if(emptyTableTips != null){
+					emptyTableTips.setBounds(0, ((window.getHeight() - 280) / 2), window.getWidth(), 100);
+				}
+				//设置控制台大小
+				if(consolePane != null){
+					consolePane.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
+				}
+			}
+		});
+		//鼠标动作监听
+		this.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {
+				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
+				if(window.getWidth() < ComponentConst.CLIENT_WIDTH){
+					window.setSize(ComponentConst.CLIENT_WIDTH, window.getHeight());
+				}
+				if(window.getHeight() < ComponentConst.CLIENT_HEIGHT){
+					window.setSize(window.getWidth(), ComponentConst.CLIENT_HEIGHT);
+				}
+			}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {}
 		});
 		//关闭监听
 		this.addWindowListener(new WindowAdapter() {
