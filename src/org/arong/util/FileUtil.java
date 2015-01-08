@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * 目录文件工具类
@@ -151,6 +152,14 @@ public final class FileUtil {
 			Tracker.println(FileUtil.class, e.getMessage());
 		}
 		return null;
+	}
+	
+	/**
+	 * 验证文件夹是否包含特殊字符
+	 * @return Boolean
+	 */
+	public static Boolean dirValidate(String dir){
+		return Pattern.compile("[^\\?|\\||\\*|\\.|\\<|\\>|\\:|\\/|\\\\]{1,}").matcher(dir).matches();
 	}
 	
 	public static String getAppPath(Class<?> cls) {

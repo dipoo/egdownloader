@@ -1,7 +1,6 @@
 package org.arong.egdownloader.ui.list;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -40,7 +39,7 @@ public class GroupList extends JList {
 					if(list.getSelectedIndex() != 0){
 						groupName = list.getSelectedValue().toString();
 					}
-					ComponentConst.DATA_PATH = ComponentConst.DATA_PATH + "/" + groupName;
+					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					window.dispose();
 					new InitWindow();
