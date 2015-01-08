@@ -119,7 +119,7 @@ public class EgDownloaderWindow extends JFrame {
 		//加载任务列表
 		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
 		// 设置主窗口
-		this.setTitle(Version.NAME + "v" + Version.VERSION);
+		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("download"))).getImage());

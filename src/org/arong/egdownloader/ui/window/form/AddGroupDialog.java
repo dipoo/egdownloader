@@ -47,15 +47,16 @@ public class AddGroupDialog extends JDialog {
 		JButton addBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window dialog, MouseEvent event) {
 				AddGroupDialog addGroupDialog = (AddGroupDialog) dialog;
-				String name = groupNameField.getText();
+				String groupName = groupNameField.getText().trim();
 				//验证名称
-				if("".equals(name.trim())){
+				if("".equals(groupName)){
 					JOptionPane.showMessageDialog(null, "名称不能为空");
-				}else if(! FileUtil.dirValidate(name.trim())){
+				}else if(! FileUtil.dirValidate(groupName)){
 					JOptionPane.showMessageDialog(null, "名称不能包含? | * . < > : / \\等特殊字符");
 				}else{
 					//更新数据路径
-					ComponentConst.changeDataPath(name.trim());
+					ComponentConst.groupName = groupName;
+					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					addGroupDialog.dispose();
 					window.dispose();

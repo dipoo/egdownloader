@@ -39,6 +39,7 @@ public class GroupList extends JList {
 					if(list.getSelectedIndex() != 0){
 						groupName = list.getSelectedValue().toString();
 					}
+					ComponentConst.groupName = groupName;
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					window.dispose();

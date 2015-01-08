@@ -25,6 +25,8 @@ public final class ComponentConst {
 	
 	public final static int MARGIN_y = 32;//组件之间垂直间隔
 	
+	public static String groupName = "";//任务组名称
+	
 	public static String DATA_PATH = "data";//数据目录
 	
 	public static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
