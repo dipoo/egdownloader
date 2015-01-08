@@ -105,6 +105,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("start", "_start.png");
 		SKIN_ICON.put("stop", "_stop.png");
 		SKIN_ICON.put("count", "_count.png");
+		SKIN_ICON.put("group", "_group.png");
 	}
 	/*MainWindow内的组件*/
 	//组件的name值
@@ -164,6 +165,10 @@ public final class ComponentConst {
 			"<b>图片列表解析</b>：返回一个JSON数组字符串，如[{\"name\":\"名称\",\"url\":\"浏览地址\"}];<br>" + 
 			"<b>真实地址解析</b>：返回真实地址字符串。<br>" + 
 			"约定：JSON字符中中key必须有引号，而且引号为双引号。具体请参看script目录下的自带脚本。</div>";
+	
+	public static void changeDataPath(String groupName){
+		DATA_PATH = DATA_PATH + "/" + groupName;
+	}
 	
 	public static void changeDataXmlPath(){
 		SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
