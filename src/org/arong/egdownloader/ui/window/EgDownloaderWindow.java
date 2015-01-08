@@ -461,11 +461,15 @@ public class EgDownloaderWindow extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				//保存数据
-				window.taskDbTemplate.update(window.tasks);
-				window.settingDbTemplate.update(window.setting);
+				window.saveTaskGroupData();
 				System.exit(0);
 			}
 		});
 		
+	}
+	
+	public void saveTaskGroupData(){
+		this.taskDbTemplate.update(this.tasks);
+		this.settingDbTemplate.update(this.setting);
 	}
 }

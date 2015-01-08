@@ -43,12 +43,21 @@ public class GroupList extends JList {
 					if(list.getSelectedIndex() != 0){
 						groupName = list.getSelectedValue().toString();
 					}
+					//如果是在主界面切换的任务组，且选择的任务组不变，则关闭任务组列表窗口
+					if(mainWindow != null && groupName.equals(ComponentConst.groupName)){
+						window.dispose();
+						return;
+					}
+					if(mainWindow != null){
+						//保存前一个任务组的数据
+						mainWindow.saveTaskGroupData();
+						mainWindow.dispose();
+					}
 					ComponentConst.groupName = groupName;
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					window.dispose();
 					if(mainWindow != null){
-						mainWindow.dispose();
 						/**
 						 * 更新dom
 						 */

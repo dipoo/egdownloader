@@ -14,6 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -21,6 +24,7 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
+import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.util.FileUtil;
@@ -54,12 +58,28 @@ public class AddGroupDialog extends JDialog {
 				}else if(! FileUtil.dirValidate(groupName)){
 					JOptionPane.showMessageDialog(null, "名称不能包含? | * . < > : / \\等特殊字符");
 				}else{
+					if (window instanceof EgDownloaderWindow) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
+						//保存前一个任务组的数据
+						mainWindow.saveTaskGroupData();
+						mainWindow.dispose();
+					}else{
+						window.dispose();
+					}
+					//if(window)
 					//更新数据路径
 					ComponentConst.groupName = groupName;
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					addGroupDialog.dispose();
-					window.dispose();
+					if(window instanceof EgDownloaderWindow){
+						/**
+						 * 更新dom
+						 */
+						SettingDom4jDbTemplate.updateDom();
+						TaskDom4jDbTemplate.updateDom();
+						PictureDom4jDbTemplate.updateDom();
+					}
 					new InitWindow();
 				}
 			}

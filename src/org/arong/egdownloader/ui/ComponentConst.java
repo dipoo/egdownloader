@@ -172,7 +172,7 @@ public final class ComponentConst {
 			"约定：JSON字符中中key必须有引号，而且引号为双引号。具体请参看script目录下的自带脚本。</div>";
 	
 	public static void changeDataPath(String groupName){
-		DATA_PATH = DATA_PATH + "/" + groupName;
+		DATA_PATH = ROOT_DATA_PATH + "/" + groupName;
 	}
 	
 	public static void changeDataXmlPath(){
