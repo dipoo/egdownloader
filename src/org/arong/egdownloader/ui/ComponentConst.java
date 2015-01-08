@@ -27,6 +27,8 @@ public final class ComponentConst {
 	
 	public static String groupName = "";//任务组名称
 	
+	public static String ROOT_DATA_PATH = "data";//数据根目录
+	
 	public static String DATA_PATH = "data";//数据目录
 	
 	public static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
@@ -130,6 +132,7 @@ public final class ComponentConst {
 	public final static String START_MENU_TEXT = "开始";
 	public final static String STOP_MENU_TEXT = "暂停";
 	public final static String DELETE_MENU_TEXT = "删除";
+	public final static String TASKGROUP_MENU_TEXT = "任务组";
 	public final static String SETTING_MENU_TEXT = "配置";
 	public final static String OPERA_MENU_TEXT = "操作";
 	public final static String SEARCH_MENU_TEXT = "搜索";

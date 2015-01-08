@@ -29,6 +29,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 	private static Document dom;
 	
 	static{
+		updateDom();
+	}
+	public static void updateDom(){
 		try {
 			dom = Dom4jUtil.getDOM(ComponentConst.SETTING_XML_DATA_PATH);
 		} catch (DocumentException e) {

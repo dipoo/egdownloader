@@ -8,8 +8,12 @@ import java.util.List;
 
 import javax.swing.JList;
 
+import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 /**
@@ -20,7 +24,7 @@ import org.arong.egdownloader.ui.window.InitWindow;
 public class GroupList extends JList {
 
 	private static final long serialVersionUID = -7702879865264332528L;
-	public GroupList(List<File> groups, final GroupWindow window){
+	public GroupList(List<File> groups, final GroupWindow window, final EgDownloaderWindow mainWindow){
 		this.setModel(new GroupListModel(groups));
 		//this.setCellRenderer(new GroupListCellReader());
 		this.setCursor(CursorManager.getPointerCursor());
@@ -43,6 +47,15 @@ public class GroupList extends JList {
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					window.dispose();
+					if(mainWindow != null){
+						mainWindow.dispose();
+						/**
+						 * 更新dom
+						 */
+						SettingDom4jDbTemplate.updateDom();
+						TaskDom4jDbTemplate.updateDom();
+						PictureDom4jDbTemplate.updateDom();
+					}
 					new InitWindow();
 				}
 			}
