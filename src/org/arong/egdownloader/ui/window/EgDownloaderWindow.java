@@ -43,6 +43,7 @@ import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
+import org.arong.egdownloader.ui.menuitem.AddTaskGroupMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ReBuildAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
@@ -166,6 +167,13 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("delete"), deleteBtnMouseListener);
+		// 菜单：任务组
+		JMenu taskGroupMenu = new AJMenu(ComponentConst.TASKGROUP_MENU_TEXT,
+				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
+						+ ComponentConst.SKIN_ICON.get("group"), null);
+		taskGroupMenu.add(new AddTaskGroupMenuItem("新建任务组", this, AddTaskGroupMenuItem.addAction));
+		taskGroupMenu.add(new AddTaskGroupMenuItem("切换任务组", this, AddTaskGroupMenuItem.changeAction));
+		
 		// 菜单：设置
 		MouseListener menuMouseListener = new MenuMouseListener(this);
 		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
@@ -215,7 +223,7 @@ public class EgDownloaderWindow extends JFrame {
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, settingMenu, operaMenu, /*consoleMenu,*/ countMenu, aboutMenu);
+				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, taskGroupMenu, settingMenu, operaMenu, /*consoleMenu,*/ countMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,

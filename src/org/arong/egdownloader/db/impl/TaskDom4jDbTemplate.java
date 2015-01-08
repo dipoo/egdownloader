@@ -39,6 +39,10 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	private static Document dom;
 	
 	static{
+		updateDom();
+	}
+	
+	public static void updateDom(){
 		try {
 			dom = Dom4jUtil.getDOM(ComponentConst.TASK_XML_DATA_PATH);
 		} catch (DocumentException e) {

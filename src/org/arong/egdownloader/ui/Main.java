@@ -33,7 +33,7 @@ public class Main {
 
 		}
 		
-		File dataFile = new File(ComponentConst.DATA_PATH);
+		File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
 		if(!dataFile.exists()){
 			dataFile.mkdirs();
 			new InitWindow();
@@ -46,7 +46,7 @@ public class Main {
 				}
 			}
 			if(groups.size() > 0){
-				new GroupWindow(groups);
+				new GroupWindow(groups, null);
 			}else{
 				new InitWindow();
 			}

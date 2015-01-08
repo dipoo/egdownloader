@@ -34,8 +34,11 @@ public class GroupWindow extends JFrame {
 
 	private static final long serialVersionUID = 3500270648971377551L;
 	
-	public GroupWindow(List<File> groups){
+	public EgDownloaderWindow mainWindow;
+	
+	public GroupWindow(List<File> groups, EgDownloaderWindow mainWindow){
 		super(Version.NAME + "任务组列表");
+		this.mainWindow = mainWindow;
 		this.setSize(300, 400);
 		this.setResizable(false);
 		this.setIconImage(new ImageIcon(getClass().getResource(
@@ -52,7 +55,7 @@ public class GroupWindow extends JFrame {
 							}
 						}) , 215, 15, 62, 30);
 		addGroupBtn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
-		JList list = new GroupList(groups, this);
+		JList list = new GroupList(groups, this, mainWindow);
 		list.setSelectedIndex(0);
 		JScrollPane listPane = new JScrollPane(list);
 		listPane.setBounds(new Rectangle(10, 50, 270, 300));
@@ -60,10 +63,6 @@ public class GroupWindow extends JFrame {
 		listPane.getViewport().setBackground(new Color(254,254,254));
 		ComponentUtil.addComponents(this.getContentPane(), tipLabel, addGroupBtn, listPane);
 		
-		
 		this.setVisible(true);
-	}
-	public GroupWindow(List<File> groups, EgDownloaderWindow mainWindow){
-		this(groups);
 	}
 }

@@ -36,6 +36,10 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	private static Document dom;
 	
 	static{
+		updateDom();
+	}
+	
+	public static void updateDom(){
 		try {
 			dom = Dom4jUtil.getDOM(ComponentConst.PICTURE_XML_DATA_PATH);
 		} catch (DocumentException e) {
