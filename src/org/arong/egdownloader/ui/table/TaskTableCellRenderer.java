@@ -50,7 +50,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		task = ((TaskingTable)table).getTasks().get(row); 
 		if(column == 0){//第一列：图标
 			tc.setPreferredWidth(50);
-			tc.setMaxWidth(60);
+			tc.setMaxWidth(80);
 			JLabel l = new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
 			l.setText("" + (row + 1));
 			l.setForeground(Color.BLUE);
@@ -64,7 +64,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			return l;
 		}else if(column == 1){//第二列：名称
 			tc.setPreferredWidth(580);
-			tc.setMaxWidth(600);
+			tc.setMaxWidth(1200);
 			if(task.getSubname() !=null && !"".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
 				JLabel nameLabel = null;
@@ -91,19 +91,19 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			}
 		}else if(column == 2){//第三列：图片总数
 			tc.setPreferredWidth(50);
-			tc.setMaxWidth(60);
+			tc.setMaxWidth(150);
 			return new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);
 		}else if(column == 3){//第三列：语言
 			tc.setPreferredWidth(60);
-			tc.setMaxWidth(80);
+			tc.setMaxWidth(150);
 			return new AJLabel(value == null ? "" : value.toString(), fontColor, font, JLabel.LEFT);
 		}else if(column == 4){//第三列：类别
 			tc.setPreferredWidth(60);
-			tc.setMaxWidth(80);
+			tc.setMaxWidth(150);
 			return new AJLabel(value == null ? "" : value.toString().toUpperCase(), fontColor, font, JLabel.LEFT);
 		}else if(column == 5){//第四列：进度
 			tc.setPreferredWidth(80);
-			tc.setMaxWidth(100);
+			tc.setMaxWidth(150);
 			if(value == null || Integer.parseInt(value.toString()) < 1){
 				return new AJLabel("0(0.0%)", fontColor, blodFont, JLabel.CENTER);
 			}

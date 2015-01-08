@@ -63,6 +63,9 @@ public class CountWindow extends JDialog {
 	
 	public String transferHtml(){
 		List<Task> tasks = window.tasks;
+		if(tasks.size() == 0){
+			return "<center><h2>无数据</h2></center>";
+		}
 		Setting setting = window.setting;
 		int t_count = tasks.size();
 		int t_historyCount = setting.getTaskHistoryCount();
