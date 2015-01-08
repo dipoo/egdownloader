@@ -46,7 +46,7 @@ public class GroupWindow extends JFrame {
 						+ ComponentConst.SKIN_ICON.get("group"))).getImage());
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setLayout(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(mainWindow == null ? EXIT_ON_CLOSE : DISPOSE_ON_CLOSE);
 		JLabel tipLabel = new AJLabel("双击选择任务组", new Color(67,44,1), 15, 15, 100, 30);
 		JButton addGroupBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
