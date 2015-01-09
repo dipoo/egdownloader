@@ -5,9 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.listenerWork.ResetTaskWork;
@@ -22,6 +24,7 @@ public class ResetMenuItem extends JMenuItem{
 	
 	public ResetMenuItem(String text, final EgDownloaderWindow window){
 		super(text);
+		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("reset"))));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

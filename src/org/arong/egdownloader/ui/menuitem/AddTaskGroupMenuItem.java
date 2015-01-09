@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -29,6 +30,8 @@ public class AddTaskGroupMenuItem extends JMenuItem {
 
 	public AddTaskGroupMenuItem(String text, final EgDownloaderWindow window, final int action){
 		super(text);
+		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + 
+				ComponentConst.SKIN_ICON.get(action == addAction ? "add" : "change"))));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

@@ -95,8 +95,16 @@ public class AddGroupDialog extends JDialog {
 				AddGroupDialog w = (AddGroupDialog)e.getSource();
 				w.dispose();
 			}
+			//窗体由激活状态变成非激活状态
+			public void windowDeactivated(WindowEvent e) {
+				//关闭后显示主界面
+				window.setVisible(true);
+				window.setEnabled(true);
+				AddGroupDialog w = (AddGroupDialog)e.getSource();
+				w.dispose();
+			}
 		});
-		setDefaultCloseOperation(HIDE_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 }

@@ -113,6 +113,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("count", "_count.png");
 		SKIN_ICON.put("group", "_group.png");
 		SKIN_ICON.put("clear", "_clear.png");
+		SKIN_ICON.put("task", "_task.png");
 	}
 	/*MainWindow内的组件*/
 	//组件的name值

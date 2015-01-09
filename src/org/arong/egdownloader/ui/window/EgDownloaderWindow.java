@@ -187,7 +187,7 @@ public class EgDownloaderWindow extends JFrame {
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("opera"), null);
 		JMenu taskMenu = new AJMenu("所有任务",
-				"", "", null);
+				"", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("task"), null);
 		taskMenu.setForeground(new Color(0,0,85));
 		taskMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
 		taskMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
