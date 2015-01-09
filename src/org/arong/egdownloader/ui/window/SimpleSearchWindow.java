@@ -62,7 +62,8 @@ public class SimpleSearchWindow extends JDialog {
 				if(key == null || "".equals(key.trim())){
 					JOptionPane.showMessageDialog(null, "请输入关键字！");
 				}
-				List<Task> allTasks = ((TaskingTable)mainWindow.runningTable).getTasks();
+				TaskingTable table = (TaskingTable)mainWindow.runningTable;
+				List<Task> allTasks = table.getTasks();
 				int j = 0;
 				for(int i = 0; i < allTasks.size(); i++){
 					j ++;
@@ -72,6 +73,10 @@ public class SimpleSearchWindow extends JDialog {
 						Tracker.println("简单搜索[" + key + "]:" + (i + 1) + "、" +  allTasks.get(i).getSubname());
 					}else{
 						j --;
+					}
+					//定位到第一条任务处
+					if(j == 1){
+						table.scrollRectToVisible(table.getCellRect(i, 0, true));
 					}
 				}
 				Tracker.println("[" + key + "]搜索完毕,结果【" + j + "】条。");
