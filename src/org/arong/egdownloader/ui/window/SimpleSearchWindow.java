@@ -76,6 +76,9 @@ public class SimpleSearchWindow extends JDialog {
 					}
 					//定位到第一条任务处
 					if(j == 1){
+						//使之选中
+						table.setRowSelectionInterval(i, i);
+						//定位
 						table.scrollRectToVisible(table.getCellRect(i, 0, true));
 					}
 				}
