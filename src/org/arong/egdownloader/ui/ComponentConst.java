@@ -101,6 +101,8 @@ public final class ComponentConst {
 		SKIN_ICON.put("opera", "_opera.png");
 		SKIN_ICON.put("detail", "_detail.png");
 		SKIN_ICON.put("copy", "_copy.png");
+		SKIN_ICON.put("cut", "_cut.png");
+		SKIN_ICON.put("paste", "_paste.png");
 		SKIN_ICON.put("browse", "_browse.png");
 		SKIN_ICON.put("check", "_check.png");
 		SKIN_ICON.put("change", "_change.png");
@@ -110,6 +112,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("stop", "_stop.png");
 		SKIN_ICON.put("count", "_count.png");
 		SKIN_ICON.put("group", "_group.png");
+		SKIN_ICON.put("clear", "_clear.png");
 	}
 	/*MainWindow内的组件*/
 	//组件的name值
