@@ -268,13 +268,13 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 			for (Node node : nodes) {
 				pics.add(node2Picture(node));
 			}
+			//排序
+			Collections.sort(pics, new Comparator<Picture>() {
+				public int compare(Picture o1, Picture o2) {
+					return o1.getNum().compareTo(o2.getNum());
+				}
+			});
 		}
-		//排序
-		Collections.sort(pics, new Comparator<Picture>() {
-			public int compare(Picture o1, Picture o2) {
-				return o1.getNum().compareTo(o2.getNum());
-			}
-		});
 		return pics;
 	}
 

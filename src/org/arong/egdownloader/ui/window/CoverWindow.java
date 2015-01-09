@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 /**
  * 漫画封面窗口
@@ -34,7 +35,7 @@ public class CoverWindow extends JDialog {
 		});
 	}
 	public void showCover(Task task){
-		String path = task.getSaveDir() + "/cover.jpg";
+		String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
 		File cover = new File(path);
 		//不存在封面
 		if(cover == null || !cover.exists()){

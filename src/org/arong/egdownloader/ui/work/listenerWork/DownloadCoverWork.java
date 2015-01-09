@@ -14,6 +14,7 @@ import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
@@ -30,7 +31,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int index = table.getSelectedRow();
 		Task task = table.getTasks().get(index);
-		File cover = new File(task.getSaveDir() + "/cover.jpg");
+		File cover = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg");
 		//不存在封面则下载
 		if(cover == null || !cover.exists()){
 			InputStream is;
@@ -40,7 +41,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 				}
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
-				FileUtil.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
+				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				JOptionPane.showMessageDialog(null, "下载成功");
 			} catch (SocketTimeoutException e){
 				JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");

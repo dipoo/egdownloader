@@ -2,10 +2,12 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
@@ -32,6 +34,7 @@ import org.arong.egdownloader.ui.swing.AJPanel;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
+import org.arong.util.FileUtil;
 /**
  * 配置窗口
  * @author 阿荣
@@ -181,9 +184,24 @@ public class SettingWindow extends JFrame{
 			basicPanel.setLayout(null);  
 			saveDirLabel = new AJLabel("保存目录：", labelColor, 25, 30, 100, 30);
 			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
+			saveDirField.setEditable(false);
+			saveDirField.setEnabled(false);
+			JButton openDirButton = new AJButton("打开", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					try {
+						String path = ComponentConst.getSavePathPreffix() + saveDirField.getText();
+						File f = new File(path);
+						FileUtil.ifNotExistsThenCreate(f);
+						Desktop.getDesktop().open(f);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "文件夹已被删除");
+					}
+				}
+			}), 500, 30, 60, 30);
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
-			saveAsNameBox.setBounds(125, 70, 30, 30);
+			saveAsNameBox.setBounds(120, 70, 30, 30);
 			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 360, 70, 100, 30);
 			autoDownloadBox = new JCheckBox("", setting.isAutoDownload());
 			autoDownloadBox.setBounds(460, 70, 30, 30);
@@ -196,7 +214,7 @@ public class SettingWindow extends JFrame{
 			cookieArea.setBounds(125, 190, 360, 150);
 			cookieArea.setLineWrap(true);
 			cookieArea.setBorder(BorderFactory.createEtchedBorder());
-			cookieButton = new AJButton("登录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+			cookieButton = new AJButton("登陆", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
@@ -208,7 +226,7 @@ public class SettingWindow extends JFrame{
 					}
 				}
 			}), 500, 250, 60, 30);
-		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField,
+		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, openDirButton,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieArea,
 				cookieButton);

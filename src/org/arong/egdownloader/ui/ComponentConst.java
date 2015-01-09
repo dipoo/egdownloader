@@ -184,5 +184,13 @@ public final class ComponentConst {
 		TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
 		PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
 	}
+
+	public static String getSavePathPreffix(){
+		if("".equals(groupName)){
+			return "";
+		}else{
+			return ROOT_DATA_PATH + "/" + groupName + "/";
+		}
+	}
 	
 }

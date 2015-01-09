@@ -9,6 +9,7 @@ import javax.swing.SwingWorker;
 
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DeletingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -60,7 +61,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 				if(deleteFile){
 					File file = null;
 					for(int i = 0; i < tasks.size(); i ++){
-						file = new File(tasks.get(i).getSaveDir());
+						file = new File(ComponentConst.getSavePathPreffix() + tasks.get(i).getSaveDir());
 						if(file.exists()){
 							this.deleteFile(file);
 						}
