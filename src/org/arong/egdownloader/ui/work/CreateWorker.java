@@ -17,6 +17,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -67,7 +68,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			if(task != null){
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
-				FileUtil.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
+				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				
 				//设置最后创建时间
 				setting.setLastCreateTime(task.getCreateTime());
