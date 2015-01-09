@@ -73,6 +73,7 @@ public class AddGroupDialog extends JDialog {
 					ComponentConst.changeDataXmlPath();
 					addGroupDialog.dispose();
 					if(window instanceof EgDownloaderWindow){
+						FileUtil.ifNotExistsThenCreate(ComponentConst.getXmlDirPath());
 						/**
 						 * 更新dom
 						 */
@@ -90,16 +91,12 @@ public class AddGroupDialog extends JDialog {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//关闭后显示主界面
-				window.setVisible(true);
-				window.setEnabled(true);
 				AddGroupDialog w = (AddGroupDialog)e.getSource();
 				w.dispose();
 			}
 			//窗体由激活状态变成非激活状态
 			public void windowDeactivated(WindowEvent e) {
 				//关闭后显示主界面
-				window.setVisible(true);
-				window.setEnabled(true);
 				AddGroupDialog w = (AddGroupDialog)e.getSource();
 				w.dispose();
 			}

@@ -180,9 +180,23 @@ public final class ComponentConst {
 	}
 	
 	public static void changeDataXmlPath(){
-		SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
-		TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
-		PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
+		if(! "".equals(groupName)){
+			SETTING_XML_DATA_PATH = DATA_PATH + "/data/setting.xml";//配置文件保存路径
+			TASK_XML_DATA_PATH = DATA_PATH + "/data/task.xml";//任务数据保存路径
+			PICTURE_XML_DATA_PATH = DATA_PATH + "/data/picture.xml";//图片数据保存路径
+		}else{
+			SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
+			TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
+			PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
+		}
+	}
+	
+	public static String getXmlDirPath(){
+		if(! "".equals(groupName)){
+			return DATA_PATH + "/data";
+		}else{
+			return DATA_PATH;
+		}
 	}
 
 	public static String getSavePathPreffix(){
