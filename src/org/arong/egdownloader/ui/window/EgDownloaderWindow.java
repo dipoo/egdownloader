@@ -44,6 +44,7 @@ import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.menuitem.AddTaskGroupMenuItem;
+import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ReBuildAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
@@ -102,6 +103,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JScrollPane tablePane;
 	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
+	public JTextArea consoleArea;
 	
 	
 	public Setting setting;
@@ -195,10 +197,10 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new SimpleSearchMenuItem(" 简单搜索", this));
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
-		/*JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
+		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
-				+ ComponentConst.SKIN_ICON.get("select"),
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new ConsoleWork()));*/
+				+ ComponentConst.SKIN_ICON.get("select"), null);
+		consoleMenu.add(new ClearConsoleMenuItem("清空控制台", this));
 		// 菜单：统计
 		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
@@ -223,7 +225,7 @@ public class EgDownloaderWindow extends JFrame {
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, taskGroupMenu, settingMenu, operaMenu, /*consoleMenu,*/ countMenu, aboutMenu);
+				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
@@ -362,20 +364,21 @@ public class EgDownloaderWindow extends JFrame {
 		/**
 		 * 控制台
 		 */
-		JTextArea jea = new JTextArea();
-		jea.setEditable(false);
-		jea.setAutoscrolls(true);
-		jea.setLineWrap(true);
-		jea.setBorder(null);
-		jea.setFont(new Font("宋体", Font.PLAIN, 12));
-		consolePane = new JScrollPane(jea);
+		consoleArea = new JTextArea();
+		consoleArea.setEditable(false);
+		consoleArea.setAutoscrolls(true);
+		consoleArea.setLineWrap(true);
+		consoleArea.setBorder(null);
+		consoleArea.setFont(new Font("宋体", Font.BOLD, 12));
+		consoleArea.setForeground(new Color(63,127,95));
+		consolePane = new JScrollPane(consoleArea);
 		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
 		consolePane.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
 		consolePane.setAutoscrolls(true);
 		consolePane.setBorder(border);
 		try {
 			//将syso信息推送到控制台
-			new SwingPrintStream(System.out, jea);
+			new SwingPrintStream(System.out, consoleArea);
 		} catch (FileNotFoundException e1) {
 			JOptionPane.showMessageDialog(this, "控制台初始化错误！");
 		}

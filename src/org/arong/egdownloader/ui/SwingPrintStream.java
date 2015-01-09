@@ -38,8 +38,8 @@ public class SwingPrintStream extends PrintStream {
 	 */
 	private void filter(JTextArea logTextArea){
 		String text = logTextArea.getText();
-		if(text.length() > 3000){
-			logTextArea.setText(text.substring(text.length() - 3000, text.length()));
+		if(text.length() > 5000){
+			logTextArea.setText(text.substring(text.length() - 5000, text.length()));
 		}
 	}
 
