@@ -46,6 +46,7 @@ public class SettingWindow extends JFrame{
 
 		JTabbedPane settingTabPanel = new JTabbedPane(JTabbedPane.LEFT);
 		public LoginWindow loginWindow;
+		public TestScriptWindow testScriptWindow;
 		/* 基本配置页签 */
 		JPanel basicPanel;
 		JLabel saveDirLabel;
@@ -143,6 +144,7 @@ public class SettingWindow extends JFrame{
 		public JTextField collectJsField;
 		public JLabel downloadJsLabel;
 		public JTextField downloadJsField;
+		public JButton testBtn;
 		public JTextPane scriptDocPanel;
 		
 		Color labelColor = new Color(65,145,65);
@@ -156,6 +158,7 @@ public class SettingWindow extends JFrame{
 				collectJsField.setVisible(true);
 				downloadJsLabel.setVisible(true);
 				downloadJsField.setVisible(true);
+				testBtn.setVisible(true);
 				scriptDocPanel.setVisible(true);
 			}else{
 				createJsLabel.setVisible(false);
@@ -164,13 +167,14 @@ public class SettingWindow extends JFrame{
 				collectJsField.setVisible(false);
 				downloadJsLabel.setVisible(false);
 				downloadJsField.setVisible(false);
+				testBtn.setVisible(false);
 				scriptDocPanel.setVisible(false);
 			}
 		}
 
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
-			Setting setting = ((EgDownloaderWindow)mainWindow).setting;
+			final Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 			
 			this.getContentPane().setLayout(null);
 			this.setSize(800, 480);
@@ -277,15 +281,35 @@ public class SettingWindow extends JFrame{
 			/*脚本设置*/
 			scriptPanel = new JPanel();
 			scriptPanel.setLayout(null);
-			openScriptLabel = new AJLabel("是否开启脚本：", labelColor, 25, 30, 100, 30);
+			openScriptLabel = new AJLabel("是否开启脚本：", labelColor, 25, 30, 90, 30);
 			openScriptBox = new JCheckBox("", setting.isOpenScript());
-			openScriptBox.setBounds(125, 30, 30, 30);
+			openScriptBox.setBounds(118, 30, 30, 30);
 			createJsLabel = new AJLabel("创建任务脚本：", labelColor, 25, 70, 100, 30);
 			createJsField = new AJTextField(setting.getCreateTaskScriptPath(), "", 125, 70, 360, 30);
 			collectJsLabel = new AJLabel("收集图片脚本：", labelColor, 25, 110, 100, 30);
 			collectJsField = new AJTextField(setting.getCollectPictureScriptPath(), "", 125, 110, 360, 30);
 			downloadJsLabel = new AJLabel("下载任务脚本：", labelColor, 25, 150, 100, 30);
 			downloadJsField = new AJTextField(setting.getDownloadScriptPath(), "", 125, 150, 360, 30);
+			testBtn = new AJButton("脚本测试", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
+					String createScriptPath = settingWindow.createJsField.getText();
+					String collectScriptPath = settingWindow.collectJsField.getText();
+					String downloadScriptPath = settingWindow.downloadJsField.getText();
+					
+					if("".equals(createScriptPath.trim()) || "".equals(collectScriptPath.trim())
+							|| "".equals(downloadScriptPath.trim())){
+						JOptionPane.showMessageDialog(null, "请填写完所有脚本路径！");
+						return;
+					}else{
+						if(testScriptWindow == null){
+							testScriptWindow = new TestScriptWindow(createScriptPath, collectScriptPath, downloadScriptPath, setting);
+						}
+						testScriptWindow.setVisible(true);
+					}
+				}
+			}), 500, 110, 60, 30);
 			scriptDocPanel = new AJTextPane(ComponentConst.SCRIPT_DESC_TEXT, labelColor);//Field(ComponentConst.SCRIPT_DESC_TEXT, "", 25, 200, 400, 100);
 			scriptDocPanel.setBounds(20, 200, 650, 200);
 			
@@ -297,7 +321,7 @@ public class SettingWindow extends JFrame{
 			});
 			showPathSettingPanel(setting.isOpenScript());
 			addComponentsJpanel(scriptPanel, openScriptLabel, openScriptBox, createJsLabel,
-					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, scriptDocPanel);
+					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, testBtn, scriptDocPanel);
 			
 			/* HenTai@Home设置 */
 			/*h_uriLabel = new AJLabel("URI:", labelColor, 25, 30, 80, 30);

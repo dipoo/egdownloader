@@ -200,4 +200,10 @@ public class Task {
 		this.end = end;
 	}
 	
+	public String getScriptMember() {
+		return "[url=" + url + ", name=" + name
+				+ ", subname=" + subname + ", type=" + type
+				+ ", total=" + total + ", size=" + size
+				+ ", language=" + language + ", coverUrl=" + coverUrl + "]";
+	}
 }
