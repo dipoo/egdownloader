@@ -43,7 +43,7 @@ public class InitWindow extends JFrame {
 		textLabel.setForeground(new Color(123,23,89));
 		textLabel.setText("1、读取配置数据");
 		//检测数据目录是否存在,不存在则创建一个
-		File data_path = new File(ComponentConst.DATA_PATH);
+		File data_path = new File(ComponentConst.getXmlDirPath());
 		if(!data_path.exists()){
 			data_path.mkdirs();
 		}
