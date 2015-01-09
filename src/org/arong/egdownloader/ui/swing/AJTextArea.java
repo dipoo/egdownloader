@@ -36,7 +36,7 @@ public class AJTextArea extends JTextArea {
 	 */
 	public AJTextArea(int x, int y, int width, int height, String borderTitle) {
 		this.setAutoscrolls(true);
-		Border border1 = BorderFactory.createLineBorder(Color.MAGENTA);
+		Border border1 = BorderFactory.createLineBorder(new Color(219,219,219));
 		Border border = BorderFactory.createTitledBorder(border1, borderTitle);
 		this.setBorder(border);
 		this.setBounds(x, y, width, height);

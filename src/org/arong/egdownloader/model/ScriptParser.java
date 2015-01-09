@@ -13,6 +13,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.JDialog;
+import javax.swing.JTextArea;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.spider.SpiderException;
@@ -199,5 +200,53 @@ public class ScriptParser {
 		}
 		Tracker.println(url);
 		return url;
+	}
+	
+	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
+		String source;
+		try {
+			source = WebClient.postRequestWithCookie(url, setting.getCookieInfo());
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("htmlSource", source);
+			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			t.setUrl(url);
+			if(create){
+				//展示任务信息
+				resultArea.setText("---任务---\r\n" + t.getScriptMember());
+			}
+			if(collect){
+				Object o = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
+				//展示图片信息
+				resultArea.setText(resultArea.getText() + "\r\n---图片列表---\r\n" + o.toString());
+				if(download){
+					//展示第一张图片的真实下载地址
+					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
+					if(pics != null){
+						source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
+						param.put("htmlSource", source);
+						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真是下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+					}
+				}
+			}else if(download){
+				Object o = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
+				//展示第一张图片的真实下载地址
+				List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
+				if(pics != null){
+					source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
+					param.put("htmlSource", source);
+					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真是下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+				}
+			}
+		} catch (ConnectTimeoutException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + "网络连接超时");
+		} catch (SocketTimeoutException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + "网络连接超时");
+		} catch (FileNotFoundException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+		} catch (ScriptException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+		} catch (Exception e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+		}
 	}
 }
