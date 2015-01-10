@@ -73,6 +73,7 @@ public class SimpleSearchWindow extends JDialog {
 						Tracker.println("简单搜索[" + key + "]:" + (i + 1) + "、" +  allTasks.get(i).getSubname());
 					}else{
 						j --;
+						continue;
 					}
 					//定位到第一条任务处
 					if(j == 1){
