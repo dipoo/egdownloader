@@ -1,5 +1,5 @@
-var mark = {//æ ‡å¿—ç¬¦
-	realUrl : ['<img id="img" src="', '" style=']//çœŸå®žä¸‹è½½åœ°å€
+var mark = {//±êÖ¾·û
+	realUrl : ['<img id="img" src="', '" style=']//ÕæÊµÏÂÔØµØÖ·
 };
 
 function interceptFromSource(source, prefix, suffix){
@@ -8,8 +8,8 @@ function interceptFromSource(source, prefix, suffix){
     return s.substring(0, s.indexOf(suffix));
 }
 
-function download(source){
+function parse(source){
 	var realUrl = interceptFromSource(source, mark.realUrl[0], mark.realUrl[1]);
 	return realUrl;
 }
-download(htmlSource);
+parse(htmlSource);
