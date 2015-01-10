@@ -25,17 +25,17 @@ public class AJTextField extends JTextField {
 	private static final long serialVersionUID = -1763143133193131228L;
 	
 	private JPopupMenu popupMenu;
-	private Color menuItemColor = new Color(0,0,85);
+	private Color color = new Color(0,0,85);
 	//右键菜单：复制
-	private AJMenuItem copyMenuItem = new AJMenuItem("复制", menuItemColor, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("copy"), null);
+	private AJMenuItem copyMenuItem = new AJMenuItem("复制", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("copy"), null);
 	//右键菜单：剪切
-	private AJMenuItem cutMenuItem = new AJMenuItem("剪切", menuItemColor, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("cut"), null);
+	private AJMenuItem cutMenuItem = new AJMenuItem("剪切", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("cut"), null);
 	//右键菜单：粘贴
-	private AJMenuItem pasteMenuItem = new AJMenuItem("粘贴", menuItemColor, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("paste"), null);
+	private AJMenuItem pasteMenuItem = new AJMenuItem("粘贴", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("paste"), null);
 	//右键菜单：清空
-	private AJMenuItem clearMenuItem = new AJMenuItem("清空", menuItemColor, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("clear"), null);
+	private AJMenuItem clearMenuItem = new AJMenuItem("清空", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("clear"), null);
 	//右键菜单：全选
-	private AJMenuItem selectAllMenuItem = new AJMenuItem("全选", menuItemColor, null);
+	private AJMenuItem selectAllMenuItem = new AJMenuItem("全选", color, null);
 	
 	public AJTextField(String name, int x, int y, int width, int height){
 		this.setName(name);
@@ -54,6 +54,9 @@ public class AJTextField extends JTextField {
 		
 		cutMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!this_.isEditable()){
+					return;
+				}
 				String selectText = this_.getSelectedText();
 				if(selectText != null && !"".equals(selectText)){
 					StringSelection ss = new StringSelection(selectText);
@@ -65,11 +68,14 @@ public class AJTextField extends JTextField {
 		
 		pasteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!this_.isEditable()){
+					return;
+				}
 				Transferable t = this_.getToolkit().getSystemClipboard().getContents(this);
 				//判断内容是否为空，是否为字符串
 				if(t != null && t.isDataFlavorSupported(DataFlavor.stringFlavor)){
 					try {
-						this_.setText(t.getTransferData(DataFlavor.stringFlavor) + "");
+						this_.setText(this_.getText() + t.getTransferData(DataFlavor.stringFlavor) + "");
 					} catch (Exception e1) {
 						System.out.println("粘贴出错");
 					}
@@ -79,12 +85,16 @@ public class AJTextField extends JTextField {
 		
 		clearMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!this_.isEditable()){
+					return;
+				}
 				this_.setText("");
 			}
 		});
 		
 		selectAllMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				this_.requestFocus();
 				this_.selectAll();
 			}
 		});
@@ -109,32 +119,32 @@ public class AJTextField extends JTextField {
 						cutMenuItem.setForeground(Color.GRAY);
 					}else{
 						copyMenuItem.setEnabled(true);
-						copyMenuItem.setForeground(menuItemColor);
+						copyMenuItem.setForeground(color);
 						cutMenuItem.setEnabled(true);
-						cutMenuItem.setForeground(menuItemColor);
+						cutMenuItem.setForeground(color);
 					}
 					
 					//是否粘贴
 					Transferable t = this_.getToolkit().getSystemClipboard().getContents(this);
 					//判断内容是否为空，是否为字符串
-					if(t == null || !t.isDataFlavorSupported(DataFlavor.stringFlavor)){
+					if(t == null || !t.isDataFlavorSupported(DataFlavor.stringFlavor) || !this_.isEditable()){
 						pasteMenuItem.setEnabled(false);
 						pasteMenuItem.setForeground(Color.GRAY);
 					}else{
 						pasteMenuItem.setEnabled(true);
-						pasteMenuItem.setForeground(menuItemColor);
+						pasteMenuItem.setForeground(color);
 					}
 					//是否清空/全选
-					if("".equals(text)){
+					if("".equals(text) || !this_.isEditable()){
 						clearMenuItem.setEnabled(false);
 						clearMenuItem.setForeground(Color.GRAY);
 						selectAllMenuItem.setEnabled(false);
 						selectAllMenuItem.setForeground(Color.GRAY);
 					}else{
 						clearMenuItem.setEnabled(true);
-						clearMenuItem.setForeground(menuItemColor);
+						clearMenuItem.setForeground(color);
 						selectAllMenuItem.setEnabled(true);
-						selectAllMenuItem.setForeground(menuItemColor);
+						selectAllMenuItem.setForeground(color);
 					}
 					
 					popupMenu.show(field, e.getPoint().x, e.getPoint().y);

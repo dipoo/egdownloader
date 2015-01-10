@@ -25,6 +25,7 @@ import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
+import org.arong.egdownloader.ui.swing.AJTextArea;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
@@ -43,7 +44,7 @@ public class TestScriptWindow extends JDialog{
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		JLabel urlLabel = new AJLabel("地址:", Color.BLUE, 10, 15, 40, 30);
-		final JTextField urlField = new AJTextField("http://exhentai.org/g/672439/1e00a4a2ec", "", 60, 15, 445, 30);
+		final JTextField urlField = new AJTextField("http://exhentai.org/g/757931/9db0ba4a6a", "", 60, 15, 445, 30);
 		JLabel typeLabel = new AJLabel("输出类型:", Color.BLUE, 10, 55, 60, 30);
 		JLabel crLabel = new AJLabel("任务", Color.BLACK, 100, 55, 25, 30);
 		final JCheckBox createCb = new JCheckBox("", true);
@@ -54,7 +55,7 @@ public class TestScriptWindow extends JDialog{
 		JLabel doLabel = new AJLabel("真实地址", Color.BLACK, 385, 55, 50, 30);
 		final JCheckBox downloadCb = new JCheckBox("", true);
 		downloadCb.setBounds(440, 55, 30, 30);
-		final JTextArea resultArea = new JTextArea();
+		final JTextArea resultArea = new AJTextArea();
 		resultArea.setEditable(false);
 		resultArea.setAutoscrolls(true);
 		resultArea.setLineWrap(true);

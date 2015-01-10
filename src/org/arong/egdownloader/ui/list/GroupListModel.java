@@ -1,6 +1,8 @@
 package org.arong.egdownloader.ui.list;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -15,6 +17,8 @@ public class GroupListModel extends DefaultListModel {
 	
 	public List<File> groups;
 	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
 	public GroupListModel(List<File> groups){
 		this.groups = groups;
 	}
@@ -22,9 +26,9 @@ public class GroupListModel extends DefaultListModel {
 	public Object getElementAt(int index) {
 		String text;
 		if(index == 0){
-			text = "默认空间";
+			text = "默认空间" + "|" + sdf.format(new Date(groups.get(0).getParentFile().lastModified()));
 		}else{
-			text = groups.get(index - 1).getName();
+			text = groups.get(index - 1).getName() + "|" + sdf.format(new Date(groups.get(index - 1).lastModified()));
 		}
 		return text;
 	}

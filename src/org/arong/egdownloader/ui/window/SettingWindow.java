@@ -31,6 +31,7 @@ import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPanel;
+import org.arong.egdownloader.ui.swing.AJTextArea;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
@@ -214,7 +215,8 @@ public class SettingWindow extends JFrame{
 			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
 			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
 			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
-			cookieArea = new JTextArea(setting.getCookieInfo());
+			cookieArea = new AJTextArea();
+			cookieArea.setText(setting.getCookieInfo());
 			cookieArea.setBounds(125, 190, 360, 150);
 			cookieArea.setLineWrap(true);
 			cookieArea.setBorder(BorderFactory.createEtchedBorder());
