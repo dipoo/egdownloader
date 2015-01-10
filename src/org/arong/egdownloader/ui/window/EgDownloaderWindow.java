@@ -229,7 +229,7 @@ public class EgDownloaderWindow extends JFrame {
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
-				(tasks == null ? 0 :tasks.size()) * 28, tasks, this);
+				(tasks == null ? 0 :tasks.size()) * 28, this.tasks, this);
 		tablePane = new JScrollPane(runningTable);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
