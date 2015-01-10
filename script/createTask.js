@@ -1,10 +1,10 @@
-ï»¿var mark = {//æ ‡å¿—ç¬¦
-	name : ['<h1 id="gn">', '</h1><h1'],//æ ‡é¢˜
-	subname : ['</h1><h1 id="gj">', '</h1></div>'],//å°æ ‡é¢˜
-	type : ['png" alt="', '" class="ic'],//ç±»åˆ«
-	coverUrl : ['<div id="gd1"><img src="', '" alt="" /></div></div>'],//å°é¢url
-	total_size : ['Images:</td><td class="gdt2">', '</td></tr><tr><td class="gdt1">Resized:'],//æ•°ç›®@å¤§å°
-	language : ['Language:</td><td class="gdt2">', '</td></tr></table></div><div id="gdr"']//æ¼«ç”»è¯­è¨€
+var mark = {//±êÖ¾·û
+	name : ['<h1 id="gn">', '</h1><h1'],//±êÌâ
+	subname : ['</h1><h1 id="gj">', '</h1></div>'],//Ğ¡±êÌâ
+	type : ['png" alt="', '" class="ic'],//Àà±ğ
+	coverUrl : ['<div id="gd1"><img src="', '" alt="" /></div></div>'],//·âÃæurl
+	total_size : ['Images:</td><td class="gdt2">', '</td></tr><tr><td class="gdt1">Resized:'],//ÊıÄ¿@´óĞ¡
+	language : ['Language:</td><td class="gdt2">', '</td></tr></table></div><div id="gdr"']//Âş»­ÓïÑÔ
 };
 
 function interceptFromSource(source, prefix, suffix){
@@ -38,19 +38,19 @@ function parseJson(json){
 
 function parse(source){
 	var task = {};
-	//è·å–æ ‡é¢˜
+	//»ñÈ¡±êÌâ
 	task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
-	//è·å–å°æ ‡é¢˜
+	//»ñÈ¡Ğ¡±êÌâ
 	task.subname = interceptFromSource(source, mark.subname[0], mark.subname[1]);
-	//è·å–å°é¢è·¯å¾„
+	//»ñÈ¡·âÃæÂ·¾¶
 	task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]);
-	//è·å–ç±»åˆ«
+	//»ñÈ¡Àà±ğ
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
-	//è·å–æ•°ç›®åŠå¤§å°
+	//»ñÈ¡ÊıÄ¿¼°´óĞ¡
 	var temp = interceptFromSource(source, mark.total_size[0], mark.total_size[1]);
 	task.total = parseInt(trim(temp.split("@")[0]));
 	task.size = trim(temp.split("@")[1]);
-	//è·å–æ¼«ç”»è¯­è¨€
+	//»ñÈ¡Âş»­ÓïÑÔ
 	task.language = interceptFromSource(source, mark.language[0], mark.language[1]);
 	return parseJson(task);
 }

@@ -3,6 +3,7 @@ package org.arong.egdownloader.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,10 @@ import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.util.FileUtil;
 import org.arong.util.JsonUtil;
 import org.arong.util.Tracker;
+
+import sun.org.mozilla.javascript.internal.Context;
+import sun.org.mozilla.javascript.internal.Function;
+import sun.org.mozilla.javascript.internal.Scriptable;
 /**
  * 脚本解析器
  * @author dipoo
@@ -60,6 +65,31 @@ public class ScriptParser {
 	    }
 	    Object result = engine.eval(new FileReader(scriptFile));
 	    return result;
+	}
+	
+	/**
+	 * 解析外部js文件并得到返回结果
+	 * @return Object
+	 */
+	public static Object parseJsScriptUseRhino(File scriptFile, String function, Object[] functionArgs) throws FileNotFoundException, IOException{
+        //开始调用javascript函数
+        Context cx = Context.enter();
+        try {
+	        Scriptable scope = cx.initStandardObjects();
+	        FileReader reader = new FileReader(scriptFile);
+	        cx.evaluateReader(scope, reader, "<cmd>", 1, null);
+	        Object fObj = scope.get(function, scope);
+	        if (!(fObj instanceof Function)) {
+	            System.out.println("找不到方法:" +function);
+	        } else {
+	            Function f = (Function)fObj;
+	            Object result = f.call(cx, scope, scope, functionArgs);
+	            return result;
+	        }
+        }finally {
+            Context.exit();
+        }
+        return null;
 	}
 	
 	/**
@@ -208,23 +238,37 @@ public class ScriptParser {
 			source = WebClient.postRequestWithCookie(url, setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
-			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			Object result = parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath()));
+			if(result == null){
+				resultArea.setText(setting.getCreateTaskScriptPath() + "脚本解析出错\r\n");
+				return;
+			}
+			Task t = JsonUtil.json2bean(Task.class, result.toString());
 			t.setUrl(url);
 			if(create){
 				//展示任务信息
 				resultArea.setText("---任务---\r\n" + t.getScriptMember());
 			}
 			if(collect){
-				Object o = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
+				result = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
+				if(result == null){
+					resultArea.setText(setting.getCollectPictureScriptPath() + "脚本解析出错\r\n");
+					return;
+				}
 				//展示图片信息
-				resultArea.setText(resultArea.getText() + "\r\n---图片列表---\r\n" + o.toString());
+				resultArea.setText(resultArea.getText() + "\r\n---图片列表---\r\n" + result.toString());
 				if(download){
 					//展示第一张图片的真实下载地址
-					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
+					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
 					if(pics != null){
 						source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
 						param.put("htmlSource", source);
-						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+						result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
+						if(result == null){
+							resultArea.setText(setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+							return;
+						}
+						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
 					}
 				}
 			}else if(download){
@@ -234,7 +278,12 @@ public class ScriptParser {
 				if(pics != null){
 					source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
 					param.put("htmlSource", source);
-					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+					result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
+					if(result == null){
+						resultArea.setText(setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+						return;
+					}
+					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
 				}
 			}
 		} catch (ConnectTimeoutException e) {
@@ -244,6 +293,72 @@ public class ScriptParser {
 		} catch (FileNotFoundException e) {
 			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
 		} catch (ScriptException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+		} catch (Exception e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+		}
+	}
+
+	
+	public static void testScriptUseRhino(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
+		String source;
+		try {
+			source = WebClient.postRequestWithCookie(url, setting.getCookieInfo());
+			Object[] args = {source};
+			//Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			Object result = parseJsScriptUseRhino(getCreateScriptFile(setting.getCreateTaskScriptPath()),"parse", args);
+			if(result == null){
+				resultArea.setText(setting.getCreateTaskScriptPath() + "脚本解析出错\r\n");
+				return;
+			}
+			Task t = JsonUtil.json2bean(Task.class, result.toString());
+			t.setUrl(url);
+			if(create){
+				//展示任务信息
+				resultArea.setText("---任务---\r\n" + t.getScriptMember() + "\r\n");
+			}
+			if(collect){
+				result = parseJsScriptUseRhino(getCollectScriptFile(setting.getCollectPictureScriptPath()),"parse", args);
+				if(result == null){
+					resultArea.setText(resultArea.getText() + setting.getCollectPictureScriptPath() + "脚本解析出错\r\n");
+					return;
+				}
+				//展示图片信息
+				resultArea.setText(resultArea.getText() + "\r\n---图片列表---\r\n" + result.toString() + "\r\n");
+				if(download){
+					//展示第一张图片的真实下载地址
+					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
+					if(pics != null){
+						source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
+						args[0] = source;
+						result = parseJsScriptUseRhino(getDownloadScriptFile(setting.getDownloadScriptPath()),"parse", args);
+						if(result == null){
+							resultArea.setText(resultArea.getText() + setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+							return;
+						}
+						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + result.toString() + "\r\n");
+					}
+				}
+			}else if(download){
+				result = parseJsScriptUseRhino(getCollectScriptFile(setting.getCollectPictureScriptPath()),"parse", args);
+				//展示第一张图片的真实下载地址
+				List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
+				if(pics != null){
+					source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
+					args[0] = source;
+					result = parseJsScriptUseRhino(getDownloadScriptFile(setting.getDownloadScriptPath()),"parse", args);
+					if(result == null){
+						resultArea.setText(resultArea.getText() + setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+						return;
+					}
+					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
+				}
+			}
+		} catch (ConnectTimeoutException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + "网络连接超时");
+		} catch (SocketTimeoutException e) {
+			resultArea.setText(resultArea.getText() + "\r\n======异常======" + "网络连接超时");
+		} catch (FileNotFoundException e) {
 			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
 		} catch (Exception e) {
 			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());

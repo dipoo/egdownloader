@@ -1,8 +1,8 @@
-ï»¿var mark = {//æ ‡å¿—ç¬¦
-	listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//æ¯é¡µæ‰€æœ‰å›¾ç‰‡æºç 
-	intercept : ['style="height', "gdtm"],//åˆ¤æ–­æ˜¯å¦è¿˜æœ‰åŠæˆªå–å‰©ä½™å­—ç¬¦ä¸²
-	showUrl : ['no-repeat"><a href="', '"><img alt='],//æ˜¾ç¤ºurl
-	name : ['title="', '" src=']//åç§°
+var mark = {//±êÖ¾·û
+	listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//Ã¿Ò³ËùÓÐÍ¼Æ¬Ô´Âë
+	intercept : ['style="height', "gdtm"],//ÅÐ¶ÏÊÇ·ñ»¹ÓÐ¼°½ØÈ¡Ê£Óà×Ö·û´®
+	showUrl : ['no-repeat"><a href="', '"><img alt='],//ÏÔÊ¾url
+	name : ['title="', '" src=']//Ãû³Æ
 };
 
 function parseJsonArray(array){
@@ -38,15 +38,15 @@ function subFromSource(source, prefix){
 	return source.substr(source.indexOf(prefix) + prefix.length, source.length);
 }
     
-function collectpictrues(temp){
+function parse(temp){
 	var newpics = [];
-	var prefix = mark.intercept[1];//æˆªå–çš„æ ‡å¿—
+	var prefix = mark.intercept[1];//½ØÈ¡µÄ±êÖ¾
 	temp = subFromSource(temp, prefix);
 	while(temp.indexOf(mark.intercept[0]) != -1){
 		var picture = {};
-		//èŽ·å–å›¾ç‰‡æµè§ˆåœ°å€
+		//»ñÈ¡Í¼Æ¬ä¯ÀÀµØÖ·
 		picture.url = interceptFromSource(temp, mark.showUrl[0], mark.showUrl[1]);
-		//èŽ·å–å›¾ç‰‡åç§°
+		//»ñÈ¡Í¼Æ¬Ãû³Æ
 		picture.name = interceptFromSource(temp, mark.name[0], mark.name[1]);
 		newpics.push(picture);
 		temp = subFromSource(temp, prefix);
@@ -54,4 +54,4 @@ function collectpictrues(temp){
 	var pictures = newpics.concat(pictures);
 	return parseJsonArray(pictures);
 }       
-collectpictrues(htmlSource);
+parse(htmlSource);
