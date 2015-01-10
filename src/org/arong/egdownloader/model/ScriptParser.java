@@ -224,7 +224,7 @@ public class ScriptParser {
 					if(pics != null){
 						source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
 						param.put("htmlSource", source);
-						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真是下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
 					}
 				}
 			}else if(download){
@@ -234,7 +234,7 @@ public class ScriptParser {
 				if(pics != null){
 					source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
 					param.put("htmlSource", source);
-					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真是下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
 				}
 			}
 		} catch (ConnectTimeoutException e) {

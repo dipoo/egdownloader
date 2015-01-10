@@ -42,6 +42,9 @@ public class GroupList extends JList {
 					String groupName = "";
 					if(list.getSelectedIndex() != 0){
 						groupName = list.getSelectedValue().toString();
+						if(groupName.indexOf("|") != -1){
+							groupName = groupName.substring(0, groupName.indexOf("|"));
+						}
 					}
 					//如果是在主界面切换的任务组，且选择的任务组不变，则关闭任务组列表窗口
 					if(mainWindow != null && groupName.equals(ComponentConst.groupName)){
