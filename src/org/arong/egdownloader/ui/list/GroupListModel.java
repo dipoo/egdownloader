@@ -26,9 +26,9 @@ public class GroupListModel extends DefaultListModel {
 	public Object getElementAt(int index) {
 		String text;
 		if(index == 0){
-			text = "默认空间" + "|" + sdf.format(new Date(groups.get(0).getParentFile().lastModified()));
+			text = sdf.format(new Date(groups.get(0).getParentFile().lastModified())) + "     |     " + "默认空间" ;
 		}else{
-			text = groups.get(index - 1).getName() + "|" + sdf.format(new Date(groups.get(index - 1).lastModified()));
+			text = sdf.format(new Date(groups.get(index - 1).lastModified())) + "     |     " + groups.get(index - 1).getName();
 		}
 		return text;
 	}

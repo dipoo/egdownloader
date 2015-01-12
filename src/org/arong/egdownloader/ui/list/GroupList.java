@@ -59,7 +59,7 @@ public class GroupList extends JList {
 						if(list.getSelectedIndex() != 0){
 							groupName = list.getSelectedValue().toString();
 							if(groupName.indexOf("|") != -1){
-								groupName = groupName.substring(0, groupName.indexOf("|"));
+								groupName = groupName.substring(groupName.indexOf("|") + 1, groupName.length()).trim();
 							}
 						}
 						//如果是在主界面切换的任务组，且选择的任务组不变，则关闭任务组列表窗口
@@ -107,7 +107,7 @@ public class GroupList extends JList {
 				}else{
 					String name = this_.getSelectedValue().toString();
 					if(name.indexOf("|") != -1){
-						name = name.substring(0, name.indexOf("|"));
+						name = name.substring(name.indexOf("|") + 1, name.length()).trim();
 					}
 					int r = JOptionPane.showConfirmDialog(this_, "删除任务组将会删除已下载的漫画，且不可恢复，您确定要删除任务组：" + name + "吗？");
 					if(r == JOptionPane.OK_OPTION){
