@@ -3,7 +3,6 @@ package org.arong.egdownloader.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +24,9 @@ import org.arong.util.FileUtil;
 import org.arong.util.JsonUtil;
 import org.arong.util.Tracker;
 
-import sun.org.mozilla.javascript.internal.Context;
+/*import sun.org.mozilla.javascript.internal.Context;
 import sun.org.mozilla.javascript.internal.Function;
-import sun.org.mozilla.javascript.internal.Scriptable;
+import sun.org.mozilla.javascript.internal.Scriptable;*/
 /**
  * 脚本解析器
  * @author dipoo
@@ -71,7 +70,7 @@ public class ScriptParser {
 	 * 解析外部js文件并得到返回结果
 	 * @return Object
 	 */
-	public static Object parseJsScriptUseRhino(File scriptFile, String function, Object[] functionArgs) throws FileNotFoundException, IOException{
+	/*public static Object parseJsScriptUseRhino(File scriptFile, String function, Object[] functionArgs) throws FileNotFoundException, IOException{
         //开始调用javascript函数
         Context cx = Context.enter();
         try {
@@ -90,7 +89,7 @@ public class ScriptParser {
             Context.exit();
         }
         return null;
-	}
+	}*/
 	
 	/**
 	 * 创建任务
@@ -300,7 +299,7 @@ public class ScriptParser {
 	}
 
 	
-	public static void testScriptUseRhino(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
+	/**public static void testScriptUseRhino(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
 		String source;
 		try {
 			source = WebClient.postRequestWithCookie(url, setting.getCookieInfo());
@@ -363,5 +362,5 @@ public class ScriptParser {
 		} catch (Exception e) {
 			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
 		}
-	}
+	}*/
 }

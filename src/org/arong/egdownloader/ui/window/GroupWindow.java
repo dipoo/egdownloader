@@ -36,7 +36,7 @@ public class GroupWindow extends JFrame {
 	
 	public EgDownloaderWindow mainWindow;
 	
-	public GroupWindow(List<File> groups, EgDownloaderWindow mainWindow){
+	public GroupWindow(List<File> groups, final EgDownloaderWindow mainWindow){
 		super(Version.NAME + "任务组列表");
 		this.mainWindow = mainWindow;
 		this.setSize(300, 400);
@@ -51,7 +51,7 @@ public class GroupWindow extends JFrame {
 		JButton addGroupBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 							public void doWork(Window window, MouseEvent e) {
-								new AddGroupDialog((JFrame) window);
+								new AddGroupDialog((GroupWindow) window, mainWindow);
 							}
 						}) , 215, 15, 62, 30);
 		addGroupBtn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));

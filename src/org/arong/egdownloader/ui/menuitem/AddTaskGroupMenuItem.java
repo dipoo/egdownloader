@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
@@ -37,7 +36,7 @@ public class AddTaskGroupMenuItem extends JMenuItem {
 			public void actionPerformed(ActionEvent ae) {
 				EgDownloaderWindow mainWindow = window;
 				if(action == addAction){//新增
-					new AddGroupDialog((JFrame) mainWindow);
+					new AddGroupDialog(null, mainWindow);
 				}else if(action == changeAction){//切换
 					File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
 					if(!dataFile.exists()){

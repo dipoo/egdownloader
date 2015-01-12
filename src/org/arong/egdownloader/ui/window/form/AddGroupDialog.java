@@ -5,11 +5,11 @@ import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -25,6 +25,7 @@ import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.util.FileUtil;
@@ -38,7 +39,7 @@ public class AddGroupDialog extends JDialog {
 
 	private static final long serialVersionUID = -1381002320125000355L;
 	
-	public AddGroupDialog(final JFrame window){
+	public AddGroupDialog(final GroupWindow window, final EgDownloaderWindow mainWindow){
 		this.setTitle("新建任务组");
 		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
 		this.setSize(300, 120);
@@ -58,13 +59,18 @@ public class AddGroupDialog extends JDialog {
 				}else if(! FileUtil.dirValidate(groupName)){
 					JOptionPane.showMessageDialog(null, "名称不能包含? | * . < > : / \\等特殊字符");
 				}else{
-					if (window instanceof EgDownloaderWindow) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
+					FileUtil.ifNotExistsThenCreate(ComponentConst.ROOT_DATA_PATH);
+					File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
+					for(File file : dataFile.listFiles()){
+						if(file.getName().equals(groupName)){
+							JOptionPane.showMessageDialog(null, "该任务组已存在");
+							return;
+						}
+					}					
+					if (mainWindow != null) {
 						//保存前一个任务组的数据
 						mainWindow.saveTaskGroupData();
 						mainWindow.dispose();
-					}else{
-						window.dispose();
 					}
 					//if(window)
 					//更新数据路径
@@ -72,7 +78,7 @@ public class AddGroupDialog extends JDialog {
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					addGroupDialog.dispose();
-					if(window instanceof EgDownloaderWindow){
+					if(mainWindow != null){
 						FileUtil.ifNotExistsThenCreate(ComponentConst.getXmlDirPath());
 						/**
 						 * 更新dom
@@ -80,6 +86,9 @@ public class AddGroupDialog extends JDialog {
 						SettingDom4jDbTemplate.updateDom();
 						TaskDom4jDbTemplate.updateDom();
 						PictureDom4jDbTemplate.updateDom();
+					}
+					if(window != null){
+						window.dispose();
 					}
 					new InitWindow();
 				}
