@@ -47,9 +47,9 @@ public class DeletingWindow extends JDialog {
 				DeletingWindow window = (DeletingWindow) e.getSource();
 				window.dispose();
 			}*/
-			public void windowActivated(WindowEvent e) {
+			/*public void windowActivated(WindowEvent e) {
 				mainWindow.setEnabled(false);
-			}
+			}*/
 		});
 		
 		dataLabel = new AJLabel("", Color.BLACK, 160, 10, 80, 30);
