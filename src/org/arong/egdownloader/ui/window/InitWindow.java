@@ -31,15 +31,6 @@ public class InitWindow extends JFrame {
 	
 	public InitWindow(){
 		super(Version.NAME + "初始化");
-		
-		if(ComponentConst.mainWindow != null){
-			//暂停所有任务
-			((TaskingTable)ComponentConst.mainWindow.runningTable).stopAllTasks();
-			ComponentConst.mainWindow.dispose();
-			ComponentConst.mainWindow = null;
-			System.gc();
-		}
-		
 		this.setSize(300, 100);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -94,7 +85,13 @@ public class InitWindow extends JFrame {
 				setting.setPictureHistoryCount(p_historyCount);
 			}
 		}
-		ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+		if(ComponentConst.mainWindow != null){
+			//暂停所有任务
+			((TaskingTable)ComponentConst.mainWindow.runningTable).stopAllTasks();
+			ComponentConst.mainWindow.changeTaskGroup(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+		}else{
+			ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+		}
 		textLabel.setText("初始化完成");
 		ComponentConst.mainWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
