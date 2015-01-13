@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.egdownloader.ui.work.ReCreateWorker;
 /**
@@ -33,6 +34,7 @@ public class Task {
 	private List<Picture> pictures;
 	private DownloadWorker downloadWorker;//下载线程实例,不保存
 	private ReCreateWorker reCreateWorker;//重新创建线程实例,不保存
+	private CreateWorker createWorker;
 	
 	public Task(){}
 	
@@ -205,5 +207,13 @@ public class Task {
 				+ ", subname=" + subname + ", type=" + type
 				+ ", total=" + total + ", size=" + size
 				+ ", language=" + language + ", coverUrl=" + coverUrl + "]";
+	}
+
+	public void setCreateWorker(CreateWorker createWorker) {
+		this.createWorker = createWorker;
+	}
+
+	public CreateWorker getCreateWorker() {
+		return createWorker;
 	}
 }

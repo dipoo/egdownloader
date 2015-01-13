@@ -16,6 +16,7 @@ import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
+import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.version.Version;
 /**
  * 程序初始化窗口
@@ -30,6 +31,15 @@ public class InitWindow extends JFrame {
 	
 	public InitWindow(){
 		super(Version.NAME + "初始化");
+		
+		if(ComponentConst.mainWindow != null){
+			//暂停所有任务
+			((TaskingTable)ComponentConst.mainWindow.runningTable).stopAllTasks();
+			ComponentConst.mainWindow.dispose();
+			ComponentConst.mainWindow = null;
+			System.gc();
+		}
+		
 		this.setSize(300, 100);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -84,10 +94,9 @@ public class InitWindow extends JFrame {
 				setting.setPictureHistoryCount(p_historyCount);
 			}
 		}
-		
-		JFrame egDownloaderWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+		ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 		textLabel.setText("初始化完成");
-		egDownloaderWindow.setVisible(true);
+		ComponentConst.mainWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
 	}
 	public JLabel getTextLabel(){

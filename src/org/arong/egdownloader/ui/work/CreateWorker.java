@@ -46,6 +46,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		}
 		EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
 		window.setEnabled(false);
+		window.setVisible(true);
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
 		addFormWindow.setVisible(false);
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
@@ -94,6 +95,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				if(setting.isAutoDownload()){
 					taskTable.startTask(task);
 				}
+				task.setCreateWorker(null);
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");
 			}
@@ -109,6 +111,8 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (ScriptException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();

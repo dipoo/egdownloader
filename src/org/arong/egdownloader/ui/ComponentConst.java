@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.version.Version;
 
 /**
@@ -17,6 +18,8 @@ import org.arong.egdownloader.version.Version;
  *
  */
 public final class ComponentConst {
+	public static EgDownloaderWindow mainWindow;
+	
 	public final static int CLIENT_WIDTH = 1024;//主窗口宽
 	
 	public final static int CLIENT_HEIGHT = 680;//主窗口高
