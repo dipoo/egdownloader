@@ -36,6 +36,13 @@ public class TaskingTable extends JTable {
 	private int sort = 1;//0为名称排序，1为时间排序
 	private List<Task> waitingTasks;//排队等待的任务
 	
+	public void changeModel(EgDownloaderWindow mainWindow){
+		this.setMainWindow(mainWindow);
+		this.tasks = mainWindow.tasks;
+		TableModel tableModel = new TaskTableModel(this.tasks);
+		this.setModel(tableModel);//设置数据模型
+	}
+	
 	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		this.tasks = (tasks == null ? new ArrayList<Task>() : tasks);

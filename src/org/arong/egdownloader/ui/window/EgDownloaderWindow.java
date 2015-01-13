@@ -27,7 +27,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
@@ -99,7 +98,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog countWindow;
 	
 	public JPopupMenu tablePopupMenu;
-	public JTable runningTable;
+	public TaskingTable runningTable;
 	public JScrollPane tablePane;
 	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
@@ -474,5 +473,19 @@ public class EgDownloaderWindow extends JFrame {
 	public void saveTaskGroupData(){
 		this.taskDbTemplate.update(this.tasks);
 		this.settingDbTemplate.update(this.setting);
+	}
+	
+	public void changeTaskGroup(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate){
+		this.taskDbTemplate = taskDbTemplate;
+		this.pictureDbTemplate = pictureDbTemplate;
+		this.settingDbTemplate = settingDbTemplate;
+		//加载配置数据
+		this.setting = setting;
+		//加载任务列表
+		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
+		// 设置主窗口
+		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
+		this.runningTable.changeModel(this);
+		this.runningTable.updateUI();
 	}
 }
