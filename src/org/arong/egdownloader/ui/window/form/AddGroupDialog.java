@@ -13,6 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
@@ -70,14 +71,12 @@ public class AddGroupDialog extends JDialog {
 					if (mainWindow != null) {
 						//保存前一个任务组的数据
 						mainWindow.saveTaskGroupData();
-						mainWindow.dispose();
 					}
 					//if(window)
 					//更新数据路径
 					ComponentConst.groupName = groupName;
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
-					addGroupDialog.dispose();
 					if(mainWindow != null){
 						FileUtil.ifNotExistsThenCreate(ComponentConst.getXmlDirPath());
 						/**
@@ -86,11 +85,17 @@ public class AddGroupDialog extends JDialog {
 						SettingDom4jDbTemplate.updateDom();
 						TaskDom4jDbTemplate.updateDom();
 						PictureDom4jDbTemplate.updateDom();
+						mainWindow.dispose();
 					}
 					if(window != null){
 						window.dispose();
 					}
-					new InitWindow();
+					addGroupDialog.dispose();
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							new InitWindow();
+						}
+					});
 				}
 			}
 		}), 220, 20, 60, 30);

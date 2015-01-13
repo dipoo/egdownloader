@@ -194,8 +194,8 @@ public class AddFormDialog extends JDialog {
 							//开始采集
 							Task task = new Task(url, saveDir);
 							task.setTag(tag);
-							CreateWorker worker = new CreateWorker(task, mainWindow);
-							worker.execute();
+							task.setCreateWorker(new CreateWorker(task, mainWindow));
+							task.getCreateWorker().execute();
 							addTaskBtn.setEnabled(true);
 						}else{
 							JOptionPane.showMessageDialog(this_, "此下载地址已存在");

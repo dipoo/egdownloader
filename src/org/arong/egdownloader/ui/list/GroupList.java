@@ -13,6 +13,7 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
@@ -84,7 +85,11 @@ public class GroupList extends JList {
 							TaskDom4jDbTemplate.updateDom();
 							PictureDom4jDbTemplate.updateDom();
 						}
-						new InitWindow();
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								new InitWindow();
+							}
+						});
 					}
 				}//右键
 				else if(me.getButton() == MouseEvent.BUTTON3){
@@ -113,6 +118,7 @@ public class GroupList extends JList {
 					if(r == JOptionPane.OK_OPTION){
 						//如果是在主界面切换的任务组，且选择的任务组不变，则关闭主窗口
 						if(mainWindow != null && name.equals(ComponentConst.groupName)){
+							mainWindow.saveTaskGroupData();
 							mainWindow.dispose();
 						}
 						File file = new File(ComponentConst.ROOT_DATA_PATH + "/" + name);
@@ -134,7 +140,11 @@ public class GroupList extends JList {
 							SettingDom4jDbTemplate.updateDom();
 							TaskDom4jDbTemplate.updateDom();
 							PictureDom4jDbTemplate.updateDom();
-							new InitWindow();
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									new InitWindow();
+								}
+							});
 						}else{
 							File[] files = dataFile.listFiles();
 							List<File> groups = new ArrayList<File>();
@@ -159,7 +169,11 @@ public class GroupList extends JList {
 								SettingDom4jDbTemplate.updateDom();
 								TaskDom4jDbTemplate.updateDom();
 								PictureDom4jDbTemplate.updateDom();
-								new InitWindow();
+								SwingUtilities.invokeLater(new Runnable() {
+									public void run() {
+										new InitWindow();
+									}
+								});
 							}
 						}
 						
