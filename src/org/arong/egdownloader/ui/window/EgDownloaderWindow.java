@@ -487,5 +487,6 @@ public class EgDownloaderWindow extends JFrame {
 		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
 		this.runningTable.changeModel(this);
 		this.runningTable.updateUI();
+		this.consoleArea.setText("");//清空控制台
 	}
 }
