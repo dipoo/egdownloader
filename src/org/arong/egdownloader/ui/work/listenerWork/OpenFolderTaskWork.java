@@ -25,11 +25,11 @@ public class OpenFolderTaskWork implements IMenuListenerTask {
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int rowIndex = table.getSelectedRow();
 		Task task = table.getTasks().get(rowIndex);
-		if(TaskStatus.UNSTARTED != task.getStatus()){
+		if(TaskStatus.UNCREATED != task.getStatus()){
 			try {
 				Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir()));
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				//e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "文件夹已被删除");
 				mainWindow.tablePopupMenu.setVisible(false);
 			}
