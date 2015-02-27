@@ -240,7 +240,7 @@ public class TaskingTable extends JTable {
 							Task task = table.getTasks().get(rowIndex);
 							CoverWindow cw = (CoverWindow) window.coverWindow;
 							if(cw == null){
-								window.coverWindow = new CoverWindow(task);
+								window.coverWindow = new CoverWindow(task, window);
 								cw = (CoverWindow) window.coverWindow;
 							}else{
 								cw.showCover(task);
