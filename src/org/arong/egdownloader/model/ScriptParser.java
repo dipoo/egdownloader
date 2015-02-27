@@ -30,7 +30,7 @@ import sun.org.mozilla.javascript.internal.Scriptable;*/
 /**
  * 脚本解析器
  * @author dipoo
- * @since 2014-01-04
+ * @since 2015-01-04
  */
 public class ScriptParser {
 	

@@ -431,6 +431,12 @@ public class EgDownloaderWindow extends JFrame {
 					tablePane.setSize(window.getWidth() - 20, height);
 					runningTable.setSize(window.getWidth() - 20, height);
 					//runningTable.updateUI();
+					//设置名称列最多显示字数
+					if(window.getWidth() <= ComponentConst.CLIENT_WIDTH){
+						TaskingTable.wordNum = 230;
+					}else{
+						TaskingTable.wordNum = 230 + (window.getWidth() - ComponentConst.CLIENT_WIDTH) * 7 / (2 * 100);
+					}
 				}
 				//设置空提示label位置
 				if(emptyTableTips != null){
