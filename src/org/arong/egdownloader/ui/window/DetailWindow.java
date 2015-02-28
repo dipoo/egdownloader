@@ -32,6 +32,8 @@ public class DetailWindow extends JDialog {
 	public JLabel taskCreateLabel;
 	public JLabel taskCompletedLabel;
 	public JLabel taskSizeLabel;
+	public JLabel urlLabel;
+	public JLabel coverUrlLabel;
 	
 	public DetailWindow(PictureTable pictureTable){
 		this.pictureTable = pictureTable;
@@ -53,11 +55,15 @@ public class DetailWindow extends JDialog {
 		taskCompletedLabel = new AJLabel("", null, 540, 5, 150, 110);
 		JLabel l6 = new AJLabel("漫画大小：", Color.BLUE, 700, 5, 60, 110);
 		taskSizeLabel = new AJLabel("", null, 770, 5, 150, 110);
+		JLabel l7 = new AJLabel("地址：", Color.BLUE, 5, 5, 40, 150);
+		urlLabel = new AJLabel("", null, 60, 5, ComponentConst.CLIENT_WIDTH - 80, 150);
+		JLabel l8 = new AJLabel("封面地址：", Color.BLUE, 5, 5, 60, 190);
+		coverUrlLabel = new AJLabel("", null, 80, 5, ComponentConst.CLIENT_WIDTH - 80, 190);
 		picturePane = new JScrollPane(pictureTable);
-		picturePane.setBounds(new Rectangle(5, 80, ComponentConst.CLIENT_WIDTH - 20, 480));
+		picturePane.setBounds(new Rectangle(5, 140, ComponentConst.CLIENT_WIDTH - 20, 420));
 		picturePane.getViewport().setBackground(new Color(254,254,254));
 		ComponentUtil.addComponents(getContentPane(),l1, taskNameLabel, picturePane, l2, taskSubnameLabel,
-				l3, l4, l5, l6, taskLanguageLabel, taskCreateLabel, taskCompletedLabel, taskSizeLabel);
+				l3, l4, l5, l6, l7, l8, taskLanguageLabel, taskCreateLabel, taskCompletedLabel, taskSizeLabel, urlLabel, coverUrlLabel);
 		
 		this.addWindowListener(new WindowAdapter() {
 
