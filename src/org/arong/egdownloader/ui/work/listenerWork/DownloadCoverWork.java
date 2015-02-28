@@ -41,8 +41,12 @@ public class DownloadCoverWork implements IMenuListenerTask {
 				}
 				//下载封面
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
-				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
-				JOptionPane.showMessageDialog(null, "下载成功");
+				int size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+				if(size == 0){
+					JOptionPane.showMessageDialog(null, "下载失败，地址错误或者地址不可访问");
+				}else{
+					JOptionPane.showMessageDialog(null, "下载成功");
+				}
 			} catch (SocketTimeoutException e){
 				JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
 			} catch (ConnectTimeoutException e){
