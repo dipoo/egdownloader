@@ -58,10 +58,19 @@ public class CoverWindow extends JDialog {
 			}
 		}else{
 			ImageIcon icon = new ImageIcon(path);
-			this.setSize(icon.getIconWidth() + 20, icon.getIconHeight() + 45);
-			coverLabel.setBounds(5, 5, icon.getIconWidth(), icon.getIconHeight());
-			coverLabel.setIcon(icon);
-			downBtn.setVisible(false);
+			if(icon.getIconWidth() == -1){
+				this.setSize(200, 80);
+				coverLabel.setText("封面文件格式错误");
+				coverLabel.setBounds(50, 5, 150, 30);
+				coverLabel.setIcon(null);
+			}else{
+				this.setSize(icon.getIconWidth() + 20, icon.getIconHeight() + 45);
+				coverLabel.setBounds(5, 5, icon.getIconWidth(), icon.getIconHeight());
+				coverLabel.setIcon(icon);
+			}
+			if(downBtn != null){
+				downBtn.setVisible(false);
+			}
 		}
 		this.setLocationRelativeTo(null);
 	}

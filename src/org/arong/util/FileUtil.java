@@ -48,6 +48,9 @@ public final class FileUtil {
 	 * @throws IOException
 	 */
 	public static int storeStream(String path, String name, InputStream in) throws IOException{
+		if(in == null){
+			return 0;
+		}
     	File dir = new File(path);
     	FileUtil.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
