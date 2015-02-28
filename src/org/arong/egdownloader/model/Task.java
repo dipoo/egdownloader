@@ -16,7 +16,7 @@ public class Task {
 	private String id;//id
 	private String url;//下载地址
 	private String name;//名称
-	private String subname;//字名称
+	private String subname;//子名称
 	private String coverUrl;//封面路径
 	private String saveDir;//保存目录
 	private String language;//漫画语言
@@ -41,6 +41,27 @@ public class Task {
 	public Task(String url, String saveDir){
 		this.url = url;
 		this.saveDir = saveDir;
+	}
+	
+	public String detatil(){
+		return "id:" + id + "\n" + 
+			   "下载地址:" + url + "\n" + 
+			   "名称:" + name + "\n" + 
+			   "子名称:" + subname + "\n" + 
+			   "封面地址:" + coverUrl + "\n" + 
+			   "保存目录:" + saveDir + "\n" + 
+			   "漫画语言:" + language + "\n" + 
+			   "分类:" + type + "\n" + 
+			   "标签:" + tag + "\n" + 
+			   "阅读:" + readed + "\n" + 
+			   "创建时间:" + createTime + "\n" + 
+			   "完成时间:" + completedTime + "\n" + 
+			   "图片总数:" + total + "\n" + 
+			   "已下载:" + current + "\n" + 
+			   "总大小:" + size + "\n" + 
+			   "状态:" + status + "\n" + 
+			   "开始索引:" + start + "\n" + 
+			   "结束索引:" + end;
 	}
 	
 	public String getUrl() {

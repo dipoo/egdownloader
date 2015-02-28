@@ -16,6 +16,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DetailWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
+import org.arong.util.Tracker;
 /**
  * 下载任务详细信息窗口
  * @author 阿荣
@@ -28,6 +29,9 @@ public class ShowDetailWork implements IMenuListenerTask {
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int index = table.getSelectedRow();
 		Task task = table.getTasks().get(index);
+		Tracker.println("=========任务详细=========");
+		System.out.println(task.detatil());
+		Tracker.println("===========end==========");
 		//当任务不为下载中，可以对图片进行排序
 		if(task.getStatus() != TaskStatus.STARTED){
 			sortPictures(task.getPictures());
@@ -47,6 +51,8 @@ public class ShowDetailWork implements IMenuListenerTask {
 		dw.taskCreateLabel.setText(task.getCreateTime());
 		dw.taskCompletedLabel.setText(task.getCompletedTime());
 		dw.taskSizeLabel.setText(task.getSize());
+		dw.urlLabel.setText(task.getUrl());
+		dw.coverUrlLabel.setText(task.getCoverUrl());
 		dw.pictureTable.updateUI();
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
