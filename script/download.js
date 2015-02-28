@@ -1,5 +1,5 @@
-var mark = {//±êÖ¾·û
-	realUrl : ['<img id="img" src="', '" style=']//ÕæÊµÏÂÔØµØÖ·
+var mark = {//æ ‡å¿—ç¬¦
+	realUrl : ['<img id="img" src="', '" style=']//çœŸå®ä¸‹è½½åœ°å€
 };
 
 function interceptFromSource(source, prefix, suffix){
