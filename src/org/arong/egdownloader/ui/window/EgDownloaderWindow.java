@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -9,6 +10,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -24,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -103,6 +106,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
 	public JTextArea consoleArea;
+	public JPopupMenu consolePopupMenu;
 	
 	
 	public Setting setting;
@@ -199,7 +203,8 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 				+ ComponentConst.SKIN_ICON.get("select"), null);
-		consoleMenu.add(new ClearConsoleMenuItem("清空控制台", this));
+		JMenuItem clearItem = new ClearConsoleMenuItem("清空控制台", this);
+		consoleMenu.add(clearItem);
 		// 菜单：统计
 		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
@@ -381,6 +386,19 @@ public class EgDownloaderWindow extends JFrame {
 		} catch (FileNotFoundException e1) {
 			JOptionPane.showMessageDialog(this, "控制台初始化错误！");
 		}
+		final JMenuItem clearItemPopup = new ClearConsoleMenuItem("清空控制台", this);
+		consoleArea.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				//右键
+				if(e.getButton() == MouseEvent.BUTTON3){
+					if(consolePopupMenu == null){
+						consolePopupMenu = new AJPopupMenu(clearItemPopup);
+					}
+					consolePopupMenu.show((Component) e.getSource(), e.getPoint().x, e.getPoint().y);
+				}
+			}
+			
+		});
 		
 		// 添加各个子组件
 		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyTableTips, consolePane);
