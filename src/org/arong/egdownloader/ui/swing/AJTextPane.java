@@ -1,10 +1,16 @@
 package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -32,5 +38,27 @@ public class AJTextPane extends JTextPane {
 		this.setEditable(false);
 		this.setEditorKit(editorKit);
 		this.setText(text);
+		//点击超链接打开浏览器事件
+		this.addHyperlinkListener(new HyperlinkListener() {
+			public void hyperlinkUpdate(HyperlinkEvent e) {
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) { 
+					try {
+						Desktop.getDesktop().browse(new URI(e.getURL().toString()));
+					} catch (IOException e1) {
+						try {
+							Runtime.getRuntime().exec("cmd.exe /c start " + e.getURL().toString());
+						} catch (IOException e2) {
+							
+						}
+					} catch (URISyntaxException e1) {
+						try {
+							Runtime.getRuntime().exec("cmd.exe /c start " + e.getURL().toString());
+						} catch (IOException e2) {
+							
+						}
+					}
+				}
+			}
+		});
 	}
 }
