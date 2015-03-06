@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JWindow;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
@@ -23,26 +23,23 @@ import org.arong.egdownloader.version.Version;
  * @author 阿荣
  * @since 2013-8-31
  */
-public class InitWindow extends JFrame {
+public class InitWindow extends JWindow {
 
 	private static final long serialVersionUID = -7316667195338580556L;
 	
 	private JLabel textLabel;
 	
 	public InitWindow(){
-		super(Version.NAME + "初始化");
 		this.setSize(300, 100);
-		this.setResizable(false);
+		this.getContentPane().setBackground(Color.decode("333"));
 		this.setLocationRelativeTo(null);
-		this.setUndecorated(true);//去掉标题
 		this.getContentPane().setLayout(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		textLabel = new AJLabel("程序初始化",new Color(123,23,89),0,10,300,30);
+		textLabel = new AJLabel(Version.NAME + "程序初始化",Color.WHITE,0,35,300,30);
 		textLabel.setHorizontalAlignment(JLabel.CENTER);
 		this.getContentPane().add(textLabel);
 		this.setVisible(true);
-		textLabel.setForeground(new Color(123,23,89));
-		textLabel.setText("1、读取配置数据");
+		textLabel.setForeground(Color.WHITE);
+		textLabel.setText(Version.NAME + "-读取配置数据");
 		//检测数据目录是否存在,不存在则创建一个
 		File data_path = new File(ComponentConst.getXmlDirPath());
 		if(!data_path.exists()){
@@ -57,8 +54,8 @@ public class InitWindow extends JFrame {
 		}else{
 			setting = settings.get(0);
 		}
-		textLabel.setForeground(new Color(123,23,89));
-		textLabel.setText("2、读取任务列表");
+		textLabel.setForeground(Color.WHITE);
+		textLabel.setText(Version.NAME + "-读取任务列表");
 		DbTemplate<Task> taskDbTemplate = new TaskDom4jDbTemplate();
 		DbTemplate<Picture> pictureDbTemplate = new PictureDom4jDbTemplate();
 		List<Task> tasks = taskDbTemplate.query();
@@ -92,7 +89,7 @@ public class InitWindow extends JFrame {
 		}else{
 			ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 		}
-		textLabel.setText("初始化完成");
+		textLabel.setText(Version.NAME + "初始化完成");
 		ComponentConst.mainWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
 	}
