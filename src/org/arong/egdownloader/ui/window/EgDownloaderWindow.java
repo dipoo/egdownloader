@@ -50,6 +50,7 @@ import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ReBuildAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
+import org.arong.egdownloader.ui.menuitem.SearchComicMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
@@ -58,6 +59,7 @@ import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
+import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
@@ -99,10 +101,12 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog resetAllTaskWindow;
 	public JDialog simpleSearchWindow;
 	public JDialog countWindow;
+	public JDialog searchComicWindow;
 	
 	public JPopupMenu tablePopupMenu;
 	public TaskingTable runningTable;
 	public JScrollPane tablePane;
+	public SearchTasksTable searchTable;
 	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
 	public JTextArea consoleArea;
@@ -197,6 +201,7 @@ public class EgDownloaderWindow extends JFrame {
 		taskMenu.add(new ResetMenuItem("重置所有任务", this));
 		taskMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
 		operaMenu.add(taskMenu);
+		operaMenu.add(new SearchComicMenuItem(" 搜索漫画", this));
 		operaMenu.add(new SimpleSearchMenuItem(" 简单搜索", this));
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
