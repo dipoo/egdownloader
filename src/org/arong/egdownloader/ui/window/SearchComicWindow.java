@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -28,7 +28,7 @@ import org.arong.egdownloader.ui.work.SearchComicWorker;
  * @author dipoo
  * @since 2015-03-11
  */
-public class SearchComicWindow extends JDialog {
+public class SearchComicWindow extends JFrame {
 
 	private static final long serialVersionUID = -3912589805632312855L;
 	private EgDownloaderWindow mainWindow;
@@ -96,7 +96,7 @@ public class SearchComicWindow extends JDialog {
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
-				JDialog w = (JDialog)e.getSource();
+				JFrame w = (JFrame)e.getSource();
 				w.dispose();
 			}
 		});

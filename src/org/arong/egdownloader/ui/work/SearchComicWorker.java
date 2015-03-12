@@ -32,7 +32,20 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			String source = WebClient.postRequestWithCookie(this.url, mainWindow.setting.getCookieInfo());
 			List<SearchTask> searchTasks = searchComicWindow.searchTasks;
 			//总记录数
-			String totalTasks = Spider.getTextFromSource(source, "Showing 1-25 of ", "</p><table class=\"ptt");
+			String totalTasks = null;
+			if(source.indexOf("Showing 1-25") == -1){
+				if(source.indexOf("Showing 1") != -1){
+					source = Spider.substring(source, "Showing 1");
+					totalTasks = Spider.getTextFromSource(source, "-", "of ");
+				}
+			}else{
+				totalTasks = Spider.getTextFromSource(source, "Showing 1-25 of ", "</p><table class=\"ptt");
+			}
+			if(totalTasks == null){
+				searchComicWindow.totalLabel.setText("搜索不到相关内容");
+				searchComicWindow.hideLoading();
+				return null;
+			}
 			int total = Integer.parseInt(totalTasks.replaceAll(",", ""));
 			//总页数
 			String totalPage = (total % 25 == 0 ? total / 25 : total / 25 + 1) + "";//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
@@ -57,7 +70,9 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					if(source.indexOf("white-space:nowrap\">") != -1){
 						date = Spider.getTextFromSource(source, "white-space:nowrap\">", "</td><td class=\"itd\" onmouseover");
 					}
-					
+					if(source.indexOf(".png\" alt=\"") != -1){
+						type = Spider.getTextFromSource(source, ".png\" alt=\"", "\" class=\"ic\" />");
+					}
 					SearchTask searchTask = new SearchTask();
 					searchTask.setName(name);
 					searchTask.setUrl(url);
