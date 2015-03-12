@@ -91,4 +91,9 @@ public class AJButton extends JButton {
 			}
 		}
 	}
+	
+	public AJButton(String text){
+		this.setText(text);
+		this.setToolTipText(text);
+	}
 }
