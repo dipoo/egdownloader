@@ -29,7 +29,6 @@ public class SearchTasksTable extends JTable {
 	private static final long serialVersionUID = 8917533573337061263L;
 	private List<SearchTask> tasks;
 	private EgDownloaderWindow mainWindow;
-	public static int wordNum = 230;//名称列最多显示字数，会随着窗口大小变化而改变
 	
 	public void changeModel(List<SearchTask> tasks){
 		this.setMainWindow(mainWindow);
@@ -38,7 +37,7 @@ public class SearchTasksTable extends JTable {
 		this.setModel(tableModel);//设置数据模型
 	}
 	
-	public SearchTasksTable(int x, int y, int width, int height, List<SearchTask> tasks, EgDownloaderWindow mainWindow){
+	public SearchTasksTable(int x, int y, int width, int height, final List<SearchTask> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		this.tasks = (tasks == null ? new ArrayList<SearchTask>() : tasks);
 		
@@ -68,12 +67,15 @@ public class SearchTasksTable extends JTable {
 				}else{
 					c = Color.DARK_GRAY;
 				}
-				
-				TableColumn tc = table.getColumnModel().getColumn(column);
+				SearchTasksTable tb = (SearchTasksTable) table;
+				TableColumn tc = tb.getColumnModel().getColumn(column);
 				if(column == 0){//类型
-					tc.setPreferredWidth(100);
+					tc.setPreferredWidth(120);
 					tc.setMaxWidth(150);
-					return new AJLabel(value.toString(), c, blodFont, JLabel.LEFT);
+					JLabel l = new AJLabel("", tb.getTasks().get(row).getType() == null ? "" : (value.toString() + ".png"), c, JLabel.LEFT);
+					l.setToolTipText(value.toString());
+					l.setFont(blodFont);
+					return l;
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(800);
 					tc.setMaxWidth(800);
