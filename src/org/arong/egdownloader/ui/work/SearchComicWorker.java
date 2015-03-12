@@ -27,10 +27,18 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	}
 	
 	protected Void doInBackground() throws Exception {
-		String source = WebClient.postRequestWithCookie(this.url, mainWindow.setting.getCookieInfo());
-		if(this.mainWindow.searchComicWindow != null){
-			SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
+		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
+		try {
+			String source = WebClient.postRequestWithCookie(this.url, mainWindow.setting.getCookieInfo());
 			List<SearchTask> searchTasks = searchComicWindow.searchTasks;
+			//总记录数
+			String totalTasks = Spider.getTextFromSource(source, "Showing 1-25 of ", "</p><table class=\"ptt");
+			int total = Integer.parseInt(totalTasks.replaceAll(",", ""));
+			//总页数
+			String totalPage = (total % 25 == 0 ? total / 25 : total / 25 + 1) + "";//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
+			
+			searchComicWindow.setTotalInfo(totalPage, totalTasks);
+			
 			if(source.indexOf("preload_pane_image_cancel()") != -1){
 				searchTasks.clear();
 				source = Spider.getTextFromSource(source, "preload_pane_image_cancel()", "<table class=\"ptb\"");
@@ -48,9 +56,6 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					}
 					if(source.indexOf("white-space:nowrap\">") != -1){
 						date = Spider.getTextFromSource(source, "white-space:nowrap\">", "</td><td class=\"itd\" onmouseover");
-					}
-					if(source.indexOf(".png\" alt=\"") != -1){
-						type = Spider.getTextFromSource(source, ".png\" alt=\"", "\" class=\"ic\" />");
 					}
 					
 					SearchTask searchTask = new SearchTask();
@@ -78,13 +83,13 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				}
 				mainWindow.searchTable.setVisible(true);
 				mainWindow.searchTable.updateUI();
-				searchComicWindow.hideLoading();
-			}else{
-				//没有搜索到相关结果
-				System.err.println("没有搜索到相关结果");
 			}
+		} catch (Exception e) {
+			searchComicWindow.key = " ";
+			searchComicWindow.totalLabel.setText(e.getMessage());
+		} finally{
+			searchComicWindow.hideLoading();
 		}
-		
 		return null;
 	}
 

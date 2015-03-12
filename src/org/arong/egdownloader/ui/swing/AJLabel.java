@@ -17,7 +17,6 @@ import org.arong.egdownloader.ui.ComponentConst;
  */
 public class AJLabel extends JLabel {
 	private static final long serialVersionUID = 4435841561097728806L;
-	
 	public AJLabel(String text, Color color) {
 		super(text);
 		if(color != null)
@@ -46,7 +45,11 @@ public class AJLabel extends JLabel {
 	public AJLabel(String text, String icon, Color color, int align){
 		this(text, color, align);
 		if(icon != null && !"".equals(icon.trim())){
-			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+			try{
+				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+			}catch (Exception e) {
+				
+			}
 		}
 	}
 	

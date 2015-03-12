@@ -6,7 +6,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -32,9 +34,11 @@ public class SearchComicWindow extends JDialog {
 	private EgDownloaderWindow mainWindow;
 	private JTextField keyField;
 	private JLabel loadingLabel;
+	public JLabel totalLabel;
 	private JButton searchBtn;
-//	private Integer[] pages = new Integer[]{1, 1};//pageNo
+	public String key = " ";
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
+	public Map<String, List<SearchTask>> datas = new HashMap<String, List<SearchTask>>();
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
@@ -50,18 +54,25 @@ public class SearchComicWindow extends JDialog {
 		loadingLabel.setBounds(600, 20, 120, 30);
 		loadingLabel.setVisible(false);
 		
+		totalLabel = new AJLabel("", null, Color.BLACK, JLabel.LEFT);
+		totalLabel.setBounds(600, 20, 300, 30);
+		totalLabel.setVisible(false);
+		
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
 			
 			public void actionPerformed(ActionEvent ae) {
-				loadingLabel.setVisible(true);
-				searchBtn.setEnabled(false);
-				
-				String key = keyField.getText();
-				//过滤key
-				key = filterUrl(key);
-				String exurl = "http://exhentai.org?f_apply=Apply+Filter&f_doujinshi=1&f_manga=1&f_artistcg=1&f_gamecg=1&f_western=1&f_non-h=1&f_imageset=1" + 
-				"&f_cosplay=1&f_asianporn=1&f_misc=1&f_search=" + key;
-				new SearchComicWorker(mainWindow, exurl).execute();	
+				showLoading();
+				String k = keyField.getText().trim();
+				if(!key.equals(k)){
+					key = k;
+					//过滤key
+					k = filterUrl(k);
+					String exurl = "http://exhentai.org?f_apply=Apply+Filter&f_doujinshi=1&f_manga=1&f_artistcg=1&f_gamecg=1&f_western=1&f_non-h=1&f_imageset=1" + 
+					"&f_cosplay=1&f_asianporn=1&f_misc=1&f_search=" + k;
+					new SearchComicWorker(mainWindow, exurl).execute();
+				}else{
+					hideLoading();
+				}
 			}
 			public String filterUrl(String url){
 				if(url != null){
@@ -78,8 +89,7 @@ public class SearchComicWindow extends JDialog {
 			}
 		}, 510, 20, 60, 30);
 		
-		
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel);
+		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -98,9 +108,20 @@ public class SearchComicWindow extends JDialog {
 		});
 	}
 	
+	public void showLoading(){
+		totalLabel.setVisible(false);
+		loadingLabel.setVisible(true);
+		searchBtn.setEnabled(false);
+	}
+	
 	public void hideLoading(){
 		loadingLabel.setVisible(false);
 		searchBtn.setEnabled(true);
+		totalLabel.setVisible(true);
+	}
+	
+	public void setTotalInfo(String totalPage, String totalTasks){
+		totalLabel.setText("共搜索到 " + totalPage + " 页,总计 " + totalTasks + " 本漫画");
 	}
 	
 	public void dispose() {
