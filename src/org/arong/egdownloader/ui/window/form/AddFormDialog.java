@@ -91,7 +91,7 @@ public class AddFormDialog extends JDialog {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//关闭后显示主界面
-				mainWindow.setVisible(true);
+				//mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
 				AddFormDialog w = (AddFormDialog)e.getSource();
 				w.dispose();
@@ -215,6 +215,9 @@ public class AddFormDialog extends JDialog {
 	public void emptyField(){
 		urlField.setText("");
 	}
+	public void setUrl(String url){
+		urlField.setText(url);
+	}
 	private static boolean isValidUrl(Setting setting, String url){
 		if(url != null){
 			//假设url合法:http://exhentai.org/g/446779/553f5c4086/
@@ -248,7 +251,7 @@ public class AddFormDialog extends JDialog {
     }
 	public void dispose() {
 		mainWindow.setEnabled(true);
-		mainWindow.setVisible(true);
+		//mainWindow.setVisible(true);
 		super.dispose();
 	}
 }

@@ -48,7 +48,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		window.setEnabled(false);
 		window.setVisible(true);
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
-		addFormWindow.setVisible(false);
+		if(addFormWindow != null){
+			addFormWindow.setVisible(false);
+		}
 		window.creatingWindow.setVisible(true);//显示新建任务详细信息窗口
 		Setting setting = window.setting;//获得配置信息
 		InputStream is;
@@ -85,9 +87,11 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				//保存到内存
 				TaskingTable taskTable = (TaskingTable)window.runningTable;
 				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
-				addFormWindow.emptyField();//清空下载地址
-				//关闭form,刷新table
-				addFormWindow.dispose();
+				if(addFormWindow != null){
+					addFormWindow.emptyField();//清空下载地址
+					//关闭form,刷新table
+					addFormWindow.dispose();
+				}
 				window.tablePane.setVisible(true);//将表格panel显示出来
 				window.emptyTableTips.setVisible(false);//将空任务label隐藏
 				taskTable.updateUI();
@@ -116,7 +120,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
-			addFormWindow.dispose();
+			if(addFormWindow != null){
+				addFormWindow.dispose();
+			}
 			window.setEnabled(true);
 			window.setVisible(true);
 		}

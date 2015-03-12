@@ -160,7 +160,6 @@ public class EgDownloaderWindow extends JFrame {
 									this_.addFormWindow.setVisible(true);
 									this_.addFormWindow.toFront();
 								}
-								
 							}
 						}));
 		// 菜单：开始

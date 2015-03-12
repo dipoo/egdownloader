@@ -3,12 +3,16 @@ package org.arong.egdownloader.ui.table;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -17,8 +21,13 @@ import javax.swing.table.TableModel;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJLabel;
+import org.arong.egdownloader.ui.swing.AJMenuItem;
+import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.form.AddFormDialog;
+import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 /**
  * 搜索结果表格
  * @author dipoo
@@ -29,6 +38,7 @@ public class SearchTasksTable extends JTable {
 	private static final long serialVersionUID = 8917533573337061263L;
 	private List<SearchTask> tasks;
 	private EgDownloaderWindow mainWindow;
+	public JPopupMenu popupMenu;//右键菜单
 	
 	public void changeModel(List<SearchTask> tasks){
 		this.setMainWindow(mainWindow);
@@ -72,7 +82,7 @@ public class SearchTasksTable extends JTable {
 				if(column == 0){//类型
 					tc.setPreferredWidth(120);
 					tc.setMaxWidth(150);
-					JLabel l = new AJLabel("", tb.getTasks().get(row).getType() == null ? "" : (value.toString() + ".png"), c, JLabel.LEFT);
+					JLabel l = new AJLabel("", tb.getTasks().get(row).getType() == null ? "" : (tb.getTasks().get(row).getType() + ".png"), c, JLabel.LEFT);
 					l.setToolTipText(value.toString());
 					l.setFont(blodFont);
 					return l;
@@ -97,15 +107,38 @@ public class SearchTasksTable extends JTable {
 			public void mouseExited(MouseEvent e) {}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
-				SearchTasksTable table = (SearchTasksTable)e.getSource();
+				final SearchTasksTable table = (SearchTasksTable)e.getSource();
 				//获取点击的行数
 				int rowIndex = table.rowAtPoint(e.getPoint());
-				//左键
+				//右键
 				if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
-					table.updateUI();
-					table.getMainWindow().tablePopupMenu.show(table, e.getPoint().x, e.getPoint().y);
+					if(table.popupMenu == null){
+						JMenuItem downItem = new AJMenuItem("创建任务", Color.BLUE,
+								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"),
+								new MenuItemActonListener(table.getMainWindow(), new IMenuListenerTask() {
+									public void doWork(Window window, ActionEvent e) {
+										EgDownloaderWindow this_ = (EgDownloaderWindow) window;
+										this_.setEnabled(false);
+										SearchTask task = table.getTasks().get(table.getSelectedRow());
+										if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
+											this_.creatingWindow.setVisible(true);
+											this_.creatingWindow.toFront();
+										}else{
+											if (this_.addFormWindow == null) {
+												this_.addFormWindow = new AddFormDialog(this_);
+											}
+											((AddFormDialog)this_.addFormWindow).emptyField();
+											((AddFormDialog)this_.addFormWindow).setUrl(task.getUrl());
+											this_.addFormWindow.setVisible(true);
+											this_.addFormWindow.toFront();
+										}
+									}
+								}));
+						table.popupMenu = new AJPopupMenu(downItem);
+					}
+					table.popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});
