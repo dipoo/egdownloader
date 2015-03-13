@@ -79,15 +79,15 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					if(source.indexOf("preload_pane_image_cancel()") == -1){
 						break;
 					}
-					
 					source = Spider.substring(source, "preload_pane_image_cancel()");
 					i++;
 				}
 				searchComicWindow.searchTasks = searchTasks;
 				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());
+					searchComicWindow.keyPage.put(searchComicWindow.key, searchComicWindow.totalLabel.getText());
 				}
-				searchComicWindow.datas.get(searchComicWindow.key).put(currentPage + "", searchTasks);
+				searchComicWindow.datas.get(searchComicWindow.key).put((currentPage) + "", searchTasks);
 				searchComicWindow.showResult(totalPage, currentPage);
 			}
 		} catch (Exception e) {

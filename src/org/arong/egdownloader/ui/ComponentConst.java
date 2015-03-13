@@ -34,6 +34,8 @@ public final class ComponentConst {
 	
 	public static String DATA_PATH = "data";//数据目录
 	
+	public static String CACHE_PATH = "cache";//缓存目录
+	
 	public static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
 	
 	public static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径

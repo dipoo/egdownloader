@@ -94,6 +94,8 @@ public class AJButton extends JButton {
 	
 	public AJButton(String text){
 		this.setText(text);
+		// 设置为手型光标
+		this.setCursor(CursorManager.getPointerCursor());
 		this.setToolTipText(text);
 	}
 }

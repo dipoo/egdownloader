@@ -59,7 +59,6 @@ import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
-import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
@@ -106,7 +105,6 @@ public class EgDownloaderWindow extends JFrame {
 	public JPopupMenu tablePopupMenu;
 	public TaskingTable runningTable;
 	public JScrollPane tablePane;
-	public SearchTasksTable searchTable;
 	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
 	public JTextArea consoleArea;
