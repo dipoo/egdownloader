@@ -1,11 +1,16 @@
 package org.arong.egdownloader.ui.swing;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
+import org.arong.util.NumberUtil;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 /**
  * 分页组件
@@ -24,7 +29,7 @@ public class AJPager extends JPanel {
 	
 	private Integer prev;//上一页
 	
-	private Integer maxPage = 7;
+	private Integer maxPage = 11;
 	
 	//分页选项左边界
 	private Integer minBound;
@@ -32,7 +37,7 @@ public class AJPager extends JPanel {
 	//分页选项右边界
 	private Integer maxBound;
 	
-	
+	private Object data;
 	
 	private ActionListener pageListener;
 	
@@ -95,8 +100,17 @@ public class AJPager extends JPanel {
 			}
 		}
 		this.removeAll();
-		if(prev > 1){
-			JButton btn = new JButton("上一页");
+		
+		JButton fbtn = new AJButton("首页");
+		fbtn.setName("1");
+		fbtn.setToolTipText("1");
+		if(pageListener != null){
+			fbtn.addActionListener(pageListener);
+		}
+		this.add(fbtn);
+		
+		if(prev >= 1){
+			JButton btn = new AJButton("上一页");
 			btn.setName(prev + "");
 			btn.setToolTipText(prev + "");
 			if(pageListener != null){
@@ -105,7 +119,7 @@ public class AJPager extends JPanel {
 			this.add(btn);
 		}
 		for(int i = minBound; i <= maxBound; i++ ){
-			JButton btn = new AJButton(" " + i + " ");
+			JButton btn = new AJButton("" + i + "");
 			btn.setName(i + "");
 			if(i == currentPage){
 				btn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
@@ -118,7 +132,7 @@ public class AJPager extends JPanel {
 			this.add(btn);
 		}
 		if(next <= pageCount){
-			JButton btn = new JButton("下一页");
+			JButton btn = new AJButton("下一页");
 			btn.setToolTipText(next + "");
 			btn.setName(next + "");
 			if(pageListener != null){
@@ -126,6 +140,47 @@ public class AJPager extends JPanel {
 			}
 			this.add(btn);
 		}
+		
+		JButton lbtn = new AJButton("尾页");
+		lbtn.setName(pageCount + "");
+		lbtn.setToolTipText(pageCount + "");
+		if(pageListener != null){
+			lbtn.addActionListener(pageListener);
+		}
+		this.add(lbtn);
+		
+		final JButton hidebtn = new JButton("");
+		hidebtn.setName(pageCount + "");
+		hidebtn.setToolTipText(pageCount + "");
+		if(pageListener != null){
+			hidebtn.addActionListener(pageListener);
+		}
+		hidebtn.setVisible(false);
+		this.add(hidebtn);
+		
+		final JTextField pageTf = new JTextField(currentPage + "");
+		pageTf.setLayout(null);
+		pageTf.setSize(new Dimension(60, 30));
+		final JPanel this_ = this;
+		final int total = pageCount;
+		pageTf.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				this_.updateUI();
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					if(NumberUtil.can2Int(pageTf.getText().trim())){
+						Integer current = Integer.parseInt(pageTf.getText().trim());
+						if(current <= total){
+							hidebtn.setName(pageTf.getText().trim());
+						}else{
+							hidebtn.setName(total + "");
+							pageTf.setText(total + "");
+						}
+						hidebtn.doClick();
+					}
+				}
+			}
+		});
+		this.add(pageTf);
 	}
 	
 	
@@ -178,6 +233,14 @@ public class AJPager extends JPanel {
 
 	public Integer getMaxBound() {
 		return maxBound;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	public Object getData() {
+		return data;
 	}
 
 }

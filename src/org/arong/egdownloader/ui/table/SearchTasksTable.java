@@ -26,6 +26,8 @@ import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SearchComicWindow;
+import org.arong.egdownloader.ui.window.SearchCoverWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 /**
@@ -37,18 +39,17 @@ public class SearchTasksTable extends JTable {
 
 	private static final long serialVersionUID = 8917533573337061263L;
 	private List<SearchTask> tasks;
-	private EgDownloaderWindow mainWindow;
+	public SearchComicWindow comicWindow;
 	public JPopupMenu popupMenu;//右键菜单
 	
 	public void changeModel(List<SearchTask> tasks){
-		this.setMainWindow(mainWindow);
 		this.tasks = tasks;
 		TableModel tableModel = new SearchTaskTableModel(tasks);
 		this.setModel(tableModel);//设置数据模型
 	}
 	
-	public SearchTasksTable(int x, int y, int width, int height, final List<SearchTask> tasks, EgDownloaderWindow mainWindow){
-		this.setMainWindow(mainWindow);
+	public SearchTasksTable(int x, int y, int width, int height, final List<SearchTask> tasks, SearchComicWindow comicWindow_){
+		this.comicWindow = comicWindow_;
 		this.tasks = (tasks == null ? new ArrayList<SearchTask>() : tasks);
 		
 		if(this.tasks.size() > ComponentConst.MAX_TASK_PAGE){
@@ -108,16 +109,26 @@ public class SearchTasksTable extends JTable {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseClicked(MouseEvent e) {
 				final SearchTasksTable table = (SearchTasksTable)e.getSource();
-				//获取点击的行数
+				//获取点击的行数和列数
 				int rowIndex = table.rowAtPoint(e.getPoint());
+				int columnIndex = table.columnAtPoint(e.getPoint());
+				if(e.getButton() == MouseEvent.BUTTON1){
+					SearchTask task = table.getTasks().get(table.getSelectedRow());
+					if(columnIndex == 0){
+						if(comicWindow.coverWindow == null){
+							comicWindow.coverWindow = new SearchCoverWindow(comicWindow);
+						}
+						comicWindow.coverWindow.showCover(task, e.getPoint());
+					}
+				}
 				//右键
-				if(e.getButton() == MouseEvent.BUTTON3){
+				else if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
 					if(table.popupMenu == null){
 						JMenuItem downItem = new AJMenuItem("创建任务", Color.BLUE,
 								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"),
-								new MenuItemActonListener(table.getMainWindow(), new IMenuListenerTask() {
+								new MenuItemActonListener(table.comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										EgDownloaderWindow this_ = (EgDownloaderWindow) window;
 										this_.setEnabled(false);
@@ -150,14 +161,6 @@ public class SearchTasksTable extends JTable {
 
 	public void setTasks(List<SearchTask> tasks) {
 		this.tasks = tasks;
-	}
-
-	public EgDownloaderWindow getMainWindow() {
-		return mainWindow;
-	}
-
-	public void setMainWindow(EgDownloaderWindow mainWindow) {
-		this.mainWindow = mainWindow;
 	}
 
 }
