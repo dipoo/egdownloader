@@ -69,9 +69,7 @@ public final class FileUtil {
 			bos.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		}finally {
 			if (bos != null) {
 				try {
 					bos.close();
@@ -83,7 +81,6 @@ public final class FileUtil {
 				try {
 					bis.close();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 			if (in != null) {

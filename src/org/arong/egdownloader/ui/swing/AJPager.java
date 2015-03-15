@@ -1,6 +1,5 @@
 package org.arong.egdownloader.ui.swing;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -160,7 +159,6 @@ public class AJPager extends JPanel {
 		
 		final JTextField pageTf = new JTextField(currentPage + "");
 		pageTf.setLayout(null);
-		pageTf.setSize(new Dimension(60, 30));
 		final JPanel this_ = this;
 		final int total = pageCount;
 		pageTf.addKeyListener(new KeyAdapter() {
