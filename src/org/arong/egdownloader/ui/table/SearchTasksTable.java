@@ -3,10 +3,12 @@ package org.arong.egdownloader.ui.table;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class SearchTasksTable extends JTable {
 	private List<SearchTask> tasks;
 	public SearchComicWindow comicWindow;
 	public JPopupMenu popupMenu;//右键菜单
+	public int currentRowIndex = -1;
 	
 	public void changeModel(List<SearchTask> tasks){
 		this.tasks = tasks;
@@ -69,7 +72,6 @@ public class SearchTasksTable extends JTable {
 		this.setDefaultRenderer(Object.class, new TableCellRenderer() {
 			private Color c = new Color(47,110,178);
 			private Font font = new Font("微软雅黑", Font.PLAIN, 11);
-			private Font blodFont = new Font("微软雅黑", Font.BOLD, 11);
 			public Component getTableCellRendererComponent(JTable table, Object value,
 					boolean isSelected, boolean hasFocus, int row, int column) {
 				
@@ -81,11 +83,9 @@ public class SearchTasksTable extends JTable {
 				SearchTasksTable tb = (SearchTasksTable) table;
 				TableColumn tc = tb.getColumnModel().getColumn(column);
 				if(column == 0){//类型
-					tc.setPreferredWidth(120);
+					tc.setPreferredWidth(105);
 					tc.setMaxWidth(150);
 					JLabel l = new AJLabel("", tb.getTasks().get(row).getType() == null ? "" : (tb.getTasks().get(row).getType() + ".png"), c, JLabel.LEFT);
-					l.setToolTipText(value.toString());
-					l.setFont(blodFont);
 					return l;
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(800);
@@ -102,27 +102,38 @@ public class SearchTasksTable extends JTable {
 		});//设置渲染器
 //		this.getTableHeader().setDefaultRenderer(new TaskTableHeaderRenderer());
 		//单元格监听
-		this.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {
-				final SearchTasksTable table = (SearchTasksTable)e.getSource();
-				//获取点击的行数和列数
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e){
+				final SearchTasksTable table = comicWindow.searchTable;
 				int rowIndex = table.rowAtPoint(e.getPoint());
 				int columnIndex = table.columnAtPoint(e.getPoint());
-				if(e.getButton() == MouseEvent.BUTTON1){
-					SearchTask task = table.getTasks().get(table.getSelectedRow());
-					if(columnIndex == 0){
+				if(columnIndex == 0){
+					SearchTask task = table.getTasks().get(rowIndex);
+					//切换行
+					if(rowIndex != currentRowIndex){
+						currentRowIndex = rowIndex;
 						if(comicWindow.coverWindow == null){
 							comicWindow.coverWindow = new SearchCoverWindow(comicWindow);
 						}
-						comicWindow.coverWindow.showCover(task, e.getPoint());
+						comicWindow.coverWindow.showCover(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
 					}
 				}
+			}
+		});
+		this.addMouseListener(new MouseAdapter() {
+			
+			public void mouseExited(MouseEvent e) {
+				if(comicWindow.coverWindow != null){
+					comicWindow.coverWindow.dispose();
+					currentRowIndex = -1;
+				}
+			}
+			public void mouseClicked(MouseEvent e) {
+				final SearchTasksTable table = (SearchTasksTable)e.getSource();
+				//获取点击的行数
+				int rowIndex = table.rowAtPoint(e.getPoint());
 				//右键
-				else if(e.getButton() == MouseEvent.BUTTON3){
+				if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
 					if(table.popupMenu == null){

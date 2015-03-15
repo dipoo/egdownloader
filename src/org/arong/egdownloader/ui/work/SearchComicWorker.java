@@ -49,25 +49,27 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			
 			searchComicWindow.setTotalInfo(totalPage, totalTasks);
 			
-			if(source.indexOf("preload_pane_image_cancel()") != -1){
-				source = Spider.getTextFromSource(source, "preload_pane_image_cancel()", "<table class=\"ptb\"");
+			if(source.indexOf("Uploader</th></tr>") != -1){
+				source = Spider.getTextFromSource(source, "Uploader</th></tr>", "<table class=\"ptb\"");
 				int i = 0;
-				while(source.indexOf(")\">") != -1){
-					String name = Spider.getTextFromSource(source, ")\">", "</a></div><div class=");
+				while(source.indexOf("<tr class=\"gtr") != -1){
+					String name = Spider.getTextFromSource(source, "hide_image_pane", "/a></div><div class=");
+					name = Spider.getTextFromSource(name, ")\">", "<");
 					String url = Spider.getTextFromSource(source, "class=\"it5\"><a href=\"", "\" onmouseover");
 					String coverUrl;
 					String date = "";
 					String type = "";
-					if(i == 0){
-						coverUrl = Spider.getTextFromSource(source, "<img src=\"", "\" alt=\"");
-					}else{
-						coverUrl = "http://exhentai.org/" + Spider.getTextFromSource(source, "init~exhentai.org~", "~" + name);
-					}
 					if(source.indexOf("white-space:nowrap\">") != -1){
 						date = Spider.getTextFromSource(source, "white-space:nowrap\">", "</td><td class=\"itd\" onmouseover");
 					}
 					if(source.indexOf(".png\" alt=\"") != -1){
 						type = Spider.getTextFromSource(source, ".png\" alt=\"", "\" class=\"ic\" />");
+					}
+					if(i == 0){
+						coverUrl = Spider.getTextFromSource(source, "px\"><img src=\"", "\" alt=\"");
+						source = Spider.substring(source, "preload_pane_image_cancel()");
+					}else{
+						coverUrl = "http://exhentai.org/" + Spider.getTextFromSource(source, "init~exhentai.org~", "~" + name);
 					}
 					SearchTask searchTask = new SearchTask();
 					searchTask.setName(name); 
@@ -82,6 +84,8 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					source = Spider.substring(source, "preload_pane_image_cancel()");
 					i++;
 				}
+				//下载封面
+				new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
 				searchComicWindow.searchTasks = searchTasks;
 				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());

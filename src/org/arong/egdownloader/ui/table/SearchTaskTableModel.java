@@ -6,9 +6,9 @@ import javax.swing.table.AbstractTableModel;
 
 import org.arong.egdownloader.model.SearchTask;
 /**
- * 任务表格数据模型
+ * 搜索任务表格数据模型
  * @author 阿荣
- * @since 2014-05-23
+ * @since 2015-03-11
  */
 public class SearchTaskTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -7062795869810088466L;

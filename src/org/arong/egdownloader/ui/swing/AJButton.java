@@ -98,4 +98,15 @@ public class AJButton extends JButton {
 		this.setCursor(CursorManager.getPointerCursor());
 		this.setToolTipText(text);
 	}
+	
+	public AJButton(String text, String icon){
+		this.setText(text);
+		if(icon != null){
+			try{
+				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+			}catch(Exception e){
+				Tracker.println(getClass(), e.getMessage());
+			}
+		}
+	}
 }

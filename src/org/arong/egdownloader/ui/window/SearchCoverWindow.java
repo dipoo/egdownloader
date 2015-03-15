@@ -1,8 +1,5 @@
 package org.arong.egdownloader.ui.window;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.io.File;
 
@@ -31,8 +28,7 @@ public class SearchCoverWindow extends JWindow {
 	public SearchCoverWindow(SearchComicWindow comicWindow){
 		this.comicWindow = comicWindow;
 		coverLabel = new JLabel();
-		this.setLayout(new GridLayout());
-		this.getContentPane().setBackground(Color.decode("333"));
+		this.setLayout(null);
 		this.getContentPane().add(coverLabel);
 	}
 	
@@ -41,24 +37,24 @@ public class SearchCoverWindow extends JWindow {
 		String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
-			this.setSize(100, 100);
+			this.setSize(16, 16);
+			coverLabel.setSize(16, 16);
 			coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
 		}else{
 			icon = new ImageIcon(path);
 			if(icon.getIconWidth() == -1){
-				this.setSize(200, 80);
-				coverLabel.setText("封面文件格式错误");
-				coverLabel.setBounds(50, 5, 150, 30);
-				coverLabel.setIcon(null);
+				this.setSize(16, 16);
+				coverLabel.setSize(16, 16);
+				coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
 			}else{
-				this.setSize(icon.getIconWidth() + 20, icon.getIconHeight() + 45);
+				this.setSize(icon.getIconWidth(), icon.getIconHeight());
+				coverLabel.setSize(icon.getIconWidth(), icon.getIconHeight());
 				coverLabel.setIcon(icon);
 			}
 		}
 		this.setLocationRelativeTo(comicWindow);
-//		this.setLocation(p);
+		this.setLocation((int)p.getX(), (int)p.getY() - this.getHeight() / 2 - 50);
 		this.setVisible(true);
 	}
-	
 
 }
