@@ -90,16 +90,16 @@ public class SearchComicWindow extends JFrame {
 		optionPanel = new JPanel(new GridLayout());
 		optionPanel.setBounds(0, 55, ComponentConst.CLIENT_WIDTH, 40);
 		optionPanel.setAlignmentX(FlowLayout.LEFT);
-		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, true);
-		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, true);
-		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, true);
-		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, true);
-		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, true);
+		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, false);
+		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, false);
+		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, false);
+		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, false);
+		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, false);
 		JCheckBox c6 = new AJCheckBox("NON-H", Color.BLUE, font, true);
-		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, true);
-		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
-		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
-		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, true);
+		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, false);
+		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, false);
+		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, false);
+		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, false);
 		ComponentUtil.addComponents(optionPanel, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10);
 		/* 分类条件 end*/
 		
