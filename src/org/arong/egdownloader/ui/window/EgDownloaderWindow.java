@@ -1,13 +1,19 @@
 package org.arong.egdownloader.ui.window;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -409,6 +415,9 @@ public class EgDownloaderWindow extends JFrame {
 		}else{
 			emptyTableTips.setVisible(false);
 		}
+		
+		final EgDownloaderWindow mainWindow = this;
+		
 		//聚焦监听
 		this.addWindowFocusListener(new WindowAdapter() {
 			public void windowGainedFocus(WindowEvent e) {
@@ -487,12 +496,56 @@ public class EgDownloaderWindow extends JFrame {
 		//关闭监听
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
-				//保存数据
-				window.saveTaskGroupData();
-				System.exit(0);
+				int r = JOptionPane.showConfirmDialog(null, "您确定要关闭下载器吗？");
+				if(r == 0){
+					//保存数据
+					mainWindow.saveTaskGroupData();
+					System.exit(0);
+				}
 			}
+
+			public void windowIconified(WindowEvent e) {
+				mainWindow.setVisible(false);
+				mainWindow.dispose();
+			}
+			
 		});
+		
+		//系统托盘
+		if (SystemTray.isSupported()) {// 判断系统是否托盘
+		    TrayIcon icon = new TrayIcon(new ImageIcon(getClass().getResource(
+					ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
+					+ ComponentConst.SKIN_ICON.get("download"))).getImage());// 创建一个托盘图标对象
+		    PopupMenu menu = new PopupMenu();// 创建弹出菜单
+		    MenuItem item = new MenuItem("exit");// 创建一个菜单项
+		    item.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	int r = JOptionPane.showConfirmDialog(null, "您确定要关闭下载器吗？");
+					if(r == 0){
+						//保存数据
+						mainWindow.saveTaskGroupData();
+						System.exit(0);
+					}
+			    }
+		    });
+		    menu.add(item);// 将菜单项添加到菜单列表
+		    icon.setPopupMenu(menu);// 将菜单添加到托盘图标
+		    icon.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if(e.getClickCount()== 2){//鼠标双击图标
+						mainWindow.setExtendedState(JFrame.NORMAL);//设置状态为正常  
+						mainWindow.setVisible(true);
+					}
+				}
+		    	
+			});
+		    SystemTray tray = SystemTray.getSystemTray();// 获取系统托盘
+		    try {
+				tray.add(icon);// 将托盘图表添加到系统托盘
+			} catch (AWTException e1) {
+//				e1.printStackTrace();
+			}
+		}
 		
 	}
 	

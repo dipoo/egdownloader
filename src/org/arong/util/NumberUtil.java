@@ -13,7 +13,7 @@ public class NumberUtil {
 	 * @return
 	 */
 	public static boolean can2Int(String str){
-		if(str == null && "".equals(str))
+		if(str == null || "".equals(str))
 			return false;
 		if(str.startsWith("-")){
 			String str2 = str.substring(1, str.length());
