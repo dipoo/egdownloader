@@ -6,6 +6,8 @@ package org.arong.egdownloader.model;
  */
 public class SearchTask extends Task {
 	private String date;//发布时间
+	
+	private String btUrl;//bt下载地址
 
 	public void setDate(String date) {
 		this.date = date;
@@ -13,5 +15,13 @@ public class SearchTask extends Task {
 
 	public String getDate() {
 		return date;
+	}
+
+	public void setBtUrl(String btUrl) {
+		this.btUrl = btUrl;
+	}
+
+	public String getBtUrl() {
+		return btUrl;
 	}
 }

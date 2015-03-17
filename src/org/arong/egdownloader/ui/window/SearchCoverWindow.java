@@ -1,8 +1,10 @@
 package org.arong.egdownloader.ui.window;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
@@ -28,6 +30,7 @@ public class SearchCoverWindow extends JWindow {
 	public SearchCoverWindow(SearchComicWindow comicWindow){
 		this.comicWindow = comicWindow;
 		coverLabel = new JLabel();
+		coverLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		this.setLayout(null);
 		this.getContentPane().add(coverLabel);
 	}
@@ -37,8 +40,8 @@ public class SearchCoverWindow extends JWindow {
 		String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
-			this.setSize(16, 16);
-			coverLabel.setSize(16, 16);
+			this.setSize(18, 18);
+			coverLabel.setSize(18, 18);
 			coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
 		}else{
 			icon = new ImageIcon(path);
@@ -47,8 +50,8 @@ public class SearchCoverWindow extends JWindow {
 				coverLabel.setSize(16, 16);
 				coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
 			}else{
-				this.setSize(icon.getIconWidth(), icon.getIconHeight());
-				coverLabel.setSize(icon.getIconWidth(), icon.getIconHeight());
+				this.setSize(icon.getIconWidth() + 2, icon.getIconHeight() + 2);
+				coverLabel.setSize(icon.getIconWidth() + 2, icon.getIconHeight() + 2);
 				coverLabel.setIcon(icon);
 			}
 		}

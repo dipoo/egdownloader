@@ -548,7 +548,7 @@ public class EgDownloaderWindow extends JFrame {
 	protected void processWindowEvent(WindowEvent e) {
 		//关闭，询问
 		if(e.getID() == WindowEvent.WINDOW_CLOSING){
-			int r = JOptionPane.showConfirmDialog(null, "您确定要关闭下载器吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			int r = JOptionPane.showConfirmDialog(null, "您确定要关闭" + Version.NAME + "吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if(r == JOptionPane.YES_OPTION){
 				//保存数据
 				this.saveTaskGroupData();

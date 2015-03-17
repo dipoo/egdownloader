@@ -24,7 +24,6 @@ import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.window.form.AddGroupDialog;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.version.Version;
-import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 /**
  * 任务组窗口
  * @author dipoo
@@ -54,7 +53,7 @@ public class GroupWindow extends JFrame {
 								new AddGroupDialog((GroupWindow) window, mainWindow);
 							}
 						}) , 215, 15, 62, 30);
-		addGroupBtn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+		addGroupBtn.setUI(AJButton.blueBtnUi);
 		JList list = new GroupList(groups, this, mainWindow);
 		list.setSelectedIndex(0);
 		JScrollPane listPane = new JScrollPane(list);

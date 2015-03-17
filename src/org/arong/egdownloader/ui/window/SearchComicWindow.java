@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -66,7 +69,7 @@ public class SearchComicWindow extends JFrame {
 		this.setLayout(null);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);  
-		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 20, 20, 50, 30);
+		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 20, 50, 30);
 		keyField = new AJTextField("", 60, 20, 440, 30);
 		keyField.setText("chinese");
 		keyField.addKeyListener(new KeyAdapter() {
@@ -75,7 +78,6 @@ public class SearchComicWindow extends JFrame {
 					searchBtn.doClick();
 				}
 			}
-			
 		});
 		
 		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
@@ -88,7 +90,7 @@ public class SearchComicWindow extends JFrame {
 		
 		/* 分类条件 */
 		optionPanel = new JPanel(new GridLayout());
-		optionPanel.setBounds(0, 55, ComponentConst.CLIENT_WIDTH, 40);
+		optionPanel.setBounds(10, 55, ComponentConst.CLIENT_WIDTH - 20, 40);
 		optionPanel.setAlignmentX(FlowLayout.LEFT);
 		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, false);
 		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, false);
@@ -100,7 +102,18 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, false);
 		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, false);
 		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, false);
-		ComponentUtil.addComponents(optionPanel, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10);
+		final JCheckBox c11 = new AJCheckBox("ALL", Color.RED, font, false);
+		c11.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				Component[] cs = optionPanel.getComponents();
+				for(int i = 0; i < cs.length; i ++){
+					if(cs[i] instanceof JCheckBox){
+						((JCheckBox)cs[i]).setSelected(c11.isSelected());
+					}
+				}
+			}
+		});
+		ComponentUtil.addComponents(optionPanel, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -120,10 +133,18 @@ public class SearchComicWindow extends JFrame {
 			
 		}, 510, 20, 60, 30);
 		
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel, optionPanel, pager);
+		JButton clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				datas.clear();
+				keyPage.clear();
+				JOptionPane.showMessageDialog(null, "清理成功");
+			}
+		}, 940, 20, 60, 30);
+		clearCacheBtn.setUI(AJButton.blueBtnUi);
+		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel, clearCacheBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) { 
 				//关闭后显示主界面
 				mainWindow.setVisible(true);
 				mainWindow.setEnabled(true);
@@ -179,8 +200,10 @@ public class SearchComicWindow extends JFrame {
 		String option = "";
 		JCheckBox jc = null;
 		for(int i = 0; i < cs.length; i++){
-			jc = (JCheckBox) cs[i];
-			option += "&f_" + jc.getText().toLowerCase() + "=" + (jc.isSelected() ? "1" : "0");
+			if(cs[i] instanceof JCheckBox){
+				jc = (JCheckBox) cs[i];
+				option += "&f_" + jc.getText().toLowerCase() + "=" + (jc.isSelected() ? "1" : "0");
+			}
 		}
 		return option;
 	}

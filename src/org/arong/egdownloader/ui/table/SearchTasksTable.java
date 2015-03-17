@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Window;
@@ -9,11 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -90,7 +96,17 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(800);
 					tc.setMaxWidth(800);
-					return new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					SearchTask task = tasks.get(row);
+					if(task.getBtUrl() != null){
+						try{
+							l.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "t.png")));
+						}catch (Exception e) {
+							
+						}
+					}
+					l.setToolTipText(value.toString());
+					return l;
 				}else if(column == 2){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
@@ -137,13 +153,13 @@ public class SearchTasksTable extends JTable {
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
 					if(table.popupMenu == null){
-						JMenuItem downItem = new AJMenuItem("创建任务", Color.BLUE,
+						JMenuItem downItem = new AJMenuItem("创建任务", Color.BLACK,
 								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"),
-								new MenuItemActonListener(table.comicWindow.mainWindow, new IMenuListenerTask() {
+								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										EgDownloaderWindow this_ = (EgDownloaderWindow) window;
 										this_.setEnabled(false);
-										SearchTask task = table.getTasks().get(table.getSelectedRow());
+										final SearchTask task = table.getTasks().get(table.getSelectedRow());
 										if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
 											this_.creatingWindow.setVisible(true);
 											this_.creatingWindow.toFront();
@@ -158,12 +174,53 @@ public class SearchTasksTable extends JTable {
 										}
 									}
 								}));
-						table.popupMenu = new AJPopupMenu(downItem);
+						JMenuItem openPageItem = new AJMenuItem("打开网页", Color.BLACK,
+								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("browse"),
+								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
+									public void doWork(Window window, ActionEvent e) {
+										final SearchTask task = table.getTasks().get(table.getSelectedRow());
+										openPage(task.getUrl());
+									}
+								}));
+						JMenuItem openBtPageItem = new AJMenuItem("下载BT", Color.BLACK,
+								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
+									public void doWork(Window window, ActionEvent e) {
+										final SearchTask task = table.getTasks().get(table.getSelectedRow());
+										if(task.getBtUrl() != null){
+											openPage(task.getBtUrl());
+										}else{
+											JOptionPane.showMessageDialog(comicWindow, "该漫画没有可以下载的bt文件");
+										}
+									}
+								}));
+						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem);
 					}
 					table.popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});
+	}
+	
+	public void openPage(String url){
+		try {
+			Desktop.getDesktop().browse(new URI(url));
+		} catch (IOException e1) {
+			try {
+				Runtime.getRuntime().exec("cmd.exe /c start " + url);
+			} catch (IOException e2) {
+				JOptionPane.showMessageDialog(null, "不支持此功能");
+			}
+		} catch (URISyntaxException e1) {
+			try {
+				Runtime.getRuntime().exec("cmd.exe /c start " + url);
+			} catch (IOException e2) {
+				JOptionPane.showMessageDialog(null, "不支持此功能");
+			}
+		}finally{
+			//隐藏tablePopupMenu
+			popupMenu.setVisible(false);
+		}
 	}
 
 	public List<SearchTask> getTasks() {
