@@ -8,7 +8,6 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 import org.arong.egdownloader.ui.ComponentConst;
-import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
 
 /**

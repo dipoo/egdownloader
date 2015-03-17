@@ -1,21 +1,21 @@
-package org.arong.egdownloader.ui.window;
+﻿package org.arong.egdownloader.ui.window;
 
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,6 +24,8 @@ import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -37,6 +39,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JWindow;
 import javax.swing.border.TitledBorder;
 
 import org.arong.egdownloader.db.DbTemplate;
@@ -92,6 +95,10 @@ import org.arong.util.Tracker;
 public class EgDownloaderWindow extends JFrame {
 
 	private static final long serialVersionUID = 8904976570969033245L;
+	
+	TrayIcon tray;//系统托盘
+	JPopupMenu trayMenu;
+	JWindow minTips;
 	
 	JMenuBar jMenuBar;// 菜单栏
 	public JFrame settingWindow;
@@ -405,7 +412,6 @@ public class EgDownloaderWindow extends JFrame {
 					consolePopupMenu.show((Component) e.getSource(), e.getPoint().x, e.getPoint().y);
 				}
 			}
-			
 		});
 		
 		// 添加各个子组件
@@ -417,6 +423,51 @@ public class EgDownloaderWindow extends JFrame {
 		}
 		
 		final EgDownloaderWindow mainWindow = this;
+		//系统托盘
+		if (SystemTray.isSupported()) {// 判断系统是否托盘
+		    tray = new TrayIcon(new ImageIcon(getClass().getResource(
+					ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
+					+ ComponentConst.SKIN_ICON.get("download"))).getImage());// 创建一个托盘图标对象
+		    tray.setImageAutoSize(true);
+		    tray.setToolTip(Version.NAME);
+		    trayMenu = new JPopupMenu();// 创建弹出菜单
+		    final JMenuItem item = new JMenuItem("退出");// 创建一个菜单项
+		    trayMenu.add(item);// 将菜单项添加到菜单列表
+		    item.addMouseListener(new MouseAdapter() {
+		    	public void mouseExited(MouseEvent e) {
+		    		trayMenu.setVisible(false);
+				}
+			});
+		    item.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+					//保存数据
+					mainWindow.saveTaskGroupData();
+					System.exit(0);
+			    }
+		    });
+		    tray.addMouseListener(new MouseAdapter() {
+		    	public void mouseReleased(MouseEvent e) {
+		    		//弹出菜单
+					if(e.isPopupTrigger()){
+						trayMenu.setLocation(e.getX(), e.getY() - trayMenu.getComponentCount() * 30);
+						trayMenu.setInvoker(trayMenu);
+						trayMenu.setVisible(true);
+					}
+				}
+				public void mouseClicked(MouseEvent e) {
+					if(e.getClickCount()== 2){//鼠标双击图标
+						mainWindow.setExtendedState(JFrame.NORMAL);//设置状态为正常  
+						mainWindow.setVisible(true);
+					}
+				}
+			});
+		    SystemTray st = SystemTray.getSystemTray();// 获取系统托盘
+		    try {
+		    	st.add(tray);// 将托盘图表添加到系统托盘
+			} catch (AWTException e1) {
+//				e1.printStackTrace();
+			}
+		}
 		
 		//聚焦监听
 		this.addWindowFocusListener(new WindowAdapter() {
@@ -442,12 +493,15 @@ public class EgDownloaderWindow extends JFrame {
 					window.simpleSearchWindow.requestFocus();
 				}
 			}
+
+			public void windowLostFocus(WindowEvent e) {
+				if(trayMenu != null){
+					trayMenu.setVisible(false);
+				}
+			}
 		});
 		//窗口大小变化监听
-		this.addComponentListener(new ComponentListener() {
-			public void componentShown(ComponentEvent e) {}
-			public void componentMoved(ComponentEvent e) {}
-			public void componentHidden(ComponentEvent e) {}
+		this.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				//设置菜单大小
@@ -478,7 +532,7 @@ public class EgDownloaderWindow extends JFrame {
 			}
 		});
 		//鼠标动作监听
-		this.addMouseListener(new MouseListener() {
+		this.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				if(window.getWidth() < ComponentConst.CLIENT_WIDTH){
@@ -488,67 +542,55 @@ public class EgDownloaderWindow extends JFrame {
 					window.setSize(window.getWidth(), ComponentConst.CLIENT_HEIGHT);
 				}
 			}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {}
 		});
-		//关闭监听
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				int r = JOptionPane.showConfirmDialog(null, "您确定要关闭下载器吗？");
-				if(r == 0){
-					//保存数据
-					mainWindow.saveTaskGroupData();
-					System.exit(0);
-				}
-			}
-
-			public void windowIconified(WindowEvent e) {
-				mainWindow.setVisible(false);
-				mainWindow.dispose();
-			}
-			
-		});
-		
-		//系统托盘
-		if (SystemTray.isSupported()) {// 判断系统是否托盘
-		    TrayIcon icon = new TrayIcon(new ImageIcon(getClass().getResource(
-					ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
-					+ ComponentConst.SKIN_ICON.get("download"))).getImage());// 创建一个托盘图标对象
-		    PopupMenu menu = new PopupMenu();// 创建弹出菜单
-		    MenuItem item = new MenuItem("exit");// 创建一个菜单项
-		    item.addActionListener(new ActionListener() {
-			    public void actionPerformed(ActionEvent e) {
-			    	int r = JOptionPane.showConfirmDialog(null, "您确定要关闭下载器吗？");
-					if(r == 0){
-						//保存数据
-						mainWindow.saveTaskGroupData();
-						System.exit(0);
-					}
-			    }
-		    });
-		    menu.add(item);// 将菜单项添加到菜单列表
-		    icon.setPopupMenu(menu);// 将菜单添加到托盘图标
-		    icon.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					if(e.getClickCount()== 2){//鼠标双击图标
-						mainWindow.setExtendedState(JFrame.NORMAL);//设置状态为正常  
-						mainWindow.setVisible(true);
-					}
-				}
-		    	
-			});
-		    SystemTray tray = SystemTray.getSystemTray();// 获取系统托盘
-		    try {
-				tray.add(icon);// 将托盘图表添加到系统托盘
-			} catch (AWTException e1) {
-//				e1.printStackTrace();
-			}
-		}
-		
 	}
 	
+	protected void processWindowEvent(WindowEvent e) {
+		//关闭，询问
+		if(e.getID() == WindowEvent.WINDOW_CLOSING){
+			int r = JOptionPane.showConfirmDialog(null, "您确定要关闭下载器吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if(r == JOptionPane.YES_OPTION){
+				//保存数据
+				this.saveTaskGroupData();
+				System.exit(0);
+			}
+		}
+		//最小化，隐藏到托盘
+		else if(e.getID() == WindowEvent.WINDOW_ICONIFIED){
+			if(tray != null){
+				if(minTips == null){
+					minTips = new JWindow();
+					minTips.setSize(150, 30);
+					minTips.setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 80);
+					minTips.setLayout(new FlowLayout());
+					minTips.getContentPane().setBackground(Color.BLACK);
+					JLabel tips = new AJLabel(Version.NAME + "已最小化到托盘", Color.WHITE);
+					tips.setToolTipText("点击完毕");
+					tips.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent e) {
+							minTips.dispose();
+						}
+					});
+					minTips.getContentPane().add(tips);
+					minTips.toFront();
+					minTips.requestFocus();
+					minTips.setVisible(true);
+					Timer t = new Timer();
+					//10秒后关闭
+					t.schedule(new TimerTask() {
+						public void run() {
+							minTips.dispose();
+						}
+					}, 10000);
+				}
+				this.setVisible(false);
+				this.dispose();
+			}
+		}else{
+			super.processWindowEvent(e);
+		}
+	}
+
 	public void saveTaskGroupData(){
 		this.taskDbTemplate.update(this.tasks);
 		this.settingDbTemplate.update(this.setting);
