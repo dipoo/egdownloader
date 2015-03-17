@@ -53,13 +53,13 @@ public class SearchTasksTable extends JTable {
 	
 	public void changeModel(List<SearchTask> tasks){
 		this.tasks = tasks;
-		TableModel tableModel = new SearchTaskTableModel(tasks);
+		TableModel tableModel = new SearchTaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
 	}
 	
-	public SearchTasksTable(int x, int y, int width, int height, final List<SearchTask> tasks, SearchComicWindow comicWindow_){
+	public SearchTasksTable(int x, int y, int width, int height, final List<SearchTask> tasks_, SearchComicWindow comicWindow_){
 		this.comicWindow = comicWindow_;
-		this.tasks = (tasks == null ? new ArrayList<SearchTask>() : tasks);
+		this.tasks = (tasks_ == null ? new ArrayList<SearchTask>() : tasks_);
 		
 		if(this.tasks.size() > ComponentConst.MAX_TASK_PAGE){
 			height = ComponentConst.MAX_TASK_PAGE * 25;
@@ -91,7 +91,7 @@ public class SearchTasksTable extends JTable {
 				if(column == 0){//类型
 					tc.setPreferredWidth(105);
 					tc.setMaxWidth(150);
-					JLabel l = new AJLabel("", tb.getTasks().get(row).getType() == null ? "" : (tb.getTasks().get(row).getType() + ".png"), c, JLabel.LEFT);
+					JLabel l = new AJLabel("", tasks.get(row).getType() == null ? "" : (tasks.get(row).getType() + ".png"), c, JLabel.LEFT);
 					return l;
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(800);

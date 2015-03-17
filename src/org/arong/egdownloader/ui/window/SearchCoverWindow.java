@@ -40,18 +40,18 @@ public class SearchCoverWindow extends JWindow {
 		String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
-			this.setSize(18, 18);
-			coverLabel.setSize(18, 18);
+			this.setSize(20, 20);
+			coverLabel.setSize(20, 20);
 			coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
 		}else{
 			icon = new ImageIcon(path);
 			if(icon.getIconWidth() == -1){
-				this.setSize(16, 16);
-				coverLabel.setSize(16, 16);
+				this.setSize(20, 20);
+				coverLabel.setSize(20, 20);
 				coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
 			}else{
-				this.setSize(icon.getIconWidth() + 2, icon.getIconHeight() + 2);
-				coverLabel.setSize(icon.getIconWidth() + 2, icon.getIconHeight() + 2);
+				this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+				coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
 				coverLabel.setIcon(icon);
 			}
 		}
