@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -66,6 +67,8 @@ public class SearchComicWindow extends JFrame {
 		this.mainWindow = mainWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
 		this.setTitle("搜索里站漫画");
+		this.setIconImage(new ImageIcon(getClass().getResource(
+				ComponentConst.ICON_PATH + "eh.png")).getImage());
 		this.setLayout(null);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);  

@@ -73,7 +73,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					}
 					String temp = source.substring(0, source.indexOf("</tr>"));
 					if(temp.indexOf("return popUp('") != -1){
-						btUrl = Spider.getTextFromSource(temp, "return popUp('", "', 610, 590)");
+						btUrl = Spider.getTextFromSource(temp, "return popUp('", "', 610, 590)").replaceAll("&amp;", "&");
 					}
 					SearchTask searchTask = new SearchTask();
 					searchTask.setName(name); 
