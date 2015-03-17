@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.arong.util.NumberUtil;
-import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 /**
  * 分页组件
  * @author dipoo
@@ -121,9 +120,9 @@ public class AJPager extends JPanel {
 			JButton btn = new AJButton("" + i + "");
 			btn.setName(i + "");
 			if(i == currentPage){
-				btn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+				btn.setUI(AJButton.blueBtnUi);
 			}else{
-				btn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green));
+				btn.setUI(AJButton.greenBtnUi);
 				if(pageListener != null){
 					btn.addActionListener(pageListener);
 				}

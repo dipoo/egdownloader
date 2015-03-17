@@ -26,11 +26,13 @@ public class Main {
 	public static void main(String[] args) {
 
 		Thread thread = null; // 启动服务器的线程
-
 		try {
 			// 连接服务器
 			// 如果服务器未启动则抛异常
 			(new Socket("localhost", iPort)).close();
+			if(ComponentConst.mainWindow != null){
+				ComponentConst.mainWindow.setVisible(true);
+			}
 			// 如果服务器已经启动则退出系统
 			System.exit(0);
 		} catch (Exception e) {

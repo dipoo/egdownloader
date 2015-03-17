@@ -30,7 +30,6 @@ import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.util.FileUtil;
-import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 /**
  * 新建任务窗口
  * @author dipoo
@@ -99,7 +98,7 @@ public class AddGroupDialog extends JDialog {
 				}
 			}
 		}), 220, 20, 60, 30);
-		addBtn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
+		addBtn.setUI(AJButton.blueBtnUi);
 		ComponentUtil.addComponents(getContentPane(), groupNameLabel, groupNameField, addBtn);
 		
 		this.addWindowListener(new WindowAdapter() {

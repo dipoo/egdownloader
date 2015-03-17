@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.plaf.ButtonUI;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
@@ -23,6 +24,9 @@ import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
  * 
  */
 public class AJButton extends JButton {
+	
+	public static ButtonUI greenBtnUi = new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green);
+	public static ButtonUI blueBtnUi = new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue);
 
 	private static final long serialVersionUID = 1876134017404282134L;
 
@@ -47,7 +51,7 @@ public class AJButton extends JButton {
 		this.setForeground(Color.WHITE);
 		this.setFocusable(false);
 		this.setMargin(new Insets(0, 0, 0, 0));
-		this.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green));
+		this.setUI(greenBtnUi);
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
 		if(actionListener != null)
