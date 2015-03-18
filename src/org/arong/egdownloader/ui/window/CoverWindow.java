@@ -29,6 +29,7 @@ public class CoverWindow extends JDialog {
 		this.mainWindow = mainWindow;
 		this.setTitle("漫画封面");
 		this.getContentPane().setLayout(null);
+		this.setLocationRelativeTo(mainWindow);
 		this.setResizable(false);
 		coverLabel = new JLabel();
 		showCover(task);
