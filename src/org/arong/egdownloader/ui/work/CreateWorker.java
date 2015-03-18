@@ -93,7 +93,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 					addFormWindow.dispose();
 				}
 				window.tablePane.setVisible(true);//将表格panel显示出来
-				window.emptyTableTips.setVisible(false);//将空任务label隐藏
+				window.emptyPanel.setVisible(false);//将空任务label隐藏
 				taskTable.updateUI();
 				//是否开启下载
 				if(setting.isAutoDownload()){

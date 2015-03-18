@@ -23,7 +23,7 @@ public class SearchTaskTableModel extends AbstractTableModel {
 	}
 
 	public int getColumnCount() {
-		return 3;
+		return 4;
 	}
 	
 	public Class<?> getColumnClass(int columnIndex) {
@@ -38,7 +38,9 @@ public class SearchTaskTableModel extends AbstractTableModel {
 			case 1 :
 				return tasks.get(rowIndex).getName();
 			case 2 :
-				return tasks.get(rowIndex).getDate();
+				return tasks.get(rowIndex).getUploader();
+			case 3 :
+				return tasks.get(rowIndex).getDate();	
 			default :
 				return "";
 		}
@@ -51,6 +53,8 @@ public class SearchTaskTableModel extends AbstractTableModel {
 		}else if(column == 1){
 			return "名称";
 		}else if(column == 2){
+			return "上传者";
+		}else if(column == 3){
 			return "发布时间";
 		}else{
 			return "";

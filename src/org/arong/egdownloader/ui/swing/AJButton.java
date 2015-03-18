@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.swing;
 import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -56,9 +57,7 @@ public class AJButton extends JButton {
 		this.setCursor(CursorManager.getPointerCursor());
 		if(actionListener != null)
 			this.addActionListener(actionListener);
-		this.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
+		this.addMouseListener(new MouseAdapter(){
 			public void mouseExited(MouseEvent e) {
 				AJButton btn = (AJButton) e.getSource();
 				btn.setForeground(Color.WHITE);
@@ -67,7 +66,6 @@ public class AJButton extends JButton {
 				AJButton btn = (AJButton) e.getSource();
 				btn.setForeground(Color.BLACK);
 			}
-			public void mouseClicked(MouseEvent e) {}
 		});
 	}
 	
@@ -97,14 +95,25 @@ public class AJButton extends JButton {
 	}
 	
 	public AJButton(String text){
+		this.setUI(greenBtnUi);
 		this.setText(text);
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
 		this.setToolTipText(text);
+		this.addMouseListener(new MouseAdapter(){
+			public void mouseExited(MouseEvent e) {
+				AJButton btn = (AJButton) e.getSource();
+				btn.setForeground(Color.WHITE);
+			}
+			public void mouseEntered(MouseEvent e) {
+				AJButton btn = (AJButton) e.getSource();
+				btn.setForeground(Color.BLACK);
+			}
+		});
 	}
 	
 	public AJButton(String text, String icon){
-		this.setText(text);
+		this(text);
 		if(icon != null){
 			try{
 				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));

@@ -8,6 +8,8 @@ public class SearchTask extends Task {
 	private String date;//发布时间
 	
 	private String btUrl;//bt下载地址
+	
+	private String uploader;//上传者
 
 	public void setDate(String date) {
 		this.date = date;
@@ -23,5 +25,13 @@ public class SearchTask extends Task {
 
 	public String getBtUrl() {
 		return btUrl;
+	}
+
+	public void setUploader(String uploader) {
+		this.uploader = uploader;
+	}
+
+	public String getUploader() {
+		return uploader;
 	}
 }

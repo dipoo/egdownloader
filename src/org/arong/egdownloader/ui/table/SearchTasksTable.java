@@ -94,7 +94,7 @@ public class SearchTasksTable extends JTable {
 					JLabel l = new AJLabel("", tasks.get(row).getType() == null ? "" : (tasks.get(row).getType() + ".png"), c, JLabel.LEFT);
 					return l;
 				}else if(column == 1){//名称
-					tc.setPreferredWidth(800);
+					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
 					JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
 					SearchTask task = tasks.get(row);
@@ -107,7 +107,14 @@ public class SearchTasksTable extends JTable {
 					}
 					l.setToolTipText(value.toString());
 					return l;
-				}else if(column == 2){//发布时间
+				}else if(column == 2){//上传者
+					tc.setPreferredWidth(100);
+					tc.setMaxWidth(150);
+					final JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					l.setForeground(Color.getHSBColor(122, 122, 122));
+					l.setToolTipText("点击搜索该上传者的上传的漫画");
+					return l;
+				}else if(column == 3){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
 					return new AJLabel(value.toString(), c, font, JLabel.LEFT);
@@ -133,6 +140,11 @@ public class SearchTasksTable extends JTable {
 						}
 						comicWindow.coverWindow.showCover(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
 					}
+				}else{
+					if(comicWindow.coverWindow != null){
+						comicWindow.coverWindow.setVisible(false);
+						currentRowIndex = -1;
+					}
 				}
 			}
 		});
@@ -140,7 +152,7 @@ public class SearchTasksTable extends JTable {
 			
 			public void mouseExited(MouseEvent e) {
 				if(comicWindow.coverWindow != null){
-					comicWindow.coverWindow.dispose();
+					comicWindow.coverWindow.setVisible(false);
 					currentRowIndex = -1;
 				}
 			}
@@ -148,8 +160,17 @@ public class SearchTasksTable extends JTable {
 				final SearchTasksTable table = (SearchTasksTable)e.getSource();
 				//获取点击的行数
 				int rowIndex = table.rowAtPoint(e.getPoint());
+				int columnIndex = table.columnAtPoint(e.getPoint());
+				//左键
+				if(e.getButton() == MouseEvent.BUTTON1){
+					//点击上传者
+					if(columnIndex == 2){
+						comicWindow.keyField.setText("uploader:" + tasks.get(rowIndex).getUploader());
+						comicWindow.searchBtn.doClick();
+					}
+				}
 				//右键
-				if(e.getButton() == MouseEvent.BUTTON3){
+				else if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
 					if(table.popupMenu == null){

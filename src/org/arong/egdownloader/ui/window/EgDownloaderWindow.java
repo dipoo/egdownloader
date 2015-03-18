@@ -30,6 +30,7 @@ import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,6 +38,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -63,10 +65,12 @@ import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
+import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
+import org.arong.egdownloader.ui.swing.AJPanel;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
@@ -118,10 +122,10 @@ public class EgDownloaderWindow extends JFrame {
 	public JPopupMenu tablePopupMenu;
 	public TaskingTable runningTable;
 	public JScrollPane tablePane;
-	public JLabel emptyTableTips;
 	public JScrollPane consolePane;
 	public JTextArea consoleArea;
 	public JPopupMenu consolePopupMenu;
+	public JPanel emptyPanel;
 	
 	
 	public Setting setting;
@@ -191,19 +195,20 @@ public class EgDownloaderWindow extends JFrame {
 						+ ComponentConst.SKIN_ICON.get("delete"), deleteBtnMouseListener);
 		
 		//菜单：搜索
-		JMenu searchComicMenu = new AJMenu(ComponentConst.SEARCH_MENU_TEXT,
+		final JMenu searchComicMenu = new AJMenu(ComponentConst.SEARCH_MENU_TEXT,
 				"", new MouseAdapter() {
 					public void mouseClicked(MouseEvent e) {
 						if(searchComicWindow == null){
 							searchComicWindow = new SearchComicWindow(mainWindow);
 						}
-						SearchComicWindow scw = (SearchComicWindow) mainWindow.searchComicWindow;
+						SearchComicWindow scw = mainWindow.searchComicWindow;
 						scw.setVisible(true);
 					}
 				});
-		ImageIcon icon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "eh.png"));
-		icon.setImage(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
-		searchComicMenu.setIcon(icon);
+		//EHicon
+		ImageIcon ehIcon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "eh.png"));
+		ehIcon.setImage(ehIcon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
+		searchComicMenu.setIcon(ehIcon);
 		
 		// 菜单：任务组
 		JMenu taskGroupMenu = new AJMenu(ComponentConst.TASKGROUP_MENU_TEXT,
@@ -394,9 +399,22 @@ public class EgDownloaderWindow extends JFrame {
 		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
 				checkResetMenuItem, changeReadedMenuItem, editMenuItem, resetMenuItem, completedMenuItem);
-		emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
-		emptyTableTips.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
+		JLabel emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
+		JButton emptyBtn = new AJButton("当前任务组没有下载任务，请点击搜索漫画");
+		emptyBtn.setIcon(ehIcon);
+		emptyBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(searchComicWindow == null){
+					searchComicWindow = new SearchComicWindow(mainWindow);
+				}
+				SearchComicWindow scw = mainWindow.searchComicWindow;
+				scw.setVisible(true);
+			}
+		});
+		emptyPanel = new AJPanel(/*emptyTableTips, */emptyBtn);
+		emptyPanel.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
+		emptyPanel.setLayout(new FlowLayout());
 		
 		/**
 		 * 控制台
@@ -433,11 +451,11 @@ public class EgDownloaderWindow extends JFrame {
 		});
 		
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyTableTips, consolePane);
+		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyPanel, consolePane);
 		if(tasks == null || tasks.size() == 0){
 			tablePane.setVisible(false);
 		}else{
-			emptyTableTips.setVisible(false);
+			emptyPanel.setVisible(false);
 		}
 		
 		//系统托盘
@@ -539,8 +557,8 @@ public class EgDownloaderWindow extends JFrame {
 					}
 				}
 				//设置空提示label位置
-				if(emptyTableTips != null){
-					emptyTableTips.setBounds(0, ((window.getHeight() - 280) / 2), window.getWidth(), 100);
+				if(emptyPanel != null){
+					emptyPanel.setBounds(0, ((window.getHeight() - 280) / 2), window.getWidth(), 100);
 				}
 				//设置控制台大小
 				if(consolePane != null){
@@ -619,12 +637,21 @@ public class EgDownloaderWindow extends JFrame {
 		this.settingDbTemplate = settingDbTemplate;
 		//加载配置数据
 		this.setting = setting;
+		//清空
+		this.tasks.clear();
 		//加载任务列表
 		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
 		// 设置主窗口
 		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
-		this.runningTable.changeModel(this);
-		this.runningTable.updateUI();
+		if(this.tasks.isEmpty()){
+			this.tablePane.setVisible(false);
+			this.emptyPanel.setVisible(true);
+		}else{
+			this.tablePane.setVisible(true);
+			this.emptyPanel.setVisible(false);
+			this.runningTable.changeModel(this);
+			this.runningTable.updateUI();
+		}
 		this.consoleArea.setText("");//清空控制台
 	}
 }

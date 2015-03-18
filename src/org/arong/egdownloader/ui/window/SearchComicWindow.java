@@ -53,10 +53,10 @@ public class SearchComicWindow extends JFrame {
 	private static final long serialVersionUID = -3912589805632312855L;
 	public EgDownloaderWindow mainWindow;
 	public SearchCoverWindow coverWindow;
-	private JTextField keyField;
+	public JTextField keyField;
 	private JLabel loadingLabel;
 	public JLabel totalLabel;
-	private JButton searchBtn;
+	public JButton searchBtn;
 	private JButton clearCacheBtn;
 	public SearchTasksTable searchTable;
 	public JScrollPane tablePane;
@@ -74,6 +74,7 @@ public class SearchComicWindow extends JFrame {
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + "eh.png")).getImage());
 		this.setLayout(null);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		//this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);  

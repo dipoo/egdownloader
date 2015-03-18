@@ -60,6 +60,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					String date = "";
 					String type = "";
 					String btUrl = null;
+					String uploader = "";
 					if(source.indexOf("white-space:nowrap\">") != -1){
 						date = Spider.getTextFromSource(source, "white-space:nowrap\">", "</td><td class=\"itd\" onmouseover");
 					}
@@ -75,6 +76,10 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					if(temp.indexOf("return popUp('") != -1){
 						btUrl = Spider.getTextFromSource(temp, "return popUp('", "', 610, 590)").replaceAll("&amp;", "&");
 					}
+					if(source.indexOf("http://exhentai.org/uploader/") != -1){
+						source = Spider.substring(source, "http://exhentai.org/uploader");
+						uploader = Spider.getTextFromSource(source, "/", "\">");
+					}
 					SearchTask searchTask = new SearchTask();
 					searchTask.setName(name); 
 					searchTask.setUrl(url);
@@ -82,6 +87,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					searchTask.setDate(date);
 					searchTask.setType(type.toUpperCase());
 					searchTask.setBtUrl(btUrl);
+					searchTask.setUploader(uploader);
 					searchTasks.add(searchTask);
 					if(source.indexOf("</td></tr>") == -1){
 						break;
@@ -102,7 +108,6 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		} catch (Exception e) {
 			searchComicWindow.key = " ";
 			searchComicWindow.totalLabel.setText(e.getMessage());
-			searchComicWindow.searchTable.removeAll();
 		} finally{
 			searchComicWindow.hideLoading();
 		}
