@@ -52,7 +52,7 @@ public class SimpleSearchWindow extends JDialog {
 				mainWindow.setEnabled(false);
 			}
 		});
-		
+		final SimpleSearchWindow this_ = this;
 		JLabel descLabel = new AJLabel("Tips:搜索的结果会显示在控制台", Color.GRAY, 200, 10, 180, 30);
 		JLabel keyLabel = new AJLabel("关键字：", Color.BLUE, 10, 50, 50, 30);
 		keyTextField = new AJTextField("", "", 70, 50, 430, 30);
@@ -60,7 +60,8 @@ public class SimpleSearchWindow extends JDialog {
 			public void actionPerformed(ActionEvent ae) {
 				String key = keyTextField.getText();
 				if(key == null || "".equals(key.trim())){
-					JOptionPane.showMessageDialog(null, "请输入关键字！");
+					JOptionPane.showMessageDialog(this_, "请输入关键字！");
+					return;
 				}
 				TaskingTable table = (TaskingTable)mainWindow.runningTable;
 				List<Task> allTasks = table.getTasks();

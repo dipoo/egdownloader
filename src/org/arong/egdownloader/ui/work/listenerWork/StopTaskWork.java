@@ -27,7 +27,7 @@ public class StopTaskWork implements IListenerTask {
 		}
 		int[] rows = table.getSelectedRows();
 		if(rows.length == 0){
-			JOptionPane.showMessageDialog(null, "请选择至少一个任务");
+			JOptionPane.showMessageDialog(mainWindow, "请选择至少一个任务");
 			return;
 		}
 		for(int i = 0; i < rows.length; i++){

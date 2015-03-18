@@ -30,11 +30,11 @@ public class OpenFolderTaskWork implements IMenuListenerTask {
 				Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir()));
 			} catch (Exception e1) {
 				//e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "文件夹已被删除");
+				JOptionPane.showMessageDialog(mainWindow, "文件夹已被删除");
 				mainWindow.tablePopupMenu.setVisible(false);
 			}
 		}else{
-			JOptionPane.showMessageDialog(null, "文件夹还未生成");
+			JOptionPane.showMessageDialog(mainWindow, "文件夹还未生成");
 		}
 		mainWindow.tablePopupMenu.setVisible(false);
 	}

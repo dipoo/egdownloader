@@ -47,6 +47,7 @@ public class LoginWindow extends JDialog {
 		JLabel pwdLabel = new AJLabel("密   码：", Color.BLUE, 10, 60, 60, 30);
 		pwdPasswordField = new JPasswordField();
 		pwdPasswordField.setBounds(60, 60, 200, 30);
+		final LoginWindow this_ = this;
 		JButton loginButton = new AJButton("登录", "", null, new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window window, MouseEvent e) {
 				EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -54,15 +55,15 @@ public class LoginWindow extends JDialog {
 				String user = settingWindow.loginWindow.userTextField.getText();
 				String pwd = String.valueOf(settingWindow.loginWindow.pwdPasswordField.getPassword());
 				if("".equals(user)){
-					JOptionPane.showMessageDialog(null, "请填写用户名");
+					JOptionPane.showMessageDialog(this_, "请填写用户名");
 					return;
 				}else if("".equals(pwd)){
-					JOptionPane.showMessageDialog(null, "请填写密码");
+					JOptionPane.showMessageDialog(this_, "请填写密码");
 					return;
 				}else{
 					try {
 						if("".equals(settingWindow.loginUrlField.getText())){
-							JOptionPane.showMessageDialog(null, "请填写登录地址");
+							JOptionPane.showMessageDialog(this_, "请填写登录地址");
 							return;
 						}
 						Map<String, String> params = new HashMap<String, String>();
@@ -78,7 +79,7 @@ public class LoginWindow extends JDialog {
 //						System.out.println(url);
 						String cookieInfo = WebClient.getCookieUseJava(url, "UTF-8");
 						if("".equals(cookieInfo)){
-							JOptionPane.showMessageDialog(null, "登录失败");
+							JOptionPane.showMessageDialog(this_, "登录失败");
 							return;
 						}else{
 							settingWindow.cookieArea.setText(cookieInfo);
@@ -87,7 +88,7 @@ public class LoginWindow extends JDialog {
 						}
 					} catch (Exception e1) {
 						Tracker.println(LoginWindow.class, e1.getMessage());
-						JOptionPane.showMessageDialog(null, "登录失败");
+						JOptionPane.showMessageDialog(this_, "登录失败");
 						return;
 					}
 				}

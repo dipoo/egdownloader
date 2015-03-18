@@ -23,10 +23,10 @@ public class DeleteTaskWork implements IListenerTask {
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int[] rows = table.getSelectedRows();
 		if(rows.length == 0){
-			JOptionPane.showMessageDialog(null, "请选择至少一个任务");
+			JOptionPane.showMessageDialog(mainWindow, "请选择至少一个任务");
 			return;
 		}
-		int option = JOptionPane.showConfirmDialog(null, "确定要删除" + (rows.length > 1 ? "这些" : "这个") + "任务吗");
+		int option = JOptionPane.showConfirmDialog(mainWindow, "确定要删除" + (rows.length > 1 ? "这些" : "这个") + "任务吗");
 		if(option == 0){
 			mainWindow.setEnabled(false);
 			DeletingWindow w = (DeletingWindow) mainWindow.deletingWindow;
@@ -36,7 +36,7 @@ public class DeleteTaskWork implements IListenerTask {
 			w = (DeletingWindow) mainWindow.deletingWindow;
 			w.setData("    0/" + rows.length);
 			w.setInfo("正在收集任务图片");
-			int o = JOptionPane.showConfirmDialog(null, "是否删除下载的文件？");
+			int o = JOptionPane.showConfirmDialog(mainWindow, "是否删除下载的文件？");
 			w.setVisible(true);
 			//执行删除线程
 			new DeleteWorker(mainWindow, table, w, rows, o == 0).execute();

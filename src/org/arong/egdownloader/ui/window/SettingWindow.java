@@ -191,6 +191,9 @@ public class SettingWindow extends JFrame{
 			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
 			saveDirField.setEditable(false);
 			saveDirField.setEnabled(false);
+			
+			final SettingWindow this_ = this;
+			
 			JButton openDirButton = new AJButton("打开", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					try {
@@ -200,7 +203,7 @@ public class SettingWindow extends JFrame{
 						Desktop.getDesktop().open(f);
 					} catch (Exception e1) {
 						e1.printStackTrace();
-						JOptionPane.showMessageDialog(null, "文件夹已被删除");
+						JOptionPane.showMessageDialog(this_, "文件夹已被删除");
 					}
 				}
 			}), 500, 30, 60, 30);
@@ -302,7 +305,7 @@ public class SettingWindow extends JFrame{
 					
 					if("".equals(createScriptPath.trim()) || "".equals(collectScriptPath.trim())
 							|| "".equals(downloadScriptPath.trim())){
-						JOptionPane.showMessageDialog(null, "请填写完所有脚本路径！");
+						JOptionPane.showMessageDialog(this_, "请填写完所有脚本路径！");
 						return;
 					}else{
 						if(testScriptWindow == null){
@@ -403,20 +406,20 @@ public class SettingWindow extends JFrame{
 						String cookieInfo = settingWindow.cookieArea.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
-							JOptionPane.showMessageDialog(null, "请填写保存目录");
+							JOptionPane.showMessageDialog(this_, "请填写保存目录");
 							return;
 						}else if("".equals(maxThread)){
-							JOptionPane.showMessageDialog(null, "请填写最多开启任务数");
+							JOptionPane.showMessageDialog(this_, "请填写最多开启任务数");
 							return;
 						}else if(!p.matcher(maxThread).matches()){
-							JOptionPane.showMessageDialog(null, "最多开启任务数必须填写数字,或不能大于10");
+							JOptionPane.showMessageDialog(this_, "最多开启任务数必须填写数字,或不能大于10");
 							return;
 						}else if("".equals(loginUrl)){
-							JOptionPane.showMessageDialog(null, "请填写登录地址");
+							JOptionPane.showMessageDialog(this_, "请填写登录地址");
 							return;
 						}else{
 							if("".equals(cookieInfo)){
-								int result = JOptionPane.showConfirmDialog(null, "登陆信息cookie不存在，确认要保存吗？");
+								int result = JOptionPane.showConfirmDialog(this_, "登陆信息cookie不存在，确认要保存吗？");
 								if(result != 0){//不保存
 									return;
 								}
@@ -428,7 +431,7 @@ public class SettingWindow extends JFrame{
 							setting.setLoginUrl(loginUrl);
 							setting.setCookieInfo(cookieInfo);
 							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-							JOptionPane.showMessageDialog(null, "保存成功");
+							JOptionPane.showMessageDialog(this_, "保存成功");
 						}
 					}
 					//引擎设置
@@ -460,7 +463,7 @@ public class SettingWindow extends JFrame{
 								 "".equals(intercept_1) || "".equals(intercept_2) || "".equals(showUrl_1) ||
 								 "".equals(showUrl_2) || "".equals(picName_1) || "".equals(picName_2) ||
 								 "".equals(realUrl_1) || "".equals(realUrl_2)){
-							JOptionPane.showMessageDialog(null, "请填写完整！");
+							JOptionPane.showMessageDialog(this_, "请填写完整！");
 							return;
 						}else{
 							setting.getTask_name()[0] = name_1;
@@ -484,7 +487,7 @@ public class SettingWindow extends JFrame{
 							setting.getPicture_realUrl()[0] = realUrl_1;
 							setting.getPicture_realUrl()[1] = realUrl_2;
 							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-							JOptionPane.showMessageDialog(null, "保存成功");
+							JOptionPane.showMessageDialog(this_, "保存成功");
 						}
 					}
 					//脚本设置
@@ -496,7 +499,7 @@ public class SettingWindow extends JFrame{
 						
 						if(openScript && ("".equals(createScriptPath.trim()) || "".equals(collectScriptPath.trim())
 								|| "".equals(downloadScriptPath.trim()))){
-							JOptionPane.showMessageDialog(null, "请填写完所有脚本路径！");
+							JOptionPane.showMessageDialog(this_, "请填写完所有脚本路径！");
 							return;
 						}
 						setting.setOpenScript(openScript);
@@ -504,7 +507,7 @@ public class SettingWindow extends JFrame{
 						setting.setCollectPictureScriptPath(collectScriptPath);
 						setting.setDownloadScriptPath(downloadScriptPath);
 						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-						JOptionPane.showMessageDialog(null, "保存成功");
+						JOptionPane.showMessageDialog(this_, "保存成功");
 					}
 					//hentai@home设置
 					/*else if(index == 5){
@@ -516,25 +519,25 @@ public class SettingWindow extends JFrame{
 						String fileListPrefix = settingWindow.h_fileListPrefixTextField.getText();
 						String fileListSuffix = settingWindow.h_fileListSuffixTextField.getText();
 						if("".equals(uri)){
-							JOptionPane.showMessageDialog(null, "请填写URI");
+							JOptionPane.showMessageDialog(this_, "请填写URI");
 							return;
 						}else if("".equals(gid)){
-							JOptionPane.showMessageDialog(null, "请填写gid");
+							JOptionPane.showMessageDialog(this_, "请填写gid");
 							return;
 						}else if("".equals(t)){
-							JOptionPane.showMessageDialog(null, "请填写t");
+							JOptionPane.showMessageDialog(this_, "请填写t");
 							return;
 						}else if("".equals(totalPrefix)){
-							JOptionPane.showMessageDialog(null, "totalPrefix");
+							JOptionPane.showMessageDialog(this_, "totalPrefix");
 							return;
 						}else if("".equals(namePrefix)){
-							JOptionPane.showMessageDialog(null, "namePrefix");
+							JOptionPane.showMessageDialog(this_, "namePrefix");
 							return;
 						}else if("".equals(fileListPrefix)){
-							JOptionPane.showMessageDialog(null, "fileListPrefix");
+							JOptionPane.showMessageDialog(this_, "fileListPrefix");
 							return;
 						}else if("".equals(fileListSuffix)){
-							JOptionPane.showMessageDialog(null, "fileListSuffix");
+							JOptionPane.showMessageDialog(this_, "fileListSuffix");
 							return;
 						}else{
 							setting.getHentaiHome().setUri(uri);
@@ -545,7 +548,7 @@ public class SettingWindow extends JFrame{
 							setting.setFileListPrefix(fileListPrefix);
 							setting.setFileListSuffix(fileListSuffix);
 							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-							JOptionPane.showMessageDialog(null, "保存成功");
+							JOptionPane.showMessageDialog(this_, "保存成功");
 						}
 					}*/
 					//下载设置
@@ -560,31 +563,31 @@ public class SettingWindow extends JFrame{
 						String realUrlSuffix = settingWindow.d_realUrlSuffixTextField.getText();
 						Pattern p = Pattern.compile("[0-9]+");
 						if("".equals(pageCount)){
-							JOptionPane.showMessageDialog(null, "请填写每页数目");
+							JOptionPane.showMessageDialog(this_, "请填写每页数目");
 							return;
 						}else if(!p.matcher(pageCount).matches()){
-							JOptionPane.showMessageDialog(null, "每页数目必须填写数字");
+							JOptionPane.showMessageDialog(this_, "每页数目必须填写数字");
 							return;
 						}else if("".equals(pageParam)){
-							JOptionPane.showMessageDialog(null, "请填写分页参数");
+							JOptionPane.showMessageDialog(this_, "请填写分页参数");
 							return;
 						}else if("".equals(sourcePrefix)){
-							JOptionPane.showMessageDialog(null, "请填写sourcePrefix");
+							JOptionPane.showMessageDialog(this_, "请填写sourcePrefix");
 							return;
 						}else if("".equals(sourceSuffix)){
-							JOptionPane.showMessageDialog(null, "请填写sourceSuffix");
+							JOptionPane.showMessageDialog(this_, "请填写sourceSuffix");
 							return;
 						}else if("".equals(showPicPrefix)){
-							JOptionPane.showMessageDialog(null, "请填写showPicPrefix");
+							JOptionPane.showMessageDialog(this_, "请填写showPicPrefix");
 							return;
 						}else if("".equals(showPicSuffix)){
-							JOptionPane.showMessageDialog(null, "请填写showPicSuffix");
+							JOptionPane.showMessageDialog(this_, "请填写showPicSuffix");
 							return;
 						}else if("".equals(realUrlPrefix)){
-							JOptionPane.showMessageDialog(null, "请填写realUrlPrefix");
+							JOptionPane.showMessageDialog(this_, "请填写realUrlPrefix");
 							return;
 						}else if("".equals(realUrlSuffix)){
-							JOptionPane.showMessageDialog(null, "请填写realUrlSuffix");
+							JOptionPane.showMessageDialog(this_, "请填写realUrlSuffix");
 							return;
 						}else{
 							setting.setPageCount(Integer.parseInt(pageCount));
@@ -596,7 +599,7 @@ public class SettingWindow extends JFrame{
 							setting.setRealUrlPrefix(realUrlPrefix);
 							setting.setRealUrlSuffix(realUrlSuffix);
 							mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
-							JOptionPane.showMessageDialog(null, "保存成功");
+							JOptionPane.showMessageDialog(this_, "保存成功");
 						}
 					}
 				}

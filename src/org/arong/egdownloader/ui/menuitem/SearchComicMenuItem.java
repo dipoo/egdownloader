@@ -1,11 +1,14 @@
 package org.arong.egdownloader.ui.menuitem;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 /**
@@ -20,6 +23,9 @@ public class SearchComicMenuItem extends JMenuItem {
 	public SearchComicMenuItem(String text, final EgDownloaderWindow mainWindow){
 		super(text);
 		this.setForeground(new Color(0,0,85));
+		ImageIcon icon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "eh.png"));
+		icon.setImage(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
+		this.setIcon(icon);
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(mainWindow.searchComicWindow == null){

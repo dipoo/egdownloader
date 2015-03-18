@@ -24,7 +24,7 @@ public class ReBuildAllTaskMenuItem extends JMenuItem {
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				//询问是否重建任务
-				int result = JOptionPane.showConfirmDialog(null, "重建任务需要暂停正在进行的任务，是否确定重建？");
+				int result = JOptionPane.showConfirmDialog(window, "重建任务需要暂停正在进行的任务，是否确定重建？");
 				if(result == 0){//确定
 					EgDownloaderWindow mainWindow = window;
 					TaskingTable table = (TaskingTable) mainWindow.runningTable;

@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -18,9 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -54,6 +57,7 @@ public class SearchComicWindow extends JFrame {
 	private JLabel loadingLabel;
 	public JLabel totalLabel;
 	private JButton searchBtn;
+	private JButton clearCacheBtn;
 	public SearchTasksTable searchTable;
 	public JScrollPane tablePane;
 	public JPanel optionPanel;
@@ -70,11 +74,12 @@ public class SearchComicWindow extends JFrame {
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + "eh.png")).getImage());
 		this.setLayout(null);
-		this.setResizable(false);
-		this.setLocationRelativeTo(null);  
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
+		//this.setResizable(false);
+		this.setLocationRelativeTo(mainWindow);  
 		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 20, 50, 30);
 		keyField = new AJTextField("", 60, 20, 440, 30);
-		keyField.setText("chinese");
+		keyField.setText("language:chinese");
 		keyField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER){
@@ -90,11 +95,10 @@ public class SearchComicWindow extends JFrame {
 		totalLabel = new AJLabel("", null, Color.BLACK, JLabel.LEFT);
 		totalLabel.setBounds(600, 20, 300, 30);
 		totalLabel.setVisible(false);
-		
 		/* 分类条件 */
-		optionPanel = new JPanel(new GridLayout());
-		optionPanel.setBounds(10, 55, ComponentConst.CLIENT_WIDTH - 20, 40);
-		optionPanel.setAlignmentX(FlowLayout.LEFT);
+		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		optionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "条件过滤"));
+		optionPanel.setBounds(6, 55, ComponentConst.CLIENT_WIDTH - 23, 65);
 		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, false);
 		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, false);
 		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, false);
@@ -105,6 +109,43 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, false);
 		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, false);
 		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, false);
+		final JComboBox language = new JComboBox(new String[]{"全部", "中文", "英文", "韩文", "法文", "西班牙"});
+		language.setSelectedIndex(1);
+		language.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String key = keyField.getText();
+				String[] keys = key.split(" ");
+				if(keys[0].indexOf("language:") != -1){
+					key = "";
+					for(int i = 1; i < keys.length; i ++){
+						key += keys[i];
+						if(i != keys.length - 1){
+							key += "";
+						}
+					}
+				}
+				switch(language.getSelectedIndex()){
+					case 0:
+						keyField.setText(key);
+						break;
+					case 1:
+						keyField.setText("language:chinese " + key);
+						break;
+					case 2:
+						keyField.setText("language:english " + key);
+						break;
+					case 3:
+						keyField.setText("language:korean " + key);
+						break;
+					case 4:
+						keyField.setText("language:french " + key);
+						break;
+					case 5:
+						keyField.setText("language:spanish " + key);
+						break;	
+				}
+			}
+		});
 		final JCheckBox c11 = new AJCheckBox("ALL", Color.RED, font, false);
 		c11.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -116,7 +157,7 @@ public class SearchComicWindow extends JFrame {
 				}
 			}
 		});
-		ComponentUtil.addComponents(optionPanel, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11);
+		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -135,14 +176,14 @@ public class SearchComicWindow extends JFrame {
 			}
 			
 		}, 510, 20, 60, 30);
-		
-		JButton clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
+		final SearchComicWindow this_ = this;
+		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				datas.clear();
 				keyPage.clear();
-				JOptionPane.showMessageDialog(null, "清理成功");
+				JOptionPane.showMessageDialog(this_, "清理成功");
 			}
-		}, 940, 20, 60, 30);
+		}, this.getWidth() - 80, 20, 60, 30);
 		clearCacheBtn.setUI(AJButton.blueBtnUi);
 		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel, clearCacheBtn, optionPanel, pager);
 		
@@ -162,7 +203,45 @@ public class SearchComicWindow extends JFrame {
 			}
 		});
 		
-		//检测是否存在缓存目录
+		//窗口大小变化监听
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				SearchComicWindow window = (SearchComicWindow) e.getSource();
+				//设置清理缓存按钮位置
+				if(clearCacheBtn != null){
+					clearCacheBtn.setLocation(window.getWidth() - 80, clearCacheBtn.getY());
+				}
+				//设置分类条件大小
+				if(optionPanel != null){
+					optionPanel.setSize(window.getWidth() - 23, optionPanel.getHeight());
+				}
+				//设置表格的大小
+				if(searchTable != null){
+					int height = window.getHeight() - 210;
+					tablePane.setSize(window.getWidth() - 20, height);
+					searchTable.setSize(window.getWidth() - 20, height);
+				}
+				//设置分页面板大小
+				if(pager != null){
+					pager.setBounds(pager.getX(), window.getHeight() - 80, window.getWidth() - 20, pager.getHeight());
+				}
+			}
+		});
+		
+		//鼠标动作监听
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				SearchComicWindow window = (SearchComicWindow) e.getSource();
+				if(window.getWidth() < ComponentConst.CLIENT_WIDTH){
+					window.setSize(ComponentConst.CLIENT_WIDTH, window.getHeight());
+				}
+				if(window.getHeight() < ComponentConst.CLIENT_HEIGHT){
+					window.setSize(window.getWidth(), ComponentConst.CLIENT_HEIGHT);
+				}
+			}
+		});
+		
+		//检测是否存在缓存目录,不存在则创建
 		FileUtil.ifNotExistsThenCreate(ComponentConst.CACHE_PATH);
 	}
 	
@@ -213,10 +292,10 @@ public class SearchComicWindow extends JFrame {
 	
 	public void showResult(String totalPage, Integer currentPage){
 		if(searchTable == null){
-			searchTable = new SearchTasksTable(5, 100, ComponentConst.CLIENT_WIDTH - 20,
-					ComponentConst.CLIENT_HEIGHT - 180, searchTasks, this);
+			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
+					this.getHeight() - 210, searchTasks, this);
 			tablePane = new JScrollPane(searchTable);
-			tablePane.setBounds(5, 100, ComponentConst.CLIENT_WIDTH - 20, ComponentConst.CLIENT_HEIGHT - 180);
+			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
 			tablePane.getViewport().setBackground(new Color(254,254,254));
 			mainWindow.searchComicWindow.getContentPane().add(tablePane);
 		}

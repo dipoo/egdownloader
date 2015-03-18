@@ -31,13 +31,13 @@ public class OpenWebPageWork implements IMenuListenerTask {
 			try {
 				Runtime.getRuntime().exec("cmd.exe /c start " + task.getUrl());
 			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(null, "不支持此功能");
+				JOptionPane.showMessageDialog(mainWindow, "不支持此功能");
 			}
 		} catch (URISyntaxException e1) {
 			try {
 				Runtime.getRuntime().exec("cmd.exe /c start " + task.getUrl());
 			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(null, "不支持此功能");
+				JOptionPane.showMessageDialog(mainWindow, "不支持此功能");
 			}
 		}finally{
 			//隐藏tablePopupMenu
