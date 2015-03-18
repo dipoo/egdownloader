@@ -258,15 +258,15 @@ public class SearchComicWindow extends JFrame {
 		}else{
 			key = k;
 			//过滤key
-			keyText = filterUrl(keyText);
+			keyText = filterKey(keyText);
 			String exurl = "http://exhentai.org/?page=" + (Integer.parseInt(page) - 1) + parseOption() + "&f_search=" + keyText;
 			new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page)).execute();
 		}
 	}
 	
-	public String filterUrl(String url){
-		if(url != null){
-			return url.replaceAll("\\%", "%25")
+	public String filterKey(String key){
+		if(key != null){
+			return key.replaceAll("\\%", "%25")
 			.replaceAll("\\+", "%2B")
 			.replaceAll(" ", "+")
 			.replaceAll("\\/", "%2F")

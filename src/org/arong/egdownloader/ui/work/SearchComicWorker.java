@@ -87,7 +87,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					searchTask.setDate(date);
 					searchTask.setType(type.toUpperCase());
 					searchTask.setBtUrl(btUrl);
-					searchTask.setUploader(uploader);
+					searchTask.setUploader(filterUploader(uploader));
 					searchTasks.add(searchTask);
 					if(source.indexOf("</td></tr>") == -1){
 						break;
@@ -113,5 +113,17 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		}
 		return null;
 	}
-
+	
+	public String filterUploader(String url){
+		if(url != null){
+			return url.replaceAll("\\%25", "%")
+			.replaceAll("\\%2B", "+")
+			.replaceAll("\\%2F", "/")
+			.replaceAll("\\%3F", "?")
+			.replaceAll("\\%23", "#")
+			.replaceAll("\\%26", "&")
+			.replaceAll("\\%3D", "=");
+		}
+		return null;
+	}
 }
