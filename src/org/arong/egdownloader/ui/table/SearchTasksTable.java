@@ -77,6 +77,7 @@ public class SearchTasksTable extends JTable {
 //		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, new TableCellRenderer() {
 			private Color c = new Color(47,110,178);
+			private Color uploaderColor = Color.getHSBColor(122, 255, 122);
 			private Font font = new Font("微软雅黑", Font.PLAIN, 11);
 			public Component getTableCellRendererComponent(JTable table, Object value,
 					boolean isSelected, boolean hasFocus, int row, int column) {
@@ -111,7 +112,7 @@ public class SearchTasksTable extends JTable {
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
 					final JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
-					l.setForeground(Color.getHSBColor(122, 122, 122));
+					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;
 				}else if(column == 3){//发布时间
