@@ -54,7 +54,7 @@ public class CheckResetWork implements IMenuListenerTask {
 				}
 				if(indexs.size() > 0){
 					mainWindow.checkingWindow.dispose();
-					int result = JOptionPane.showConfirmDialog(null, "检测到" + indexs.size() + "张图片缺失，是否重置这些图片的下载状态？");
+					int result = JOptionPane.showConfirmDialog(mainWindow, "检测到" + indexs.size() + "张图片缺失，是否重置这些图片的下载状态？");
 					if(result == 0){//确定
 						mainWindow.checkingWindow.setVisible(true);
 						for(int i = 0; i < indexs.size(); i ++){
@@ -72,13 +72,13 @@ public class CheckResetWork implements IMenuListenerTask {
 						mainWindow.taskDbTemplate.update(task);//保存任务
 						table.updateUI();//刷新表格
 						mainWindow.checkingWindow.dispose();
-						JOptionPane.showMessageDialog(null, "重置任务完成！");
+						JOptionPane.showMessageDialog(mainWindow, "重置任务完成！");
 					}
 					return;
 				}
 			}else{//文件夹不存在或者文件列表为空,重置全部图片状态
 				mainWindow.checkingWindow.dispose();
-				int result = JOptionPane.showConfirmDialog(null, "检测不到任何图片，是否重置任务的下载状态？");
+				int result = JOptionPane.showConfirmDialog(mainWindow, "检测不到任何图片，是否重置任务的下载状态？");
 				if(result == 0){//确定
 					mainWindow.checkingWindow.setVisible(true);
 					for(int i = 0; i < pics.size(); i ++){
@@ -91,13 +91,13 @@ public class CheckResetWork implements IMenuListenerTask {
 					mainWindow.taskDbTemplate.update(task);//保存任务
 					table.updateUI();//刷新表格
 					mainWindow.checkingWindow.dispose();
-					JOptionPane.showMessageDialog(null, "重置任务完成！");
+					JOptionPane.showMessageDialog(mainWindow, "重置任务完成！");
 				}
 				return;
 			}
 		}
 		mainWindow.checkingWindow.dispose();
-		JOptionPane.showMessageDialog(null, "检测完毕！无文件缺失");
+		JOptionPane.showMessageDialog(mainWindow, "检测完毕！无文件缺失");
 	}
 	
 	/**

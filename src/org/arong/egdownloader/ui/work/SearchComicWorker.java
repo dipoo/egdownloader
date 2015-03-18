@@ -102,6 +102,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		} catch (Exception e) {
 			searchComicWindow.key = " ";
 			searchComicWindow.totalLabel.setText(e.getMessage());
+			searchComicWindow.searchTable.removeAll();
 		} finally{
 			searchComicWindow.hideLoading();
 		}

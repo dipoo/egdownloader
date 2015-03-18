@@ -43,23 +43,23 @@ public class DownloadCoverWork implements IMenuListenerTask {
 				is =  WebClient.getStreamUseJava(task.getCoverUrl());
 				int size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				if(size == 0){
-					JOptionPane.showMessageDialog(null, "下载失败，地址错误或者地址不可访问");
+					JOptionPane.showMessageDialog(mainWindow, "下载失败，地址错误或者地址不可访问");
 				}else{
-					JOptionPane.showMessageDialog(null, "下载成功");
+					JOptionPane.showMessageDialog(mainWindow, "下载成功");
 				}
 			} catch (SocketTimeoutException e){
-				JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
+				JOptionPane.showMessageDialog(mainWindow, "读取文件超时，请检查网络后重试");
 			} catch (ConnectTimeoutException e){
-				JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
+				JOptionPane.showMessageDialog(mainWindow, "连接超时，请检查网络后重试");
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
+				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} catch (SpiderException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
+				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} finally{
 				mainWindow.tablePopupMenu.setVisible(false);
 			}
 		}else{
-			JOptionPane.showMessageDialog(null, "封面已存在");
+			JOptionPane.showMessageDialog(mainWindow, "封面已存在");
 			mainWindow.tablePopupMenu.setVisible(false);
 		}
 	}

@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -59,7 +60,6 @@ import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ReBuildAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
-import org.arong.egdownloader.ui.menuitem.SearchComicMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
@@ -132,6 +132,8 @@ public class EgDownloaderWindow extends JFrame {
 	public DbTemplate<Setting> settingDbTemplate;
 
 	public EgDownloaderWindow(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
+		final EgDownloaderWindow mainWindow = this;
+		
 		this.taskDbTemplate = taskDbTemplate;
 		this.pictureDbTemplate = pictureDbTemplate;
 		this.settingDbTemplate = settingDbTemplate;
@@ -140,6 +142,7 @@ public class EgDownloaderWindow extends JFrame {
 		//加载任务列表
 		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
 		// 设置主窗口
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
@@ -186,6 +189,22 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
 				"", ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("delete"), deleteBtnMouseListener);
+		
+		//菜单：搜索
+		JMenu searchComicMenu = new AJMenu(ComponentConst.SEARCH_MENU_TEXT,
+				"", new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						if(searchComicWindow == null){
+							searchComicWindow = new SearchComicWindow(mainWindow);
+						}
+						SearchComicWindow scw = (SearchComicWindow) mainWindow.searchComicWindow;
+						scw.setVisible(true);
+					}
+				});
+		ImageIcon icon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "eh.png"));
+		icon.setImage(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
+		searchComicMenu.setIcon(icon);
+		
 		// 菜单：任务组
 		JMenu taskGroupMenu = new AJMenu(ComponentConst.TASKGROUP_MENU_TEXT,
 				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
@@ -211,8 +230,7 @@ public class EgDownloaderWindow extends JFrame {
 		taskMenu.add(new ResetMenuItem("重置所有任务", this));
 		taskMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
 		operaMenu.add(taskMenu);
-		operaMenu.add(new SearchComicMenuItem(" 搜索漫画", this));
-		operaMenu.add(new SimpleSearchMenuItem(" 简单搜索", this));
+		operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
@@ -244,7 +262,7 @@ public class EgDownloaderWindow extends JFrame {
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
+				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, searchComicMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
 		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
@@ -336,7 +354,7 @@ public class EgDownloaderWindow extends JFrame {
 						int index = table.getSelectedRow();
 						Task task = table.getTasks().get(index);
 						if(task.getStatus() == TaskStatus.STARTED){
-							JOptionPane.showMessageDialog(null, "正在下载中的任务不能重置！");
+							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能重置！");
 							return;
 						}
 						List<Task> tasks = new ArrayList<Task>();
@@ -356,11 +374,11 @@ public class EgDownloaderWindow extends JFrame {
 						int index = table.getSelectedRow();
 						Task task = table.getTasks().get(index);
 						if(task.getStatus() == TaskStatus.STARTED){
-							JOptionPane.showMessageDialog(null, "正在下载中的任务不能执行此操作！");
+							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能执行此操作！");
 							return;
 						}
 						//询问是否执行此操作
-						int result = JOptionPane.showConfirmDialog(null, "此操作后将无法还原，确定要将【"
+						int result = JOptionPane.showConfirmDialog(mainWindow, "此操作后将无法还原，确定要将【"
 						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
 						"】置为完成状态吗？");
 						if(result == 0){//确定
@@ -368,7 +386,7 @@ public class EgDownloaderWindow extends JFrame {
 							task.setStatus(TaskStatus.COMPLETED);
 							//保存数据
 							mainWindow.taskDbTemplate.update(mainWindow.tasks);
-							JOptionPane.showMessageDialog(null, "操作完成！");
+							JOptionPane.showMessageDialog(mainWindow, "操作完成！");
 						}
 					}
 				}));
@@ -422,7 +440,6 @@ public class EgDownloaderWindow extends JFrame {
 			emptyTableTips.setVisible(false);
 		}
 		
-		final EgDownloaderWindow mainWindow = this;
 		//系统托盘
 		if (SystemTray.isSupported()) {// 判断系统是否托盘
 		    tray = new TrayIcon(new ImageIcon(getClass().getResource(
@@ -548,7 +565,7 @@ public class EgDownloaderWindow extends JFrame {
 	protected void processWindowEvent(WindowEvent e) {
 		//关闭，询问
 		if(e.getID() == WindowEvent.WINDOW_CLOSING){
-			int r = JOptionPane.showConfirmDialog(null, "您确定要关闭" + Version.NAME + "吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			int r = JOptionPane.showConfirmDialog(this, "您确定要关闭" + Version.NAME + "吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if(r == JOptionPane.YES_OPTION){
 				//保存数据
 				this.saveTaskGroupData();

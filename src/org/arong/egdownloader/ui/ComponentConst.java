@@ -141,6 +141,7 @@ public final class ComponentConst {
 	public final static String START_MENU_TEXT = "开始";
 	public final static String STOP_MENU_TEXT = "暂停";
 	public final static String DELETE_MENU_TEXT = "删除";
+	public final static String TASKGROUP_SEARCH_TEXT = "搜索";
 	public final static String TASKGROUP_MENU_TEXT = "任务组";
 	public final static String SETTING_MENU_TEXT = "配置";
 	public final static String OPERA_MENU_TEXT = "操作";
@@ -154,8 +155,8 @@ public final class ComponentConst {
 	public final static String POPUP_STOP_MENU_TEXT = "暂停任务   ";
 	public final static String POPUP_DETAIL_MENU_TEXT = "详细信息   ";
 	public final static String POPUP_COPYURL_MENU_TEXT = "复制地址   ";
-	public final static String POPUP_OPENFOLDER_MENU_TEXT = "打开文件夹   ";
-	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "浏览下载页   ";
+	public final static String POPUP_OPENFOLDER_MENU_TEXT = "打开目录   ";
+	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = "打开网页   ";
 	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = "下载封面   ";
 	public final static String POPUP_CHECKRESET_MENU_TEXT = "查漏补缺   ";
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = "更改状态   ";

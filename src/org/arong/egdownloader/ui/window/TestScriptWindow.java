@@ -67,6 +67,7 @@ public class TestScriptWindow extends JDialog{
 		consolePane.setBounds(10, 100, 568, 310);
 		consolePane.setAutoscrolls(true);
 		consolePane.setBorder(border);
+		
 		final JButton testBtn = new AJButton("测试脚本", "", "", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window window, MouseEvent e) {
 				String url = urlField.getText();

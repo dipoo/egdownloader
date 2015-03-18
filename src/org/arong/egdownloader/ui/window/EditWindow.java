@@ -72,15 +72,15 @@ public class EditWindow extends JDialog {
 				String end = endField.getText().trim();
 				
 				if("".equals(name)){
-					JOptionPane.showMessageDialog(null, "请填写任务名称");
+					JOptionPane.showMessageDialog(dialog, "请填写任务名称");
 				}else if(!start.matches("^[0-9]*[1-9][0-9]*$")){
-					JOptionPane.showMessageDialog(null, "[开始]请填写正整数");
+					JOptionPane.showMessageDialog(dialog, "[开始]请填写正整数");
 				}else if(!end.matches("^[0-9]*[1-9][0-9]*$")){
-					JOptionPane.showMessageDialog(null, "[结束]请填写正整数");
+					JOptionPane.showMessageDialog(dialog, "[结束]请填写正整数");
 				}else if(Integer.parseInt(start) > Integer.parseInt(end)){
-					JOptionPane.showMessageDialog(null, "[开始]不能大于[结束]");
+					JOptionPane.showMessageDialog(dialog, "[开始]不能大于[结束]");
 				}else if(Integer.parseInt(end) > task.getTotal()){
-					JOptionPane.showMessageDialog(null, "[结束]不能大于图片总数：" + task.getTotal());
+					JOptionPane.showMessageDialog(dialog, "[结束]不能大于图片总数：" + task.getTotal());
 				}else{
 					if("".equals(subname)){
 						subname = null;

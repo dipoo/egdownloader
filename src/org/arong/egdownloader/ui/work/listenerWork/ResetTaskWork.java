@@ -16,7 +16,7 @@ import org.arong.egdownloader.ui.window.ResetAllTaskWindow;
 public class ResetTaskWork {
 	public ResetTaskWork(EgDownloaderWindow mainWindow, List<Task> tasks, String message) {
 		//询问是否重置任务
-		int result = JOptionPane.showConfirmDialog(null, message);
+		int result = JOptionPane.showConfirmDialog(mainWindow, message);
 		if(result == 0){//确定
 			
 			mainWindow.setEnabled(false);
@@ -48,7 +48,7 @@ public class ResetTaskWork {
 			//保存数据
 			mainWindow.taskDbTemplate.update(mainWindow.tasks);
 			w.dispose();
-			JOptionPane.showMessageDialog(null, "重置任务完成！");
+			JOptionPane.showMessageDialog(mainWindow, "重置任务完成！");
 		}
 	}
 }

@@ -90,12 +90,12 @@ public class SearchTasksTable extends JTable {
 				TableColumn tc = tb.getColumnModel().getColumn(column);
 				if(column == 0){//类型
 					tc.setPreferredWidth(105);
-					tc.setMaxWidth(150);
+					tc.setMaxWidth(105);
 					JLabel l = new AJLabel("", tasks.get(row).getType() == null ? "" : (tasks.get(row).getType() + ".png"), c, JLabel.LEFT);
 					return l;
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(800);
-					tc.setMaxWidth(800);
+					tc.setMaxWidth(1800);
 					JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
 					SearchTask task = tasks.get(row);
 					if(task.getBtUrl() != null){
@@ -209,13 +209,13 @@ public class SearchTasksTable extends JTable {
 			try {
 				Runtime.getRuntime().exec("cmd.exe /c start " + url);
 			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(null, "不支持此功能");
+				JOptionPane.showMessageDialog(comicWindow, "不支持此功能");
 			}
 		} catch (URISyntaxException e1) {
 			try {
 				Runtime.getRuntime().exec("cmd.exe /c start " + url);
 			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(null, "不支持此功能");
+				JOptionPane.showMessageDialog(comicWindow, "不支持此功能");
 			}
 		}finally{
 			//隐藏tablePopupMenu
