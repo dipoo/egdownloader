@@ -14,6 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -257,25 +259,18 @@ public class SearchComicWindow extends JFrame {
 			hideLoading();
 		}else{
 			key = k;
-			//过滤key
-			keyText = filterKey(keyText);
-			String exurl = "http://exhentai.org/?page=" + (Integer.parseInt(page) - 1) + parseOption() + "&f_search=" + keyText;
+			String exurl = "http://exhentai.org/?page=" + (Integer.parseInt(page) - 1) + parseOption();
+			if(!keyText.equals("")){
+				//过滤key
+				try {
+					keyText = URLEncoder.encode(keyText, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					
+				}
+				exurl = exurl + "&f_search=" + keyText;
+			}
 			new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page)).execute();
 		}
-	}
-	
-	public String filterKey(String key){
-		if(key != null){
-			return key.replaceAll("\\%", "%25")
-			.replaceAll("\\+", "%2B")
-			.replaceAll(" ", "+")
-			.replaceAll("\\/", "%2F")
-			.replaceAll("\\?", "%3F")
-			.replaceAll("\\#", "%23")
-			.replaceAll("\\&", "%26")
-			.replaceAll("\\=", "%3D");
-		}
-		return null;
 	}
 	
 	public String parseOption(){
