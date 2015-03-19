@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.work;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +79,8 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					}
 					if(source.indexOf("http://exhentai.org/uploader/") != -1){
 						source = Spider.substring(source, "http://exhentai.org/uploader");
-						uploader = Spider.getTextFromSource(source, "/", "\">");
+						uploader = URLDecoder.decode(Spider.getTextFromSource(source, "/", "\">"), "utf-8");
+						uploader = URLDecoder.decode(uploader, "utf-8");
 					}
 					SearchTask searchTask = new SearchTask();
 					searchTask.setName(name); 
@@ -87,7 +89,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					searchTask.setDate(date);
 					searchTask.setType(type.toUpperCase());
 					searchTask.setBtUrl(btUrl);
-					searchTask.setUploader(filterUploader(uploader));
+					searchTask.setUploader(uploader);
 					searchTasks.add(searchTask);
 					if(source.indexOf("</td></tr>") == -1){
 						break;
@@ -110,19 +112,6 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			searchComicWindow.totalLabel.setText(e.getMessage());
 		} finally{
 			searchComicWindow.hideLoading();
-		}
-		return null;
-	}
-	
-	public String filterUploader(String url){
-		if(url != null){
-			return url.replaceAll("\\%25", "%")
-			.replaceAll("\\%2B", "+")
-			.replaceAll("\\%2F", "/")
-			.replaceAll("\\%3F", "?")
-			.replaceAll("\\%23", "#")
-			.replaceAll("\\%26", "&")
-			.replaceAll("\\%3D", "=");
 		}
 		return null;
 	}
