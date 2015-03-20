@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -176,7 +177,9 @@ public class SettingWindow extends JFrame{
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
 			final Setting setting = ((EgDownloaderWindow)mainWindow).setting;
-			
+			this.setIconImage(new ImageIcon(getClass().getResource(
+					ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
+					+ ComponentConst.SKIN_ICON.get("setting"))).getImage());
 			this.getContentPane().setLayout(null);
 			this.setSize(800, 480);
 			this.setResizable(false);

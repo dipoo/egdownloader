@@ -100,6 +100,7 @@ public class AJButton extends JButton {
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
 		this.setToolTipText(text);
+		this.setForeground(Color.WHITE);
 		this.addMouseListener(new MouseAdapter(){
 			public void mouseExited(MouseEvent e) {
 				AJButton btn = (AJButton) e.getSource();
