@@ -38,17 +38,34 @@ public class ScriptParser {
 	private static File createScriptFile;
 	private static File collectScriptFile;
 	private static File downloadScriptFile;
+	private static File searchScriptFile;
 	
 	public static File getCreateScriptFile(String filePath) {
-		return createScriptFile == null ? createScriptFile = new File(filePath) : createScriptFile;
+		if(createScriptFile == null){
+			createScriptFile = new File(filePath);
+		}
+		return createScriptFile;
 	}
 	
 	public static File getCollectScriptFile(String filePath) {
-		return collectScriptFile == null ? collectScriptFile = new File(filePath) : collectScriptFile;
+		if(collectScriptFile == null){
+			collectScriptFile = new File(filePath);
+		}
+		return collectScriptFile;
 	}
 	
 	public static File getDownloadScriptFile(String filePath) {
-		return downloadScriptFile == null ? downloadScriptFile = new File(filePath) : downloadScriptFile;
+		if(downloadScriptFile == null){
+			downloadScriptFile = new File(filePath);
+		}
+		return downloadScriptFile;
+	}
+	
+	public static File getSearchScriptFile(String filePath) {
+		if(searchScriptFile == null){
+			searchScriptFile = new File(filePath);
+		}
+		return searchScriptFile;
 	}
 	
 	/**
@@ -231,6 +248,16 @@ public class ScriptParser {
 		return url;
 	}
 	
+	/**
+	 * 搜索漫画列表
+	 */
+	public static List<SearchTask> search(String source, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("htmlSource", source);
+		Object result = parseJsScript(param, getSearchScriptFile(setting.getSearchScriptPath()));
+		return result == null ? null : JsonUtil.jsonArray2beanList(SearchTask.class, result.toString());
+	}
+	
 	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
 		String source;
 		try {
@@ -297,7 +324,6 @@ public class ScriptParser {
 			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
 		}
 	}
-
 	
 	/**public static void testScriptUseRhino(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
 		String source;

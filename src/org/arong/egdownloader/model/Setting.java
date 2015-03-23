@@ -17,17 +17,18 @@ public class Setting {
 	private int maxThread = 5;
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
 	
-	private boolean openScript;//是否启用脚本
+	private boolean openScript = true;//是否启用脚本
 	private String createTaskScriptPath = "script/createTask.js";//创建任务脚本
 	private String collectPictureScriptPath = "script/collectPicture.js";//收集图片脚本
 	private String downloadScriptPath = "script/download.js";//任务下载脚本
+	private String searchScriptPath = "script/search.js";//搜索漫画列表脚本
 	
 	//前后缀
 	private String[] task_name = {"<h1 id=\"gn\">", "</h1><h1"};//名称
 	private String[] task_subname = {"</h1><h1 id=\"gj\">", "</h1></div>"};//子名称
 	private String[] task_coverUrl = {"<div id=\"gd1\"><img src=\"", "\" alt=\"\" /></div></div>"};//封面地址
 	private String[] task_total_size = {"Images:</td><td class=\"gdt2\">", "</td></tr><tr><td class=\"gdt1\">Resized:"};//数目及大小
-	private String[] task_language = {"Language:</td><td class=\"gdt2\">", "</td></tr></table></div><div id=\"gdr\""};//语言
+	private String[] task_language = {"Language:</td><td class=\"gdt2\">", " &nbsp;<span class=\"halp"};//语言
 	private String[] task_type = {"png\" alt=\"", "\" class=\"ic"};//类别
 	private String[] picture_listSource = {"</table><div id=\"gdt\">", "<div class=\"c\"></div></div><table"};//每页所有图片源码
 	private String[] picture_intercept = {"style=\"height", "\"gdtm"};//判断是否还有及截取剩余字符串
@@ -325,5 +326,11 @@ public class Setting {
 	}
 	public int getPictureHistoryCount() {
 		return pictureHistoryCount;
+	}
+	public void setSearchScriptPath(String searchScriptPath) {
+		this.searchScriptPath = searchScriptPath;
+	}
+	public String getSearchScriptPath() {
+		return searchScriptPath;
 	}
 }

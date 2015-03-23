@@ -161,7 +161,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("saveAsName", t.isSaveAsName() + "");
 		ele.addAttribute("autoDownload", t.isAutoDownload() + "");
 		ele.addAttribute("maxThread", t.getMaxThread() + "");
-		ele.addAttribute("gidPrefix", t.getGidPrefix());
+		/*ele.addAttribute("gidPrefix", t.getGidPrefix());
 		ele.addAttribute("hentaiHome.uri", t.getHentaiHome().getUri());
 		ele.addAttribute("hentaiHome.firstParameterName", t.getHentaiHome().getFirstParameterName());
 		ele.addAttribute("hentaiHome.secondParameterName", t.getHentaiHome().getSecondParameterName() + "");
@@ -177,7 +177,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("showPicPrefix", t.getShowPicPrefix());
 		ele.addAttribute("showPicSuffix", t.getShowPicSuffix());
 		ele.addAttribute("realUrlPrefix", t.getRealUrlPrefix());
-		ele.addAttribute("realUrlSuffix", t.getRealUrlSuffix());
+		ele.addAttribute("realUrlSuffix", t.getRealUrlSuffix());*/
 		ele.addAttribute("loginUrl", t.getLoginUrl());
 		ele.addAttribute("tags", t.getTags());
 		
@@ -186,7 +186,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("taskHostoryCount", t.getTaskHistoryCount() + "");
 		ele.addAttribute("pictureHostoryCount", t.getPictureHistoryCount() + "");
 		
-		ele.addAttribute("t_name1", t.getTask_name()[0]);
+		/*ele.addAttribute("t_name1", t.getTask_name()[0]);
 		ele.addAttribute("t_name2", t.getTask_name()[1]);
 		ele.addAttribute("t_subname1", t.getTask_subname()[0]);
 		ele.addAttribute("t_subname2", t.getTask_subname()[1]);
@@ -205,12 +205,13 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("p_showUrl1", t.getPicture_showUrl()[0]);
 		ele.addAttribute("p_showUrl2", t.getPicture_showUrl()[1]);
 		ele.addAttribute("p_realUrl1", t.getPicture_realUrl()[0]);
-		ele.addAttribute("p_realUrl2", t.getPicture_realUrl()[1]);
+		ele.addAttribute("p_realUrl2", t.getPicture_realUrl()[1]);*/
 		
 		ele.addAttribute("openScript", t.isOpenScript() + "");
 		ele.addAttribute("createTaskScriptPath", t.getCreateTaskScriptPath());
 		ele.addAttribute("collectPictureScriptPath", t.getCollectPictureScriptPath());
 		ele.addAttribute("downloadScriptPath", t.getDownloadScriptPath());
+		ele.addAttribute("searchScriptPath", t.getSearchScriptPath());
 		return ele;
 	}
 	private Setting node2Setting(Node node) {
@@ -221,9 +222,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setCookieInfo(ele.attributeValue("cookieInfo") == null ? t.getCookieInfo() : ele.attributeValue("cookieInfo"));
 		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
 		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")) ? true : false);
-		t.setGidPrefix(ele.attributeValue("gidPrefix"));
+		t.setGidPrefix(ele.attributeValue("gidPrefix") == null ? t.getGidPrefix() : ele.attributeValue("gidPrefix"));
 		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
-		t.getHentaiHome().setUri(ele.attributeValue("hentaiHome.uri"));
+		/*t.getHentaiHome().setUri(ele.attributeValue("hentaiHome.uri"));
 		t.getHentaiHome().setFirstParameterName(ele.attributeValue("hentaiHome.firstParameterName"));
 		t.getHentaiHome().setSecondParameterName(ele.attributeValue("hentaiHome.secondParameterName"));
 		t.setTotalPrefix(ele.attributeValue("totalPrefix"));
@@ -238,7 +239,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setShowPicPrefix(ele.attributeValue("showPicPrefix"));
 		t.setShowPicSuffix(ele.attributeValue("showPicSuffix"));
 		t.setRealUrlPrefix(ele.attributeValue("realUrlPrefix"));
-		t.setRealUrlSuffix(ele.attributeValue("realUrlSuffix"));
+		t.setRealUrlSuffix(ele.attributeValue("realUrlSuffix"));*/
 		t.setLoginUrl(ele.attributeValue("loginUrl") == null ? t.getLoginUrl() : ele.attributeValue("loginUrl"));
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
@@ -249,7 +250,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setLastCreateTime(ele.attributeValue("lastCreateTime"));
 		t.setLastDownloadTime(ele.attributeValue("lastDownloadTime"));
 		
-		t.getTask_name()[0] = ele.attributeValue("t_name1") == null ? t.getTask_name()[0] : ele.attributeValue("t_name1");
+		/*t.getTask_name()[0] = ele.attributeValue("t_name1") == null ? t.getTask_name()[0] : ele.attributeValue("t_name1");
 		t.getTask_name()[1] = ele.attributeValue("t_name2") == null ? t.getTask_name()[1] : ele.attributeValue("t_name2");
 		t.getTask_subname()[0] = ele.attributeValue("t_subname1") == null ? t.getTask_subname()[0] : ele.attributeValue("t_subname1");
 		t.getTask_subname()[1] = ele.attributeValue("t_subname2") == null ? t.getTask_subname()[1] : ele.attributeValue("t_subname2");
@@ -268,12 +269,13 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.getPicture_showUrl()[0] = ele.attributeValue("p_showUrl1") == null ? t.getPicture_showUrl()[0] : ele.attributeValue("p_showUrl1");
 		t.getPicture_showUrl()[1] = ele.attributeValue("p_showUrl2") == null ? t.getPicture_showUrl()[1] : ele.attributeValue("p_showUrl2");
 		t.getPicture_realUrl()[0] = ele.attributeValue("p_realUrl1") == null ? t.getPicture_realUrl()[0] : ele.attributeValue("p_realUrl1");
-		t.getPicture_realUrl()[1] = ele.attributeValue("p_realUrl2") == null ? t.getPicture_realUrl()[1] : ele.attributeValue("p_realUrl2");
+		t.getPicture_realUrl()[1] = ele.attributeValue("p_realUrl2") == null ? t.getPicture_realUrl()[1] : ele.attributeValue("p_realUrl2");*/
 		
-		t.setOpenScript("true".equals(ele.attributeValue("openScript")) ? true : false);
+		//t.setOpenScript("true".equals(ele.attributeValue("openScript")) ? true : false);
 		t.setCreateTaskScriptPath(ele.attributeValue("createTaskScriptPath") == null ? t.getCreateTaskScriptPath() : ele.attributeValue("createTaskScriptPath"));
 		t.setCollectPictureScriptPath(ele.attributeValue("collectPictureScriptPath") == null ? t.getCollectPictureScriptPath() : ele.attributeValue("collectPictureScriptPath"));
 		t.setDownloadScriptPath(ele.attributeValue("downloadScriptPath") == null ? t.getDownloadScriptPath() : ele.attributeValue("downloadScriptPath"));
+		t.setSearchScriptPath(ele.attributeValue("searchScriptPath") == null ? t.getSearchScriptPath() : ele.attributeValue("searchScriptPath"));
 		return t;
 	}
 	

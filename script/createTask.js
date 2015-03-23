@@ -3,8 +3,9 @@ var mark = {//标志符
 	subname : ['</h1><h1 id="gj">', '</h1></div>'],//小标题
 	type : ['png" alt="', '" class="ic'],//类别
 	coverUrl : ['<div id="gd1"><img src="', '" alt="" /></div></div>'],//封面url
-	total_size : ['Images:</td><td class="gdt2">', '</td></tr><tr><td class="gdt1">Resized:'],//数目@大小
-	language : ['Language:</td><td class="gdt2">', '</td></tr></table></div><div id="gdr"']//漫画语言
+	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],//数目
+	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],//漫画大小
+	language : ['Language:</td><td class="gdt2">', ' &nbsp;<span class="halp']//漫画语言
 };
 
 function interceptFromSource(source, prefix, suffix){
@@ -47,9 +48,12 @@ function parse(source){
 	//获取类别
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
 	//获取数目及大小
-	var temp = interceptFromSource(source, mark.total_size[0], mark.total_size[1]);
-	task.total = parseInt(trim(temp.split("@")[0]));
-	task.size = trim(temp.split("@")[1]);
+	task.total = parseInt(trim(interceptFromSource(source, mark.total[0], mark.total[1])));
+	if(source.indexOf(mark.size[1]) != -1){
+		task.size = trim(interceptFromSource(source, mark.size[0], mark.size[1]));
+	}else{
+		task.size = trim(interceptFromSource(source, mark.size[0], mark.size[2]));
+	}
 	//获取漫画语言
 	task.language = interceptFromSource(source, mark.language[0], mark.language[1]);
 	return parseJson(task);
