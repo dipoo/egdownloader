@@ -52,9 +52,12 @@ public final class ParseEngine {
         //获取封面路径
         task.setCoverUrl(Spider.getTextFromSource(source, setting.getTask_coverUrl()[0], setting.getTask_coverUrl()[1]));
         //获取数目及大小
-        String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
+        /*String temp = Spider.getTextFromSource(source, setting.getTask_total_size()[0], setting.getTask_total_size()[1]);
         task.setTotal(Integer.parseInt(temp.split("@")[0].trim()));
-        task.setSize(temp.split("@")[1].trim());
+        task.setSize(temp.split("@")[1].trim());*/
+        
+        task.setSize(Spider.getTextFromSource(source, "File Size:</td><td class=\"gdt2\">", "B &nbsp;<span class=\"halp\""));
+        task.setTotal(Integer.parseInt(Spider.getTextFromSource(source, "Length:</td><td class=\"gdt2\">", " pages</td></tr><tr><td class=\"gdt1")));
         //设置下载结束索引
         task.setEnd(task.getTotal());
         //获取漫画语言

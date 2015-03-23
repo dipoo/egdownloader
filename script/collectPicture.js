@@ -37,6 +37,13 @@ function interceptFromSource(source, prefix, suffix){
 function subFromSource(source, prefix){
 	return source.substr(source.indexOf(prefix) + prefix.length, source.length);
 }
+
+function trim(s){
+	if(s != null && typeof s == 'string'){
+		return s.replace(/(^\s*)|(\s*$)/g, "");
+	}
+	return s;
+};
     
 function parse(temp){
 	var newpics = [];
@@ -47,7 +54,8 @@ function parse(temp){
 		//获取图片浏览地址
 		picture.url = interceptFromSource(temp, mark.showUrl[0], mark.showUrl[1]);
 		//获取图片名称
-		picture.name = interceptFromSource(temp, mark.name[0], mark.name[1]);
+		var s = interceptFromSource(temp, mark.name[0], mark.name[1]);//Page 1: img00001.jpg
+		picture.name = trim(s.split(':')[1]);
 		newpics.push(picture);
 		temp = subFromSource(temp, prefix);
 	}

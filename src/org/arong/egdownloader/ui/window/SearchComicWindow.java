@@ -280,7 +280,9 @@ public class SearchComicWindow extends JFrame {
 		for(int i = 0; i < cs.length; i++){
 			if(cs[i] instanceof JCheckBox){
 				jc = (JCheckBox) cs[i];
-				option += "&f_" + jc.getText().toLowerCase() + "=" + (jc.isSelected() ? "1" : "0");
+				if(jc.isSelected()){
+					option += "&f_" + jc.getText().toLowerCase() + "=on";
+				}
 			}
 		}
 		return option;
