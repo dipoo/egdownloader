@@ -60,6 +60,12 @@ public final class ComponentConst {
 	
 	public static String countHtml;
 	
+	public final static String SCRIPT_CREATE_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
+	public final static String SCRIPT_COLLECT_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
+	public final static String SCRIPT_DOWNLOAD_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/download.js";
+	public final static String SCRIPT_SEARCH_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/search.js";
+	public final static String SCRIPT_VERSION_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/version";
+	
 	static{
 		InputStream s = null;
 		try {
@@ -101,7 +107,6 @@ public final class ComponentConst {
 		SKIN_ICON.put("tool", "_tool.png");
 		SKIN_ICON.put("picture", "_picture.png");
 		SKIN_ICON.put("user", "_user.png");
-		SKIN_ICON.put("empty", "_empty.png");
 		SKIN_ICON.put("save", "_save.png");
 		SKIN_ICON.put("opera", "_opera.png");
 		SKIN_ICON.put("detail", "_detail.png");
@@ -173,12 +178,13 @@ public final class ComponentConst {
 			"</b><br>项目地址：<a href='https://github.com/dipoo/egdownloader'>https://github.com/dipoo/egdownloader</a>" + 
 			"<br/><font color='blue'>有任何问题，请到项目托管地址发issue。</font>";
 	public final static String SCRIPT_DESC_TEXT = "<div style='font-size:10px;color:#666;'>目前脚本解析系统只支持javascript脚本，共需要三个脚本文件，分别用于任务信息解析，图片列表解析和图片真实地址解析，" +
-			"可以在上面指定具体的脚本路径。系统提供给js脚本中一个参数：<font color='red'>htmlSource</font>，代表网页源码（任务解析，图片列表解析的是主页面源码，真实地址解析的是图片浏览页面源码），你需要" +
+			"可以在上面指定具体的脚本路径。系统提供给js脚本中一个参数：<font color='red'>htmlSource</font>，代表网页源码（任务解析，图片列表解析的是主页面源码，真实地址解析的是图片浏览页面源码，搜索漫画的是首页源码），你需要" +
 			"返回各自所需的信息：<br>" + 
 			"<b>任务信息解析</b>：返回一个JSON字符串，如：{\"name\":\"名称\",\"subname\":\"子标题\",\"type\":\"类别\",\"coverUrl\":\"封面地址\",\"total\":\"数目\"," +
 			"\"size\":大小,\"language\":\"语言\"};<br>" + 
 			"<b>图片列表解析</b>：返回一个JSON数组字符串，如[{\"name\":\"名称\",\"url\":\"浏览地址\"}];<br>" + 
 			"<b>真实地址解析</b>：返回真实地址字符串。<br>" + 
+			"<b>搜索漫畫解析</b>：返回一个带着分页信息和JSON数组的字符串，格式如1888,76###[{\"name\":\"名称\",\"url\":\"浏览地址\", \"coverUrl\":\"封面地址\", \"date\":\"发布时间\", \"type\":\"类型\", \"btUrl\":\"bt地址\", \"uploader\":\"上传者\"}];<br>" + 
 			"约定：JSON字符中中key必须有引号，而且引号为双引号。具体请参看script目录下的自带脚本。</div>";
 	
 	public static void changeDataPath(String groupName){

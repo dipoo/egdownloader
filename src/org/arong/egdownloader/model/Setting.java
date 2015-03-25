@@ -2,6 +2,8 @@ package org.arong.egdownloader.model;
 
 import java.util.UUID;
 
+import org.arong.egdownloader.ui.work.UpdateScriptWorker;
+
 /**
  * 采集配置信息
  * @author 阿荣
@@ -22,6 +24,7 @@ public class Setting {
 	private String collectPictureScriptPath = "script/collectPicture.js";//收集图片脚本
 	private String downloadScriptPath = "script/download.js";//任务下载脚本
 	private String searchScriptPath = "script/search.js";//搜索漫画列表脚本
+	private UpdateScriptWorker updateScriptWorker;//脚本更新器
 	
 	//前后缀
 	private String[] task_name = {"<h1 id=\"gn\">", "</h1><h1"};//名称
@@ -332,5 +335,11 @@ public class Setting {
 	}
 	public String getSearchScriptPath() {
 		return searchScriptPath;
+	}
+	public void setUpdateScriptWorker(UpdateScriptWorker updateScriptWorker) {
+		this.updateScriptWorker = updateScriptWorker;
+	}
+	public UpdateScriptWorker getUpdateScriptWorker() {
+		return updateScriptWorker;
 	}
 }

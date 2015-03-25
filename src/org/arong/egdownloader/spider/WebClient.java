@@ -34,13 +34,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
  */
 public class WebClient {
 	
-	public static String postRequest(String url) throws ConnectTimeoutException, SocketTimeoutException{
-		try {
-			return postRequestWithCookie(url, "utf-8", null, null);
-		} catch (WebClientException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static String postRequest(String url) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
+		return postRequestWithCookie(url, "utf-8", null, null);
 	}
 	
 	public static String postRequest(String url, String encoding) throws ConnectTimeoutException, SocketTimeoutException{
@@ -52,13 +47,8 @@ public class WebClient {
 		return null;
 	}
 	
-	public static String postRequestWithCookie(String url, String cookieInfo) throws ConnectTimeoutException, SocketTimeoutException{
-		try {
-			return postRequestWithCookie(url, "utf-8", null, cookieInfo);
-		} catch (WebClientException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static String postRequestWithCookie(String url, String cookieInfo) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
+		return postRequestWithCookie(url, "utf-8", null, cookieInfo);
 	}
 	
 

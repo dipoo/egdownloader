@@ -3,14 +3,16 @@ package org.arong.egdownloader.ui.work;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.script.ScriptException;
 import javax.swing.SwingWorker;
 
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
-import org.arong.egdownloader.spider.Spider;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
+import org.arong.util.JsonUtil;
 /**
  * 搜索漫画线程类
  * @author dipoo
@@ -30,21 +32,18 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
 			String source = WebClient.postRequestWithCookie(this.url, mainWindow.setting.getCookieInfo());
-			List<SearchTask> searchTasks = ScriptParser.search(source, mainWindow.setting);
-			if(searchTasks != null){
-				String totalTasks = null;
-				if(source.indexOf("Showing ") != -1){
-					source = Spider.substring(source, "Showing ");
-					totalTasks = Spider.getTextFromSource(source, "of ", "</p><table class=\"ptt");
+			String[] result = ScriptParser.search(source, mainWindow.setting);
+			String json = result[1];
+			if(result.length > 2){
+				for(int i = 2; i < result.length; i ++){
+					json += "###" + result[i];
 				}
-				if(totalTasks == null){
-					searchComicWindow.totalLabel.setText("搜索不到相关内容");
-					searchComicWindow.hideLoading();
-					return null;
-				}
-				int total = Integer.parseInt(totalTasks.replaceAll(",", ""));
+			}
+			List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
+			if(!"null".equals(result[1])){
+				String totalTasks = result[0].split(",")[0];
 				//总页数
-				String totalPage = (total % 25 == 0 ? total / 25 : total / 25 + 1) + "";//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
+				String totalPage = result[0].split(",")[1];//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
 				
 				searchComicWindow.setTotalInfo(totalPage, totalTasks);
 				
@@ -63,6 +62,11 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				searchComicWindow.hideLoading();
 				return null;
 			}
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		} catch (WebClientException e) {
+			searchComicWindow.key = " ";
+			searchComicWindow.totalLabel.setText("当前无网络");
 		} catch (Exception e) {
 			searchComicWindow.key = " ";
 			searchComicWindow.totalLabel.setText(e.getMessage());
