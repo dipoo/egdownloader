@@ -32,6 +32,7 @@ import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextArea;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.swing.AJTextPane;
+import org.arong.egdownloader.ui.work.UpdateScriptWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.util.FileUtil;
 /**
@@ -75,6 +76,8 @@ public class SettingWindow extends JFrame{
 		public JLabel searchJsLabel;
 		public JTextField searchJsField;
 		public JButton testBtn;
+		public JButton updateBtn;
+		public JLabel loadingLabel;
 		public JTextPane scriptDocPanel;
 		
 		Color labelColor = new Color(65,145,65);
@@ -154,12 +157,16 @@ public class SettingWindow extends JFrame{
 			scriptPanel.setLayout(null);
 			createJsLabel = new AJLabel("创建任务脚本：", labelColor, 25, 30, 100, 30);
 			createJsField = new AJTextField(setting.getCreateTaskScriptPath(), "", 125, 30, 360, 30);
+			createJsField.setEditable(false);
 			collectJsLabel = new AJLabel("收集图片脚本：", labelColor, 25, 70, 100, 30);
 			collectJsField = new AJTextField(setting.getCollectPictureScriptPath(), "", 125, 70, 360, 30);
+			collectJsField.setEditable(false);
 			downloadJsLabel = new AJLabel("下载任务脚本：", labelColor, 25, 110, 100, 30);
 			downloadJsField = new AJTextField(setting.getDownloadScriptPath(), "", 125, 110, 360, 30);
+			downloadJsField.setEditable(false);
 			searchJsLabel = new AJLabel("搜索漫画脚本：", labelColor, 25, 150, 100, 30);
 			searchJsField = new AJTextField(setting.getSearchScriptPath(), "", 125, 150, 360, 30);
+			searchJsField.setEditable(false);
 			testBtn = new AJButton("脚本测试", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -179,18 +186,25 @@ public class SettingWindow extends JFrame{
 						testScriptWindow.setVisible(true);
 					}
 				}
-			}), 550, 90, 60, 30);
-			scriptDocPanel = new AJTextPane(ComponentConst.SCRIPT_DESC_TEXT, labelColor);//Field(ComponentConst.SCRIPT_DESC_TEXT, "", 25, 200, 400, 100);
-			scriptDocPanel.setBounds(20, 200, 650, 200);
-			
-			/*openScriptBox.addChangeListener(new ChangeListener() {
-				public void stateChanged(ChangeEvent e) {
-					boolean selected = openScriptBox.getSelectedObjects() == null ? false : true;
-					showPathSettingPanel(selected);
+			}), 550, 70, 60, 30);
+			updateBtn = new AJButton("同步脚本", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+					if(mainWindow.setting.getUpdateScriptWorker() == null){
+						mainWindow.setting.setUpdateScriptWorker(new UpdateScriptWorker(mainWindow));
+					}
+					updateBtn.setEnabled(false);
+					mainWindow.setting.getUpdateScriptWorker().execute();
 				}
-			});*/
+			}), 550, 110, 60, 30);
+			loadingLabel = new AJLabel("", "loading.gif", null, JLabel.LEFT);//
+			loadingLabel.setBounds(620, 110, 30, 30);
+			loadingLabel.setVisible(false);
+			scriptDocPanel = new AJTextPane(ComponentConst.SCRIPT_DESC_TEXT, labelColor);
+			scriptDocPanel.setBounds(20, 200, 650, 250);
+			
 			addComponentsJpanel(scriptPanel, createJsLabel,
-					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, searchJsLabel, searchJsField, testBtn, scriptDocPanel);
+					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, searchJsLabel, searchJsField, testBtn, updateBtn, loadingLabel, scriptDocPanel);
 			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("脚本配置", scriptPanel);
@@ -256,7 +270,7 @@ public class SettingWindow extends JFrame{
 						JOptionPane.showMessageDialog(this_, "保存成功");
 					}
 				}
-			}), 32, 250, 60, 30);
+			}), 32, 200, 60, 30);
 			
 			
 			this.getContentPane().add(save_Btn, -1);

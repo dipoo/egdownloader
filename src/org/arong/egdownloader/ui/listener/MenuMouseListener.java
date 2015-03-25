@@ -42,8 +42,8 @@ public class MenuMouseListener implements MouseListener {
 				}
 				mainWindow.settingWindow.setLocationRelativeTo(mainWindow);
 				// 设置关于窗口置于最顶层
-				mainWindow.settingWindow.toFront();
 				mainWindow.settingWindow.setVisible(true);
+				mainWindow.settingWindow.toFront();
 			}
 			// 如果点击的是关于菜单，则将关于窗口显示出来，倘若关于窗口为null就先实例化
 			else if (ComponentConst.ABOUT_MENU_NAME.equals(menuName)) {
@@ -53,8 +53,8 @@ public class MenuMouseListener implements MouseListener {
 				}
 				mainWindow.aboutMenuWindow.setLocationRelativeTo(mainWindow);
 				// 设置关于窗口置于最顶层
-				mainWindow.aboutMenuWindow.toFront();
 				mainWindow.aboutMenuWindow.setVisible(true);
+				mainWindow.aboutMenuWindow.toFront();
 			}
 		}
 

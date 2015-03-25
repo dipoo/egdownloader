@@ -18,6 +18,7 @@ import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -132,6 +133,15 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						Tracker.println(task.getName() + ":" + pic.getName() + "-连接超时，滞后重试");
 						//继续下一个
 						continue;
+					}catch (WebClientException e) {
+						//碰到网络异常，任务暂停
+						Tracker.println("当前无网络，请检查网络设置是否正确");
+						task.setStatus(TaskStatus.STOPED);
+						table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+						//开始任务等待列表中的第一个任务
+						table.startWaitingTask();
+						table.updateUI();
+						return null;
 					}catch (Exception e){
 						//碰到异常
 						Tracker.println(task.getName() + ":" + pic.getName() + e.getMessage());

@@ -99,7 +99,7 @@ public final class ParseEngine {
 		return task;
 	}
 	
-	public static List<Picture> collectpictrues(Task task, Setting setting, int page, String picSource, CreatingWindow creatingWindow) throws ConnectTimeoutException, SocketTimeoutException, SpiderException{
+	public static List<Picture> collectpictrues(Task task, Setting setting, int page, String picSource, CreatingWindow creatingWindow) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, WebClientException{
 		List<Picture> pics = new ArrayList<Picture>();
 		if(page != 0){
 			int currCount = 0;
@@ -141,9 +141,10 @@ public final class ParseEngine {
 	/**
 	 * 重建任务，主要重新采集语言、封面、小标题等信息
 	 * @param task
+	 * @throws WebClientException 
 	 * @since v0.40
 	 */
-	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException{
+	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, WebClientException{
 		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
 				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
 			String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());

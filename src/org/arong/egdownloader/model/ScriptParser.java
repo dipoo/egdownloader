@@ -40,6 +40,13 @@ public class ScriptParser {
 	private static File downloadScriptFile;
 	private static File searchScriptFile;
 	
+	public static void clearFiles(){
+		createScriptFile = null;
+		collectScriptFile = null;
+		downloadScriptFile = null;
+		searchScriptFile = null;
+	}
+	
 	public static File getCreateScriptFile(String filePath) {
 		if(createScriptFile == null){
 			createScriptFile = new File(filePath);
@@ -210,7 +217,7 @@ public class ScriptParser {
 	/**
 	 * 重建任务，主要重新采集语言、封面、小标题等信息
 	 */
-	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException{
+	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException, WebClientException{
 		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
 				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
 			String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
@@ -233,10 +240,10 @@ public class ScriptParser {
 	/**
 	 * 获取图片真实下载地址
 	 */
-	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws Exception{
+	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
 		String url = null;
+		String source = WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo());
 		try {
-			String source = WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
@@ -249,13 +256,14 @@ public class ScriptParser {
 	}
 	
 	/**
-	 * 搜索漫画列表
+	 * 搜索漫画列表,第一个元素为分页信息字符串，格式为 count,pageCount；
+	 * 第二个元素为漫画列表JSON字符串
 	 */
-	public static List<SearchTask> search(String source, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
+	public static String[] search(String source, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		Object result = parseJsScript(param, getSearchScriptFile(setting.getSearchScriptPath()));
-		return result == null ? null : JsonUtil.jsonArray2beanList(SearchTask.class, result.toString());
+		return result.toString().split("\\###");
 	}
 	
 	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){

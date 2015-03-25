@@ -92,6 +92,8 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 	}
 
 	public boolean update(Setting t) {
+		if(t == null)
+			return false;
 		while(locked){
 			update(t);
 		}

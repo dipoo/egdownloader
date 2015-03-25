@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -57,7 +58,7 @@ public final class FileUtil {
     	BufferedOutputStream bos = null;
     	int size = 0;
     	try {
-    		File fs = new File(path + "/" + name);
+    		File fs = new File(path + File.separator + name);
 			bis = new BufferedInputStream(in);
 			bos = new BufferedOutputStream(new FileOutputStream(fs));
 			byte[] buff = new byte[1024];
@@ -93,6 +94,20 @@ public final class FileUtil {
 		}
     	return size;
     }
+	
+	public static void storeStr2file(String str, String path, String name) throws IOException{
+		if(str == null){
+			return;
+		}
+		File dir = new File(path);
+    	FileUtil.ifNotExistsThenCreate(dir);
+    	FileWriter fw = new FileWriter(path + File.separator + name);
+    	fw.write(str);
+    	if(fw != null){
+    		fw.close();
+    	}
+	}
+	
 	/**
 	 * 将字节数转化为合适的单位字符串
 	 * @param size

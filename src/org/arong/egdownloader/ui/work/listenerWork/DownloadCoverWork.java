@@ -14,6 +14,7 @@ import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -54,6 +55,8 @@ public class DownloadCoverWork implements IMenuListenerTask {
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} catch (SpiderException e) {
+				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
+			} catch (WebClientException e) {
 				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} finally{
 				mainWindow.tablePopupMenu.setVisible(false);

@@ -1,4 +1,6 @@
 var mark = {//标志符
+	separator : [',', '###'],//分隔符，不可改变
+	page : ['Showing ', 'of ', '</p><table class="ptt'],
 	listSource : ['Uploader</th></tr>', '<table class="ptb"'],//每页所有图片源码
 	intercept : ['<tr class="gtr', "</td></tr>"],//判断是否还有及截取剩余字符串
 	name : ['hide_image_pane', '/a></div><div class=', ')">', '<'],//名称
@@ -42,9 +44,23 @@ function interceptFromSource(source, prefix, suffix){
 function subFromSource(source, prefix){
 	return source.substr(source.indexOf(prefix) + prefix.length, source.length);
 }
+
+function pageInfo(source){
+	var s = source;
+	var count = null;
+	if(s.indexOf(mark.page[0]) != -1){
+		s = subFromSource(s, mark.page[0]);
+		count = interceptFromSource(s, mark.page[1], mark.page[2]).replace(",", "");
+	}
+	if(count == null){
+		return null;
+	}
+	return count + mark.separator[0] + (parseInt(count) % 25 == 0 ? Math.round(parseInt(count) / 25) : Math.round(parseInt(count) / 25 + 1));
+}
     
 function parse(source){
 	if(source.indexOf(mark.listSource[0]) != -1){
+		var page = pageInfo(source);
 		source = interceptFromSource(source, mark.listSource[0], mark.listSource[1]);
 		var tasks = [];
 		var prefix = mark.intercept[1];//截取的标志
@@ -79,7 +95,7 @@ function parse(source){
 			i ++;
 		}
 		var list = tasks.concat(list);
-		return parseJsonArray(list);
+		return  page + mark.separator[1] + parseJsonArray(list);
 	}else{
 		return null;
 	}
