@@ -96,6 +96,7 @@ public class SettingWindow extends JFrame{
 			
 			settingTabPanel.setBounds(20, 0, 780, 450);
 			
+			
 			/* 基本配置 */
 			basicPanel = new JPanel();
 			basicPanel.setLayout(null);  

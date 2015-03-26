@@ -263,7 +263,7 @@ public class ScriptParser {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		Object result = parseJsScript(param, getSearchScriptFile(setting.getSearchScriptPath()));
-		return result.toString().split("\\###");
+		return result == null ? null : result.toString().split("\\###");
 	}
 	
 	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){

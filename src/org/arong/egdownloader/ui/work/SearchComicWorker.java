@@ -33,14 +33,14 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		try {
 			String source = WebClient.postRequestWithCookie(this.url, mainWindow.setting.getCookieInfo());
 			String[] result = ScriptParser.search(source, mainWindow.setting);
-			String json = result[1];
-			if(result.length > 2){
-				for(int i = 2; i < result.length; i ++){
-					json += "###" + result[i];
+			if(result != null){
+				String json = result[1];
+				if(result.length > 2){
+					for(int i = 2; i < result.length; i ++){
+						json += "###" + result[i];
+					}
 				}
-			}
-			List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
-			if(!"null".equals(result[1])){
+				List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
 				String totalTasks = result[0].split(",")[0];
 				//总页数
 				String totalPage = result[0].split(",")[1];//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
@@ -56,7 +56,6 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				}
 				searchComicWindow.datas.get(searchComicWindow.key).put((currentPage) + "", searchTasks);
 				searchComicWindow.showResult(totalPage, currentPage);
-				
 			}else{
 				searchComicWindow.totalLabel.setText("搜索不到相关内容");
 				searchComicWindow.hideLoading();
