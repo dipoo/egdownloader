@@ -9,7 +9,7 @@ var mark = {//标志符
 	date : ['white-space:nowrap">', '</td><td class="itd" onmouseover'],//发布时间
 	type : ['.png" alt="', '" class="ic" />'],//类型
 	btUrl : ['</tr>', "return popUp('", "', 610, 590)"],//bt地址
-	uploader : ['http://exhentai.org/uploader', '/', '">']//上传者
+	uploader : ['http://exhentai.org/uploader', '>', '</a>']//上传者
 };
 
 function parseJsonArray(array){
@@ -89,7 +89,7 @@ function parse(source){
 			}
 			//上传者
 			var uploaderTemp = subFromSource(source, mark.uploader[0]);
-			task.uploader = unescape(interceptFromSource(uploaderTemp, mark.uploader[1], mark.uploader[2]));
+			task.uploader = interceptFromSource(uploaderTemp, mark.uploader[1], mark.uploader[2]);
 			tasks.push(task);
 			source = subFromSource(source, prefix);
 			i ++;

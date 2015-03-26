@@ -1,9 +1,12 @@
 package org.arong.egdownloader.ui;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -60,11 +63,11 @@ public final class ComponentConst {
 	
 	public static String countHtml;
 	
-	public final static String SCRIPT_CREATE_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
-	public final static String SCRIPT_COLLECT_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
-	public final static String SCRIPT_DOWNLOAD_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/download.js";
-	public final static String SCRIPT_SEARCH_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/search.js";
-	public final static String SCRIPT_VERSION_URL = "https://raw.githubusercontent.com/dipoo/egdownloader/master/script/version";
+	public static String SCRIPT_CREATE_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
+	public static String SCRIPT_COLLECT_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
+	public static String SCRIPT_DOWNLOAD_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/download.js";
+	public static String SCRIPT_SEARCH_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/search.js";
+	public static String SCRIPT_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/version";
 	
 	static{
 		InputStream s = null;
@@ -95,6 +98,30 @@ public final class ComponentConst {
 			}
 			if(countHtml == null)
 				countHtml = "没有找到" + RESOURCES_PATH + "count.html文件";
+		}
+		
+		Properties scriptProp = new Properties();
+		try {
+			scriptProp.load(new FileReader("script/version.properties"));
+			if(scriptProp.get("script_create_url") != null){
+				SCRIPT_CREATE_URL = scriptProp.get("script_create_url").toString();
+			}
+			if(scriptProp.get("script_collect_url") != null){
+				SCRIPT_COLLECT_URL = scriptProp.get("script_collect_url").toString();
+			}
+			if(scriptProp.get("script_download_url") != null){
+				SCRIPT_DOWNLOAD_URL = scriptProp.get("script_download_url").toString();
+			}
+			if(scriptProp.get("script_search_url") != null){
+				SCRIPT_SEARCH_URL = scriptProp.get("script_search_url").toString();
+			}
+			if(scriptProp.get("script_version_url") != null){
+				SCRIPT_VERSION_URL = scriptProp.get("script_version_url").toString();
+			}
+		} catch (FileNotFoundException e) {
+			
+		} catch (IOException e) {
+			
 		}
 		
 		SKIN_ICON.put("add", "_add.png");

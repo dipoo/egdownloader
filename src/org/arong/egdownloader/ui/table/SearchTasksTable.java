@@ -92,7 +92,7 @@ public class SearchTasksTable extends JTable {
 				if(column == 0){//类型
 					tc.setPreferredWidth(105);
 					tc.setMaxWidth(105);
-					JLabel l = new AJLabel("", tasks.get(row).getType() == null ? "" : (tasks.get(row).getType() + ".png"), c, JLabel.LEFT);
+					JLabel l = new AJLabel("", tasks.get(row).getType() == null ? "" : (tasks.get(row).getType().toLowerCase() + ".png"), c, JLabel.LEFT);
 					return l;
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(700);
@@ -111,7 +111,7 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 2){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					final JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
 					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;

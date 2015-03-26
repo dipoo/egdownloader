@@ -21,7 +21,6 @@ import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.table.TaskingTable;
@@ -107,9 +106,9 @@ public class InitWindow extends JWindow {
 		textLabel.setText(Version.NAME + "-检测远程脚本");
 		//检测脚本是否发生变化
 		try {
-			scriptVersion = WebClient.postRequest(ComponentConst.SCRIPT_VERSION_URL);
+			scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
 			String currentVersion = FileUtil.getTextFromReader(new FileReader("script/version"));
-			if(!currentVersion.equals(scriptVersion)){
+			if(scriptVersion != null && !currentVersion.equals(scriptVersion)){
 				int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
 				this.toFront();
 				if(r == JOptionPane.YES_OPTION){
@@ -120,8 +119,6 @@ public class InitWindow extends JWindow {
 			}else{
 				startMain();
 			}
-		}catch (WebClientException e) {
-			startMain();
 		}catch (SocketTimeoutException e) {
 			startMain();
 		}catch (ConnectTimeoutException e) {

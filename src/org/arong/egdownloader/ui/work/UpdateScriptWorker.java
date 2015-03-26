@@ -78,7 +78,7 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 				}catch (Exception e) {
 					
 				}
-				JOptionPane.showMessageDialog(null, "同步完成");
+				JOptionPane.showMessageDialog(mainWindow.settingWindow, "同步完成");
 			}
 		}catch (ConnectTimeoutException e) {
 			JOptionPane.showMessageDialog(null, "更新脚本出错，建议手动更新");
@@ -86,6 +86,11 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 				initWindow.startMain();
 			}
 		}catch (SocketTimeoutException e) {
+			JOptionPane.showMessageDialog(null, "更新脚本出错，建议手动更新");
+			if(initWindow != null){
+				initWindow.startMain();
+			}
+		}catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "更新脚本出错，建议手动更新");
 			if(initWindow != null){
 				initWindow.startMain();

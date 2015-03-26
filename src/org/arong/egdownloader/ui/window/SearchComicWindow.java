@@ -102,16 +102,16 @@ public class SearchComicWindow extends JFrame {
 		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		optionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "条件过滤"));
 		optionPanel.setBounds(6, 55, ComponentConst.CLIENT_WIDTH - 23, 65);
-		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, false);
-		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, false);
-		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, false);
-		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, false);
-		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, false);
+		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, true);
+		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, true);
+		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, true);
+		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, true);
+		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, true);
 		JCheckBox c6 = new AJCheckBox("NON-H", Color.BLUE, font, true);
-		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, false);
-		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, false);
-		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, false);
-		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, false);
+		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, true);
+		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
+		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
+		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, true);
 		final JComboBox language = new JComboBox(new String[]{"全部", "中文", "英文", "韩文", "法文", "西班牙"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
