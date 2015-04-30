@@ -107,8 +107,13 @@ public class InitWindow extends JWindow {
 		//检测脚本是否发生变化
 		try {
 			scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
+			//V.2015.03.26
 			String currentVersion = FileUtil.getTextFromReader(new FileReader("script/version"));
-			if(scriptVersion != null && !currentVersion.equals(scriptVersion)){
+
+			//版本返回信息需要以V.2字符串开头，否则可能获取的数据不正确，不做更新操作
+			if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){
+				ComponentConst.removeScriptVersion = scriptVersion;
+				ComponentConst.scriptChange = true;
 				int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
 				this.toFront();
 				if(r == JOptionPane.YES_OPTION){
