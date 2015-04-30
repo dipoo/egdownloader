@@ -25,7 +25,7 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 	Window window;
 	InitWindow initWindow;
 	EgDownloaderWindow mainWindow;
-	
+	//window可能会是InitWindow或者EgDownloaderWindow
 	public UpdateScriptWorker(Window window){
 		this.window = window;
 	}
@@ -66,20 +66,17 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 			FileUtil.storeStream(dir, "search.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH_URL));
 			//更新脚本解析器 
 			ScriptParser.clearFiles();
+			//保存版本号
+			FileUtil.storeStr2file(ComponentConst.removeScriptVersion, "script/", "version");
+			ComponentConst.localScriptVersion = ComponentConst.removeScriptVersion;
+			ComponentConst.scriptChange = false;
 			if(initWindow != null){
-				//保存版本号
-				FileUtil.storeStr2file(initWindow.scriptVersion, "script/", "version");
 				//开启主界面
 				initWindow.startMain();
 			}else{
-				//保存版本号
-				try{
-					FileUtil.storeStr2file(WebClient.postRequest(ComponentConst.SCRIPT_VERSION_URL), "script/", "version");
-				}catch (Exception e) {
-					
-				}
 				JOptionPane.showMessageDialog(mainWindow.settingWindow, "同步完成");
 			}
+			
 		}catch (ConnectTimeoutException e) {
 			JOptionPane.showMessageDialog(null, "更新脚本出错，建议手动更新");
 			if(initWindow != null){

@@ -1,8 +1,8 @@
-var mark = {//标志符
-	listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//每页所有图片源码
-	intercept : ['style="height', "gdtm"],//判断是否还有及截取剩余字符串
-	showUrl : ['no-repeat"><a href="', '"><img alt='],//显示url
-	name : ['title="', '" src=']//名称
+var mark = {//
+	listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//
+	intercept : ['style="height', "gdtm"],//
+	showUrl : ['no-repeat"><a href="', '"><img alt='],//
+	name : ['title="', '" src=']//
 };
 
 function parseJsonArray(array){
@@ -47,13 +47,13 @@ function trim(s){
     
 function parse(temp){
 	var newpics = [];
-	var prefix = mark.intercept[1];//截取的标志
+	var prefix = mark.intercept[1];//
 	temp = subFromSource(temp, prefix);
 	while(temp.indexOf(mark.intercept[0]) != -1){
 		var picture = {};
-		//获取图片浏览地址
+		//
 		picture.url = interceptFromSource(temp, mark.showUrl[0], mark.showUrl[1]);
-		//获取图片名称
+		//
 		var s = interceptFromSource(temp, mark.name[0], mark.name[1]);//Page 1: img00001.jpg
 		picture.name = trim(s.split(':')[1]);
 		newpics.push(picture);

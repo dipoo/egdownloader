@@ -63,6 +63,12 @@ public final class ComponentConst {
 	
 	public static String countHtml;
 	
+	public static String localScriptVersion;//本地脚本版本号
+	
+	public static String removeScriptVersion;//远程脚本版本号
+	
+	public static boolean scriptChange;//远程脚本是否更新
+	
 	public static String SCRIPT_CREATE_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
 	public static String SCRIPT_COLLECT_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
 	public static String SCRIPT_DOWNLOAD_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/download.js";

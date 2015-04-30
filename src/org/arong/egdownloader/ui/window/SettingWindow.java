@@ -190,12 +190,16 @@ public class SettingWindow extends JFrame{
 			}), 550, 70, 60, 30);
 			updateBtn = new AJButton("同步脚本", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
-					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-					if(mainWindow.setting.getUpdateScriptWorker() == null){
-						mainWindow.setting.setUpdateScriptWorker(new UpdateScriptWorker(mainWindow));
+					if(ComponentConst.scriptChange){
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						if(mainWindow.setting.getUpdateScriptWorker() == null){
+							mainWindow.setting.setUpdateScriptWorker(new UpdateScriptWorker(mainWindow));
+						}
+						updateBtn.setEnabled(false);
+						mainWindow.setting.getUpdateScriptWorker().execute();
+					}else{
+						JOptionPane.showMessageDialog(this_, "远程脚本未更新或者更新不可用！");
 					}
-					updateBtn.setEnabled(false);
-					mainWindow.setting.getUpdateScriptWorker().execute();
 				}
 			}), 550, 110, 60, 30);
 			loadingLabel = new AJLabel("", "loading.gif", null, JLabel.LEFT);//
