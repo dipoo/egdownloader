@@ -202,6 +202,7 @@ public class EgDownloaderWindow extends JFrame {
 							searchComicWindow = new SearchComicWindow(mainWindow);
 						}
 						SearchComicWindow scw = mainWindow.searchComicWindow;
+						scw.searchBtn.doClick();
 						scw.setVisible(true);
 					}
 				});
