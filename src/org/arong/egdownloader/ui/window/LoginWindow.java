@@ -73,11 +73,11 @@ public class LoginWindow extends JDialog {
 						params.put("UserName", user);
 						params.put("PassWord", pwd);//
 						params.put("CookieDate", "1");
-//						String cookieInfo = WebClient.getCookieByPostWithoutCookie(settingWindow.loginUrlField.getText(),
-//								"UTF-8", params); 
+						String cookieInfo = WebClient.getCookieByPostWithoutCookie(settingWindow.loginUrlField.getText(),
+								"UTF-8", params); 
 						String url = WebClient.getUrlStr(settingWindow.loginUrlField.getText() + "&", params);
-//						System.out.println(url);
-						String cookieInfo = WebClient.getCookieUseJava(url, "UTF-8");
+						System.out.println(url);
+//						String cookieInfo = WebClient.getCookieUseJava(url, "UTF-8");
 						if("".equals(cookieInfo)){
 							JOptionPane.showMessageDialog(this_, "登录失败");
 							return;
