@@ -51,6 +51,7 @@ public class SettingWindow extends JFrame{
 		JPanel basicPanel;
 		JLabel saveDirLabel;
 		public JTextField saveDirField;
+		JButton openDirButton;
 		JLabel saveAsNameLabel;
 		public JCheckBox saveAsNameBox;
 		JLabel autoDownloadLabel;
@@ -75,6 +76,7 @@ public class SettingWindow extends JFrame{
 		public JTextField downloadJsField;
 		public JLabel searchJsLabel;
 		public JTextField searchJsField;
+		public JButton openScriptDirBtn;
 		public JButton testBtn;
 		public JButton updateBtn;
 		public JLabel loadingLabel;
@@ -107,7 +109,7 @@ public class SettingWindow extends JFrame{
 			
 			final SettingWindow this_ = this;
 			
-			JButton openDirButton = new AJButton("打开", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+			openDirButton = new AJButton("打开", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					try {
 						String path = ComponentConst.getSavePathPreffix() + saveDirField.getText();
@@ -168,6 +170,20 @@ public class SettingWindow extends JFrame{
 			searchJsLabel = new AJLabel("搜索漫画脚本：", labelColor, 25, 150, 100, 30);
 			searchJsField = new AJTextField(setting.getSearchScriptPath(), "", 125, 150, 360, 30);
 			searchJsField.setEditable(false);
+			openScriptDirBtn = new AJButton("脚本目录", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					try {
+						String path = "script";
+						File f = new File(path);
+						FileUtil.ifNotExistsThenCreate(f);
+						Desktop.getDesktop().open(f);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this_, "文件夹已被删除");
+					}
+				}
+			}), 550, 50, 60, 30);
+			
 			testBtn = new AJButton("脚本测试", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -187,7 +203,7 @@ public class SettingWindow extends JFrame{
 						testScriptWindow.setVisible(true);
 					}
 				}
-			}), 550, 70, 60, 30);
+			}), 550, 90, 60, 30);
 			updateBtn = new AJButton("同步脚本", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					if(ComponentConst.scriptChange){
@@ -201,7 +217,7 @@ public class SettingWindow extends JFrame{
 						JOptionPane.showMessageDialog(this_, "远程脚本未更新或者更新不可用！");
 					}
 				}
-			}), 550, 110, 60, 30);
+			}), 550, 130, 60, 30);
 			loadingLabel = new AJLabel("", "loading.gif", null, JLabel.LEFT);//
 			loadingLabel.setBounds(620, 110, 30, 30);
 			loadingLabel.setVisible(false);
@@ -209,7 +225,7 @@ public class SettingWindow extends JFrame{
 			scriptDocPanel.setBounds(20, 200, 650, 250);
 			
 			addComponentsJpanel(scriptPanel, createJsLabel,
-					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, searchJsLabel, searchJsField, testBtn, updateBtn, loadingLabel, scriptDocPanel);
+					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, searchJsLabel, searchJsField, openScriptDirBtn, testBtn, updateBtn, loadingLabel, scriptDocPanel);
 			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("脚本配置", scriptPanel);
