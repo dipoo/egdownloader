@@ -54,11 +54,13 @@ public class SearchComicWindow extends JFrame {
 
 	private static final long serialVersionUID = -3912589805632312855L;
 	public EgDownloaderWindow mainWindow;
+	public SearchTagWindow searchTagWindow;
 	public SearchCoverWindow coverWindow;
 	public JTextField keyField;
 	private JLabel loadingLabel;
 	public JLabel totalLabel;
 	public JButton searchBtn;
+	public JButton tagBtn;
 	private JButton clearCacheBtn;
 	public SearchTasksTable searchTable;
 	public JScrollPane tablePane;
@@ -149,7 +151,7 @@ public class SearchComicWindow extends JFrame {
 				}
 			}
 		});
-		final JCheckBox c11 = new AJCheckBox("ALL", Color.RED, font, false);
+		final JCheckBox c11 = new AJCheckBox("ALL", Color.RED, font, true);
 		c11.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
@@ -180,6 +182,14 @@ public class SearchComicWindow extends JFrame {
 			
 		}, 510, 20, 60, 30);
 		final SearchComicWindow this_ = this;
+		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(searchTagWindow == null){
+					searchTagWindow = new SearchTagWindow(this_);
+				}
+				searchTagWindow.setVisible(true);
+			}
+		}, this.getWidth() - 150, 20, 60, 30);
 		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				datas.clear();
@@ -187,8 +197,9 @@ public class SearchComicWindow extends JFrame {
 				JOptionPane.showMessageDialog(this_, "清理成功");
 			}
 		}, this.getWidth() - 80, 20, 60, 30);
+		tagBtn.setUI(AJButton.blueBtnUi);
 		clearCacheBtn.setUI(AJButton.blueBtnUi);
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel, clearCacheBtn, optionPanel, pager);
+		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel, tagBtn, clearCacheBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { 
@@ -212,6 +223,7 @@ public class SearchComicWindow extends JFrame {
 				SearchComicWindow window = (SearchComicWindow) e.getSource();
 				//设置清理缓存按钮位置
 				if(clearCacheBtn != null){
+					tagBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());
 					clearCacheBtn.setLocation(window.getWidth() - 80, clearCacheBtn.getY());
 				}
 				//设置分类条件大小

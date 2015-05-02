@@ -39,6 +39,10 @@ public final class ComponentConst {
 	
 	public static String CACHE_PATH = "cache";//缓存目录
 	
+	public final static String TAG_FILE_NAME = "tags.properties";
+	
+	public final static String TAG_FILE_PATH = ROOT_DATA_PATH + "/tags.properties";
+	
 	public static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
 	
 	public static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
