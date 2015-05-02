@@ -69,6 +69,7 @@ public final class ComponentConst {
 	
 	public static boolean scriptChange;//远程脚本是否更新
 	
+	public static String EG_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/egversion";
 	public static String SCRIPT_CREATE_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
 	public static String SCRIPT_COLLECT_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
 	public static String SCRIPT_DOWNLOAD_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/download.js";
@@ -109,6 +110,9 @@ public final class ComponentConst {
 		Properties scriptProp = new Properties();
 		try {
 			scriptProp.load(new FileReader("script/version.properties"));
+			if(scriptProp.get("eg_version_url") != null){
+				EG_VERSION_URL = scriptProp.get("eg_version_url").toString();
+			}
 			if(scriptProp.get("script_create_url") != null){
 				SCRIPT_CREATE_URL = scriptProp.get("script_create_url").toString();
 			}
@@ -207,7 +211,7 @@ public final class ComponentConst {
 	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME +
 			"</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" +
 			Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" +
-			Version.VERSION +"</b><br>更新时间：<b>" + Version.MODIFLIED +
+			Version.VERSION +"</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='checkVersion'><font color='red'>检查新版本</font><a/><br>更新时间：<b>" + Version.MODIFLIED +
 			"</b><br>项目地址：<a href='https://github.com/dipoo/egdownloader'>https://github.com/dipoo/egdownloader</a>" + 
 			"<br/><font color='blue'>有任何问题，请到项目托管地址发issue。如果eh网页改版，请通知我更新脚本^_^</font>";
 	public final static String SCRIPT_DESC_TEXT = "<div style='font-size:10px;color:#666;'>目前脚本解析系统只支持javascript脚本，共需要三个脚本文件，分别用于任务信息解析，图片列表解析和图片真实地址解析，" +
