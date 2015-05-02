@@ -436,8 +436,8 @@ public final class JsonUtil {
 					String[] kv;
 					Map<String, String> data = new HashMap<String, String>();
 					for(int i = 0; i < arr.length; i ++){
-						if(arr[i].indexOf("\":") != -1){
-							kv = arr[i].split("\":");
+						if(arr[i].trim().indexOf("\":") != -1){
+							kv = arr[i].trim().split("\":");
 							if('"' == kv[1].charAt(0) && '"' == kv[1].charAt(kv[1].length() - 1)){
 								data.put(kv[0], kv[1].substring(1, kv[1].length() - 1));
 							}else{

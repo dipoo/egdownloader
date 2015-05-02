@@ -41,7 +41,9 @@ public class AJTextPane extends JTextPane {
 		//点击超链接打开浏览器事件
 		this.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
-				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) { 
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					if(e.getURL() == null || "#".equals(e.getURL().toString()))
+						return;
 					try {
 						Desktop.getDesktop().browse(new URI(e.getURL().toString()));
 					} catch (IOException e1) {
