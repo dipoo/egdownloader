@@ -70,6 +70,7 @@ public class SearchTagWindow extends JDialog {
 		addBtn = new AJButton("添加标签", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				addPanel.setVisible(true);
+				tagPane.setVisible(false);
 			}
 		}, (this.getWidth() - 60) / 2, 10, 60, 30);
 		
@@ -110,12 +111,14 @@ public class SearchTagWindow extends JDialog {
 					}
 					updateTagScrollPane(tags);
 					addPanel.setVisible(false);
+					tagPane.setVisible(true);
 				}
 			}
 		}, 80, 90, 60, 30);
 		JButton cancelBtn = new AJButton("取消", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				addPanel.setVisible(false);
+				tagPane.setVisible(true);
 			}
 		}, 150, 90, 60, 30);
 		ComponentUtil.addComponents(addPanel, nameLabel, nameField, valueLabel, valueField, saveBtn, cancelBtn);
