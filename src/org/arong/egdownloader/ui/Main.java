@@ -13,6 +13,7 @@ import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+
 /**
  * 启动程序的唯一入口
  * 
@@ -51,7 +52,6 @@ public class Main {
 			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
 			BeautyEyeLNFHelper.launchBeautyEyeLNF();
 			UIManager.put("RootPane.setupButtonVisible", false);
-			// WebLookAndFeel.install();
 		} catch (Exception e) {
 
 		}

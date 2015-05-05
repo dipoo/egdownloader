@@ -66,15 +66,19 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {
-				try {
-					bw.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				if(bw != null){
+					try {
+						bw.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
-				try {
-					br.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				if(br != null){
+					try {
+						br.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		} catch (Exception e) {
