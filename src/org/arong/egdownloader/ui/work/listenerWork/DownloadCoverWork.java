@@ -41,11 +41,14 @@ public class DownloadCoverWork implements IMenuListenerTask {
 					ParseEngine.rebuildTask(task, mainWindow.setting);
 				}
 				//下载封面
-				is =  WebClient.getStreamUseJava(task.getCoverUrl());
+				is =  WebClient.postRequestAsStreamWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
 				int size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				if(size == 0){
 					JOptionPane.showMessageDialog(mainWindow, "下载失败，地址错误或者地址不可访问");
 				}else{
+					if(mainWindow.coverWindow2 != null && mainWindow.coverWindow2.isVisible()){
+						mainWindow.coverWindow2.dispose();
+					}
 					JOptionPane.showMessageDialog(mainWindow, "下载成功");
 				}
 			} catch (SocketTimeoutException e){

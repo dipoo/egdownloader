@@ -64,7 +64,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			//是否已读
 			if(task.isReaded()){
 				l.setText(l.getText() + "√");
-				l.setToolTipText("已经阅读过了");//设置鼠标移过提示
+				//l.setToolTipText("已经阅读过了");//设置鼠标移过提示
 			}else{
 				l.setText(l.getText() + "  ");
 			}
