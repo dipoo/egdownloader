@@ -84,6 +84,18 @@ public class SettingWindow extends JFrame{
 		
 		Color labelColor = new Color(65,145,65);
 		Color bgColor = new Color(210,225,240);
+		
+		
+
+		public void dispose() {
+			super.dispose();
+			if(loginWindow != null && loginWindow.isVisible()){
+				loginWindow.dispose();
+			}
+			if(testScriptWindow != null && testScriptWindow.isVisible()){
+				testScriptWindow.dispose();
+			}
+		}
 
 		public SettingWindow(JFrame mainWindow) {
 			super("配置");
