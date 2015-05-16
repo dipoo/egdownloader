@@ -29,6 +29,7 @@ import javax.swing.table.TableModel;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
@@ -92,7 +93,15 @@ public class SearchTasksTable extends JTable {
 				if(column == 0){//类型
 					tc.setPreferredWidth(105);
 					tc.setMaxWidth(105);
-					JLabel l = new AJLabel("", tasks.get(row).getType() == null ? "" : (tasks.get(row).getType().toLowerCase() + ".png"), c, JLabel.LEFT);
+					JLabel l = new AJLabel("", c, JLabel.LEFT);
+					if(tasks.get(row).getType() != null){
+						ImageIcon icon = IconManager.getIcon(tasks.get(row).getType().toLowerCase());
+						if(icon != null){
+							l.setIcon(icon);
+						}else{
+							l.setText(tasks.get(row).getType());
+						}
+					}
 					return l;
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(700);

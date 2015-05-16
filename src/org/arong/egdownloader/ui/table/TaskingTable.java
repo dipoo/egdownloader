@@ -135,21 +135,8 @@ public class TaskingTable extends JTable {
                 			table.setTasks(table.getMainWindow().tasks);
                 		}
                     }
-                    //漫画类别排序
-                    else if(column == 4){
-                    	if(table.getMainWindow().tasks != null){
-                			//按照名称排序
-                			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
-                				@Override
-                				public int compare(Task o1, Task o2) {
-                					return o1.getType().toLowerCase().compareTo(o2.getType().toLowerCase());
-                				}
-                			});
-                			table.setTasks(table.getMainWindow().tasks);
-                		}
-                    }
                     //漫画下载进度排序
-                    else if(column == 5){
+                    else if(column == 4){
                     	if(table.getMainWindow().tasks != null){
                 			//按照名称排序
                 			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {
@@ -168,7 +155,7 @@ public class TaskingTable extends JTable {
                 		}
                     }
                     //漫画下载状态排序
-                    else if(column == 6){
+                    else if(column == 5){
                     	if(table.getMainWindow().tasks != null){
                 			//按照名称排序
                 			Collections.sort(table.getMainWindow().tasks, new Comparator<Task>() {

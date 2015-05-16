@@ -21,8 +21,8 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 			boolean isSelected, boolean hasFocus, int row, int column) {
 			JLabel l = null;
 		switch (column){
-			case 0://数目
-				l = new AJLabel(table.getRowCount() + "", null, color, JLabel.CENTER);
+			case 0://类别
+				l = new AJLabel("", null, color, JLabel.CENTER);
 				l.setToolTipText("漫画总数(按照阅读状态排序)");
 				return l;
 			case 1://名称
@@ -37,15 +37,11 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 				l =  new AJLabel(value.toString(), null, color, JLabel.LEFT);
 				l.setToolTipText("按照漫画语言排序");
 				return l;
-			case 4://类别
-				l =  new AJLabel(value.toString(), null, color, JLabel.LEFT);
-				l.setToolTipText("按照漫画类别排序");
-				return l;
-			case 5://下载进度
+			case 4://下载进度
 				l =  new AJLabel(value.toString(), null, color, JLabel.CENTER);
 				l.setToolTipText("按照漫画进度降序排序");
 				return l;
-			case 6://状态
+			case 5://状态
 				l = new AJLabel(value.toString(), null, color, JLabel.CENTER);
 				l.setToolTipText("按照漫画下载状态排序");
 				return l;
