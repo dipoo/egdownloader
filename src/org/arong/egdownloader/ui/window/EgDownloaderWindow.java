@@ -111,7 +111,8 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog creatingWindow;
 	public JDialog detailWindow;
 	public JDialog checkingWindow;
-	public JDialog coverWindow;
+	public JDialog coverWindow2;//漫画封面，鼠标点击弹出
+	public SearchCoverWindow coverWindow;//漫画封面，鼠标移动出现
 	public JDialog editWindow;
 	public JDialog deletingWindow;
 	public JDialog resetAllTaskWindow;
@@ -624,6 +625,9 @@ public class EgDownloaderWindow extends JFrame {
 				}
 				if(settingWindow != null && settingWindow.isVisible()){
 					settingWindow.dispose();
+				}
+				if(detailWindow != null && detailWindow.isVisible()){
+					detailWindow.dispose();
 				}
 				this.setVisible(false);
 				this.dispose();

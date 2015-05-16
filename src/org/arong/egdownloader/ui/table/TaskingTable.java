@@ -1,8 +1,11 @@
 package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +21,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SearchCoverWindow;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.egdownloader.ui.work.ReCreateWorker;
 import org.arong.util.Tracker;
@@ -36,6 +40,7 @@ public class TaskingTable extends JTable {
 	private int sort = 1;//0为名称排序，1为时间排序
 	private List<Task> waitingTasks;//排队等待的任务
 	public static int wordNum = 230;//名称列最多显示字数，会随着窗口大小变化而改变
+	public int currentRowIndex = -1;//用于封面显示
 	
 	public void changeModel(EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
@@ -65,11 +70,7 @@ public class TaskingTable extends JTable {
 		this.setDefaultRenderer(Object.class, renderer);//设置渲染器
 		this.getTableHeader().setDefaultRenderer(new TaskTableHeaderRenderer());
 		//表头监听
-		this.getTableHeader().addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
+		this.getTableHeader().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getSource() == getTableHeader()) {
 					TaskingTable table = (TaskingTable)getTableHeader().getTable();
@@ -186,11 +187,37 @@ public class TaskingTable extends JTable {
 			}
 		});
 		//单元格监听
-		this.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
+		final TaskingTable table = this;
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e){
+				int rowIndex = table.rowAtPoint(e.getPoint());
+				int columnIndex = table.columnAtPoint(e.getPoint());
+				if(columnIndex == 0){
+					Task task = table.getTasks().get(rowIndex);
+					//切换行
+					if(rowIndex != currentRowIndex){
+						currentRowIndex = rowIndex;
+						if(table.mainWindow.coverWindow == null){
+							table.mainWindow.coverWindow = new SearchCoverWindow(table.mainWindow);
+						}
+						table.mainWindow.coverWindow.showCover(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+					}
+				}else{
+					if(table.mainWindow.coverWindow != null){
+						table.mainWindow.coverWindow.setVisible(false);
+						currentRowIndex = -1;
+					}
+				}
+			}
+		});
+		//单元格监听
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseExited(MouseEvent e) {
+				if(table.mainWindow.coverWindow != null){
+					table.mainWindow.coverWindow.setVisible(false);
+					currentRowIndex = -1;
+				}
+			}
 			public void mouseClicked(MouseEvent e) {
 				TaskingTable table = (TaskingTable)e.getSource();
 				//获取点击的行数
@@ -223,16 +250,21 @@ public class TaskingTable extends JTable {
 						int column = table.columnAtPoint(e.getPoint());
 						//显示预览图
 						if(column == 0){
-							EgDownloaderWindow window = table.getMainWindow();
 							Task task = table.getTasks().get(rowIndex);
-							CoverWindow cw = (CoverWindow) window.coverWindow;
-							if(cw == null){
-								window.coverWindow = new CoverWindow(task, window);
-								cw = (CoverWindow) window.coverWindow;
-							}else{
-								cw.showCover(task);
+							String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
+							File cover = new File(path);
+							//不存在封面
+							if(cover == null || !cover.exists()){
+								EgDownloaderWindow window = table.getMainWindow();
+								CoverWindow cw = (CoverWindow) window.coverWindow2;
+								if(cw == null){
+									window.coverWindow2 = new CoverWindow(task, window);
+									cw = (CoverWindow) window.coverWindow2;
+								}else{
+									cw.showCover(task);
+								}
+								cw.setVisible(true);
 							}
-							cw.setVisible(true);
 						}
 					}
 					
