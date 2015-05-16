@@ -38,7 +38,6 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
-import org.arong.egdownloader.ui.work.DownloadCacheCoverWorker;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 /**
  * 搜索结果表格
@@ -226,18 +225,15 @@ public class SearchTasksTable extends JTable {
 										}
 									}
 								}));
-						JMenuItem downloadCoverItem = new AJMenuItem("下载封面", Color.BLACK,
-								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+						JMenuItem searchTitleItem = new AJMenuItem("搜索标题", Color.BLACK, null,
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										List<SearchTask> tasks = new ArrayList<SearchTask>();
-										tasks.add(task);
-										//下载封面线程
-										new DownloadCacheCoverWorker(tasks, comicWindow.mainWindow).execute();
+										comicWindow.keyField.setText(task.getName());
+										comicWindow.searchBtn.doClick();
 									}
 								}));
-						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, downloadCoverItem);
+						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, searchTitleItem);
 					}
 					table.popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}

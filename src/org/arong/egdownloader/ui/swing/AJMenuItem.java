@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -26,8 +27,12 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 	public AJMenuItem(String text, String icon){
 		this.setText(text);
 		this.setCursor(CursorManager.getPointerCursor());
-		if(icon != null && !"".equals(icon))
-			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
+		if(icon != null && !"".equals(icon)){
+			URL url = getClass().getResource(ComponentConst.ICON_PATH + icon);
+			if(url != null){
+				this.setIcon(new ImageIcon(url));
+			}
+		}	
 	}
 	
 	public AJMenuItem(String text, String name, Component... components){
