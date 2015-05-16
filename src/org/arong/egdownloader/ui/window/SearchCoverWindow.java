@@ -11,6 +11,7 @@ import javax.swing.JWindow;
 
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.util.FileUtil;
 /**
  * 搜索结果封面窗口
@@ -42,13 +43,13 @@ public class SearchCoverWindow extends JWindow {
 		if(cover == null || !cover.exists()){
 			this.setSize(20, 20);
 			coverLabel.setSize(20, 20);
-			coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
+			coverLabel.setIcon(IconManager.getIcon("loading"));
 		}else{
 			icon = new ImageIcon(path);
 			if(icon.getIconWidth() == -1){
 				this.setSize(20, 20);
 				coverLabel.setSize(20, 20);
-				coverLabel.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "loading.gif")));
+				coverLabel.setIcon(IconManager.getIcon("loading"));
 			}else{
 				this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
 				coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);

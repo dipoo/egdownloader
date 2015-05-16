@@ -17,6 +17,7 @@ import javax.swing.table.TableColumn;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
 
 /**
@@ -49,9 +50,15 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		TableColumn tc = table.getColumnModel().getColumn(column);
 		task = ((TaskingTable)table).getTasks().get(row); 
 		if(column == 0){//第一列：图标
-			tc.setPreferredWidth(50);
-			tc.setMaxWidth(80);
-			JLabel l = new JLabel(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))), JLabel.CENTER);
+			tc.setPreferredWidth(130);
+			tc.setMaxWidth(150);
+			JLabel l = new JLabel();
+			
+			if(task.getType() != null){
+				ImageIcon icon = IconManager.getIcon(task.getType().toLowerCase());
+				l.setIcon(icon != null ? icon : IconManager.getIcon("folder"));
+			}
+			
 			l.setText("" + (row + 1));
 			l.setForeground(Color.BLUE);
 			//是否已读
@@ -94,29 +101,25 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setMaxWidth(150);
 			return new AJLabel(value.toString(), fontColor, font, JLabel.LEFT);
 		}else if(column == 3){//第三列：语言
-			tc.setPreferredWidth(60);
+			tc.setPreferredWidth(80);
 			tc.setMaxWidth(150);
 			return new AJLabel(value == null ? "" : value.toString(), fontColor, font, JLabel.LEFT);
-		}else if(column == 4){//第三列：类别
-			tc.setPreferredWidth(60);
-			tc.setMaxWidth(150);
-			return new AJLabel(value == null ? "" : value.toString().toUpperCase(), fontColor, font, JLabel.LEFT);
-		}else if(column == 5){//第四列：进度
+		}else if(column == 4){//第四列：进度
 			tc.setPreferredWidth(80);
 			tc.setMaxWidth(150);
 			if(value == null || Integer.parseInt(value.toString()) < 1){
 				return new AJLabel("0(0.0%)", fontColor, blodFont, JLabel.CENTER);
 			}
-			JProgressBar bar = new JProgressBar(0, Integer.parseInt(table.getModel().getValueAt(row, column - 3).toString()));
+			JProgressBar bar = new JProgressBar(0, task.getTotal());
 			bar.setBackground(progressBarBg);
-			bar.setString(value.toString() + "(" + getSchedule(value, table.getModel().getValueAt(row, column - 3)) + ")");
+			bar.setString(value.toString() + "(" + getSchedule(value, task.getTotal()) + ")");
 			bar.setStringPainted(true);
 			bar.setFont(blodFont);bar.setPreferredSize(new Dimension(110, 13));
 			bar.setForeground(progressBarBorder);
 			bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
 			bar.setValue(Integer.parseInt(value.toString()));
 			return bar;
-		}else if(column == 6){//第五列：状态
+		}else if(column == 5){//第五列：状态
 			tc.setPreferredWidth(table.getRowCount() > ComponentConst.MAX_TASK_PAGE ?  40 : 62);
 			tc.setMaxWidth(80);
 			if(value.toString().equals(TaskStatus.UNSTARTED.getStatus())){

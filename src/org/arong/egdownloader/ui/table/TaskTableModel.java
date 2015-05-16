@@ -43,10 +43,8 @@ public class TaskTableModel extends AbstractTableModel {
 			case 3 :
 				return tasks.get(rowIndex).getLanguage();
 			case 4 :
-				return tasks.get(rowIndex).getType();
-			case 5 :
-				return tasks.get(rowIndex).getCurrent();	
-			case 6 :	
+				return tasks.get(rowIndex).getCurrent();
+			case 5 :	
 				return tasks.get(rowIndex).getStatus().getStatus();
 			default :
 				return "";
