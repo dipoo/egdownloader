@@ -345,6 +345,9 @@ public class SearchComicWindow extends JFrame {
 	public void dispose() {
 		mainWindow.setEnabled(true);
 		mainWindow.setVisible(true);
+		if(searchTagWindow != null && searchTagWindow.isVisible()){
+			searchTagWindow.dispose();
+		}
 		super.dispose();
 	}
 }

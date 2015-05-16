@@ -619,6 +619,12 @@ public class EgDownloaderWindow extends JFrame {
 						}
 					}, 10000);
 				}
+				if(searchComicWindow != null && searchComicWindow.isVisible()){
+					searchComicWindow.dispose();
+				}
+				if(settingWindow != null && settingWindow.isVisible()){
+					settingWindow.dispose();
+				}
 				this.setVisible(false);
 				this.dispose();
 			}
