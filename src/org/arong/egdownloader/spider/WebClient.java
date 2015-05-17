@@ -82,7 +82,8 @@ public class WebClient {
 		}
 		//设置cookie
 		if(cookieInfo != null){
-			postMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
+			postMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2965);
+			postMethod.getParams().setParameter("http.protocol.cookie-policy",CookiePolicy.BROWSER_COMPATIBILITY);
 			postMethod.setRequestHeader("Cookie", cookieInfo);
 		}
 		//设置连接超时为20秒
@@ -160,7 +161,8 @@ public class WebClient {
 		}
 		//设置cookie
 		if(cookieInfo != null){
-			postMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
+			postMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2965);
+			postMethod.getParams().setParameter("http.protocol.cookie-policy",CookiePolicy.BROWSER_COMPATIBILITY);
 			postMethod.setRequestHeader("Cookie", cookieInfo);
 		}
 		//设置连接超时为20秒
@@ -176,6 +178,7 @@ public class WebClient {
 			if (statusCode == 200 || statusCode == 201) {
 				// 查看 cookie 信息  
 			      Cookie[] cookies = httpClient.getState().getCookies();  
+//			      System.out.println("body:" + postMethod.getResponseBodyAsString());
 			      if (cookies.length == 0) {  
 			         System.out.println( "None" );  
 			      } else {  
@@ -260,7 +263,8 @@ public class WebClient {
 		}
 		//设置cookie
 		if(cookieInfo != null){
-			postMethod.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
+			postMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2965);
+			postMethod.getParams().setParameter("http.protocol.cookie-policy",CookiePolicy.BROWSER_COMPATIBILITY);
 			postMethod.setRequestHeader("Cookie", cookieInfo);
 		}
 		//设置连接超时为20秒
