@@ -147,7 +147,7 @@ public class SettingWindow extends JFrame{
 			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
 			cookieArea = new AJTextArea();
 			cookieArea.setText(setting.getCookieInfo());
-			cookieArea.setBounds(125, 190, 360, 150);
+			cookieArea.setBounds(125, 190, 360, 200);
 			cookieArea.setLineWrap(true);
 			cookieArea.setBorder(BorderFactory.createEtchedBorder());
 			cookieButton = new AJButton("登陆", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
@@ -162,10 +162,17 @@ public class SettingWindow extends JFrame{
 					}
 				}
 			}), 500, 250, 60, 30);
+			JButton resumeButton = new AJButton("还原", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
+					settingWindow.cookieArea.setText(new Setting().getCookieInfo());
+				}
+			}), 500, 290, 60, 30);
 		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, openDirButton,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieArea,
-				cookieButton);
+				cookieButton, resumeButton);
 		    
 			/*脚本设置*/
 			scriptPanel = new JPanel();
