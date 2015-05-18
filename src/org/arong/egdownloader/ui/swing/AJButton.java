@@ -93,6 +93,19 @@ public class AJButton extends JButton {
 			}
 		}
 	}
+	public AJButton(String text, ImageIcon icon, MouseListener mouseListener, 
+			int x, int y, int width, int height) {
+		this(text, "", null, x, y, width, height);
+		if(mouseListener != null)
+			this.addMouseListener(mouseListener);
+		if(icon != null){
+			try{
+				this.setIcon(icon);
+			}catch(Exception e){
+				Tracker.println(getClass(), e.getMessage());
+			}
+		}
+	}
 	
 	public AJButton(String text){
 		this.setUI(greenBtnUi);

@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
  *
  */
 public class IconManager {
+	private static ImageIcon addImage;
+	private static ImageIcon changeImage;
 	private static ImageIcon loadingImage;
 	private static ImageIcon folderImage;
 	private static ImageIcon artistcgImage;
@@ -22,16 +24,26 @@ public class IconManager {
 	private static ImageIcon westernImage;
 	
 	public static ImageIcon getIcon(String name){
-		if("loading".equals(name)){
-			if(loadingImage == null){
-				loadingImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "loading.gif"));
+		if("add".equals(name)){
+			if(addImage == null){
+				addImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add")));
 			}
-			return loadingImage;
+			return addImage;
+		}else if("change".equals(name)){
+			if(changeImage == null){
+				changeImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("change")));
+			}
+			return changeImage;
 		}else if("folder".equals(name)){
 			if(folderImage == null){
 				folderImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder")));
 			}
 			return folderImage;
+		}else if("loading".equals(name)){
+			if(loadingImage == null){
+				loadingImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "loading.gif"));
+			}
+			return loadingImage;
 		}else if("artistcg".equals(name)){
 			if(artistcgImage == null){
 				artistcgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "ARTISTCG.png"));

@@ -25,6 +25,7 @@ import javax.swing.JTextPane;
 
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -121,7 +122,7 @@ public class SettingWindow extends JFrame{
 			
 			final SettingWindow this_ = this;
 			
-			openDirButton = new AJButton("打开", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+			openDirButton = new AJButton("打开", IconManager.getIcon("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					try {
 						String path = ComponentConst.getSavePathPreffix() + saveDirField.getText();
