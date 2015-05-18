@@ -39,6 +39,12 @@ public class AJMenu extends JMenu {
 			//设置图标
 			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
+	public AJMenu(String text, String name, ImageIcon icon, MouseListener listener){
+		this(text, name, listener);
+		if(icon != null)
+			//设置图标
+			this.setIcon(icon);
+	}
 	public AJMenu(String text, Color color, MouseListener listener){
 		this(text, "", listener);
 		this.setForeground(color);

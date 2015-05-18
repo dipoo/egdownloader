@@ -185,7 +185,7 @@ public class SearchTasksTable extends JTable {
 					table.setRowSelectionInterval(rowIndex, rowIndex);
 					if(table.popupMenu == null){
 						JMenuItem downItem = new AJMenuItem("创建任务", Color.BLACK,
-								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"),
+								IconManager.getIcon("add"),
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										EgDownloaderWindow this_ = (EgDownloaderWindow) window;
@@ -225,7 +225,7 @@ public class SearchTasksTable extends JTable {
 										}
 									}
 								}));
-						JMenuItem searchTitleItem = new AJMenuItem("搜索标题", Color.BLACK, null,
+						JMenuItem searchTitleItem = new AJMenuItem("搜索标题", Color.BLACK, "",
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										final SearchTask task = table.getTasks().get(table.getSelectedRow());

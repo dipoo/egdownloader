@@ -11,7 +11,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -25,6 +24,7 @@ import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -83,7 +83,7 @@ public class AddFormDialog extends JDialog {
 	public AddFormDialog(final JFrame mainWindow){
 		this.mainWindow = mainWindow;
 		this.setTitle("新建任务");
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
+		this.setIconImage(IconManager.getIcon("add").getImage());
 		this.setSize(480, 250);
 		this.setResizable(false);
 		this.setLayout(null);
@@ -139,7 +139,7 @@ public class AddFormDialog extends JDialog {
 			}
 		}) , 400, 120, 60, 30);
 		
-		addTaskBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		addTaskBtn = new AJButton("新建", IconManager.getIcon("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog, MouseEvent event) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				String url = this_.urlField.getText().trim();

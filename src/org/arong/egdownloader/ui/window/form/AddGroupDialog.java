@@ -7,7 +7,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -20,6 +19,7 @@ import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -41,7 +41,7 @@ public class AddGroupDialog extends JDialog {
 	
 	public AddGroupDialog(final GroupWindow window, final EgDownloaderWindow mainWindow){
 		this.setTitle("新建任务组");
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"))).getImage());
+		this.setIconImage(IconManager.getIcon("add").getImage());
 		this.setSize(300, 120);
 		this.setResizable(false);
 		this.setLayout(null);
@@ -49,7 +49,7 @@ public class AddGroupDialog extends JDialog {
 		
 		JLabel groupNameLabel = new AJLabel("名称：", Color.BLUE, 15, 20, 40, 30);
 		final JTextField groupNameField = new AJTextField("", "", 50, 20, 160, 30);
-		JButton addBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		JButton addBtn = new AJButton("新建", IconManager.getIcon("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window dialog, MouseEvent event) {
 				AddGroupDialog addGroupDialog = (AddGroupDialog) dialog;
 				String groupName = groupNameField.getText().trim();

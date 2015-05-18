@@ -7,10 +7,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
-import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
@@ -24,7 +23,7 @@ public class OpenRootMenuItem extends JMenuItem {
 
 	public OpenRootMenuItem(String text, final EgDownloaderWindow window){
 		super(text);
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"))));
+		this.setIcon(IconManager.getIcon("folder"));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

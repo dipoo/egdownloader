@@ -52,6 +52,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.SwingPrintStream;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
@@ -162,8 +163,7 @@ public class EgDownloaderWindow extends JFrame {
 		Color menuItemColor = new Color(0,0,85);
 		// 菜单：新建
 		JMenu newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("add"),
+				"", IconManager.getIcon("add"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,
 						new IListenerTask() {
 							public void doWork(Window mainWindow, MouseEvent e) {
@@ -329,7 +329,7 @@ public class EgDownloaderWindow extends JFrame {
 		}));
 		//右键菜单：打开文件夹
 		AJMenuItem openFolderPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder"),
+				IconManager.getIcon("folder"),
 				new MenuItemActonListener(this, new OpenFolderTaskWork()));
 		//右键菜单：打开网页
 		AJMenuItem openWebPageMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, menuItemColor,
@@ -345,7 +345,7 @@ public class EgDownloaderWindow extends JFrame {
 				new MenuItemActonListener(this, new CheckResetWork()));
 		//右键菜单：更改阅读状态
 		AJMenuItem changeReadedMenuItem = new AJMenuItem(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("change"),
+				IconManager.getIcon("change"),
 				new MenuItemActonListener(this, new ChangeReadedWork()));
 		//右键菜单：编辑任务信息
 		AJMenuItem editMenuItem = new AJMenuItem(ComponentConst.POPUP_EDIT_MENU_TEXT, menuItemColor,

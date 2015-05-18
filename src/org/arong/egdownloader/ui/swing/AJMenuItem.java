@@ -58,6 +58,15 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 		this.addActionListener(listener);
 	}
 	
+	public AJMenuItem (String text,  Color color, ImageIcon icon, ActionListener listener){
+		this(text, null);
+		if(icon != null){
+			this.setIcon(icon);
+		}
+		this.setForeground(color);
+		this.addActionListener(listener);
+	}
+	
 	public AJMenuItem (String text, Color color, ActionListener listener){
 		this.setText(text);
 		this.setForeground(color);
