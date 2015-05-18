@@ -1,6 +1,8 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,8 +10,10 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JWindow;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -51,17 +55,33 @@ public class InitWindow extends JWindow {
 	public String scriptVersion;
 	
 	public InitWindow(){
-		this.setSize(300, 100);
-		this.getContentPane().setBackground(Color.decode("333"));
+		final ImageIcon icon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "init.jpg"));
+		this.setSize(icon.getIconWidth(), icon.getIconHeight());
+//		this.getContentPane().setBackground(Color.decode("333"));
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setLayout(null);
-		textLabel = new AJLabel(Version.NAME + "程序初始化",Color.WHITE,0,35,300,30);
+		JPanel backPanel = new JPanel() {
+			private static final long serialVersionUID = 1L;
+			protected void paintComponent(Graphics g) {  
+                Image img = icon.getImage();  
+                g.drawImage(img, 0, 0, icon.getIconWidth(),  
+                        icon.getIconHeight(), icon.getImageObserver());  
+  
+            }  
+        };
+        backPanel.setLayout(null);
+		backPanel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
+		JLabel v = new AJLabel(Version.NAME + "v" + Version.VERSION, Color.WHITE, 0, 10, icon.getIconWidth(), 30);
+		v.setHorizontalAlignment(JLabel.CENTER);
+		textLabel = new AJLabel("程序初始化",Color.WHITE,0,100,icon.getIconWidth(),30);
 		textLabel.setHorizontalAlignment(JLabel.CENTER);
-		this.getContentPane().add(textLabel);
+		backPanel.add(v);
+		backPanel.add(textLabel);
+		this.getContentPane().add(backPanel);
 		textLabel.setForeground(Color.WHITE);
 		this.setVisible(true);
-		this.toFront();  
-		textLabel.setText(Version.NAME + "-读取配置数据");
+		this.toFront();
+		textLabel.setText("读取配置数据");
 		//检测数据目录是否存在,不存在则创建一个
 		File data_path = new File(ComponentConst.getXmlDirPath());
 		if(!data_path.exists()){
@@ -76,7 +96,7 @@ public class InitWindow extends JWindow {
 			setting = settings.get(0);
 		}
 		textLabel.setForeground(Color.WHITE);
-		textLabel.setText(Version.NAME + "-读取任务列表");
+		textLabel.setText("读取任务列表");
 		taskDbTemplate = new TaskDom4jDbTemplate();
 		pictureDbTemplate = new PictureDom4jDbTemplate();
 		tasks = taskDbTemplate.query();
@@ -103,7 +123,7 @@ public class InitWindow extends JWindow {
 				setting.setPictureHistoryCount(p_historyCount);
 			}
 		}
-		textLabel.setText(Version.NAME + "-检测远程脚本");
+		textLabel.setText("检测远程脚本");
 		//检测脚本是否发生变化
 		try {
 			scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
@@ -144,7 +164,7 @@ public class InitWindow extends JWindow {
 		}else{
 			ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 		}
-		textLabel.setText(Version.NAME + "初始化完成");
+		textLabel.setText("初始化完成");
 		ComponentConst.mainWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
 	}
