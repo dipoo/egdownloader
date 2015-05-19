@@ -24,19 +24,19 @@ public class AddTaskGroupMenuItem extends JMenuItem {
 
 	private static final long serialVersionUID = 2616082975789594278L;
 	
-	public static final int addAction = 1;
-	public static final int changeAction = 2;
+	public static final int ADDACTION = 1;
+	public static final int CHANGEACTION = 2;
 
 	public AddTaskGroupMenuItem(String text, final EgDownloaderWindow window, final int action){
 		super(text);
-		this.setIcon(IconManager.getIcon(action == addAction ? "add" : "change"));
+		this.setIcon(IconManager.getIcon(action == ADDACTION ? "add" : "change"));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				EgDownloaderWindow mainWindow = window;
-				if(action == addAction){//新增
+				if(action == ADDACTION){//新增
 					new AddGroupDialog(null, mainWindow);
-				}else if(action == changeAction){//切换
+				}else if(action == CHANGEACTION){//切换
 					File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
 					if(!dataFile.exists()){
 						dataFile.mkdirs();
