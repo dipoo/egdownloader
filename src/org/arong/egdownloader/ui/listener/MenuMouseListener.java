@@ -47,14 +47,14 @@ public class MenuMouseListener implements MouseListener {
 			}
 			// 如果点击的是关于菜单，则将关于窗口显示出来，倘若关于窗口为null就先实例化
 			else if (ComponentConst.ABOUT_MENU_NAME.equals(menuName)) {
-				if (mainWindow.aboutMenuWindow == null) {
+				if (mainWindow.aboutWindow == null) {
 					JDialog aboutWindow = new AboutMenuWindow(mainWindow);
-					mainWindow.aboutMenuWindow = aboutWindow;
+					mainWindow.aboutWindow = aboutWindow;
 				}
-				mainWindow.aboutMenuWindow.setLocationRelativeTo(mainWindow);
+				mainWindow.aboutWindow.setLocationRelativeTo(mainWindow);
 				// 设置关于窗口置于最顶层
-				mainWindow.aboutMenuWindow.setVisible(true);
-				mainWindow.aboutMenuWindow.toFront();
+				mainWindow.aboutWindow.setVisible(true);
+				mainWindow.aboutWindow.toFront();
 			}
 		}
 

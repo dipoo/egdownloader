@@ -107,7 +107,7 @@ public class EgDownloaderWindow extends JFrame {
 	
 	JMenuBar jMenuBar;// 菜单栏
 	public JFrame settingWindow;
-	public JDialog aboutMenuWindow;
+	public JDialog aboutWindow;
 	public JDialog addFormWindow;
 	public JDialog creatingWindow;
 	public JDialog detailWindow;
@@ -216,8 +216,8 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu taskGroupMenu = new AJMenu(ComponentConst.TASKGROUP_MENU_TEXT,
 				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
 						+ ComponentConst.SKIN_ICON.get("group"), null);
-		taskGroupMenu.add(new AddTaskGroupMenuItem("新建任务组", this, AddTaskGroupMenuItem.addAction));
-		taskGroupMenu.add(new AddTaskGroupMenuItem("切换任务组", this, AddTaskGroupMenuItem.changeAction));
+		taskGroupMenu.add(new AddTaskGroupMenuItem("新建任务组", this, AddTaskGroupMenuItem.ADDACTION));
+		taskGroupMenu.add(new AddTaskGroupMenuItem("切换任务组", this, AddTaskGroupMenuItem.CHANGEACTION));
 		
 		// 菜单：设置
 		MouseListener menuMouseListener = new MenuMouseListener(this);
@@ -270,7 +270,6 @@ public class EgDownloaderWindow extends JFrame {
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
 				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, searchComicMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
-		
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
 				(tasks == null ? 0 :tasks.size()) * 28, this.tasks, this);
@@ -510,8 +509,8 @@ public class EgDownloaderWindow extends JFrame {
 		this.addWindowFocusListener(new WindowAdapter() {
 			public void windowGainedFocus(WindowEvent e) {
 				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
-				if (window.aboutMenuWindow != null) {
-					window.aboutMenuWindow.dispose();
+				if (window.aboutWindow != null) {
+					window.aboutWindow.dispose();
 				}
 				if(window.countWindow != null){
 					window.countWindow.dispose();
@@ -620,15 +619,11 @@ public class EgDownloaderWindow extends JFrame {
 						}
 					}, 10000);
 				}
-				if(searchComicWindow != null && searchComicWindow.isVisible()){
-					searchComicWindow.dispose();
-				}
-				if(settingWindow != null && settingWindow.isVisible()){
-					settingWindow.dispose();
-				}
-				if(detailWindow != null && detailWindow.isVisible()){
-					detailWindow.dispose();
-				}
+				ComponentUtil.disposeAll(searchComicWindow, settingWindow,
+						detailWindow, aboutWindow, addFormWindow,
+						creatingWindow, detailWindow, checkingWindow,
+						coverWindow2, coverWindow, editWindow, deletingWindow,
+						resetAllTaskWindow, countWindow, simpleSearchWindow);
 				this.setVisible(false);
 				this.dispose();
 			}
