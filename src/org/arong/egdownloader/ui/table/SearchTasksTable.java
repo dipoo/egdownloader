@@ -233,7 +233,21 @@ public class SearchTasksTable extends JTable {
 										comicWindow.searchBtn.doClick();
 									}
 								}));
-						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, searchTitleItem);
+						JMenuItem searchAuthorItem = new AJMenuItem("搜索作者", Color.BLACK, "",
+								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
+									public void doWork(Window window, ActionEvent e) {
+										final SearchTask task = table.getTasks().get(table.getSelectedRow());
+										String name = task.getName();
+										if(name != null){
+											if(name.indexOf("[") != -1 && name.indexOf("]") != -1 && name.indexOf("[") < name.indexOf("]")){
+												name = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
+												comicWindow.keyField.setText(name);
+												comicWindow.searchBtn.doClick();
+											}
+										}
+									}
+								}));
+						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, searchTitleItem, searchAuthorItem);
 					}
 					table.popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}

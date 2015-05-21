@@ -45,7 +45,7 @@ public class AboutMenuWindow extends JDialog {
 		// 设置主窗口
 		this.setSize(340, 250);
 		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("user"))).getImage());
-		this.setTitle("about");
+		this.setTitle("关于");
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);
@@ -79,7 +79,7 @@ public class AboutMenuWindow extends JDialog {
 							String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, null);
 							Map<String, String> version = JsonUtil.json2Map(egVersion);
 							if(! Version.VERSION.equals(version.get("version"))){
-								int r = JOptionPane.showConfirmDialog(this_, "最新版本号为：" + version.get("version") + ",是否前往下载？");
+								int r = JOptionPane.showConfirmDialog(this_, "最新版本号为：" + version.get("version") + "，是否前往下载？");
 								if(r == JOptionPane.OK_OPTION){
 									try {
 										Desktop.getDesktop().browse(new URI(version.get("url")));
