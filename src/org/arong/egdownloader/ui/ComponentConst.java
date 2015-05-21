@@ -213,7 +213,7 @@ public final class ComponentConst {
 	
 	/*AboutMenuWindow内的组件*/
 	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME +
-			"</h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" +
+			"&nbsp;<small><font color='red'>一周年版</font></small></h3>作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者：<b>" +
 			Version.AUTHOR + "</b><br>版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：<b>" +
 			Version.VERSION +"</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='checkVersion'><font color='red'>检查新版本</font><a/><br>更新时间：<b>" + Version.MODIFLIED +
 			"</b><br>项目地址：<a href='https://github.com/dipoo/egdownloader'>https://github.com/dipoo/egdownloader</a>" + 

@@ -72,7 +72,7 @@ public class AJButton extends JButton {
 	public AJButton(String text, String name, String icon, ActionListener actionListener,
 			int x, int y, int width, int height) {
 		this(text, name, actionListener, x, y, width, height);
-		if(icon != null){
+		if(icon != null && !"".equals(icon)){
 			try{
 				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 			}catch(Exception e){
@@ -85,7 +85,7 @@ public class AJButton extends JButton {
 		this(text, name, null, x, y, width, height);
 		if(mouseListener != null)
 			this.addMouseListener(mouseListener);
-		if(icon != null){
+		if(icon != null && !"".equals(icon)){
 			try{
 				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 			}catch(Exception e){
@@ -128,7 +128,7 @@ public class AJButton extends JButton {
 	
 	public AJButton(String text, String icon){
 		this(text);
-		if(icon != null){
+		if(icon != null && !"".equals(icon)){
 			try{
 				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 			}catch(Exception e){
