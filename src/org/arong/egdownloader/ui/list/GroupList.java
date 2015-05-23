@@ -20,6 +20,7 @@ import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -36,7 +37,7 @@ public class GroupList extends JList {
 	private static final long serialVersionUID = -7702879865264332528L;
 	
 	private JPopupMenu popupMenu;
-	private JMenuItem deleteMenu = new AJMenuItem("删除", new Color(0,0,85), ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("delete"), null);
+	private JMenuItem deleteMenu = new AJMenuItem("删除", new Color(0,0,85), IconManager.getIcon("delete"), null);
 	
 	public GroupList(List<File> groups, final GroupWindow window, final EgDownloaderWindow mainWindow){
 		this.setModel(new GroupListModel(groups));

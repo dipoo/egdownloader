@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
-import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 /**
  * 清空控制台菜单项
@@ -20,7 +19,7 @@ public class ClearConsoleMenuItem extends JMenuItem {
 	
 	public ClearConsoleMenuItem(String text, final EgDownloaderWindow mainWindow){
 		super(text);
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("clear"))));
+		this.setIcon(IconManager.getIcon("clear"));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

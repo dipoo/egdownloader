@@ -8,7 +8,6 @@ import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JTextPane;
 
@@ -16,6 +15,7 @@ import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 /**
  * 任务统计面板
@@ -31,7 +31,7 @@ public class CountWindow extends JDialog {
 		this.window = window;
 		// 设置主窗口
 		this.setSize(700, 250);
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("count"))).getImage());
+		this.setIconImage(IconManager.getIcon("count").getImage());
 		this.setTitle("统计");
 		this.setVisible(true);
 		this.setResizable(false);

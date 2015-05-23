@@ -110,7 +110,7 @@ public class SearchTasksTable extends JTable {
 					SearchTask task = tasks.get(row);
 					if(task.getBtUrl() != null){
 						try{
-							l.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "t.png")));
+							l.setIcon(IconManager.getIcon("t"));
 						}catch (Exception e) {
 							
 						}
@@ -205,8 +205,7 @@ public class SearchTasksTable extends JTable {
 										}
 									}
 								}));
-						JMenuItem openPageItem = new AJMenuItem("打开网页", Color.BLACK,
-								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("browse"),
+						JMenuItem openPageItem = new AJMenuItem("打开网页", Color.BLACK, IconManager.getIcon("browse"),
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										final SearchTask task = table.getTasks().get(table.getSelectedRow());
@@ -214,7 +213,7 @@ public class SearchTasksTable extends JTable {
 									}
 								}));
 						JMenuItem openBtPageItem = new AJMenuItem("下载BT", Color.BLACK,
-								ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+								IconManager.getIcon("download"),
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										final SearchTask task = table.getTasks().get(table.getSelectedRow());

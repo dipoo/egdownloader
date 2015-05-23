@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -122,7 +121,7 @@ public class AddFormDialog extends JDialog {
 		initOrUpdateTagComboBox(setting);
 		
 		saveDirField.setText(setting.getDefaultSaveDir() + "\\" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		chooserBtn = new AJButton("浏览", "chooserBtn", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		chooserBtn = new AJButton("浏览", IconManager.getIcon("select"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog, MouseEvent e) {
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				int result = this_.saveDirChooser.showOpenDialog(this_);

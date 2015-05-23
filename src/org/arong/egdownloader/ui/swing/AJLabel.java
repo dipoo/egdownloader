@@ -53,6 +53,17 @@ public class AJLabel extends JLabel {
 		}
 	}
 	
+	public AJLabel(String text, ImageIcon icon, Color color, int align){
+		this(text, color, align);
+		if(icon != null){
+			try{
+				this.setIcon(icon);
+			}catch (Exception e) {
+				
+			}
+		}
+	}
+	
 	public AJLabel(String text, Color color, Font font, int align){
 		this(text, color);
 		this.setFont(font);

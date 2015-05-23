@@ -7,15 +7,14 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.list.GroupList;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
@@ -40,15 +39,12 @@ public class GroupWindow extends JFrame {
 		this.mainWindow = mainWindow;
 		this.setSize(300, 400);
 		this.setResizable(false);
-		this.setIconImage(new ImageIcon(getClass().getResource(
-				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("group"))).getImage());
+		this.setIconImage(IconManager.getIcon("group").getImage());
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(mainWindow == null ? EXIT_ON_CLOSE : DISPOSE_ON_CLOSE);
 		JLabel tipLabel = new AJLabel("双击选择任务组", new Color(67,44,1), 15, 15, 100, 30);
-		JButton addGroupBtn = new AJButton("新建", "", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		JButton addGroupBtn = new AJButton("新建", IconManager.getIcon("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 							public void doWork(Window window, MouseEvent e) {
 								new AddGroupDialog((GroupWindow) window, mainWindow);
 							}

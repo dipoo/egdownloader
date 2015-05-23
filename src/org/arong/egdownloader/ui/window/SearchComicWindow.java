@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -36,6 +35,7 @@ import javax.swing.JTextField;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJCheckBox;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -75,8 +75,7 @@ public class SearchComicWindow extends JFrame {
 		this.mainWindow = mainWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
 		this.setTitle("搜索里站漫画");
-		this.setIconImage(new ImageIcon(getClass().getResource(
-				ComponentConst.ICON_PATH + "eh.png")).getImage());
+		this.setIconImage(IconManager.getIcon("eh").getImage());
 		this.setLayout(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
@@ -97,7 +96,7 @@ public class SearchComicWindow extends JFrame {
 		loadingLabel.setBounds(600, 20, 120, 30);
 		loadingLabel.setVisible(false);
 		
-		totalLabel = new AJLabel("", null, Color.BLACK, JLabel.LEFT);
+		totalLabel = new AJLabel("", "", Color.BLACK, JLabel.LEFT);
 		totalLabel.setBounds(600, 20, 300, 30);
 		totalLabel.setVisible(false);
 		/* 分类条件 */
