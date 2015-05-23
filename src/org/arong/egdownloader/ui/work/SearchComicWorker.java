@@ -53,6 +53,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());
 					searchComicWindow.keyPage.put(searchComicWindow.key, searchComicWindow.totalLabel.getText());
+					searchComicWindow.pageInfo.put(searchComicWindow.key, totalPage);
 				}
 				searchComicWindow.datas.get(searchComicWindow.key).put((currentPage) + "", searchTasks);
 				searchComicWindow.showResult(totalPage, currentPage);
