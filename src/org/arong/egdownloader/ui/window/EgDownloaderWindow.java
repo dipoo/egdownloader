@@ -47,6 +47,7 @@ import javax.swing.border.TitledBorder;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
@@ -396,10 +397,43 @@ public class EgDownloaderWindow extends JFrame {
 						}
 					}
 				}));
+		//右键菜单：重建任务
+		AJMenuItem rebuildMenuItem = new AJMenuItem(ComponentConst.POPUP_REBUILD_MENU_TEXT, menuItemColor,
+				"",
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						int index = table.getSelectedRow();
+						Task task = table.getTasks().get(index);
+						if(task.getStatus() == TaskStatus.STARTED){
+							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能执行此操作！");
+							return;
+						}
+						//询问是否执行此操作
+						int result = JOptionPane.showConfirmDialog(mainWindow, "此操作后将无法还原，确定要重建【"
+						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
+						"】这个任务吗？");
+						if(result == 0){//确定
+							try {
+								ScriptParser.rebuildTask(task, mainWindow.setting);
+								System.out.println(task);
+								table.updateUI();
+								//保存数据
+								mainWindow.taskDbTemplate.update(task);
+								JOptionPane.showMessageDialog(mainWindow, "操作完成！");
+							}catch (Exception e1) {
+								JOptionPane.showMessageDialog(mainWindow, "操作失败！" + e1.getMessage());
+							}
+						}
+					}
+				}));
+		AJMenu moreMenu = new AJMenu(ComponentConst.POPUP_MORE_MENU_TEXT, "", editMenuItem, resetMenuItem, completedMenuItem, rebuildMenuItem);
+		moreMenu.setForeground(menuItemColor);
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
-				checkResetMenuItem, changeReadedMenuItem, editMenuItem, resetMenuItem, completedMenuItem);
+				checkResetMenuItem, changeReadedMenuItem, moreMenu);
 		JLabel emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		JButton emptyBtn = new AJButton("当前任务组没有下载任务，请点击搜索漫画");

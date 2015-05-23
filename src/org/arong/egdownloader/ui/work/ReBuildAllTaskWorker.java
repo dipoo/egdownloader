@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import org.arong.egdownloader.model.ParseEngine;
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.table.TaskingTable;
@@ -30,7 +30,7 @@ public class ReBuildAllTaskWorker extends SwingWorker<Void, Void> {
 		int i = 0;
 		for(Task task : tasks){
 			i ++;
-			ParseEngine.rebuildTask(task, setting);
+			ScriptParser.rebuildTask(task, setting);
 			table.updateUI();
 			Tracker.println(ReBuildAllTaskWorker.class, "重建任务-" + i + "/" + tasks.size());
 		}

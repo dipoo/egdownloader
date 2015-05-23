@@ -12,6 +12,7 @@ public class IconManager {
 	private static ImageIcon changeImage;
 	private static ImageIcon loadingImage;
 	private static ImageIcon folderImage;
+	private static ImageIcon operaImage;
 	private static ImageIcon artistcgImage;
 	private static ImageIcon asianpornImage;
 	private static ImageIcon cosplayImage;
@@ -39,6 +40,11 @@ public class IconManager {
 				folderImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("folder")));
 			}
 			return folderImage;
+		}else if("opera".equals(name)){
+			if(operaImage == null){
+				operaImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("opera")));
+			}
+			return operaImage;
 		}else if("loading".equals(name)){
 			if(loadingImage == null){
 				loadingImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "loading.gif"));
