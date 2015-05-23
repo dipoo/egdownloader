@@ -169,8 +169,7 @@ public class SearchTagWindow extends JDialog {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					this_.dispose();
-					searchComicWindow.keyField.setText("tag:"+ tags.getProperty(key));
-					searchComicWindow.searchBtn.doClick();
+					searchComicWindow.doSearch("tag:"+ tags.getProperty(key));
 				}
 			});
 			tagPane.add(b);

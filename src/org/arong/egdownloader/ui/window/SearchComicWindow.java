@@ -57,6 +57,7 @@ public class SearchComicWindow extends JFrame {
 	public SearchTagWindow searchTagWindow;
 	public SearchCoverWindow coverWindow;
 	public JTextField keyField;
+	public JComboBox language;
 	private JLabel loadingLabel;
 	public JLabel totalLabel;
 	public JButton searchBtn;
@@ -113,7 +114,7 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
 		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
 		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, true);
-		final JComboBox language = new JComboBox(new String[]{"全部", "中文", "英文", "韩文", "法文", "西班牙"});
+		language = new JComboBox(new String[]{"全部", "中文", "英文", "韩文", "法文", "西班牙"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -339,6 +340,34 @@ public class SearchComicWindow extends JFrame {
 	
 	public void setTotalInfo(String totalPage, String totalTasks){
 		totalLabel.setText("共搜索到 " + totalPage + " 页,总计 " + totalTasks + " 本漫画");
+	}
+	
+	public void doSearch(String text){
+		if(text == null || "".equals(text)){
+			return;
+		}
+		String key = text;
+		switch(language.getSelectedIndex()){
+			case 0:
+				break;
+			case 1:
+				key = "language:chinese " + key;
+				break;
+			case 2:
+				key = "language:english " + key;
+				break;
+			case 3:
+				key = "language:korean " + key;
+				break;
+			case 4:
+				key = "language:french " + key;
+				break;
+			case 5:
+				key = "language:spanish " + key;
+				break;	
+		}
+		keyField.setText(key);
+		searchBtn.doClick();
 	}
 	
 	public void dispose() {
