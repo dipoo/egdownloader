@@ -71,6 +71,7 @@ public class SearchComicWindow extends JFrame {
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
 	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();
 	public Map<String, String> keyPage = new HashMap<String, String>();
+	public Map<String, String> pageInfo = new HashMap<String, String>();//总页数
 	private Font font = new Font("宋体", 0, 12); 
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -193,6 +194,7 @@ public class SearchComicWindow extends JFrame {
 		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				datas.clear();
+				pageInfo.clear();
 				keyPage.clear();
 				JOptionPane.showMessageDialog(this_, "清理成功");
 			}
@@ -266,7 +268,7 @@ public class SearchComicWindow extends JFrame {
 		String k = parseOption() + keyText;
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			searchTasks = datas.get(k).get(page);
-			showResult(pager.getPageCount()+"", Integer.parseInt(page));
+			showResult(pageInfo.get(k), Integer.parseInt(page));
 			totalLabel.setText(keyPage.get(k));
 			hideLoading();
 		}else{
