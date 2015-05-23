@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -63,7 +63,7 @@ public class EditWindow extends JDialog {
 		startField = new AJTextField("", 290, 100, 60, 30);
 		endLabel = new AJLabel("结束：", Color.BLUE, 360, 100, 40, 30);
 		endField = new AJTextField("", 400, 100, 60, 30);
-		editTaskBtn = new AJButton("保存", "", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
+		editTaskBtn = new AJButton("保存", IconManager.getIcon("save"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window dialog, MouseEvent event) {
 				String name = nameField.getText().trim();
 				String subname = subnameField.getText().trim();

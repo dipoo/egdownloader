@@ -26,6 +26,7 @@ import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.UpdateScriptWorker;
@@ -55,7 +56,7 @@ public class InitWindow extends JWindow {
 	public String scriptVersion;
 	
 	public InitWindow(){
-		final ImageIcon icon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "init.jpg"));
+		final ImageIcon icon = IconManager.getIcon("init");
 		this.setSize(icon.getIconWidth(), icon.getIconHeight());
 //		this.getContentPane().setBackground(Color.decode("333"));
 		this.setLocationRelativeTo(null);

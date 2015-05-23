@@ -5,12 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
-import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.Tracker;
@@ -24,7 +23,7 @@ public class StartAllTaskMenuItem extends JMenuItem {
 	private static final long serialVersionUID = -2960067609351359632L;
 	public StartAllTaskMenuItem(String text, final EgDownloaderWindow window){
 		super(text);
-		this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("start"))));
+		this.setIcon(IconManager.getIcon("start"));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {

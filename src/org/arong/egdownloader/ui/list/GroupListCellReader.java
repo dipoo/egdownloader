@@ -7,7 +7,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
 /**
  * 任务组列表渲染器
@@ -28,8 +28,7 @@ public class GroupListCellReader extends DefaultListCellRenderer {
             setBackground(Color.BLUE);  
             setForeground(Color.DARK_GRAY);  
         }
-		return new AJLabel(value.toString(), ComponentConst.SKIN_NUM
-				+ ComponentConst.SKIN_ICON.get("folder"), Color.BLUE, JLabel.LEFT);
+		return new AJLabel(value.toString(), IconManager.getIcon("folder"), Color.BLUE, JLabel.LEFT);
 	}
 	
 	

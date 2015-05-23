@@ -11,7 +11,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,6 +19,7 @@ import javax.swing.event.HyperlinkListener;
 
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.JsonUtil;
@@ -44,7 +44,7 @@ public class AboutMenuWindow extends JDialog {
 	public AboutMenuWindow(final JFrame mainWindow) {
 		// 设置主窗口
 		this.setSize(340, 250);
-		this.setIconImage(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("user"))).getImage());
+		this.setIconImage(IconManager.getIcon("user").getImage());
 		this.setTitle("关于");
 		this.setVisible(true);
 		this.setResizable(false);

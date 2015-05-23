@@ -151,9 +151,7 @@ public class EgDownloaderWindow extends JFrame {
 		// 设置主窗口
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
-		this.setIconImage(new ImageIcon(getClass().getResource(
-				ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("download"))).getImage());
+		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
 		this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
@@ -184,17 +182,14 @@ public class EgDownloaderWindow extends JFrame {
 						}));
 		// 菜单：开始
 		JMenu startTasksMenu = new AJMenu(ComponentConst.START_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("start"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
+				"", IconManager.getIcon("start"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
 		// 菜单：暂停
 		JMenu stopTasksMenu = new AJMenu(ComponentConst.STOP_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("stop"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
+				"", IconManager.getIcon("stop"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
 		// 菜单：删除
 		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
 		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("delete"), deleteBtnMouseListener);
+				"", IconManager.getIcon("delete"), deleteBtnMouseListener);
 		
 		//菜单：搜索
 		final JMenu searchComicMenu = new AJMenu(ComponentConst.SEARCH_MENU_TEXT,
@@ -209,29 +204,26 @@ public class EgDownloaderWindow extends JFrame {
 					}
 				});
 		//EHicon
-		ImageIcon ehIcon = new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + "eh.png"));
+		ImageIcon ehIcon = IconManager.getIcon("eh");
 		ehIcon.setImage(ehIcon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
 		searchComicMenu.setIcon(ehIcon);
 		
 		// 菜单：任务组
 		JMenu taskGroupMenu = new AJMenu(ComponentConst.TASKGROUP_MENU_TEXT,
-				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("group"), null);
+				ComponentConst.SETTING_MENU_NAME, IconManager.getIcon("group"), null);
 		taskGroupMenu.add(new AddTaskGroupMenuItem("新建任务组", this, AddTaskGroupMenuItem.ADDACTION));
 		taskGroupMenu.add(new AddTaskGroupMenuItem("切换任务组", this, AddTaskGroupMenuItem.CHANGEACTION));
 		
 		// 菜单：设置
 		MouseListener menuMouseListener = new MenuMouseListener(this);
 		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
-				ComponentConst.SETTING_MENU_NAME, ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("setting"),
+				ComponentConst.SETTING_MENU_NAME, IconManager.getIcon("setting"),
 				menuMouseListener);
 		// 菜单：操作
 		JMenu operaMenu = new AJMenu(ComponentConst.OPERA_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("opera"), null);
+				"", IconManager.getIcon("opera"), null);
 		JMenu taskMenu = new AJMenu("所有任务",
-				"", ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("task"), null);
+				"", IconManager.getIcon("task"), null);
 		taskMenu.setForeground(new Color(0,0,85));
 		taskMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
 		taskMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
@@ -242,14 +234,12 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-				+ ComponentConst.SKIN_ICON.get("select"), null);
+				"", IconManager.getIcon("select"), null);
 		JMenuItem clearItem = new ClearConsoleMenuItem("清空控制台", this);
 		consoleMenu.add(clearItem);
 		// 菜单：统计
 		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
-				"", ComponentConst.SKIN_NUM
-				+ ComponentConst.SKIN_ICON.get("count"),
+				"", IconManager.getIcon("count"),
 				new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
 					public void doWork(Window window, MouseEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -265,8 +255,7 @@ public class EgDownloaderWindow extends JFrame {
 				}));
 		// 菜单：关于
 		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
-				ComponentConst.ABOUT_MENU_NAME, ComponentConst.SKIN_NUM
-						+ ComponentConst.SKIN_ICON.get("user"),
+				ComponentConst.ABOUT_MENU_NAME, IconManager.getIcon("user"),
 				menuMouseListener);
 		// 构造菜单栏并添加菜单
 		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
@@ -279,7 +268,7 @@ public class EgDownloaderWindow extends JFrame {
 		tablePane.getViewport().setBackground(new Color(254,254,254));
 		//右键菜单：开始
 		AJMenuItem startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("start"),
+				IconManager.getIcon("start"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -295,7 +284,7 @@ public class EgDownloaderWindow extends JFrame {
 		}));
 		//右键菜单：暂停
 		AJMenuItem stopPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_STOP_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("stop"),
+				IconManager.getIcon("stop"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -311,11 +300,11 @@ public class EgDownloaderWindow extends JFrame {
 		}));
 		//右键菜单：查看详细
 		AJMenuItem detailPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("detail"),
+				IconManager.getIcon("detail"),
 				new MenuItemActonListener(this, new ShowDetailWork()));
 		//右键菜单：复制网址
 		AJMenuItem copyUrlPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_COPYURL_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("copy"),
+				IconManager.getIcon("copy"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 			public void doWork(Window window, ActionEvent e) {
 				EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -333,15 +322,15 @@ public class EgDownloaderWindow extends JFrame {
 				new MenuItemActonListener(this, new OpenFolderTaskWork()));
 		//右键菜单：打开网页
 		AJMenuItem openWebPageMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("browse"),
+				IconManager.getIcon("browse"),
 				new MenuItemActonListener(this, new OpenWebPageWork()));
 		//右键菜单：下载封面
 		AJMenuItem downloadCoverMenuItem = new AJMenuItem(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("download"),
+				IconManager.getIcon("download"),
 				new MenuItemActonListener(this, new DownloadCoverWork()));
 		//右键菜单：查漏补缺
 		AJMenuItem checkResetMenuItem = new AJMenuItem(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("check"),
+				IconManager.getIcon("check"),
 				new MenuItemActonListener(this, new CheckResetWork()));
 		//右键菜单：更改阅读状态
 		AJMenuItem changeReadedMenuItem = new AJMenuItem(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
@@ -349,11 +338,11 @@ public class EgDownloaderWindow extends JFrame {
 				new MenuItemActonListener(this, new ChangeReadedWork()));
 		//右键菜单：编辑任务信息
 		AJMenuItem editMenuItem = new AJMenuItem(ComponentConst.POPUP_EDIT_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("save"),
+				IconManager.getIcon("save"),
 				new MenuItemActonListener(this, new ShowEditWork()));
 		//右键菜单：重置任务
 		AJMenuItem resetMenuItem = new AJMenuItem(ComponentConst.POPUP_RESET_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("reset"),
+				IconManager.getIcon("reset"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -373,7 +362,7 @@ public class EgDownloaderWindow extends JFrame {
 				}));
 		//右键菜单：完成任务
 		AJMenuItem completedMenuItem = new AJMenuItem(ComponentConst.POPUP_COMPLETED_MENU_TEXT, menuItemColor,
-				ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("ok"),
+				IconManager.getIcon("ok"),
 				new MenuItemActonListener(this, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -417,7 +406,6 @@ public class EgDownloaderWindow extends JFrame {
 						if(result == 0){//确定
 							try {
 								ScriptParser.rebuildTask(task, mainWindow.setting);
-								System.out.println(task);
 								table.updateUI();
 								//保存数据
 								mainWindow.taskDbTemplate.update(task);
@@ -434,7 +422,7 @@ public class EgDownloaderWindow extends JFrame {
 		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
 				checkResetMenuItem, changeReadedMenuItem, moreMenu);
-		JLabel emptyTableTips = new AJLabel("empty",  ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("empty"), new Color(227,93,81), JLabel.CENTER);
+		JLabel emptyTableTips = new AJLabel("empty", "", new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		JButton emptyBtn = new AJButton("当前任务组没有下载任务，请点击搜索漫画");
 		emptyBtn.setIcon(ehIcon);
@@ -495,9 +483,7 @@ public class EgDownloaderWindow extends JFrame {
 		
 		//系统托盘
 		if (SystemTray.isSupported()) {// 判断系统是否托盘
-		    tray = new TrayIcon(new ImageIcon(getClass().getResource(
-					ComponentConst.ICON_PATH + ComponentConst.SKIN_NUM
-					+ ComponentConst.SKIN_ICON.get("download"))).getImage());// 创建一个托盘图标对象
+		    tray = new TrayIcon(IconManager.getIcon("download").getImage());// 创建一个托盘图标对象
 		    tray.setImageAutoSize(true);
 		    tray.setToolTip(Version.NAME);
 		    trayMenu = new JPopupMenu();// 创建弹出菜单

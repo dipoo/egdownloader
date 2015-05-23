@@ -13,7 +13,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
-import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 /**
  * 封装JTextField,使构造函数可以设置name值,大小及坐标(含右键菜单)
  * @author 阿荣
@@ -27,13 +27,13 @@ public class AJTextField extends JTextField {
 	private JPopupMenu popupMenu;
 	private Color color = new Color(0,0,85);
 	//右键菜单：复制
-	private AJMenuItem copyMenuItem = new AJMenuItem("复制", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("copy"), null);
+	private AJMenuItem copyMenuItem = new AJMenuItem("复制", color, IconManager.getIcon("copy"), null);
 	//右键菜单：剪切
-	private AJMenuItem cutMenuItem = new AJMenuItem("剪切", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("cut"), null);
+	private AJMenuItem cutMenuItem = new AJMenuItem("剪切", color, IconManager.getIcon("cut"), null);
 	//右键菜单：粘贴
-	private AJMenuItem pasteMenuItem = new AJMenuItem("粘贴", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("paste"), null);
+	private AJMenuItem pasteMenuItem = new AJMenuItem("粘贴", color, IconManager.getIcon("paste"), null);
 	//右键菜单：清空
-	private AJMenuItem clearMenuItem = new AJMenuItem("清空", color, ComponentConst.SKIN_NUM + ComponentConst.SKIN_ICON.get("clear"), null);
+	private AJMenuItem clearMenuItem = new AJMenuItem("清空", color, IconManager.getIcon("clear"), null);
 	//右键菜单：全选
 	private AJMenuItem selectAllMenuItem = new AJMenuItem("全选", color, null);
 	
