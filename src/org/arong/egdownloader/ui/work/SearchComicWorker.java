@@ -72,6 +72,8 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			searchComicWindow.totalLabel.setText(e.getMessage());
 		} finally{
 			searchComicWindow.hideLoading();
+			searchComicWindow.leftBtn.setEnabled(true);
+			searchComicWindow.rightBtn.setEnabled(true);
 		}
 		return null;
 	}

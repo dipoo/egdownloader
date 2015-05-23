@@ -47,7 +47,9 @@ public class AJButton extends JButton {
 			int x, int y, int width, int height) {
 		super(text);
 		this.setName(name);
-		this.setToolTipText(text);
+		if(text != null && !"".equals(text)){
+			this.setToolTipText(text);
+		}
 		this.setBounds(x, y, width, height);
 		this.setForeground(Color.WHITE);
 		this.setFocusable(false);
@@ -112,7 +114,9 @@ public class AJButton extends JButton {
 		this.setText(text);
 		// 设置为手型光标
 		this.setCursor(CursorManager.getPointerCursor());
-		this.setToolTipText(text);
+		if(text != null && !"".equals(text)){
+			this.setToolTipText(text);
+		}
 		this.setForeground(Color.WHITE);
 		this.addMouseListener(new MouseAdapter(){
 			public void mouseExited(MouseEvent e) {

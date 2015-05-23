@@ -29,12 +29,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJCheckBox;
@@ -61,6 +63,8 @@ public class SearchComicWindow extends JFrame {
 	private JLabel loadingLabel;
 	public JLabel totalLabel;
 	public JButton searchBtn;
+	public JButton leftBtn;
+	public JButton rightBtn;
 	public JButton tagBtn;
 	private JButton clearCacheBtn;
 	public SearchTasksTable searchTable;
@@ -69,9 +73,10 @@ public class SearchComicWindow extends JFrame {
 	public AJPager pager;
 	public String key = " ";//搜索条件的字符串
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
-	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();
-	public Map<String, String> keyPage = new HashMap<String, String>();
-	public Map<String, String> pageInfo = new HashMap<String, String>();//总页数
+	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();//任务数据缓存
+	public Map<String, String> keyPage = new HashMap<String, String>();//分页信息缓存
+	public Map<String, String> pageInfo = new HashMap<String, String>();//总页数缓存
+	public List<String> keyList = new ArrayList<String>();//关键字缓存
 	private Font font = new Font("宋体", 0, 12); 
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -84,7 +89,7 @@ public class SearchComicWindow extends JFrame {
 		//this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);  
 		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 20, 50, 30);
-		keyField = new AJTextField("", 60, 20, 440, 30);
+		keyField = new AJTextField("", 60, 20, 400, 30);
 		keyField.setText("language:chinese");
 		keyField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
@@ -94,12 +99,14 @@ public class SearchComicWindow extends JFrame {
 			}
 		});
 		
+		keyList.add("");
+		
 		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
-		loadingLabel.setBounds(600, 20, 120, 30);
+		loadingLabel.setBounds(630, 20, 120, 30);
 		loadingLabel.setVisible(false);
 		
 		totalLabel = new AJLabel("", "", Color.BLACK, JLabel.LEFT);
-		totalLabel.setBounds(600, 20, 300, 30);
+		totalLabel.setBounds(630, 20, 300, 30);
 		totalLabel.setVisible(false);
 		/* 分类条件 */
 		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -181,7 +188,33 @@ public class SearchComicWindow extends JFrame {
 				search("1");
 			}
 			
-		}, 510, 20, 60, 30);
+		}, 470, 20, 60, 30);
+		leftBtn = new JButton(IconManager.getIcon("left"));
+		leftBtn.setBounds(540, 20, 30, 30);
+		leftBtn.setToolTipText("后退");
+		leftBtn.setFocusable(false);
+		leftBtn.setCursor(CursorManager.getPointerCursor());
+		leftBtn.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				changeKeyList(true);
+				String key = keyList.get(keyList.size() - 1);
+				keyField.setText(key);
+				searchBtn.doClick();
+			}
+		});
+		rightBtn = new JButton(IconManager.getIcon("right"));
+		rightBtn.setBounds(580, 20, 30, 30);
+		rightBtn.setToolTipText("前进");
+		rightBtn.setFocusable(false);
+		rightBtn.setCursor(CursorManager.getPointerCursor());
+		rightBtn.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				changeKeyList(false);
+				String key = keyList.get(keyList.size() - 1);
+				keyField.setText(key);
+				searchBtn.doClick();
+			}
+		});
 		final SearchComicWindow this_ = this;
 		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -201,7 +234,7 @@ public class SearchComicWindow extends JFrame {
 		}, this.getWidth() - 80, 20, 60, 30);
 		tagBtn.setUI(AJButton.blueBtnUi);
 		clearCacheBtn.setUI(AJButton.blueBtnUi);
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, loadingLabel, totalLabel, tagBtn, clearCacheBtn, optionPanel, pager);
+		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, leftBtn, rightBtn, loadingLabel, totalLabel, tagBtn, clearCacheBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { 
@@ -265,6 +298,11 @@ public class SearchComicWindow extends JFrame {
 	public void search(String page){
 		showLoading();
 		String keyText = keyField.getText().trim();
+		//如果当前的关键字与上一个不相同，则添加进去
+		if(! keyText.equals(keyList.get(keyList.size() - 1))){
+			keyList.add(keyText);
+		}
+		
 		String k = parseOption() + keyText;
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			searchTasks = datas.get(k).get(page);
@@ -272,6 +310,10 @@ public class SearchComicWindow extends JFrame {
 			totalLabel.setText(keyPage.get(k));
 			hideLoading();
 		}else{
+			//设置为不可用
+			leftBtn.setEnabled(false);
+			rightBtn.setEnabled(false);
+			
 			key = k;
 			String exurl = "http://exhentai.org/?page=" + (Integer.parseInt(page) - 1) + parseOption();
 			if(!keyText.equals("")){
@@ -286,6 +328,7 @@ public class SearchComicWindow extends JFrame {
 			new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page)).execute();
 		}
 	}
+	
 	
 	public String parseOption(){
 		Component[] cs = optionPanel.getComponents();
@@ -314,6 +357,8 @@ public class SearchComicWindow extends JFrame {
 		searchTable.setVisible(true);
 		searchTable.changeModel(searchTasks);
 		searchTable.updateUI();
+		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
+		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
 		if(totalPage != null && currentPage != null){
 			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
 			mainWindow.searchComicWindow.pager.setVisible(true);
@@ -379,5 +424,15 @@ public class SearchComicWindow extends JFrame {
 			searchTagWindow.dispose();
 		}
 		super.dispose();
+	}
+	//根据前进或后退改变keyList的元素排序
+	private void changeKeyList(boolean left){
+		if(left){
+			String e = keyList.remove(keyList.size() - 1);
+			keyList.add(0, e);
+		}else{
+			String e = keyList.remove(0);
+			keyList.add(keyList.size(), e);
+		}
 	}
 }
