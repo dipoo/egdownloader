@@ -228,8 +228,7 @@ public class SearchTasksTable extends JTable {
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										comicWindow.keyField.setText(task.getName());
-										comicWindow.searchBtn.doClick();
+										comicWindow.doSearch(task.getName());
 									}
 								}));
 						JMenuItem searchAuthorItem = new AJMenuItem("搜索作者", Color.BLACK, "",
@@ -240,8 +239,7 @@ public class SearchTasksTable extends JTable {
 										if(name != null){
 											if(name.indexOf("[") != -1 && name.indexOf("]") != -1 && name.indexOf("[") < name.indexOf("]")){
 												name = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
-												comicWindow.keyField.setText(name);
-												comicWindow.searchBtn.doClick();
+												comicWindow.doSearch(name);
 											}
 										}
 									}
