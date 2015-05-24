@@ -55,7 +55,7 @@ public class CheckResetWork implements IMenuListenerTask {
 				if(indexs.size() > 0){
 					mainWindow.checkingWindow.dispose();
 					int result = JOptionPane.showConfirmDialog(mainWindow, "检测到" + indexs.size() + "张图片缺失，是否重置这些图片的下载状态？");
-					if(result == 0){//确定
+					if(result == JOptionPane.OK_OPTION){//确定
 						mainWindow.checkingWindow.setVisible(true);
 						for(int i = 0; i < indexs.size(); i ++){
 							pic = task.getPictures().get(indexs.get(i));
@@ -79,7 +79,7 @@ public class CheckResetWork implements IMenuListenerTask {
 			}else{//文件夹不存在或者文件列表为空,重置全部图片状态
 				mainWindow.checkingWindow.dispose();
 				int result = JOptionPane.showConfirmDialog(mainWindow, "检测不到任何图片，是否重置任务的下载状态？");
-				if(result == 0){//确定
+				if(result == JOptionPane.OK_OPTION){//确定
 					mainWindow.checkingWindow.setVisible(true);
 					for(int i = 0; i < pics.size(); i ++){
 						pics.get(i).setCompleted(false);

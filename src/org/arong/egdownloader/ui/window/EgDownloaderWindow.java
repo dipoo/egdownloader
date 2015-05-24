@@ -201,6 +201,7 @@ public class EgDownloaderWindow extends JFrame {
 						SearchComicWindow scw = mainWindow.searchComicWindow;
 						scw.searchBtn.doClick();
 						scw.setVisible(true);
+						scw.toFront();
 					}
 				});
 		//EHicon
@@ -396,7 +397,7 @@ public class EgDownloaderWindow extends JFrame {
 						int result = JOptionPane.showConfirmDialog(mainWindow, "此操作后将无法还原，确定要将【"
 						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
 						"】置为完成状态吗？");
-						if(result == 0){//确定
+						if(result == JOptionPane.OK_OPTION){//确定
 							task.setCurrent(task.getTotal());
 							task.setStatus(TaskStatus.COMPLETED);
 							//保存数据
@@ -422,7 +423,7 @@ public class EgDownloaderWindow extends JFrame {
 						int result = JOptionPane.showConfirmDialog(mainWindow, "此操作后将无法还原，确定要重建【"
 						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
 						"】这个任务吗？");
-						if(result == 0){//确定
+						if(result == JOptionPane.OK_OPTION){//确定
 							try {
 								ScriptParser.rebuildTask(task, mainWindow.setting);
 								table.updateUI();
@@ -624,7 +625,7 @@ public class EgDownloaderWindow extends JFrame {
 		//关闭，询问
 		if(e.getID() == WindowEvent.WINDOW_CLOSING){
 			int r = JOptionPane.showConfirmDialog(this, "您确定要关闭" + Version.NAME + "吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-			if(r == JOptionPane.YES_OPTION){
+			if(r == JOptionPane.OK_OPTION){
 				//保存数据
 				this.saveTaskGroupData();
 				System.exit(0);
