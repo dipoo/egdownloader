@@ -35,6 +35,11 @@ public class Task {
 	private DownloadWorker downloadWorker;//下载线程实例,不保存
 	private ReCreateWorker reCreateWorker;//重新创建线程实例,不保存
 	private CreateWorker createWorker;
+	private String author;
+	
+	public String getAuthor() {
+		return author;
+	}
 	
 	public Task(){}
 	
@@ -75,6 +80,13 @@ public class Task {
 	}
 	public void setName(String name) {
 		this.name = name;
+		if(name != null){
+			if(name.indexOf("[") != -1 && name.indexOf("]") != -1 && name.indexOf("[") < name.indexOf("]")){
+				author = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
+			}else if(name.indexOf("【") != -1 && name.indexOf("】") != -1 && name.indexOf("【") < name.indexOf("】")){
+				author = name.substring(name.indexOf("【") + 1, name.indexOf("】"));
+			}
+		}
 	}
 	public String getSubname() {
 		return subname;

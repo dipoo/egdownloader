@@ -207,6 +207,7 @@ public final class ComponentConst {
 	public final static String POPUP_CHECKRESET_MENU_TEXT = " 查漏补缺   ";
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = " 更改状态   ";
 	public final static String POPUP_MORE_MENU_TEXT = "更多操作   ";
+	public final static String POPUP_SEARCHAUTHOR_MENU_TEXT = " 搜索作者   ";
 	public final static String POPUP_EDIT_MENU_TEXT = "编辑   ";
 	public final static String POPUP_RESET_MENU_TEXT = "重置   ";
 	public final static String POPUP_COMPLETED_MENU_TEXT = "完成   " ;

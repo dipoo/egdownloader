@@ -336,6 +336,25 @@ public class EgDownloaderWindow extends JFrame {
 		AJMenuItem changeReadedMenuItem = new AJMenuItem(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("change"),
 				new MenuItemActonListener(this, new ChangeReadedWork()));
+		//右键菜单：搜索作者
+		AJMenuItem searchAuthorMenuItem = new AJMenuItem(ComponentConst.POPUP_SEARCHAUTHOR_MENU_TEXT, menuItemColor,
+				"",
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						int index = table.getSelectedRow();
+						Task task = table.getTasks().get(index);
+						if(searchComicWindow == null){
+							searchComicWindow = new SearchComicWindow(mainWindow);
+						}
+						SearchComicWindow scw = mainWindow.searchComicWindow;
+						if(task.getAuthor() != null){
+							scw.doSearch(task.getAuthor());
+							scw.setVisible(true);
+						}
+					}
+				}));
 		//右键菜单：编辑任务信息
 		AJMenuItem editMenuItem = new AJMenuItem(ComponentConst.POPUP_EDIT_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("save"),
@@ -421,7 +440,7 @@ public class EgDownloaderWindow extends JFrame {
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
-				checkResetMenuItem, changeReadedMenuItem, moreMenu);
+				checkResetMenuItem, changeReadedMenuItem, searchAuthorMenuItem, moreMenu);
 		JLabel emptyTableTips = new AJLabel("empty", "", new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		JButton emptyBtn = new AJButton("当前任务组没有下载任务，请点击搜索漫画");

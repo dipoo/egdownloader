@@ -175,8 +175,7 @@ public class SearchTasksTable extends JTable {
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//点击上传者
 					if(columnIndex == 2){
-						comicWindow.keyField.setText("uploader:" + tasks.get(rowIndex).getUploader());
-						comicWindow.searchBtn.doClick();
+						comicWindow.doSearch("uploader:" + tasks.get(rowIndex).getUploader());
 					}
 				}
 				//右键
@@ -235,12 +234,8 @@ public class SearchTasksTable extends JTable {
 								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
 									public void doWork(Window window, ActionEvent e) {
 										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										String name = task.getName();
-										if(name != null){
-											if(name.indexOf("[") != -1 && name.indexOf("]") != -1 && name.indexOf("[") < name.indexOf("]")){
-												name = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
-												comicWindow.doSearch(name);
-											}
+										if(task.getAuthor() != null){
+											comicWindow.doSearch(task.getAuthor());
 										}
 									}
 								}));
