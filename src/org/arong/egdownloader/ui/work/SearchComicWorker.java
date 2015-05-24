@@ -74,6 +74,9 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			searchComicWindow.hideLoading();
 			searchComicWindow.leftBtn.setEnabled(true);
 			searchComicWindow.rightBtn.setEnabled(true);
+			if(searchComicWindow.isVisible()){
+				searchComicWindow.toFront();
+			}
 		}
 		return null;
 	}

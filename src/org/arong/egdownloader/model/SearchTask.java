@@ -19,6 +19,12 @@ public class SearchTask {
 	private String btUrl;//bt下载地址
 	
 	private String uploader;//上传者
+	
+	private String author;
+	
+	public String getAuthor() {
+		return author;
+	}
 
 	public void setDate(String date) {
 		this.date = date;
@@ -61,6 +67,13 @@ public class SearchTask {
 
 	public void setName(String name) {
 		this.name = name;
+		if(name != null){
+			if(name.indexOf("[") != -1 && name.indexOf("]") != -1 && name.indexOf("[") < name.indexOf("]")){
+				author = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
+			}else if(name.indexOf("【") != -1 && name.indexOf("】") != -1 && name.indexOf("【") < name.indexOf("】")){
+				author = name.substring(name.indexOf("【") + 1, name.indexOf("】"));
+			}
+		}
 	}
 
 	public String getName() {

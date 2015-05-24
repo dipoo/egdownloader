@@ -114,13 +114,13 @@ public class SearchTagWindow extends JDialog {
 					tagPane.setVisible(true);
 				}
 			}
-		}, 80, 90, 60, 30);
+		}, 120, 90, 60, 30);
 		JButton cancelBtn = new AJButton("取消", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				addPanel.setVisible(false);
 				tagPane.setVisible(true);
 			}
-		}, 150, 90, 60, 30);
+		}, 210, 90, 60, 30);
 		ComponentUtil.addComponents(addPanel, nameLabel, nameField, valueLabel, valueField, saveBtn, cancelBtn);
 		
 		
