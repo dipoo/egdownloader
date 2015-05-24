@@ -7,10 +7,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
+import org.arong.egdownloader.version.Version;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 
@@ -33,6 +35,8 @@ public class Main {
 			(new Socket("localhost", iPort)).close();
 			if(ComponentConst.mainWindow != null){
 				ComponentConst.mainWindow.setVisible(true);
+			}else{
+				JOptionPane.showMessageDialog(null, "本程序不允许多开", Version.NAME, JOptionPane.ERROR_MESSAGE);
 			}
 			// 如果服务器已经启动则退出系统
 			System.exit(0);
