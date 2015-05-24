@@ -137,7 +137,7 @@ public class InitWindow extends JWindow {
 				ComponentConst.scriptChange = true;
 				int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
 				this.toFront();
-				if(r == JOptionPane.YES_OPTION){
+				if(r == JOptionPane.OK_OPTION){
 					new UpdateScriptWorker(this).execute();
 				}else{
 					startMain();

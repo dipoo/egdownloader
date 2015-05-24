@@ -279,7 +279,7 @@ public class SettingWindow extends JFrame{
 						}else{
 							if("".equals(cookieInfo)){
 								int result = JOptionPane.showConfirmDialog(this_, "登陆信息cookie不存在，确认要保存吗？");
-								if(result != 0){//不保存
+								if(result != JOptionPane.OK_OPTION){//不保存
 									return;
 								}
 							}

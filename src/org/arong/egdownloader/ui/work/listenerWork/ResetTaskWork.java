@@ -17,7 +17,7 @@ public class ResetTaskWork {
 	public ResetTaskWork(EgDownloaderWindow mainWindow, List<Task> tasks, String message) {
 		//询问是否重置任务
 		int result = JOptionPane.showConfirmDialog(mainWindow, message);
-		if(result == 0){//确定
+		if(result == JOptionPane.OK_OPTION){//确定
 			
 			mainWindow.setEnabled(false);
 			ResetAllTaskWindow w = (ResetAllTaskWindow) mainWindow.resetAllTaskWindow;
