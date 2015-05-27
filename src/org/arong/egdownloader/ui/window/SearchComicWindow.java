@@ -78,6 +78,7 @@ public class SearchComicWindow extends JFrame {
 	public Map<String, String> pageInfo = new HashMap<String, String>();//总页数缓存
 	public List<String> keyList = new ArrayList<String>();//关键字缓存
 	private Font font = new Font("宋体", 0, 12); 
+	public String page = "1";
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
@@ -99,7 +100,7 @@ public class SearchComicWindow extends JFrame {
 			}
 		});
 		
-		keyList.add("");
+		keyList.add(",1");
 		
 		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
 		loadingLabel.setBounds(630, 20, 120, 30);
@@ -185,7 +186,7 @@ public class SearchComicWindow extends JFrame {
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
 			
 			public void actionPerformed(ActionEvent ae) {
-				search("1");
+				search(page);
 			}
 			
 		}, 470, 20, 60, 30);
@@ -198,7 +199,8 @@ public class SearchComicWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				changeKeyList(true);
 				String key = keyList.get(keyList.size() - 1);
-				keyField.setText(key);
+				keyField.setText(key.substring(0, key.lastIndexOf(",")));
+				page = key.substring(key.lastIndexOf(",") + 1, key.length());
 				searchBtn.doClick();
 			}
 		});
@@ -211,7 +213,8 @@ public class SearchComicWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				changeKeyList(false);
 				String key = keyList.get(keyList.size() - 1);
-				keyField.setText(key);
+				keyField.setText(key.substring(0, key.lastIndexOf(",")));
+				page = key.substring(key.lastIndexOf(",") + 1, key.length());
 				searchBtn.doClick();
 			}
 		});
@@ -299,8 +302,8 @@ public class SearchComicWindow extends JFrame {
 		showLoading();
 		String keyText = keyField.getText().trim();
 		//如果当前的关键字与上一个不相同，则添加进去
-		if(! keyText.equals(keyList.get(keyList.size() - 1))){
-			keyList.add(keyText);
+		if(! (keyText + "," + page).equals(keyList.get(keyList.size() - 1))){
+			keyList.add(keyText + "," + page);
 		}
 		
 		String k = parseOption() + keyText;
@@ -413,6 +416,10 @@ public class SearchComicWindow extends JFrame {
 				key = "language:spanish " + key;
 				break;	
 		}
+		if(key.equals(keyField.getText())){
+			return;
+		}
+		page = "1";
 		keyField.setText(key);
 		searchBtn.doClick();
 	}
