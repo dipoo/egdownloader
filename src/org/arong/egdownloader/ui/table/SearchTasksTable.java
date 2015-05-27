@@ -249,6 +249,7 @@ public class SearchTasksTable extends JTable {
 										File coverFile = new File(path);
 										if(coverFile.exists()){
 											coverFile.delete();
+											JOptionPane.showMessageDialog(comicWindow, "清理完成");
 										}
 									}
 								}));

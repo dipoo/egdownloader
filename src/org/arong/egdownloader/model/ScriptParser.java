@@ -128,13 +128,9 @@ public class ScriptParser {
 		param.put("htmlSource", source);
 		Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
 		//获取名称
-		if(task.getName() == null){
-			task.setName(t.getName());
-		}
+		task.setName(t.getName());
 		//获取子名称
-		if(task.getSubname() == null){
-			task.setSubname(t.getSubname());
-		}
+		task.setSubname(t.getSubname());
 		//获取漫画类别
 		task.setType(t.getType());
         //获取封面路径
@@ -218,12 +214,13 @@ public class ScriptParser {
 	 * 重建任务，主要重新采集语言、封面、小标题等信息
 	 */
 	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException, WebClientException{
-		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
-				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
+//		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
+//				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
 			String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			task.setName(t.getName());
 			//获取子名称
 	        task.setSubname(t.getSubname());
 	        //获取类别
@@ -234,7 +231,7 @@ public class ScriptParser {
 	        task.setSize(t.getSize());
 	        //获取漫画语言
 	        task.setLanguage(t.getLanguage());
-		}
+//		}
 	}
 	
 	/**
