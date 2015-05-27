@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -71,6 +72,7 @@ public class SearchComicWindow extends JFrame {
 	public JScrollPane tablePane;
 	public JPanel optionPanel;
 	public AJPager pager;
+	public boolean haveBt;//是否有bt下载文件
 	public String key = " ";//搜索条件的字符串
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
 	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();//任务数据缓存
@@ -123,6 +125,9 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
 		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
 		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, true);
+		JCheckBox c11 = new AJCheckBox("BT", Color.RED, font, false);//
+		c11.setToolTipText("是否可以下载BT文件");
+		c11.setName("sto");
 		language = new JComboBox(new String[]{"全部", "中文", "英文", "韩文", "法文", "西班牙"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
@@ -160,18 +165,18 @@ public class SearchComicWindow extends JFrame {
 				}
 			}
 		});
-		final JCheckBox c11 = new AJCheckBox("ALL", Color.RED, font, true);
-		c11.addMouseListener(new MouseAdapter() {
+		final JCheckBox c12 = new AJCheckBox("ALL", Color.RED, font, true);
+		c12.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
 				for(int i = 0; i < cs.length; i ++){
 					if(cs[i] instanceof JCheckBox){
-						((JCheckBox)cs[i]).setSelected(c11.isSelected());
+						((JCheckBox)cs[i]).setSelected(c12.isSelected());
 					}
 				}
 			}
 		});
-		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11);
+		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -341,7 +346,11 @@ public class SearchComicWindow extends JFrame {
 			if(cs[i] instanceof JCheckBox){
 				jc = (JCheckBox) cs[i];
 				if(jc.isSelected()){
-					option += "&f_" + jc.getText().toLowerCase() + "=on";
+					if(jc.getName() != null){
+						option += "&f_" + jc.getName().toLowerCase() + "=on";
+					}else{
+						option += "&f_" + jc.getText().toLowerCase() + "=on";
+					}
 				}
 			}
 		}
