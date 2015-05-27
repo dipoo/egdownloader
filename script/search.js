@@ -1,5 +1,5 @@
 var mark = {
-	separator : [',', '###'],
+    separator : [',', '###'],
 	page : ['Showing ', 'of ', '</p><table class="ptt'],
 	listSource : ['Uploader</th></tr>', '<table class="ptb"'],
 	intercept : ['<tr class="gtr', "</td></tr>"],

@@ -1,5 +1,5 @@
 var mark = {
-	realUrl : ['<img id="img" src="', '" style=']
+    realUrl : ['<img id="img" src="', '" style=']
 };
 
 function interceptFromSource(source, prefix, suffix){

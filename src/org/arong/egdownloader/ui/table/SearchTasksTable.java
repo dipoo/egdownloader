@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,6 +40,7 @@ import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
+import org.arong.util.FileUtil;
 /**
  * 搜索结果表格
  * @author dipoo
@@ -239,7 +241,18 @@ public class SearchTasksTable extends JTable {
 										}
 									}
 								}));
-						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, searchTitleItem, searchAuthorItem);
+						JMenuItem clearCoverItem = new AJMenuItem("清理封面", Color.BLACK, IconManager.getIcon("clear"),
+								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
+									public void doWork(Window window, ActionEvent e) {
+										final SearchTask task = table.getTasks().get(table.getSelectedRow());
+										String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
+										File coverFile = new File(path);
+										if(coverFile.exists()){
+											coverFile.delete();
+										}
+									}
+								}));
+						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, searchTitleItem, searchAuthorItem, clearCoverItem);
 					}
 					table.popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
