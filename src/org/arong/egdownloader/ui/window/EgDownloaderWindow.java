@@ -199,9 +199,9 @@ public class EgDownloaderWindow extends JFrame {
 							searchComicWindow = new SearchComicWindow(mainWindow);
 						}
 						SearchComicWindow scw = mainWindow.searchComicWindow;
-						scw.searchBtn.doClick();
-						scw.setVisible(true);
 						scw.toFront();
+						scw.setVisible(true);
+						scw.searchBtn.doClick();
 					}
 				});
 		//EHicon
@@ -452,7 +452,9 @@ public class EgDownloaderWindow extends JFrame {
 					searchComicWindow = new SearchComicWindow(mainWindow);
 				}
 				SearchComicWindow scw = mainWindow.searchComicWindow;
+				scw.toFront();
 				scw.setVisible(true);
+				scw.searchBtn.doClick();
 			}
 		});
 		emptyPanel = new AJPanel(/*emptyTableTips, */emptyBtn);

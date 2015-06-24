@@ -2,7 +2,6 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -111,6 +110,62 @@ public class SearchComicWindow extends JFrame {
 		totalLabel = new AJLabel("", "", Color.BLACK, JLabel.LEFT);
 		totalLabel.setBounds(630, 20, 300, 30);
 		totalLabel.setVisible(false);
+		
+		searchBtn = new AJButton("搜索", "", new ActionListener() {
+			
+			public void actionPerformed(ActionEvent ae) {
+				search(page);
+			}
+			
+		}, 470, 20, 60, 30);
+		leftBtn = new JButton(IconManager.getIcon("left"));
+		leftBtn.setBounds(540, 20, 30, 30);
+		leftBtn.setToolTipText("后退");
+		leftBtn.setFocusable(false);
+		leftBtn.setCursor(CursorManager.getPointerCursor());
+		leftBtn.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				changeKeyList(true);
+				String key = keyList.get(keyList.size() - 1);
+				keyField.setText(key.substring(0, key.lastIndexOf(",")));
+				page = key.substring(key.lastIndexOf(",") + 1, key.length());
+				searchBtn.doClick();
+			}
+		});
+		rightBtn = new JButton(IconManager.getIcon("right"));
+		rightBtn.setBounds(580, 20, 30, 30);
+		rightBtn.setToolTipText("前进");
+		rightBtn.setFocusable(false);
+		rightBtn.setCursor(CursorManager.getPointerCursor());
+		rightBtn.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				changeKeyList(false);
+				String key = keyList.get(keyList.size() - 1);
+				keyField.setText(key.substring(0, key.lastIndexOf(",")));
+				page = key.substring(key.lastIndexOf(",") + 1, key.length());
+				searchBtn.doClick();
+			}
+		});
+		final SearchComicWindow this_ = this;
+		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(searchTagWindow == null){
+					searchTagWindow = new SearchTagWindow(this_);
+				}
+				searchTagWindow.setVisible(true);
+			}
+		}, this.getWidth() - 150, 20, 60, 30);
+		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				datas.clear();
+				pageInfo.clear();
+				keyPage.clear();
+				JOptionPane.showMessageDialog(this_, "清理成功");
+			}
+		}, this.getWidth() - 80, 20, 60, 30);
+		tagBtn.setUI(AJButton.blueBtnUi);
+		clearCacheBtn.setUI(AJButton.blueBtnUi);
+		
 		/* 分类条件 */
 		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		optionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "条件过滤"));
@@ -183,65 +238,13 @@ public class SearchComicWindow extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				JButton btn = (JButton) e.getSource();
+				page = btn.getName();
 				search(Integer.parseInt(btn.getName()) + "");
 			}
 		});
 		pager.setVisible(false);
 		
-		searchBtn = new AJButton("搜索", "", new ActionListener() {
-			
-			public void actionPerformed(ActionEvent ae) {
-				search(page);
-			}
-			
-		}, 470, 20, 60, 30);
-		leftBtn = new JButton(IconManager.getIcon("left"));
-		leftBtn.setBounds(540, 20, 30, 30);
-		leftBtn.setToolTipText("后退");
-		leftBtn.setFocusable(false);
-		leftBtn.setCursor(CursorManager.getPointerCursor());
-		leftBtn.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				changeKeyList(true);
-				String key = keyList.get(keyList.size() - 1);
-				keyField.setText(key.substring(0, key.lastIndexOf(",")));
-				page = key.substring(key.lastIndexOf(",") + 1, key.length());
-				searchBtn.doClick();
-			}
-		});
-		rightBtn = new JButton(IconManager.getIcon("right"));
-		rightBtn.setBounds(580, 20, 30, 30);
-		rightBtn.setToolTipText("前进");
-		rightBtn.setFocusable(false);
-		rightBtn.setCursor(CursorManager.getPointerCursor());
-		rightBtn.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				changeKeyList(false);
-				String key = keyList.get(keyList.size() - 1);
-				keyField.setText(key.substring(0, key.lastIndexOf(",")));
-				page = key.substring(key.lastIndexOf(",") + 1, key.length());
-				searchBtn.doClick();
-			}
-		});
-		final SearchComicWindow this_ = this;
-		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				if(searchTagWindow == null){
-					searchTagWindow = new SearchTagWindow(this_);
-				}
-				searchTagWindow.setVisible(true);
-			}
-		}, this.getWidth() - 150, 20, 60, 30);
-		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				datas.clear();
-				pageInfo.clear();
-				keyPage.clear();
-				JOptionPane.showMessageDialog(this_, "清理成功");
-			}
-		}, this.getWidth() - 80, 20, 60, 30);
-		tagBtn.setUI(AJButton.blueBtnUi);
-		clearCacheBtn.setUI(AJButton.blueBtnUi);
+		
 		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, leftBtn, rightBtn, loadingLabel, totalLabel, tagBtn, clearCacheBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {

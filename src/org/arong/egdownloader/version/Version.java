@@ -12,6 +12,6 @@ public final class Version {
 	// 程序作者
 	public final static String AUTHOR = "dipoo";
 	// 程序最后修改时间
-	public final static String MODIFLIED = "2015-05-21";
+	public final static String MODIFLIED = "2015-05-12";
 	
 }
