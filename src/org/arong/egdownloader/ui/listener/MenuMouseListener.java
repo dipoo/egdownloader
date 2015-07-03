@@ -1,10 +1,10 @@
 package org.arong.egdownloader.ui.listener;
 
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JDialog;
-import javax.swing.JMenu;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.AboutMenuWindow;
@@ -31,8 +31,8 @@ public class MenuMouseListener implements MouseListener {
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (e.getSource() instanceof JMenu) {
-			JMenu menu = (JMenu) e.getSource();
+		if (e.getSource() instanceof Component) {
+			Component menu = (Component) e.getSource();
 			String menuName = menu.getName();
 			// 如果点击的是工具菜单，则将关于窗口显示出来，倘若关于窗口为null就先实例化
 			if (ComponentConst.SETTING_MENU_NAME.equals(menuName)) {

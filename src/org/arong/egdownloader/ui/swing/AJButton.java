@@ -1,15 +1,20 @@
 package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.border.Border;
 import javax.swing.plaf.ButtonUI;
+import javax.swing.plaf.basic.BasicButtonUI;
 
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
@@ -71,17 +76,6 @@ public class AJButton extends JButton {
 		});
 	}
 	
-	public AJButton(String text, String name, String icon, ActionListener actionListener,
-			int x, int y, int width, int height) {
-		this(text, name, actionListener, x, y, width, height);
-		if(icon != null && !"".equals(icon)){
-			try{
-				this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
-			}catch(Exception e){
-				System.out.println(e.getMessage());
-			}
-		}
-	}
 	public AJButton(String text, String name, String icon, MouseListener mouseListener,
 			int x, int y, int width, int height) {
 		this(text, name, null, x, y, width, height);
@@ -106,6 +100,54 @@ public class AJButton extends JButton {
 			}catch(Exception e){
 				Tracker.println(getClass(), e.getMessage());
 			}
+		}
+	}
+	
+	public AJButton(String text, ImageIcon icon, MouseListener mouseListener, boolean border) {
+		super(text);
+		this.setCursor(CursorManager.getPointerCursor());
+		if(mouseListener != null)
+			this.addMouseListener(mouseListener);
+		if(icon != null){
+			try{
+				this.setIcon(icon);
+			}catch(Exception e){
+				Tracker.println(getClass(), e.getMessage());
+			}
+		}
+		if(!border){
+			this.setUI(new BasicButtonUI());
+			final Border empty = BorderFactory.createEmptyBorder(0, 5, 0, 5);
+			this.setBorder(empty);
+			this.setFocusable(false);
+			this.addMouseListener(new MouseAdapter() {
+				Border vborder = new Border() {  
+		            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {  
+		                g.setColor(new Color(Integer.parseInt("2593D9", 16)));  
+		                g.drawLine(x, y + height - 2, x + width, y + height - 2);
+		            	g.drawLine(x, y + height - 1, x + width, y + height - 1);
+		            }  
+		  
+		            public Insets getBorderInsets(Component c) {  
+		                return new Insets(10, 5, 10, 5);  
+		            }  
+		  
+		            public boolean isBorderOpaque() {  
+		                return true;  
+		            }  
+		        };
+			    public void mouseEntered(MouseEvent e) {  
+			        if (isRolloverEnabled()) {  
+			            setBorder(vborder);  
+			        }  
+			    }  
+			  
+			    public void mouseExited(MouseEvent e) {  
+			        if (isRolloverEnabled()) {  
+			            setBorder(empty);  
+			        }  
+			    } 
+			});
 		}
 	}
 	

@@ -67,8 +67,8 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 			//更新脚本解析器 
 			ScriptParser.clearFiles();
 			//保存版本号
-			FileUtil.storeStr2file(ComponentConst.removeScriptVersion, "script/", "version");
-			ComponentConst.localScriptVersion = ComponentConst.removeScriptVersion;
+			FileUtil.storeStr2file(ComponentConst.remoteScriptVersion, "script/", "version");
+			ComponentConst.localScriptVersion = ComponentConst.remoteScriptVersion;
 			ComponentConst.scriptChange = false;
 			if(initWindow != null){
 				//开启主界面

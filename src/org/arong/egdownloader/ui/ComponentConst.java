@@ -69,9 +69,11 @@ public final class ComponentConst {
 	
 	public static String localScriptVersion;//本地脚本版本号
 	
-	public static String removeScriptVersion;//远程脚本版本号
+	public static String remoteScriptVersion;//远程脚本版本号
 	
 	public static boolean scriptChange;//远程脚本是否更新
+	
+	public static String osname;//操作系统名称
 	
 	public static String EG_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/egversion";
 	public static String SCRIPT_CREATE_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
