@@ -56,6 +56,11 @@ public class InitWindow extends JWindow {
 	public String scriptVersion;
 	
 	public InitWindow(){
+		ComponentConst.osname = System.getProperties().getProperty("os.name");
+		if(ComponentConst.osname == null){
+			ComponentConst.osname = "Linux";
+		}
+		
 		final ImageIcon icon = IconManager.getIcon("init");
 		this.setSize(icon.getIconWidth(), icon.getIconHeight());
 //		this.getContentPane().setBackground(Color.decode("333"));
@@ -133,7 +138,7 @@ public class InitWindow extends JWindow {
 
 			//版本返回信息需要以V.2字符串开头，否则可能获取的数据不正确，不做更新操作
 			if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){
-				ComponentConst.removeScriptVersion = scriptVersion;
+				ComponentConst.remoteScriptVersion = scriptVersion;
 				ComponentConst.scriptChange = true;
 				int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
 				this.toFront();

@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
@@ -39,8 +40,24 @@ public class AJMenu extends JMenu {
 			//设置图标
 			this.setIcon(new ImageIcon(getClass().getResource(ComponentConst.ICON_PATH + icon)));
 	}
+	public AJMenu(String text, String name, ImageIcon icon){
+		this(text, name);
+		if(icon != null)
+			//设置图标
+			this.setIcon(icon);
+	}
 	public AJMenu(String text, String name, ImageIcon icon, MouseListener listener){
 		this(text, name, listener);
+		if(icon != null)
+			//设置图标
+			this.setIcon(icon);
+	}
+	public AJMenu(String text, String name, ImageIcon icon, ActionListener listener){
+		super(text);
+		this.setName(name);
+		this.setForeground(Color.DARK_GRAY);
+		this.setCursor(CursorManager.getPointerCursor());
+		this.addActionListener(listener);
 		if(icon != null)
 			//设置图标
 			this.setIcon(icon);

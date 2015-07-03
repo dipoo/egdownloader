@@ -19,7 +19,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
@@ -28,6 +27,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -160,71 +160,119 @@ public class EgDownloaderWindow extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Color menuItemColor = new Color(0,0,85);
-		// 菜单：新建
-		JMenu newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
-				"", IconManager.getIcon("add"),
-				new OperaBtnMouseListener(this, MouseAction.CLICK,
-						new IListenerTask() {
-							public void doWork(Window mainWindow, MouseEvent e) {
-								EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
-								this_.setEnabled(false);
-								if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
-									this_.creatingWindow.setVisible(true);
-									this_.creatingWindow.toFront();
-								}else{
-									if (this_.addFormWindow == null) {
-										this_.addFormWindow = new AddFormDialog(this_);
-									}
-									this_.addFormWindow.setVisible(true);
-									this_.addFormWindow.toFront();
-								}
-							}
-						}));
-		// 菜单：开始
-		JMenu startTasksMenu = new AJMenu(ComponentConst.START_MENU_TEXT,
-				"", IconManager.getIcon("start"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
-		// 菜单：暂停
-		JMenu stopTasksMenu = new AJMenu(ComponentConst.STOP_MENU_TEXT,
-				"", IconManager.getIcon("stop"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
-		// 菜单：删除
-		OperaBtnMouseListener deleteBtnMouseListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork());
-		JMenu deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
-				"", IconManager.getIcon("delete"), deleteBtnMouseListener);
 		
-		//菜单：搜索
-		final JMenu searchComicMenu = new AJMenu(ComponentConst.SEARCH_MENU_TEXT,
-				"", new MouseAdapter() {
-					public void mouseClicked(MouseEvent e) {
-						if(searchComicWindow == null){
-							searchComicWindow = new SearchComicWindow(mainWindow);
-						}
-						SearchComicWindow scw = mainWindow.searchComicWindow;
-						scw.toFront();
-						scw.setVisible(true);
-						scw.searchBtn.doClick();
+		Component newTaskMenu = null;// 菜单：新建
+		Component startTasksMenu = null;// 菜单：开始
+		Component stopTasksMenu = null;// 菜单：暂停
+		Component deleteTasksMenu = null;// 菜单：删除
+		Component searchComicMenu = null;//菜单：搜索
+		Component settingMenu = null;// 菜单：设置
+		Component countMenu = null;// 菜单：统计
+		Component aboutMenu = null;// 菜单：关于
+		OperaBtnMouseListener newTaskBtnListener = new OperaBtnMouseListener(this, MouseAction.CLICK,
+				new IListenerTask() {
+			public void doWork(Window mainWindow, MouseEvent e) {
+				EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
+				this_.setEnabled(false);
+				if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
+					this_.creatingWindow.setVisible(true);
+					this_.creatingWindow.toFront();
+				}else{
+					if (this_.addFormWindow == null) {
+						this_.addFormWindow = new AddFormDialog(this_);
 					}
-				});
+					this_.addFormWindow.setVisible(true);
+					this_.addFormWindow.toFront();
+				}
+			}
+		});
+		OperaBtnMouseListener countBtnListener = new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
+			public void doWork(Window window, MouseEvent e) {
+				EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+				if (mainWindow.countWindow == null) {
+					JDialog countWindow = new CountWindow(mainWindow);
+					mainWindow.countWindow = countWindow;
+				}
+				mainWindow.countWindow.setLocationRelativeTo(mainWindow);
+				// 设置关于窗口置于最顶层
+				mainWindow.countWindow.toFront();
+				((CountWindow)mainWindow.countWindow).showCountPanel();
+			}
+		});
+		
+		if(ComponentConst.osname.toLowerCase().contains("linux")){
+			newTaskMenu = new AJButton(ComponentConst.ADD_MENU_TEXT, IconManager.getIcon("add"), newTaskBtnListener, false);
+			startTasksMenu = new AJButton(ComponentConst.START_MENU_TEXT, 
+					IconManager.getIcon("start"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()), false);
+			stopTasksMenu = new AJButton(ComponentConst.STOP_MENU_TEXT,
+					IconManager.getIcon("stop"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()), false);
+			deleteTasksMenu = new AJButton(ComponentConst.DELETE_MENU_TEXT,
+					IconManager.getIcon("delete"), new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork()), false);
+			searchComicMenu = new AJButton(ComponentConst.SEARCH_MENU_TEXT, null
+					, new MouseAdapter() {
+						public void mouseClicked(MouseEvent e) {
+							if(searchComicWindow == null){
+								searchComicWindow = new SearchComicWindow(mainWindow);
+							}
+							SearchComicWindow scw = mainWindow.searchComicWindow;
+							scw.toFront();
+							scw.setVisible(true);
+							scw.searchBtn.doClick();
+						}
+					}, false);
+			settingMenu = new AJButton(ComponentConst.SETTING_MENU_TEXT, IconManager.getIcon("setting"),
+					new MenuMouseListener(this), false);
+			settingMenu.setName(ComponentConst.SETTING_MENU_NAME);
+			countMenu = new AJButton(ComponentConst.COUNT_MENU_TEXT, IconManager.getIcon("count"), countBtnListener, false);
+			aboutMenu = new AJButton(ComponentConst.ABOUT_MENU_TEXT, IconManager.getIcon("user"),
+					new MenuMouseListener(this), false);
+			aboutMenu.setName(ComponentConst.ABOUT_MENU_NAME);
+		}else{
+			newTaskMenu = new AJMenu(ComponentConst.ADD_MENU_TEXT,
+					"", IconManager.getIcon("add"), newTaskBtnListener);
+			startTasksMenu = new AJMenu(ComponentConst.START_MENU_TEXT,
+					"", IconManager.getIcon("start"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StartTaskWork()));
+			stopTasksMenu = new AJMenu(ComponentConst.STOP_MENU_TEXT,
+					"", IconManager.getIcon("stop"), new OperaBtnMouseListener(this, MouseAction.CLICK,new StopTaskWork()));
+			deleteTasksMenu = new AJMenu(ComponentConst.DELETE_MENU_TEXT,
+					"", IconManager.getIcon("delete"), new OperaBtnMouseListener(this, MouseAction.CLICK,new DeleteTaskWork()));
+			searchComicMenu = new AJMenu(ComponentConst.SEARCH_MENU_TEXT,
+					"", new MouseAdapter() {
+						public void mouseClicked(MouseEvent e) {
+							if(searchComicWindow == null){
+								searchComicWindow = new SearchComicWindow(mainWindow);
+							}
+							SearchComicWindow scw = mainWindow.searchComicWindow;
+							scw.toFront();
+							scw.setVisible(true);
+							scw.searchBtn.doClick();
+						}
+					});
+			settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
+					ComponentConst.SETTING_MENU_NAME, IconManager.getIcon("setting"),
+					new MenuMouseListener(this));
+			countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
+					"", IconManager.getIcon("count"),countBtnListener);
+			aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
+					ComponentConst.ABOUT_MENU_NAME, IconManager.getIcon("user"),
+					new MenuMouseListener(this));
+		}
 		//EHicon
 		ImageIcon ehIcon = IconManager.getIcon("eh");
 		ehIcon.setImage(ehIcon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
-		searchComicMenu.setIcon(ehIcon);
+		((AbstractButton) searchComicMenu).setIcon(ehIcon);
 		
 		// 菜单：任务组
 		JMenu taskGroupMenu = new AJMenu(ComponentConst.TASKGROUP_MENU_TEXT,
-				ComponentConst.SETTING_MENU_NAME, IconManager.getIcon("group"), null);
+				ComponentConst.SETTING_MENU_NAME, IconManager.getIcon("group"));
 		taskGroupMenu.add(new AddTaskGroupMenuItem("新建任务组", this, AddTaskGroupMenuItem.ADDACTION));
 		taskGroupMenu.add(new AddTaskGroupMenuItem("切换任务组", this, AddTaskGroupMenuItem.CHANGEACTION));
 		
-		// 菜单：设置
-		MouseListener menuMouseListener = new MenuMouseListener(this);
-		JMenu settingMenu = new AJMenu(ComponentConst.SETTING_MENU_TEXT,
-				ComponentConst.SETTING_MENU_NAME, IconManager.getIcon("setting"),
-				menuMouseListener);
 		// 菜单：操作
 		JMenu operaMenu = new AJMenu(ComponentConst.OPERA_MENU_TEXT,
-				"", IconManager.getIcon("opera"), null);
+				"", IconManager.getIcon("opera"));
 		JMenu taskMenu = new AJMenu("所有任务",
-				"", IconManager.getIcon("task"), null);
+				"", IconManager.getIcon("task"));
 		taskMenu.setForeground(new Color(0,0,85));
 		taskMenu.add(new StartAllTaskMenuItem("开始所有任务", this));
 		taskMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
@@ -235,32 +283,15 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
-				"", IconManager.getIcon("select"), null);
+				"", IconManager.getIcon("select"));
 		JMenuItem clearItem = new ClearConsoleMenuItem("清空控制台", this);
 		consoleMenu.add(clearItem);
-		// 菜单：统计
-		JMenu countMenu = new AJMenu(ComponentConst.COUNT_MENU_TEXT,
-				"", IconManager.getIcon("count"),
-				new OperaBtnMouseListener(this, MouseAction.CLICK,new IListenerTask() {
-					public void doWork(Window window, MouseEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						if (mainWindow.countWindow == null) {
-							JDialog countWindow = new CountWindow(mainWindow);
-							mainWindow.countWindow = countWindow;
-						}
-						mainWindow.countWindow.setLocationRelativeTo(mainWindow);
-						// 设置关于窗口置于最顶层
-						mainWindow.countWindow.toFront();
-						((CountWindow)mainWindow.countWindow).showCountPanel();
-					}
-				}));
-		// 菜单：关于
-		JMenu aboutMenu = new AJMenu(ComponentConst.ABOUT_MENU_TEXT,
-				ComponentConst.ABOUT_MENU_NAME, IconManager.getIcon("user"),
-				menuMouseListener);
+		
+		Component[] menus = new Component[]{
+					newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, searchComicMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu
+			};
 		// 构造菜单栏并添加菜单
-		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30,
-				newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, searchComicMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu);
+		jMenuBar = new AJMenuBar(0, 0, ComponentConst.CLIENT_WIDTH, 30, menus);
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
 				(tasks == null ? 0 :tasks.size()) * 28, this.tasks, this);
