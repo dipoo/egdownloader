@@ -20,6 +20,10 @@ import java.util.regex.Pattern;
  * @since 2014-05-26
  */
 public final class FileUtil {
+	/** 当前下载的字节数:用于storeStream方法的下载速度计算 */
+	public static Long byteLength = 0L;
+	/** 上次下载的字节数:用于storeStream方法的下载速度计算 */
+	public static Long oldByteLength = 0L;
 	/**
 	 * 如果目录不存在，则创建
 	 * @param path
@@ -61,10 +65,11 @@ public final class FileUtil {
     		File fs = new File(path + File.separator + name);
 			bis = new BufferedInputStream(in);
 			bos = new BufferedOutputStream(new FileOutputStream(fs));
-			byte[] buff = new byte[1024];
+			byte[] buff = new byte[1024 * 10];
 			int len = 0;
 			while ((len = bis.read(buff)) != -1) {
 				size += len;
+				byteLength += len;
 				bos.write(buff, 0, len);
 			}
 			bos.flush();
@@ -110,21 +115,21 @@ public final class FileUtil {
 	
 	/**
 	 * 将字节数转化为合适的单位字符串
-	 * @param size
+	 * @param length
 	 * @return
 	 */
-	public static String showSizeStr(int size){
+	public static String showSizeStr(Long length){
 		String s = "0B";
-		double d = (double)size;
+		double d = (double)length;
 		DecimalFormat df = new DecimalFormat("#####0.00");
-		if(size < 1024){
+		if(length < 1024){
 			s = d + "B";
 		}else if(d < 1024 * 1024 ){
-			s = df.format(d / 1024.0) + "K";
+			s = df.format(d / 1024.0) + "KB";
 		}else if(d < 1024 * 1024 * 1024){
-			s = df.format(d / (1024.0 * 1024.0)) + "M";
+			s = df.format(d / (1024.0 * 1024.0)) + "MB";
 		}else if(d < 1024 * 1024 * 1024 * 1024){
-			s = df.format(d / (1024.0 * 1024.0 * 1024.0)) + "G";
+			s = df.format(d / (1024.0 * 1024.0 * 1024.0)) + "GB";
 		}
 		return s;
 	}

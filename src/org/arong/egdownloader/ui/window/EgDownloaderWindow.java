@@ -90,6 +90,7 @@ import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
 import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
+import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
 
 /**
@@ -137,7 +138,7 @@ public class EgDownloaderWindow extends JFrame {
 	public DbTemplate<Task> taskDbTemplate;
 	public DbTemplate<Picture> pictureDbTemplate;
 	public DbTemplate<Setting> settingDbTemplate;
-
+	
 	public EgDownloaderWindow(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
 		final EgDownloaderWindow mainWindow = this;
 		
@@ -150,7 +151,28 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
 		// 设置主窗口
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
-		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
+		final String title = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
+		this.setTitle(title);
+		
+		//设置下载速度检测定时器
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+				//当前一秒内的流量
+				Long length = FileUtil.byteLength - FileUtil.oldByteLength;
+				//显示到标题栏
+				mainWindow.setTitle(title + " (" + FileUtil.showSizeStr(length) + "/S)");
+				if(FileUtil.byteLength > 999900000){
+					FileUtil.byteLength = 0L;
+					FileUtil.oldByteLength = 0L;
+				}else{
+					FileUtil.oldByteLength = FileUtil.byteLength;
+				}
+			}
+		};
+		Timer timer = new Timer(true);
+		//1秒执行一次
+		timer.schedule(timerTask, 1000, 1000);
+		
 		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);

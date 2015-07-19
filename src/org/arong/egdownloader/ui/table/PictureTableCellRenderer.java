@@ -44,7 +44,7 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(50);
 			tc.setMaxWidth(60);
-			val = FileUtil.showSizeStr(Integer.parseInt(val));
+			val = FileUtil.showSizeStr(Long.parseLong(val));
 		}else if(column == 3){//第四列：状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(50);
