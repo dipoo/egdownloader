@@ -73,7 +73,11 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}
 						if(this.isCancelled())//是否暂停
 							return null;
-						is =  WebClient.getStreamUseJava(pic.getRealUrl());
+						if(pic.getRealUrl().contains("exhentai.org")){
+							is =  WebClient.postRequestAsStreamWithCookie(pic.getRealUrl(), setting.getCookieInfo());
+						}else{
+							is =  WebClient.getStreamUseJava(pic.getRealUrl());
+						}
 						if(this.isCancelled())//是否暂停
 							return null;
 						int size = is.available();
