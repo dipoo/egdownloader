@@ -33,10 +33,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	
 	private JFrame mainWindow;
 	private Task task;
+	private Setting setting;
 	private int exceptionNum = 0;
 	public DownloadWorker(Task task, JFrame mainWindow){
 		this.mainWindow = mainWindow;
 		this.task = task;
+		setting = ((EgDownloaderWindow)mainWindow).setting;
 	}
 	
 	protected Void doInBackground() throws Exception {
@@ -48,9 +50,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		List<Picture> pics = task.getPictures();
 		
 		Picture pic;
-		Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 		InputStream is;
-		File existNameFs;//判断是否有重复的文件名
+		File existNameFs = null;//判断是否有重复的文件名
 		if(pics.size() != 0){
 			int success = 0;//下载完成个数
 			int requireNum = 0;//需要下载数（未下载数）
@@ -101,25 +102,30 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 								name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
 							}
 						}else{
-							existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/" + name);
+							existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
 							//已存在相同名称的文件
 							while(existNameFs.exists()){
 								name = name.substring(0, name.lastIndexOf(".")) + "_" + name.substring(name.lastIndexOf("."), name.length());
 								existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/" + name);
 							}
-							existNameFs = null;
 						}
 						size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), name, is);//保存到目录
-						if(this.isCancelled())//是否暂停
+						if(this.isCancelled()){//是否暂停
+							//删除已经下载的文件
+							delete(existNameFs);
 							return null;
+						}
 						//Picture [id=41b2c042-7560-422b-a521-e76b56720a77, num=01, name=P213_.jpg, url=http://exhentai.org/s/b0f5fe0e5c/698928-1, realUrl=http://36.233.48.163:8888/h/b0f5fe0e5c10d164456ed3f2000d8b0ef258ab5d-1385766-1279-1850-jpg/keystamp=1401206100-f2b9d0361c/P213_.jpg, size=0, time=null, saveAsName=true, isCompleted=false, isRunning=false]
 						pic.setSize(size);//设置图片大小
 						pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						//保存数据
-						if(this.isCancelled())//是否暂停
+						if(this.isCancelled()){//是否暂停
+							//删除已经下载的文件
+							delete(existNameFs);
 							return null;
+						}
 						//更新图片信息
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
 						//设置最后下载时间
@@ -130,6 +136,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (SocketTimeoutException e){
 						//碰到异常
 						Tracker.println(task.getName() + ":" + pic.getName() + "-读取流超时，滞后重试");
+						//删除已经下载的文件
+						delete(existNameFs);
 						//继续下一个
 						continue;
 					}catch (ConnectTimeoutException e){
@@ -196,6 +204,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		}
 		
 		return null;
+	}
+	private void delete(File existNameFs){
+		//是否以真实名称保存，是的话则要删除下载不完整的文件
+		if(setting.isSaveAsName() && existNameFs != null && existNameFs.exists()){
+			existNameFs.delete();
+		}
 	}
 	public Task getTask() {
 		return task;
