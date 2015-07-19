@@ -192,6 +192,7 @@ public class ScriptParser {
         		pic.setId(UUID.randomUUID().toString());
         		pic.setTid(task.getId());
         		pic.setNum(ParseEngine.genNum(task.getTotal(), i));
+        		pic.setSaveAsName(setting.isSaveAsName());
         		i ++;
         	}
         }

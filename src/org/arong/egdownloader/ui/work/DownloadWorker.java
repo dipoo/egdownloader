@@ -97,9 +97,11 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}
 						String name = pic.getName();
 						//是否以真实名称保存，是的话则要判断是否重复并处理
-						if(! setting.isSaveAsName()){
+						if(! pic.isSaveAsName()){
 							if(name.indexOf(".") != -1){
 								name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
+							}else{
+								name = pic.getNum() + ".jpg";
 							}
 						}else{
 							existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);

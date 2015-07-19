@@ -45,7 +45,13 @@ public class CheckResetWork implements IMenuListenerTask {
 					if(pic.isCompleted()){//只有状态为已下载的才继续
 						name = pic.getName();//图片名称
 						//真实保存名称
-						name = pic.isSaveAsName() ? name : pic.getNum() + "." + name.substring(name.lastIndexOf("."), name.length());
+						if(!pic.isSaveAsName()){
+							if(name.lastIndexOf(".") != -1){
+								name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
+							}else{
+								name = pic.getNum() + ".jpg";
+							}
+						}
 						if(exists(fileNames, name)){
 							continue;
 						}
