@@ -199,7 +199,7 @@ public class SettingWindow extends JFrame{
 						JOptionPane.showMessageDialog(this_, "文件夹已被删除");
 					}
 				}
-			}), 550, 50, 60, 30);
+			}), 500, 50, 60, 30);
 			
 			testBtn = new AJButton("脚本测试", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
@@ -220,7 +220,7 @@ public class SettingWindow extends JFrame{
 						testScriptWindow.setVisible(true);
 					}
 				}
-			}), 550, 90, 60, 30);
+			}), 500, 90, 60, 30);
 			updateBtn = new AJButton("同步脚本", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					if(ComponentConst.scriptChange){
@@ -234,7 +234,7 @@ public class SettingWindow extends JFrame{
 						JOptionPane.showMessageDialog(this_, "远程脚本未更新或者更新不可用！");
 					}
 				}
-			}), 550, 130, 60, 30);
+			}), 500, 130, 60, 30);
 			loadingLabel = new AJLabel("", "loading.gif", null, JLabel.LEFT);//
 			loadingLabel.setBounds(620, 110, 30, 30);
 			loadingLabel.setVisible(false);
