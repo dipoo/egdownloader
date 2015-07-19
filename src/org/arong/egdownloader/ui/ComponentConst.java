@@ -223,8 +223,8 @@ public final class ComponentConst {
 			Version.VERSION +"</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='checkVersion'><font color='red'>检查新版本</font><a/><br>更新时间：<b>" + Version.MODIFLIED +
 			"</b><br>项目地址：<a href='https://github.com/dipoo/egdownloader'>https://github.com/dipoo/egdownloader</a>" + 
 			"<br/><font color='blue'>有任何问题，请到项目托管地址发issue。如果eh网页改版，请通知我更新脚本^_^</font>";
-	public final static String SCRIPT_DESC_TEXT = "<div style='font-size:10px;color:#666;'>目前脚本解析系统只支持javascript脚本，共需要三个脚本文件，分别用于任务信息解析，图片列表解析和图片真实地址解析，" +
-			"可以在上面指定具体的脚本路径。系统提供给js脚本中一个参数：<font color='red'>htmlSource</font>，代表网页源码（任务解析，图片列表解析的是主页面源码，真实地址解析的是图片浏览页面源码，搜索漫画的是首页源码），你需要" +
+	public final static String SCRIPT_DESC_TEXT = "<div style='font-size:10px;color:#666;'>目前脚本解析系统只支持javascript脚本，共需要四个脚本文件，分别用于任务信息解析，图片列表解析，图片真实地址解析和搜索漫画解析，" +
+			"已经在上面指定了具体的脚本路径。系统提供给js脚本中一个参数：<font color='red'>htmlSource</font>，代表网页源码（任务解析，图片列表解析的是主页面源码，真实地址解析的是图片浏览页面源码，搜索漫画的是首页源码），你需要" +
 			"返回各自所需的信息：<br>" + 
 			"<b>任务信息解析</b>：返回一个JSON字符串，如：{\"name\":\"名称\",\"subname\":\"子标题\",\"type\":\"类别\",\"coverUrl\":\"封面地址\",\"total\":\"数目\"," +
 			"\"size\":大小,\"language\":\"语言\"};<br>" + 
