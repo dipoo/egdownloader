@@ -19,7 +19,7 @@ public class ResetTaskWork {
 		int result = JOptionPane.showConfirmDialog(mainWindow, message);
 		if(result == JOptionPane.OK_OPTION){//确定
 			
-			mainWindow.setEnabled(false);
+			//mainWindow.setEnabled(false);
 			ResetAllTaskWindow w = (ResetAllTaskWindow) mainWindow.resetAllTaskWindow;
 			if(w == null){
 				mainWindow.resetAllTaskWindow = new ResetAllTaskWindow(mainWindow, tasks);

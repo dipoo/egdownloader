@@ -58,13 +58,10 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 				
 				//保存到数据库
 				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
-				//保存到内存
-				TaskingTable taskTable = (TaskingTable)window.runningTable;
-				//关闭form,刷新table
+				//关闭form
 				((CreatingWindow)(window.creatingWindow)).reset();
 				window.creatingWindow.dispose();
 				window.tablePane.setVisible(true);//将表格panel显示出来
-				taskTable.updateUI();
 				window.setEnabled(true);
 				window.setVisible(true);
 				//下载

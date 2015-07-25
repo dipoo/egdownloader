@@ -23,6 +23,7 @@ import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -51,7 +52,7 @@ public class InitWindow extends JWindow {
 	
 	public Setting setting;
 	
-	public List<Task> tasks;
+	public TaskList<Task> tasks;
 	
 	public String scriptVersion;
 	
@@ -105,7 +106,7 @@ public class InitWindow extends JWindow {
 		textLabel.setText("读取任务列表");
 		taskDbTemplate = new TaskDom4jDbTemplate();
 		pictureDbTemplate = new PictureDom4jDbTemplate();
-		tasks = taskDbTemplate.query();
+		tasks = (TaskList<Task>) taskDbTemplate.query();
 		if(tasks != null){
 			//按照名称排序
 			/*Collections.sort(tasks, new Comparator<Task>() {

@@ -31,7 +31,6 @@ public class ReBuildAllTaskWorker extends SwingWorker<Void, Void> {
 		for(Task task : tasks){
 			i ++;
 			ScriptParser.rebuildTask(task, setting);
-			table.updateUI();
 			Tracker.println(ReBuildAllTaskWorker.class, "重建任务-" + i + "/" + tasks.size());
 		}
 		window.taskDbTemplate.update(tasks);

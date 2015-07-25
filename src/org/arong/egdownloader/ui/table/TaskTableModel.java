@@ -1,6 +1,8 @@
 package org.arong.egdownloader.ui.table;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -11,7 +13,7 @@ import org.arong.egdownloader.ui.ComponentConst;
  * @author 阿荣
  * @since 2014-05-23
  */
-public class TaskTableModel extends AbstractTableModel {
+public class TaskTableModel extends AbstractTableModel implements Observer{
 	private static final long serialVersionUID = -7062795869810088466L;
 	private List<Task> tasks;
 	
@@ -65,6 +67,10 @@ public class TaskTableModel extends AbstractTableModel {
 
 	public List<Task> getTasks() {
 		return tasks;
+	}
+
+	public void update(Observable o, Object arg) {
+		System.out.println(123);
 	}
 
 }

@@ -22,7 +22,6 @@ import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
 /**
  * 下载线程类，执行耗时的下载任务
@@ -45,7 +44,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		TaskingTable table = (TaskingTable) ((EgDownloaderWindow)mainWindow).runningTable;
 		exceptionNum = 0;
 		//设置任务状态为下载中
-		task.setStatus(TaskStatus.STARTED);
+		//task.setStatus(TaskStatus.STARTED);
 		Tracker.println(getClass(), task.getName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载");
 		List<Picture> pics = task.getPictures();
 		
@@ -111,7 +110,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 								existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/" + name);
 							}
 						}
-						size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), name, is);//保存到目录
+						size = task.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), name, is);//保存到目录
 						if(this.isCancelled()){//是否暂停
 							//删除已经下载的文件
 							delete(existNameFs);
@@ -134,7 +133,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						setting.setLastDownloadTime(pic.getTime());
 						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成。");
 						success ++;
-						table.updateUI();
 					}catch (SocketTimeoutException e){
 						//碰到异常
 						Tracker.println(task.getName() + ":" + pic.getName() + "-读取流超时，滞后重试");
@@ -154,7 +152,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 						//开始任务等待列表中的第一个任务
 						table.startWaitingTask();
-						table.updateUI();
 						return null;
 					}catch (Exception e){
 						//碰到异常
@@ -177,7 +174,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 					//开始任务等待列表中的第一个任务
 					table.startWaitingTask();
-					table.updateUI();
 					return null;
 				}
 				if(exceptionNum >= requireNum){
@@ -187,7 +183,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 					//开始任务等待列表中的第一个任务
 					table.startWaitingTask();
-					table.updateUI();
 					return null;
 				}
 				doInBackground();
@@ -201,7 +196,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 				table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 				//开始任务等待列表中的第一个任务
 				table.startWaitingTask();
-				table.updateUI();
 			}
 		}
 		

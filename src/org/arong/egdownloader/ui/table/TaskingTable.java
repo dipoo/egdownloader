@@ -5,17 +5,23 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
@@ -33,7 +39,7 @@ import org.arong.util.Tracker;
 public class TaskingTable extends JTable {
 
 	private static final long serialVersionUID = 8917533573337061263L;
-	private List<Task> tasks;
+	private TaskList<Task> tasks;
 	private EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
 	private boolean rebuild;
@@ -41,17 +47,26 @@ public class TaskingTable extends JTable {
 	private List<Task> waitingTasks;//排队等待的任务
 	public static int wordNum = 230;//名称列最多显示字数，会随着窗口大小变化而改变
 	public int currentRowIndex = -1;//用于封面显示
+	private boolean refresh;//是否应该刷新
+	private Timer timer = new Timer(true); 
 	
 	public void changeModel(EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		this.tasks = mainWindow.tasks;
+		final TaskingTable table = this;
+		this.tasks.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				table.setRefresh(true);
+			}
+		});
 		TableModel tableModel = new TaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
 	}
 	
-	public TaskingTable(int x, int y, int width, int height, List<Task> tasks, EgDownloaderWindow mainWindow){
+	public TaskingTable(int x, int y, int width, int height, TaskList<Task> tasks, EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
-		this.tasks = (tasks == null ? new ArrayList<Task>() : tasks);
+		final TaskingTable table = this;
+		this.tasks = (tasks == null ? new TaskList<Task>() : tasks);
 		
 		if(this.tasks.size() > ComponentConst.MAX_TASK_PAGE){
 			height = ComponentConst.MAX_TASK_PAGE * 25;
@@ -73,10 +88,10 @@ public class TaskingTable extends JTable {
 		this.getTableHeader().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getSource() == getTableHeader()) {
-					TaskingTable table = (TaskingTable)getTableHeader().getTable();
                     getTableHeader().removeMouseListener(this);  
                     int column = columnAtPoint(e.getPoint());  
                     //点击名称列，重新排序
+                    table.setRefresh(true);
                     if(column == 1){
                     	if(sort == 0){
                     		sort = 1;
@@ -181,13 +196,11 @@ public class TaskingTable extends JTable {
                 			table.setTasks(table.getMainWindow().tasks);
                 		}
                     }
-                    table.updateUI();
                     getTableHeader().addMouseListener(this);
                 }  
 			}
 		});
 		//单元格监听
-		final TaskingTable table = this;
 		this.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e){
 				int rowIndex = table.rowAtPoint(e.getPoint());
@@ -219,7 +232,6 @@ public class TaskingTable extends JTable {
 				}
 			}
 			public void mouseClicked(MouseEvent e) {
-				TaskingTable table = (TaskingTable)e.getSource();
 				//获取点击的行数
 				int rowIndex = table.rowAtPoint(e.getPoint());
 				//左键
@@ -244,7 +256,6 @@ public class TaskingTable extends JTable {
 							Tracker.println(getClass(), task.getName() + ":重新采集");
 							task.setReCreateWorker(new ReCreateWorker(task, table.getMainWindow()));
 							task.getReCreateWorker().execute();
-							table.updateUI();
 						}
 					}else{//单击事件
 						int column = table.columnAtPoint(e.getPoint());
@@ -273,11 +284,34 @@ public class TaskingTable extends JTable {
 				else if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
-					table.updateUI();
 					table.getMainWindow().tablePopupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});
+		
+		//注册属性变化监听器
+		this.tasks.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				table.setRefresh(true);
+			}
+		});
+		for(Task task : tasks){
+			task.addPropertyChangeListener(new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					table.setRefresh(true);
+				}
+			});
+		}
+		//定时(每秒)刷新
+		timer.schedule(new TimerTask() {
+			public void run() {
+				if(table.isRefresh()){
+					//刷新表格
+					SwingUtilities.updateComponentTreeUI(table);
+					table.setRefresh(false);
+				}
+			}
+		}, 1000, 1000);
 	}
 	/**
 	 * 添加排队等待的任务
@@ -291,7 +325,6 @@ public class TaskingTable extends JTable {
 			task.setStatus(TaskStatus.WAITING);
 			waitingTasks.add(task);
 		}
-		this.updateUI();
 	}
 	
 	/**
@@ -314,7 +347,6 @@ public class TaskingTable extends JTable {
 			}
 			this.setRunningNum(this.getRunningNum() + 1);
 		}
-		this.updateUI();
 	}
 	/**
 	 * 将排队等待中的第一个任务开启下载
@@ -327,7 +359,6 @@ public class TaskingTable extends JTable {
 			this.startTask(task);
 			this.getWaitingTasks().remove(0);//将第一个任务移除排队列表
 		}
-		this.updateUI();
 	}
 	
 	/**
@@ -356,7 +387,6 @@ public class TaskingTable extends JTable {
 			Tracker.println(getClass(), task.getName() + ":已暂停");
 			this.waitingTasks.remove(task);
 		}
-		this.updateUI();
 	}
 	
 	/**
@@ -374,7 +404,7 @@ public class TaskingTable extends JTable {
 		return tasks;
 	}
 
-	public void setTasks(List<Task> tasks) {
+	public void setTasks(TaskList<Task> tasks) {
 		this.tasks = tasks;
 	}
 
@@ -405,5 +435,13 @@ public class TaskingTable extends JTable {
 	}
 	public void setRebuild(boolean rebuild) {
 		this.rebuild = rebuild;
+	}
+
+	public boolean isRefresh() {
+		return refresh;
+	}
+
+	public void setRefresh(boolean refresh) {
+		this.refresh = refresh;
 	}
 }

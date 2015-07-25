@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.util.Dom4jUtil;
@@ -242,7 +243,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		@SuppressWarnings("unchecked")
 		List<Node> nodes = dom.selectNodes("/tasks/task");
 		if(nodes != null && nodes.size() > 0){
-			List<Task> tasks = new ArrayList<Task>();
+			TaskList<Task> tasks = new TaskList<Task>();
 			for (Node node : nodes) {
 				tasks.add(node2Task(node));
 			}

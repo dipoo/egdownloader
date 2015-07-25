@@ -95,8 +95,6 @@ public class EditWindow extends JDialog {
 					task.setEnd(Integer.parseInt(end));
 					//保存
 					mainWindow.taskDbTemplate.update(task);
-					//更新table
-					mainWindow.runningTable.updateUI();
 					dialog.dispose();
 				}
 			}
