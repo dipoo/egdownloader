@@ -50,6 +50,7 @@ import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
@@ -133,13 +134,13 @@ public class EgDownloaderWindow extends JFrame {
 	
 	
 	public Setting setting;
-	public List<Task> tasks;
+	public TaskList<Task> tasks;
 	
 	public DbTemplate<Task> taskDbTemplate;
 	public DbTemplate<Picture> pictureDbTemplate;
 	public DbTemplate<Setting> settingDbTemplate;
 	
-	public EgDownloaderWindow(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
+	public EgDownloaderWindow(Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
 		final EgDownloaderWindow mainWindow = this;
 		
 		this.taskDbTemplate = taskDbTemplate;
@@ -148,7 +149,7 @@ public class EgDownloaderWindow extends JFrame {
 		//加载配置数据
 		this.setting = setting;
 		//加载任务列表
-		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
+		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		final String title = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
@@ -479,7 +480,6 @@ public class EgDownloaderWindow extends JFrame {
 						if(result == JOptionPane.OK_OPTION){//确定
 							try {
 								ScriptParser.rebuildTask(task, mainWindow.setting);
-								table.updateUI();
 								//保存数据
 								mainWindow.taskDbTemplate.update(task);
 								JOptionPane.showMessageDialog(mainWindow, "操作完成！");
@@ -732,7 +732,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.settingDbTemplate.update(this.setting);
 	}
 	
-	public void changeTaskGroup(Setting setting, List<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate){
+	public void changeTaskGroup(Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate){
 		this.taskDbTemplate = taskDbTemplate;
 		this.pictureDbTemplate = pictureDbTemplate;
 		this.settingDbTemplate = settingDbTemplate;
@@ -741,7 +741,7 @@ public class EgDownloaderWindow extends JFrame {
 		//清空
 		this.tasks.clear();
 		//加载任务列表
-		this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
+		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口
 		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
 		if(this.tasks.isEmpty()){
@@ -751,7 +751,6 @@ public class EgDownloaderWindow extends JFrame {
 			this.tablePane.setVisible(true);
 			this.emptyPanel.setVisible(false);
 			this.runningTable.changeModel(this);
-			this.runningTable.updateUI();
 		}
 		this.consoleArea.setText("");//清空控制台
 	}

@@ -85,7 +85,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.settingDbTemplate.update(setting);//保存配置
 				
 				//保存到内存
-				TaskingTable taskTable = (TaskingTable)window.runningTable;
+				final TaskingTable taskTable = (TaskingTable)window.runningTable;
 				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
 				if(addFormWindow != null){
 					addFormWindow.emptyField();//清空下载地址
@@ -94,7 +94,6 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				}
 				window.tablePane.setVisible(true);//将表格panel显示出来
 				window.emptyPanel.setVisible(false);//将空任务label隐藏
-				taskTable.updateUI();
 				//是否开启下载
 				if(setting.isAutoDownload()){
 					taskTable.startTask(task);

@@ -74,7 +74,6 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 				table.getTasks().removeAll(tasks);
 			}
 			table.clearSelection();//使之不选中任何行
-			table.updateUI();//刷新表格
 			if(table.getTasks().size() == 0){
 				mainWindow.tablePane.setVisible(false);//将任务panel隐藏
 				mainWindow.emptyPanel.setVisible(true);//将空任务label显示

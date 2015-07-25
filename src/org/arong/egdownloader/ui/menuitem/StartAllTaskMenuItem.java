@@ -43,8 +43,6 @@ public class StartAllTaskMenuItem extends JMenuItem {
 						table.startTask(tasks.get(i));
 					}
 				}
-				//刷新表格
-				table.updateUI();
 				Tracker.println(getClass(), "【所有任务已开启】");
 			}
 		});

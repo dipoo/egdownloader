@@ -55,8 +55,6 @@ public class StopAllTaskMenuItem extends JMenuItem {
 				}
 				//清空正在下载数
 				table.setRunningNum(0);
-				//刷新表格
-				table.updateUI();
 				Tracker.println(getClass(), "【所有任务已暂停】");
 			}
 		});
