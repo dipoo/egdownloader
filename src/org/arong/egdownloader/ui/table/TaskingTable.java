@@ -59,6 +59,13 @@ public class TaskingTable extends JTable {
 				table.setRefresh(true);
 			}
 		});
+		for(Task task : this.tasks){
+			task.addPropertyChangeListener(new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					table.setRefresh(true);
+				}
+			});
+		}
 		TableModel tableModel = new TaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
 	}
