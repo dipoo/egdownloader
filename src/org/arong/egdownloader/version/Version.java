@@ -8,10 +8,10 @@ public final class Version {
 	// 程序名
 	public final static String NAME = "EG下载器";
 	// 程序版本号
-	public final static String VERSION = "0.70";
+	public final static String VERSION = "0.75";
 	// 程序作者
 	public final static String AUTHOR = "dipoo";
 	// 程序最后修改时间
-	public final static String MODIFLIED = "2015-07-03";
+	public final static String MODIFLIED = "2015-09-10";
 	
 }
