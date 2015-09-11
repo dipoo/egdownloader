@@ -1,11 +1,11 @@
 var mark = {
     name : ['<h1 id="gn">', '</h1><h1'],
-	subname : ['</h1><h1 id="gj">', '</h1></div>'],
+    subname : ['</h1><h1 id="gj">', '</h1></div>'],
 	type : ['png" alt="', '" class="ic'],//
 	coverUrl : ['<div id="gd1"><img src="', '" alt="" /></div></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
-	language : ['Language:</td><td class="gdt2">', ' &nbsp;<span class="halp', ' &nbsp;']
+	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;']
 };
 
 function interceptFromSource(source, prefix, suffix){
@@ -49,9 +49,13 @@ function parse(source){
 	}else{
 		task.size = trim(interceptFromSource(source, mark.size[0], mark.size[2]));
 	}
-	task.language = interceptFromSource(source, mark.language[0], mark.language[1]);
-	if(task.language.indexOf(mark.language[2]) > 0){
-		task.language = task.language.substr(0, task.language.indexOf(mark.language[2]));
+	if(source.indexOf(mark.language[1]) != -1){
+		task.language = trim(interceptFromSource(source, mark.language[0], mark.language[1]));
+	}else{
+		task.language = trim(interceptFromSource(source, mark.language[0], mark.language[2]));
+	}
+	if(task.language.indexOf(mark.language[3]) > 0){
+		task.language = task.language.substr(0, task.language.indexOf(mark.language[3]));
 	}
 	return parseJson(task);
 }
