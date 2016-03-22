@@ -326,7 +326,7 @@ public class SearchComicWindow extends JFrame {
 			rightBtn.setEnabled(false);
 			
 			key = k;
-			String exurl = "http://exhentai.org/?page=" + (Integer.parseInt(page) - 1) + parseOption();
+			String exurl = "http://exhentai.org/?advsearch=1&f_sh=on&f_apply=Apply+Filter&f_sname=on&f_stags=on&f_sh=on&f_srdd=2&page=" + (Integer.parseInt(page) - 1) + parseOption();
 			if(!keyText.equals("")){
 				//过滤key
 				try {
@@ -350,9 +350,9 @@ public class SearchComicWindow extends JFrame {
 				jc = (JCheckBox) cs[i];
 				if(jc.isSelected()){
 					if(jc.getName() != null){
-						option += "&f_" + jc.getName().toLowerCase() + "=on";
+						option += "&f_" + jc.getName().toLowerCase() + "=1";
 					}else{
-						option += "&f_" + jc.getText().toLowerCase() + "=on";
+						option += "&f_" + jc.getText().toLowerCase() + "=1";
 					}
 				}
 			}
