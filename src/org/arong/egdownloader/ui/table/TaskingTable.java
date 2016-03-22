@@ -320,6 +320,14 @@ public class TaskingTable extends JTable {
 			}
 		}, 1000, 1000);
 	}
+	public void propertyChange(Task task){
+		final TaskingTable table = this;
+		task.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				table.setRefresh(true);
+			}
+		});
+	}
 	/**
 	 * 添加排队等待的任务
 	 * @param task

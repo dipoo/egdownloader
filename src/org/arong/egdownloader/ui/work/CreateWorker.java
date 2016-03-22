@@ -87,6 +87,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				//保存到内存
 				final TaskingTable taskTable = (TaskingTable)window.runningTable;
 				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
+				taskTable.propertyChange(task);//开始观察者模式，显示下载速度
 				if(addFormWindow != null){
 					addFormWindow.emptyField();//清空下载地址
 					//关闭form,刷新table
