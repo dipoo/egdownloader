@@ -11,18 +11,22 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
 import org.arong.egdownloader.model.Setting;
+import org.arong.egdownloader.spider.Proxy;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
@@ -47,6 +51,7 @@ public class SettingWindow extends JFrame{
 		JTabbedPane settingTabPanel = new JTabbedPane(JTabbedPane.LEFT);
 		public LoginWindow loginWindow;
 		public TestScriptWindow testScriptWindow;
+		public TestProxyWindow testProxyWindow;
 		/* 基本配置页签 */
 		JPanel basicPanel;
 		JLabel saveDirLabel;
@@ -82,6 +87,22 @@ public class SettingWindow extends JFrame{
 		public JLabel loadingLabel;
 		public JTextPane scriptDocPanel;
 		
+		/* 代理设置 */
+		JPanel proxyPanel;
+		public JLabel proxyLabel;
+		public ButtonGroup proxyButtonGroup;
+		public JRadioButton noRadioButton;
+		public JRadioButton yesRadioButton;
+		public JLabel proxyIpLabel;
+		public JTextField proxyIpField;
+		public JLabel proxyPortLabel;
+		public JTextField proxyPortField;
+		public JLabel proxyUsernameLabel;
+		public JTextField proxyUsernameField;
+		public JLabel proxyPwdLabel;
+		public JPasswordField  proxyPwdField;
+		public JButton proxyTestBtn;
+		
 		Color labelColor = new Color(65,145,65);
 		Color bgColor = new Color(210,225,240);
 		
@@ -107,7 +128,6 @@ public class SettingWindow extends JFrame{
 			this.setLocationRelativeTo(null);
 			
 			settingTabPanel.setBounds(20, 0, 780, 450);
-			
 			
 			/* 基本配置 */
 			basicPanel = new JPanel();
@@ -244,8 +264,42 @@ public class SettingWindow extends JFrame{
 			addComponentsJpanel(scriptPanel, createJsLabel,
 					createJsField, collectJsLabel, collectJsField, downloadJsLabel, downloadJsField, searchJsLabel, searchJsField, openScriptDirBtn, testBtn, updateBtn, loadingLabel, scriptDocPanel);
 			
+			/* 代理配置 */
+			proxyPanel = new JPanel();
+			proxyPanel.setLayout(null);
+			proxyButtonGroup = new ButtonGroup();
+			proxyLabel = new AJLabel("是否使用代理：", labelColor, 25, 30, 100, 30);
+			noRadioButton = new JRadioButton("不使用", !setting.isUseProxy());
+			noRadioButton.setBounds(125, 30, 80, 30);
+			yesRadioButton = new JRadioButton("使用", setting.isUseProxy());
+			yesRadioButton.setBounds(230, 30, 80, 30);
+			proxyButtonGroup.add(noRadioButton);
+			proxyButtonGroup.add(yesRadioButton);
+			proxyIpLabel = new AJLabel("服务器：", labelColor, 25, 70, 100, 30);
+			proxyIpField = new AJTextField(setting.getProxyIp(), "", 125, 70, 360, 30);
+			proxyPortLabel = new AJLabel("端口：", labelColor, 25, 110, 100, 30);
+			proxyPortField = new AJTextField(setting.getProxyPort(), "", 125, 110, 360, 30);
+			proxyUsernameLabel = new AJLabel("用户名：", labelColor, 25, 150, 100, 30);
+			proxyUsernameField = new AJTextField(setting.getProxyUsername(), "", 125, 150, 360, 30);
+			proxyPwdLabel = new AJLabel("密码：", labelColor, 25, 190, 100, 30);
+			proxyPwdField = new JPasswordField(setting.getProxyPwd());
+			proxyPwdField.setBounds(125, 190, 360, 30);
+			proxyTestBtn = new AJButton("测试", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					if(testProxyWindow == null){
+						testProxyWindow = new TestProxyWindow(setting);
+					}
+					testProxyWindow.setVisible(true);
+				}
+			}), 125, 230, 60, 30);
+			
+			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyIpLabel, proxyIpField, proxyPortLabel, proxyPortField,
+					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn);
+			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("脚本配置", scriptPanel);
+			settingTabPanel.add("代理配置", proxyPanel);
+			
 			
 			
 			
@@ -304,6 +358,23 @@ public class SettingWindow extends JFrame{
 						setting.setCollectPictureScriptPath(collectScriptPath);
 						setting.setDownloadScriptPath(downloadScriptPath);
 						setting.setSearchScriptPath(searchScriptPath);
+						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
+						JOptionPane.showMessageDialog(this_, "保存成功");
+					}
+					//代理设置
+					else if(index == 2){
+						boolean useProxy = settingWindow.yesRadioButton.isSelected() ? true : false;
+						String proxyIp = settingWindow.proxyIpField.getText();
+						String proxyPort = settingWindow.proxyPortField.getText();
+						String proxyUsername = settingWindow.proxyUsernameField.getText();
+						String proxyPwd = String.valueOf(settingWindow.proxyPwdField.getPassword());
+						
+						setting.setUseProxy(useProxy);
+						setting.setProxyIp(proxyIp);
+						setting.setProxyPort(proxyPort);
+						setting.setProxyUsername(proxyUsername);
+						setting.setProxyPwd(proxyPwd);
+						Proxy.init(useProxy, proxyIp, proxyPort, proxyUsername, proxyPwd);
 						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
 						JOptionPane.showMessageDialog(this_, "保存成功");
 					}

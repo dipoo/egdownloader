@@ -65,6 +65,16 @@ public class Setting {
 	private String lastDownloadTime;//最后下载时间
 	private String lastCreateTime;//最后创建时间
 	
+	/**
+	 * 代理
+	 */
+	private boolean useProxy = false;//是否使用代理
+	private String proxyIp;//代理ip
+	private String proxyPort;//代理端口
+	private String proxyUsername;//代理用户名
+	private String proxyPwd;//代理密码
+	
+	
 	
 	public String[] getTask_name() {
 		return task_name;
@@ -341,5 +351,35 @@ public class Setting {
 	}
 	public UpdateScriptWorker getUpdateScriptWorker() {
 		return updateScriptWorker;
+	}
+	public boolean isUseProxy() {
+		return useProxy;
+	}
+	public void setUseProxy(boolean useProxy) {
+		this.useProxy = useProxy;
+	}
+	public String getProxyIp() {
+		return proxyIp;
+	}
+	public void setProxyIp(String proxyIp) {
+		this.proxyIp = proxyIp;
+	}
+	public String getProxyPort() {
+		return proxyPort;
+	}
+	public void setProxyPort(String proxyPort) {
+		this.proxyPort = proxyPort;
+	}
+	public String getProxyUsername() {
+		return proxyUsername;
+	}
+	public void setProxyUsername(String proxyUsername) {
+		this.proxyUsername = proxyUsername;
+	}
+	public String getProxyPwd() {
+		return proxyPwd;
+	}
+	public void setProxyPwd(String proxyPwd) {
+		this.proxyPwd = proxyPwd;
 	}
 }

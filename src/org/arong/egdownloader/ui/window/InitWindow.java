@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.db.DbTemplate;
@@ -164,15 +165,20 @@ public class InitWindow extends JWindow {
 	
 	//启动主界面
 	public void startMain(){
-		if(ComponentConst.mainWindow != null){
-			//暂停所有任务
-			((TaskingTable)ComponentConst.mainWindow.runningTable).stopAllTasks();
-			ComponentConst.mainWindow.changeTaskGroup(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
-		}else{
-			ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
-		}
-		textLabel.setText("初始化完成");
-		ComponentConst.mainWindow.setVisible(true);
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				if(ComponentConst.mainWindow != null){
+					//暂停所有任务
+					((TaskingTable)ComponentConst.mainWindow.runningTable).stopAllTasks();
+					ComponentConst.mainWindow.changeTaskGroup(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+				}else{
+					ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+				}
+				textLabel.setText("初始化完成");
+				ComponentConst.mainWindow.setVisible(true);
+			}
+		});
+		
 	}
 }
