@@ -8,9 +8,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.util.CodeUtil;
 import org.arong.util.Dom4jUtil;
 import org.arong.util.FileUtil;
 import org.dom4j.Document;
@@ -218,6 +220,12 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("collectPictureScriptPath", t.getCollectPictureScriptPath());
 		ele.addAttribute("downloadScriptPath", t.getDownloadScriptPath());
 		ele.addAttribute("searchScriptPath", t.getSearchScriptPath());
+		
+		ele.addAttribute("useProxy", t.isUseProxy() + "");
+		ele.addAttribute("proxyIp", t.getProxyIp());
+		ele.addAttribute("proxyPort", t.getProxyPort());
+		ele.addAttribute("proxyUsername", t.getProxyUsername());
+		ele.addAttribute("proxyPwd", CodeUtil.myEncode(t.getProxyPwd()));
 		return ele;
 	}
 	private Setting node2Setting(Node node) {
@@ -282,6 +290,12 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setCollectPictureScriptPath(ele.attributeValue("collectPictureScriptPath") == null ? t.getCollectPictureScriptPath() : ele.attributeValue("collectPictureScriptPath"));
 		t.setDownloadScriptPath(ele.attributeValue("downloadScriptPath") == null ? t.getDownloadScriptPath() : ele.attributeValue("downloadScriptPath"));
 		t.setSearchScriptPath(ele.attributeValue("searchScriptPath") == null ? t.getSearchScriptPath() : ele.attributeValue("searchScriptPath"));
+		
+		t.setUseProxy("true".equals(ele.attributeValue("useProxy")) ? true : false);
+		t.setProxyIp(ele.attributeValue("proxyIp"));
+		t.setProxyPort(ele.attributeValue("proxyPort"));
+		t.setProxyUsername(ele.attributeValue("proxyUsername"));
+		t.setProxyPwd(CodeUtil.myDecode(ele.attributeValue("proxyPwd")));
 		return t;
 	}
 	

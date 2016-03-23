@@ -314,7 +314,9 @@ public class TaskingTable extends JTable {
 			public void run() {
 				if(table.isRefresh()){
 					//刷新表格
-					SwingUtilities.updateComponentTreeUI(table);
+					try{
+						SwingUtilities.updateComponentTreeUI(table);
+					}catch(Exception e){}
 					table.setRefresh(false);
 				}
 			}

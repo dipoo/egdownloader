@@ -78,8 +78,15 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}else{
 							is =  WebClient.getStreamUseJava(pic.getRealUrl());
 						}
+						
 						if(this.isCancelled())//是否暂停
 							return null;
+						if(is == null){
+							pic.setRealUrl(null);
+							Tracker.println(task.getName() + ":" + pic.getName() + ":图片流无效");
+							exceptionNum ++;
+							continue;
+						}
 						int size = is.available();
 						if(size < 1000){
 							pic.setRealUrl(null);
@@ -155,7 +162,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						return null;
 					}catch (Exception e){
 						//碰到异常
-						Tracker.println(task.getName() + ":" + pic.getName() + e.getMessage());
+						e.printStackTrace();
+						Tracker.println(task.getName() + ":" + pic.getName() + e.getLocalizedMessage());
 						//继续下一个
 						continue;
 					}

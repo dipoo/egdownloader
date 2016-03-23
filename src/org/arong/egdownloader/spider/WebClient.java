@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
@@ -25,6 +26,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 /**
  * 获取远程url地址页面的源文件
@@ -63,7 +65,7 @@ public class WebClient {
 	 * @throws SocketTimeoutException 
 	 */
 	public static String postRequestWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
-		HttpClient httpClient = new HttpClient();
+		HttpClient httpClient = Proxy.getHttpClient();
 		// 创建HttpPost对象。
 		PostMethod postMethod = new PostMethod(url);
 		postMethod.setDoAuthentication(true);
@@ -98,6 +100,7 @@ public class WebClient {
 			// 如果服务器成功地返回响应
 			if (statusCode == 200 || statusCode == 201) {
 				// 获取服务器响应字符串
+				postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
 				result = postMethod.getResponseBodyAsString();
 			}else if (statusCode == 302) {
                 // 重定向
@@ -142,7 +145,7 @@ public class WebClient {
 	 * @throws SocketTimeoutException
 	 */
 	public static String getCookieByPostWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
-		HttpClient httpClient = new HttpClient();
+		HttpClient httpClient = Proxy.getHttpClient();
 		// 创建HttpPost对象。
 		PostMethod postMethod = new PostMethod(url);
 		postMethod.setDoAuthentication(true);
@@ -244,7 +247,7 @@ public class WebClient {
 	 * @throws SocketTimeoutException 
 	 */
 	public static InputStream postRequestAsStreamWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
-		HttpClient httpClient = new HttpClient();
+		HttpClient httpClient = Proxy.getHttpClient();
 		// 创建HttpPost对象。
 		PostMethod postMethod = new PostMethod(url);
 		postMethod.setDoAuthentication(true);
@@ -318,8 +321,21 @@ public class WebClient {
 
         try{
 	        do {
-	            HttpURLConnection urlConnection = (HttpURLConnection) url
-	                    .openConnection();
+	        	HttpURLConnection urlConnection = null;
+	            if(Proxy.getNetProxy() != null){
+	            	urlConnection = (HttpURLConnection) url
+                    .openConnection(Proxy.getNetProxy());
+	            	if(Proxy.username != null && Proxy.pwd != null){
+	            		//格式如下：  
+	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
+	            		String headerKey = "Proxy-Authorization";  
+	            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
+	            		urlConnection.setRequestProperty(headerKey, headerValue);
+	            	}
+	            }else{
+	            	urlConnection = (HttpURLConnection) url
+	                        .openConnection();
+	            }
 	            // 添加访问授权
 	            if (digest != null) {
 	                urlConnection.setRequestProperty("Authorization", digest);
@@ -332,7 +348,7 @@ public class WebClient {
 	            urlConnection.setConnectTimeout(20000);
 	            urlConnection.setReadTimeout(20000);
 	            //模拟http头文件
-	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
+	            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36");
 	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
 	            //追加http头文件
 	            Set<Entry<String, String>> headersSet = headers.entrySet();
@@ -357,6 +373,27 @@ public class WebClient {
 	            } else {
 	                if (responseCode == 200 || responseCode == 201) {
 	                	inputStream = urlConnection.getInputStream();
+	                }else{
+	                	// 获得返回的数据长度
+	    	            int responseLength = urlConnection.getContentLength();
+	                	BufferedInputStream in;
+		                if (responseCode == 200 || responseCode == 201) {
+		                    in = new BufferedInputStream(urlConnection.getInputStream());
+		                } else {
+		                    in = new BufferedInputStream(urlConnection.getErrorStream());
+		                }
+		                int size = responseLength == -1 ? 4096 : responseLength;
+		                String responseContent = null;
+	                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                    byte[] bytes = new byte[size];
+	                    int read;
+	                    while ((read = in.read(bytes)) >= 0) {
+	                        out.write(bytes, 0, read);
+	                    }
+	                    responseContent = new String(out.toByteArray());
+	                    in.close();
+	                    out.close();
+	                    System.out.println(responseContent);
 	                }
 	                foundRedirect = false;
 	            }
@@ -404,9 +441,23 @@ public class WebClient {
 
         try{
 	        do {
-	
-	            HttpURLConnection urlConnection = (HttpURLConnection) url
-	                    .openConnection();
+	        	
+	            HttpURLConnection urlConnection = null;
+	            if(Proxy.getNetProxy() != null){
+	            	urlConnection = (HttpURLConnection) url
+                    .openConnection(Proxy.getNetProxy());
+	            	if(Proxy.username != null && Proxy.pwd != null){
+	            		//格式如下：  
+	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
+	            		String headerKey = "Proxy-Authorization";  
+	            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
+	            		urlConnection.setRequestProperty(headerKey, headerValue);
+	            	}
+	            }else{
+	            	urlConnection = (HttpURLConnection) url
+	                        .openConnection();
+	            }
+	            
 	            // 添加访问授权
 	            if (digest != null) {
 	                urlConnection.setRequestProperty("Authorization", digest);
@@ -503,8 +554,21 @@ public class WebClient {
         try{
 	        do {
 	
-	            HttpURLConnection urlConnection = (HttpURLConnection) url
-	                    .openConnection();
+	        	HttpURLConnection urlConnection = null;
+	            if(Proxy.getNetProxy() != null){
+	            	urlConnection = (HttpURLConnection) url
+                    .openConnection(Proxy.getNetProxy());
+	            	if(Proxy.username != null && Proxy.pwd != null){
+	            		//格式如下：  
+	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
+	            		String headerKey = "Proxy-Authorization";  
+	            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
+	            		urlConnection.setRequestProperty(headerKey, headerValue);
+	            	}
+	            }else{
+	            	urlConnection = (HttpURLConnection) url
+	                        .openConnection();
+	            }
 	            // 添加访问授权
 	            if (digest != null) {
 	                urlConnection.setRequestProperty("Authorization", digest);
