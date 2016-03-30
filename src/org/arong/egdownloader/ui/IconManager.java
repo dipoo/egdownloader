@@ -43,6 +43,7 @@ public class IconManager {
 	private static ImageIcon initImage;
 	private static ImageIcon leftImage;
 	private static ImageIcon rightImage;
+	private static ImageIcon zipImage;
 	
 	private static ImageIcon ehImage;
 	private static ImageIcon tImage;
@@ -218,6 +219,11 @@ public class IconManager {
 				taskImage = new ImageIcon(IconManager.class.getResource(skinPath + ComponentConst.SKIN_ICON.get("task")));
 			}
 			return taskImage;
+		}else if("zip".equals(name)){
+			if(zipImage == null){
+				zipImage = new ImageIcon(IconManager.class.getResource(skinPath + ComponentConst.SKIN_ICON.get("zip")));
+			}
+			return zipImage;
 		}else if("init".equals(name)){
 			if(initImage == null){
 				initImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "init.jpg"));

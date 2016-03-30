@@ -78,6 +78,7 @@ import org.arong.egdownloader.ui.swing.AJPanel;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
+import org.arong.egdownloader.ui.work.ZIPWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
@@ -120,6 +121,7 @@ public class EgDownloaderWindow extends JFrame {
 	public SearchCoverWindow coverWindow;//漫画封面，鼠标移动出现
 	public JDialog editWindow;
 	public JDialog deletingWindow;
+	public JDialog zipWindow;
 	public JDialog resetAllTaskWindow;
 	public JDialog simpleSearchWindow;
 	public JDialog countWindow;
@@ -394,6 +396,22 @@ public class EgDownloaderWindow extends JFrame {
 		AJMenuItem changeReadedMenuItem = new AJMenuItem(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("change"),
 				new MenuItemActonListener(this, new ChangeReadedWork()));
+		//右键菜单：打包ZIP
+		AJMenuItem zipMenuItem = new AJMenuItem(ComponentConst.POPUP_ZIP_MENU_TEXT, menuItemColor,
+				IconManager.getIcon("zip"),
+				new MenuItemActonListener(this, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						
+						if(zipWindow == null){
+							zipWindow = new ZiptingWindow(mainWindow);
+						}
+						mainWindow.tablePopupMenu.setVisible(false);
+						ZIPWorker zipWordker = new ZIPWorker(mainWindow, table, (ZiptingWindow)zipWindow);
+						zipWordker.execute();
+					}
+				}));
 		//右键菜单：搜索作者
 		AJMenuItem searchAuthorMenuItem = new AJMenuItem(ComponentConst.POPUP_SEARCHAUTHOR_MENU_TEXT, menuItemColor,
 				"",
@@ -497,7 +515,7 @@ public class EgDownloaderWindow extends JFrame {
 		//表格的右键菜单
 		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
-				checkResetMenuItem, changeReadedMenuItem, searchAuthorMenuItem, moreMenu);
+				checkResetMenuItem, changeReadedMenuItem, zipMenuItem, searchAuthorMenuItem, moreMenu);
 		JLabel emptyTableTips = new AJLabel("empty", "", new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		JButton emptyBtn = new AJButton("当前任务组没有下载任务，请点击搜索漫画");
