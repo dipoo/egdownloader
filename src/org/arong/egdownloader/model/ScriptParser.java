@@ -244,8 +244,10 @@ public class ScriptParser {
 		try {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
+			param.put("down_original", setting.isDownloadOriginal());//是否下载原图
 			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
 		} catch (Exception e) {
+			e.printStackTrace();
 			Tracker.println(ScriptParser.class, taskName + ":getdownloadUrl异常,请检查" + setting.getDownloadScriptPath() + "脚本是否出现问题！");
 			return null;
 		}
