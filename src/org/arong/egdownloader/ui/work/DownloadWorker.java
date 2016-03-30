@@ -45,7 +45,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		exceptionNum = 0;
 		//设置任务状态为下载中
 		//task.setStatus(TaskStatus.STARTED);
-		Tracker.println(getClass(), task.getName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载");
+		Tracker.println(getClass(), task.getDisplayName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载");
 		List<Picture> pics = task.getPictures();
 		
 		Picture pic;
@@ -83,20 +83,20 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null;
 						if(is == null){
 							pic.setRealUrl(null);
-							Tracker.println(task.getName() + ":" + pic.getName() + ":图片流无效");
+							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":图片流无效");
 							exceptionNum ++;
 							continue;
 						}
 						int size = is.available();
 						if(size < 1000){
 							pic.setRealUrl(null);
-							Tracker.println(task.getName() + ":" + pic.getName() + ":403");
+							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
 							is.close();
 							exceptionNum ++;
 							continue;
 						}else if(size < 1010){
 							pic.setRealUrl(null);
-							Tracker.println(task.getName() + ":" + pic.getName() + ":509");
+							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":509");
 							is.close();
 							exceptionNum ++;
 							continue;
@@ -138,18 +138,18 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
 						//设置最后下载时间
 						setting.setLastDownloadTime(pic.getTime());
-						Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成。");
+						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "下载完成。");
 						success ++;
 					}catch (SocketTimeoutException e){
 						//碰到异常
-						Tracker.println(task.getName() + ":" + pic.getName() + "-读取流超时，滞后重试");
+						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试");
 						//删除已经下载的文件
 						delete(existNameFs);
 						//继续下一个
 						continue;
 					}catch (ConnectTimeoutException e){
 						//碰到异常
-						Tracker.println(task.getName() + ":" + pic.getName() + "-连接超时，滞后重试");
+						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-连接超时，滞后重试");
 						//继续下一个
 						continue;
 					}catch (WebClientException e) {
@@ -163,7 +163,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (Exception e){
 						//碰到异常
 						e.printStackTrace();
-						Tracker.println(task.getName() + ":" + pic.getName() + e.getLocalizedMessage());
+						Tracker.println(task.getDisplayName() + ":" + pic.getName() + e.getLocalizedMessage());
 						//继续下一个
 						continue;
 					}
@@ -176,7 +176,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				//是否达到下载区间要求,达到则暂停
 				if(success == requireNum){
-					Tracker.println(DownloadWorker.class, "【" + task.getName() + ":完成配置区间下载。】");
+					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + ":完成配置区间下载。】");
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -185,7 +185,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				}
 				if(exceptionNum >= requireNum){
-					Tracker.println(DownloadWorker.class, "【" + task.getName() + ":配额不足或者下载异常，停止下载。】");
+					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + ":配额不足或者下载异常，停止下载。】");
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -197,7 +197,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			}else{
 				//设置任务状态为已完成
 				task.setStatus(TaskStatus.COMPLETED);
-				Tracker.println(DownloadWorker.class ,"【" + task.getName() + "已下载完毕。】");
+				Tracker.println(DownloadWorker.class ,"【" + task.getDisplayName() + "已下载完毕。】");
 				task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 				//更新任务到文件
 				((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);

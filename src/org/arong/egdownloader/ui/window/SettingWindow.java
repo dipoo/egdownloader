@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -56,6 +57,8 @@ public class SettingWindow extends JFrame{
 		JPanel basicPanel;
 		JLabel saveDirLabel;
 		public JTextField saveDirField;
+		private JFileChooser saveDirChooser;
+		JButton browseDirButton;
 		JButton openDirButton;
 		JLabel saveAsNameLabel;
 		public JCheckBox saveAsNameBox;
@@ -102,6 +105,7 @@ public class SettingWindow extends JFrame{
 		public JLabel proxyPwdLabel;
 		public JPasswordField  proxyPwdField;
 		public JButton proxyTestBtn;
+		private JLabel proxyTipLabel;
 		
 		Color labelColor = new Color(65,145,65);
 		Color bgColor = new Color(210,225,240);
@@ -131,14 +135,31 @@ public class SettingWindow extends JFrame{
 			
 			/* 基本配置 */
 			basicPanel = new JPanel();
-			basicPanel.setLayout(null);  
+			basicPanel.setLayout(null);
+			saveDirChooser = new JFileChooser("/");
+			saveDirChooser.setDialogTitle("选择保存目录");//选择框标题
+			saveDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//只能选择目录
 			saveDirLabel = new AJLabel("保存目录：", labelColor, 25, 30, 100, 30);
 			saveDirField = new AJTextField(setting.getDefaultSaveDir(), "", 125, 30, 360, 30);
 			saveDirField.setEditable(false);
 			saveDirField.setEnabled(false);
 			
 			final SettingWindow this_ = this;
-			
+			browseDirButton = new AJButton("浏览", IconManager.getIcon("select"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+				public void doWork(Window window, MouseEvent e) {
+					int result = this_.saveDirChooser.showOpenDialog(this_);
+					File file = null;  
+	                if(result == JFileChooser.APPROVE_OPTION) {  
+	                    file = this_.saveDirChooser.getSelectedFile();  
+	                    if(!file.isDirectory()) {  
+	                        JOptionPane.showMessageDialog(this_, "你选择的目录不存在");
+	                        return ;
+	                    }  
+	                    String path = file.getAbsolutePath();
+	                    this_.saveDirField.setText(path);
+	                }
+				}
+			}), 500, 30, 60, 30);
 			openDirButton = new AJButton("打开", IconManager.getIcon("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					try {
@@ -151,7 +172,8 @@ public class SettingWindow extends JFrame{
 						JOptionPane.showMessageDialog(this_, "文件夹已被删除");
 					}
 				}
-			}), 500, 30, 60, 30);
+			}), 570, 30, 60, 30);
+			//当存在原图时，下载原图http://exhentai.org/s/72aa78ff00/913125-7
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
 			saveAsNameBox.setBounds(120, 70, 30, 30);
@@ -187,7 +209,7 @@ public class SettingWindow extends JFrame{
 					settingWindow.cookieArea.setText(new Setting().getCookieInfo());
 				}
 			}), 500, 290, 60, 30);
-		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, openDirButton,
+		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, browseDirButton, openDirButton,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieArea,
 				cookieButton, resumeButton);
@@ -292,9 +314,10 @@ public class SettingWindow extends JFrame{
 					testProxyWindow.setVisible(true);
 				}
 			}), 125, 230, 60, 30);
+			proxyTipLabel =  new AJLabel("提示：测试前请先保存当前配置", Color.BLUE, 200, 230, 300, 30);
 			
 			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyIpLabel, proxyIpField, proxyPortLabel, proxyPortField,
-					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn);
+					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn, proxyTipLabel);
 			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("脚本配置", scriptPanel);

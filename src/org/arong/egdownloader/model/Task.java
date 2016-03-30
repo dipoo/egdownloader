@@ -55,6 +55,10 @@ public class Task {
 	private Long oldByteLength = 0L;
 	private String downSpeed = "";//下载速度
 	
+	public String getDisplayName(){
+		return subname == null || "".equals(subname) ? name : subname;
+	}
+	
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		changeSupport.addPropertyChangeListener(l);
 	}

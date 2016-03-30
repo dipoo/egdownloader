@@ -167,6 +167,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("group", "_group.png");
 		SKIN_ICON.put("clear", "_clear.png");
 		SKIN_ICON.put("task", "_task.png");
+		SKIN_ICON.put("zip", "_zip.png");
 	}
 	/*MainWindow内的组件*/
 	//组件的name值
@@ -210,6 +211,7 @@ public final class ComponentConst {
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = " 更改状态   ";
 	public final static String POPUP_MORE_MENU_TEXT = "更多操作   ";
 	public final static String POPUP_SEARCHAUTHOR_MENU_TEXT = " 搜索作者   ";
+	public final static String POPUP_ZIP_MENU_TEXT = " 打包ZIP   ";
 	public final static String POPUP_EDIT_MENU_TEXT = "编辑   ";
 	public final static String POPUP_RESET_MENU_TEXT = "重置   ";
 	public final static String POPUP_COMPLETED_MENU_TEXT = "完成   " ;
@@ -258,11 +260,12 @@ public final class ComponentConst {
 	}
 
 	public static String getSavePathPreffix(){
-		if("".equals(groupName)){
+		return "";
+		/*if("".equals(groupName)){
 			return "";
 		}else{
 			return ROOT_DATA_PATH + "/" + groupName + "/";
-		}
+		}*/
 	}
 	
 }

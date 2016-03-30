@@ -51,7 +51,7 @@ public class SearchCoverWindow extends JWindow {
 	 * 主窗口使用
 	 */
 	public void showCover(Task task, Point p){
-		String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
+		String path = task.getSaveDir() + "/cover.jpg";
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
 			this.setVisible(false);
