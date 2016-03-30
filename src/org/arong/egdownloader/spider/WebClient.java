@@ -52,8 +52,10 @@ public class WebClient {
 	public static String postRequestWithCookie(String url, String cookieInfo) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
 		return postRequestWithCookie(url, "utf-8", null, cookieInfo);
 	}
+	public static String postRequestWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
+		return postRequestWithCookie( url,  encoding,  rawParams, cookieInfo, true);
+	}
 	
-
 	/**
 	 * @param url
 	 *            发送请求的URL
@@ -64,7 +66,7 @@ public class WebClient {
 	 * @throws ConnectTimeoutException 
 	 * @throws SocketTimeoutException 
 	 */
-	public static String postRequestWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
+	public static String postRequestWithCookie(String url, String encoding, Map<String, String> rawParams, String cookieInfo, boolean requestLocation) throws WebClientException, ConnectTimeoutException, SocketTimeoutException {
 		HttpClient httpClient = Proxy.getHttpClient();
 		// 创建HttpPost对象。
 		PostMethod postMethod = new PostMethod(url);
@@ -105,7 +107,12 @@ public class WebClient {
 			}else if (statusCode == 302) {
                 // 重定向
                 String location = postMethod.getResponseHeader("Location").getValue();
-                return postRequestWithCookie(location, encoding, rawParams, cookieInfo);
+                if(requestLocation){
+                	return postRequestWithCookie(location, encoding, rawParams, cookieInfo);
+                }else{
+                	return location;
+                }
+                
             }
 		} catch (SocketTimeoutException e1){
 			throw e1;

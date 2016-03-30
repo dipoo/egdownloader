@@ -64,6 +64,8 @@ public class SettingWindow extends JFrame{
 		public JCheckBox saveAsNameBox;
 		JLabel autoDownloadLabel;
 		public JCheckBox autoDownloadBox;
+		JLabel downloadOriginalLabel;
+		public JCheckBox downloadOriginalBox;
 		JLabel maxThreadLabel;
 		public JTextField maxThreadField;
 		JLabel loginUrlLabel;
@@ -176,12 +178,15 @@ public class SettingWindow extends JFrame{
 			//当存在原图时，下载原图http://exhentai.org/s/72aa78ff00/913125-7
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
-			saveAsNameBox.setBounds(120, 70, 30, 30);
-			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 360, 70, 100, 30);
+			saveAsNameBox.setBounds(118, 70, 30, 30);
+			autoDownloadLabel = new AJLabel("创建后自动下载：", labelColor, 200, 70, 100, 30);
 			autoDownloadBox = new JCheckBox("", setting.isAutoDownload());
-			autoDownloadBox.setBounds(460, 70, 30, 30);
+			autoDownloadBox.setBounds(290, 70, 30, 30);
+			downloadOriginalLabel = new AJLabel("下载原图：", labelColor, 400, 70, 100, 30);
+			downloadOriginalBox = new JCheckBox("", setting.isDownloadOriginal());
+			downloadOriginalBox.setBounds(460, 70, 30, 30);
 			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 110, 100, 30);
-			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 100, 30);
+			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 60, 30);
 			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
 			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
 			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
@@ -210,7 +215,8 @@ public class SettingWindow extends JFrame{
 				}
 			}), 500, 290, 60, 30);
 		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, browseDirButton, openDirButton,
-				saveAsNameLabel, saveAsNameBox, autoDownloadLabel,autoDownloadBox, maxThreadLabel, maxThreadField,
+				saveAsNameLabel, saveAsNameBox, autoDownloadLabel, autoDownloadBox, downloadOriginalLabel,
+				downloadOriginalBox, maxThreadLabel, maxThreadField,
 				loginUrlLabel, loginUrlField, cookieLabel, cookieArea,
 				cookieButton, resumeButton);
 		    
@@ -339,6 +345,7 @@ public class SettingWindow extends JFrame{
 						String loginUrl = settingWindow.loginUrlField.getText();
 						boolean saveAsName = settingWindow.saveAsNameBox.getSelectedObjects() == null ? false : true;//是否选择了
 						boolean autoDownload = settingWindow.autoDownloadBox.getSelectedObjects() == null ? false : true;
+						boolean downloadOriginal = settingWindow.downloadOriginalBox.getSelectedObjects() == null ? false : true;
 						String cookieInfo = settingWindow.cookieArea.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
@@ -363,6 +370,7 @@ public class SettingWindow extends JFrame{
 							setting.setDefaultSaveDir(saveDir);
 							setting.setSaveAsName(saveAsName);
 							setting.setAutoDownload(autoDownload);
+							setting.setDownloadOriginal(downloadOriginal);
 							setting.setMaxThread(Integer.parseInt(maxThread));
 							setting.setLoginUrl(loginUrl);
 							setting.setCookieInfo(cookieInfo);
