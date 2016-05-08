@@ -97,7 +97,7 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 					e.printStackTrace();
 				}
 			}
-			Tracker.println(task.getDisplayName() + "：打包完成");
+			Tracker.println(task.getDisplayName() + "：打包完成（保存在下载目录）");
 			w.dispose();
 		}
 		return null;
