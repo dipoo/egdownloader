@@ -24,7 +24,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
  */
 public class Main {
 	/** 端口号 */
-	private static int iPort = 50000;
+	private static int iPort = 50009;
 
 	public static void main(String[] args) {
 
