@@ -42,6 +42,7 @@ function parse(source){
 	task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
 	task.subname = interceptFromSource(source, mark.subname[0], mark.subname[1]);
 	task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]);
+	task.coverUrl = task.coverUrl.replace("https", "http");
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
 	task.total = parseInt(trim(interceptFromSource(source, mark.total[0], mark.total[1])));
 	if(source.indexOf(mark.size[1]) != -1){
