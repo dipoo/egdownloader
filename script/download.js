@@ -13,7 +13,7 @@ function parse(source){
 	if("undefined" != typeof down_original && down_original && source.indexOf(mark.original[0]) != -1){
 		return mark.original[0] + interceptFromSource(source, mark.original[0], mark.original[1]).replace(/&amp;/g, '&');
 	}else{
-		return interceptFromSource(source, mark.realUrl[0], mark.realUrl[1]);
+		return interceptFromSource(source, mark.realUrl[0], mark.realUrl[1]).replace("https", "http");
 	}
 }
 parse(htmlSource);

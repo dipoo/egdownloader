@@ -5,11 +5,11 @@ var mark = {
 	intercept : ['<tr class="gtr', "</td></tr>"],
 	name : ['hide_image_pane', '/a></div><div class=', ')">', '<'],
 	url : ['class="it5"><a href="', '" onmouseover'],
-	coverUrl : ['px"><img src="', '" alt="', 'init~exhentai.org~', '~'],
+	coverUrl : ['px"><img src="', '" alt="', '~exhentai.org~', '~'],
 	date : ['white-space:nowrap">', '</td><td class="itd" onmouseover'],
 	type : ['.png" alt="', '" class="ic" />'],
 	btUrl : ['</tr>', "return popUp('", "', 610, 590)"],
-	uploader : ['http://exhentai.org/uploader', '>', '</a>']
+	uploader : ['exhentai.org/uploader', '>', '</a>']
 };
 
 function parseJsonArray(array){
@@ -70,8 +70,10 @@ function parse(source){
 			var nameTemp = interceptFromSource(source, mark.name[0], mark.name[1]);
 			task.name = interceptFromSource(nameTemp, mark.name[2], mark.name[3]);
 			task.url = interceptFromSource(source, mark.url[0], mark.url[1]);
+			task.url = task.url.replace("https", "http");
 			if(i == 0){
 				task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]);
+				task.coverUrl = task.coverUrl.replace("https", "http");
 			}else{
 				task.coverUrl = "http://exhentai.org/" + interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3] + task.name);
 			}
