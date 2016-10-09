@@ -70,6 +70,7 @@ public class Setting {
 	 * 代理
 	 */
 	private boolean useProxy = false;//是否使用代理
+	private String proxyType;//代理类型
 	private String proxyIp;//代理ip
 	private String proxyPort;//代理端口
 	private String proxyUsername;//代理用户名
@@ -388,5 +389,11 @@ public class Setting {
 	}
 	public void setDownloadOriginal(boolean downloadOriginal) {
 		this.downloadOriginal = downloadOriginal;
+	}
+	public String getProxyType() {
+		return proxyType;
+	}
+	public void setProxyType(String proxyType) {
+		this.proxyType = proxyType;
 	}
 }

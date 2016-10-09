@@ -111,7 +111,7 @@ public class AddFormDialog extends JDialog {
 		
 		tipLabel = new AJLabel("提示：保存目录不用填写具体文件夹名，下载器会自动生成", Color.LIGHT_GRAY, 80, 5, this.getWidth() - 80, 30);
 		
-		urlLabel = new AJLabel("下载地址", Color.BLUE, 5, 40, 60, 30);
+		urlLabel = new AJLabel("任务地址", Color.BLUE, 5, 40, 60, 30);
 		urlField = new AJTextField("urlField", 65, 40, 395, 30);
 		saveDirLabel = new AJLabel("保存目录", Color.BLUE, 5, 120, 60, 30);
 		saveDirField = new AJTextField("saveDirField", 65, 120, 320, 30);

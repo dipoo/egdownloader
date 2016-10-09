@@ -50,10 +50,10 @@ public class TestProxyWindow extends JDialog{
 		ButtonGroup buttonGroup = new ButtonGroup();
 		final JRadioButton rb1 = new JRadioButton("内置", true);
 		rb1.setBounds(125, 55, 100, 30);
-		final JRadioButton rb2 = new JRadioButton("HttpClient");
-		rb2.setBounds(225, 55, 100, 30);
+		/*final JRadioButton rb2 = new JRadioButton("HttpClient");
+		rb2.setBounds(225, 55, 100, 30);*/
 		buttonGroup.add(rb1);
-		buttonGroup.add(rb2);
+//		buttonGroup.add(rb2);
 		final JTextArea resultArea = new AJTextArea();
 		resultArea.setEditable(false);
 		resultArea.setAutoscrolls(true);
@@ -75,24 +75,25 @@ public class TestProxyWindow extends JDialog{
 					JOptionPane.showMessageDialog(null, "地址不能为空");
 					return;
 				}
-				resultArea.setText("");
+				//resultArea.setText("");
 				String result = null;
 				try{
 					if(rb1.isSelected()){
 						result = WebClient.getRequestUseJava(url, "gb2312");
 					}
-					if(rb2.isSelected()){
+					/*if(rb2.isSelected()){
 						result = WebClient.postRequest(url, "gb2312");
-					}
-					resultArea.setText(result);
+					}*/
+					resultArea.setText(resultArea.getText() + "\n================\n" + result);
 				}catch(Exception e1){
-					resultArea.setText(e1.getMessage());
+					e1.printStackTrace();
+					resultArea.setText(resultArea.getText() + "\n================\n" + e1.getMessage());
 				}
 			}
 		}), 515, 15, 60, 30);
 		
 		
-		ComponentUtil.addComponents(getContentPane(), urlLabel, urlField, testBtn, typeLabel, rb1, rb2, consolePane);
+		ComponentUtil.addComponents(getContentPane(), urlLabel, urlField, testBtn, typeLabel, rb1, /*rb2,*/ consolePane);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//关闭后显示主界面

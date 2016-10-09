@@ -152,7 +152,7 @@ public class EgDownloaderWindow extends JFrame {
 		//加载配置数据
 		this.setting = setting;
 		//设置代理
-		Proxy.init(setting.isUseProxy(), setting.getProxyIp(), setting.getProxyPort(), setting.getProxyUsername(), setting.getProxyPwd());
+		Proxy.init(setting.isUseProxy(), setting.getProxyType(), setting.getProxyIp(), setting.getProxyPort(), setting.getProxyUsername(), setting.getProxyPwd());
 		//加载任务列表
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口

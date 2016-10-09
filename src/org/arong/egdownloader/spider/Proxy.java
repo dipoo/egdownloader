@@ -16,17 +16,24 @@ import org.apache.commons.httpclient.auth.AuthScope;
  */
 public class Proxy {
 	public static boolean useProxy;
+	public static java.net.Proxy.Type type = java.net.Proxy.Type.HTTP;//HTTP或者SOCKS
 	public static String ip;
 	public static String port;
 	public static String username;
 	public static String pwd;
 	
-	public static void init(boolean useProxy_, String ip_, String port_, String username_, String pwd_){
+	public static void init(boolean useProxy_, String type_, String ip_, String port_, String username_, String pwd_){
 		useProxy = useProxy_;
 		ip = ip_;
 		port = port_;
 		username = username_;
 		pwd = pwd_;
+		
+		if("http".equals(type_)){
+			type = java.net.Proxy.Type.HTTP;
+		}else if("socks".equals(type_)){
+			type = java.net.Proxy.Type.SOCKS;
+		}
 		//proxy();
 	}
 	
@@ -72,7 +79,7 @@ public class Proxy {
 	
 	public static java.net.Proxy getNetProxy(){
 		if(useProxy){
-			return new java.net.Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(ip, Integer.parseInt(port)));
+			return new java.net.Proxy(type, new InetSocketAddress(ip, Integer.parseInt(port)));
 		}
 		return null;
 	}

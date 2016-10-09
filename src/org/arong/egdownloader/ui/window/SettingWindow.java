@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -98,6 +99,10 @@ public class SettingWindow extends JFrame{
 		public ButtonGroup proxyButtonGroup;
 		public JRadioButton noRadioButton;
 		public JRadioButton yesRadioButton;
+		public JLabel proxyTypeLabel;
+		public ButtonGroup proxyTypeButtonGroup;
+		public JRadioButton httpRadioButton;
+		public JRadioButton socksRadioButton;
 		public JLabel proxyIpLabel;
 		public JTextField proxyIpField;
 		public JLabel proxyPortLabel;
@@ -107,7 +112,7 @@ public class SettingWindow extends JFrame{
 		public JLabel proxyPwdLabel;
 		public JPasswordField  proxyPwdField;
 		public JButton proxyTestBtn;
-		private JLabel proxyTipLabel;
+		/*private JLabel proxyTipLabel;*/
 		
 		Color labelColor = new Color(65,145,65);
 		Color bgColor = new Color(210,225,240);
@@ -303,10 +308,18 @@ public class SettingWindow extends JFrame{
 			yesRadioButton.setBounds(230, 30, 80, 30);
 			proxyButtonGroup.add(noRadioButton);
 			proxyButtonGroup.add(yesRadioButton);
-			proxyIpLabel = new AJLabel("服务器：", labelColor, 25, 70, 100, 30);
-			proxyIpField = new AJTextField(setting.getProxyIp(), "", 125, 70, 360, 30);
-			proxyPortLabel = new AJLabel("端口：", labelColor, 25, 110, 100, 30);
-			proxyPortField = new AJTextField(setting.getProxyPort(), "", 125, 110, 360, 30);
+			proxyTypeButtonGroup = new ButtonGroup();
+			proxyTypeLabel = new AJLabel("代理方式：", labelColor, 25, 70, 100, 30);
+			httpRadioButton = new JRadioButton("HTTP", "http".equals(setting.getProxyType()));
+			httpRadioButton.setBounds(125, 70, 80, 30);
+			socksRadioButton = new JRadioButton("SOCKS", "socks".equals(setting.getProxyType()));
+			socksRadioButton.setBounds(230, 70, 80, 30);
+			proxyTypeButtonGroup.add(httpRadioButton);
+			proxyTypeButtonGroup.add(socksRadioButton);
+			proxyIpLabel = new AJLabel("服务器：", labelColor, 25, 110, 100, 30);
+			proxyIpField = new AJTextField(setting.getProxyIp(), "", 125, 110, 200, 30);
+			proxyPortLabel = new AJLabel("端口：", labelColor, 350, 110, 100, 30);
+			proxyPortField = new AJTextField(setting.getProxyPort(), "", 405, 110, 80, 30);
 			proxyUsernameLabel = new AJLabel("用户名：", labelColor, 25, 150, 100, 30);
 			proxyUsernameField = new AJTextField(setting.getProxyUsername(), "", 125, 150, 360, 30);
 			proxyPwdLabel = new AJLabel("密码：", labelColor, 25, 190, 100, 30);
@@ -317,13 +330,19 @@ public class SettingWindow extends JFrame{
 					if(testProxyWindow == null){
 						testProxyWindow = new TestProxyWindow(setting);
 					}
+					//点击保存
+					for(MouseListener ml : save_Btn.getMouseListeners()){
+						ml.mouseClicked(new MouseEvent(save_Btn, 1, System.currentTimeMillis(), 1, 1, 1, 1, false, 1));
+					}
+					
 					testProxyWindow.setVisible(true);
 				}
 			}), 125, 230, 60, 30);
-			proxyTipLabel =  new AJLabel("提示：测试前请先保存当前配置", Color.BLUE, 200, 230, 300, 30);
+			//proxyTipLabel =  new AJLabel("提示：测试前请先保存当前配置", Color.BLUE, 200, 230, 300, 30);
 			
-			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyIpLabel, proxyIpField, proxyPortLabel, proxyPortField,
-					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn, proxyTipLabel);
+			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyTypeLabel, proxyIpLabel, httpRadioButton,
+					socksRadioButton, proxyIpField, proxyPortLabel, proxyPortField,
+					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn/*, proxyTipLabel*/);
 			
 			settingTabPanel.add("基本配置", basicPanel);
 			settingTabPanel.add("脚本配置", scriptPanel);
@@ -395,17 +414,23 @@ public class SettingWindow extends JFrame{
 					//代理设置
 					else if(index == 2){
 						boolean useProxy = settingWindow.yesRadioButton.isSelected() ? true : false;
+						String proxyType = "http";
+						if(socksRadioButton.isSelected()){
+							proxyType = "socks";
+						}
 						String proxyIp = settingWindow.proxyIpField.getText();
 						String proxyPort = settingWindow.proxyPortField.getText();
 						String proxyUsername = settingWindow.proxyUsernameField.getText();
 						String proxyPwd = String.valueOf(settingWindow.proxyPwdField.getPassword());
 						
 						setting.setUseProxy(useProxy);
+						setting.setProxyType(proxyType);
 						setting.setProxyIp(proxyIp);
 						setting.setProxyPort(proxyPort);
 						setting.setProxyUsername(proxyUsername);
 						setting.setProxyPwd(proxyPwd);
-						Proxy.init(useProxy, proxyIp, proxyPort, proxyUsername, proxyPwd);
+						
+						Proxy.init(useProxy, proxyType, proxyIp, proxyPort, proxyUsername, proxyPwd);
 						mainWindow.settingDbTemplate.update(mainWindow.setting);//保存
 						JOptionPane.showMessageDialog(this_, "保存成功");
 					}

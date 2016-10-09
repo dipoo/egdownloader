@@ -43,13 +43,8 @@ public class WebClient {
 		return postRequestWithCookie(url, "utf-8", null, null);
 	}
 	
-	public static String postRequest(String url, String encoding) throws ConnectTimeoutException, SocketTimeoutException{
-		try {
-			return postRequestWithCookie(url, encoding, null, null);
-		} catch (WebClientException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static String postRequest(String url, String encoding) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
+		return postRequestWithCookie(url, encoding, null, null);
 	}
 	
 	public static String postRequestWithCookie(String url, String cookieInfo) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
@@ -338,7 +333,7 @@ public class WebClient {
 	        	HttpURLConnection urlConnection = null;
 	            if(Proxy.getNetProxy() != null){
 	            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
-	            	if(Proxy.username != null && Proxy.pwd != null){
+	            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
 	            		//格式如下：  
 	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
 	            		String headerKey = "Proxy-Authorization";  
@@ -468,7 +463,7 @@ public class WebClient {
 	            HttpURLConnection urlConnection = null;
 	            if(Proxy.getNetProxy() != null){
 	            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
-	            	if(Proxy.username != null && Proxy.pwd != null){
+	            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
 	            		//格式如下：  
 	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
 	            		String headerKey = "Proxy-Authorization";  
@@ -584,7 +579,7 @@ public class WebClient {
 	            if(Proxy.getNetProxy() != null){
 	            	urlConnection = (HttpURLConnection) url
                     .openConnection(Proxy.getNetProxy());
-	            	if(Proxy.username != null && Proxy.pwd != null){
+	            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
 	            		//格式如下：  
 	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
 	            		String headerKey = "Proxy-Authorization";  
