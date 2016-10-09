@@ -8,7 +8,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -223,6 +222,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("searchScriptPath", t.getSearchScriptPath());
 		
 		ele.addAttribute("useProxy", t.isUseProxy() + "");
+		ele.addAttribute("proxyType", t.getProxyType());
 		ele.addAttribute("proxyIp", t.getProxyIp());
 		ele.addAttribute("proxyPort", t.getProxyPort());
 		ele.addAttribute("proxyUsername", t.getProxyUsername());
@@ -294,6 +294,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setSearchScriptPath(ele.attributeValue("searchScriptPath") == null ? t.getSearchScriptPath() : ele.attributeValue("searchScriptPath"));
 		
 		t.setUseProxy("true".equals(ele.attributeValue("useProxy")) ? true : false);
+		t.setProxyIp(ele.attributeValue("proxyType"));
 		t.setProxyIp(ele.attributeValue("proxyIp"));
 		t.setProxyPort(ele.attributeValue("proxyPort"));
 		t.setProxyUsername(ele.attributeValue("proxyUsername"));
