@@ -3,7 +3,10 @@ package org.arong.egdownloader.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,13 +120,16 @@ public class ScriptParser {
 	
 	/**
 	 * 创建任务
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 */
-	public static Task buildTaskByJavaScript(Task task, Setting setting, JDialog window) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
+	public static Task buildTaskByJavaScript(Task task, Setting setting, JDialog window) throws SpiderException, WebClientException, ScriptException, KeyManagementException, NoSuchAlgorithmException, IOException{
 		CreatingWindow creatingWindow = (CreatingWindow)window;
 		if(task.getId() == null){
 			task.setId(UUID.randomUUID().toString());
 		}
-		String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), null, setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
@@ -177,7 +183,7 @@ public class ScriptParser {
 	        	if(i == 0){
 	        		pictures = collectpictrues(source, setting.getCollectPictureScriptPath(), creatingWindow);
 	        	}else{
-	        		source = WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
+	        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, null, setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
 	        		pictures.addAll(collectpictrues(source, setting.getCollectPictureScriptPath(), creatingWindow));
 	        	}
         	}catch(Exception e){
@@ -191,7 +197,7 @@ public class ScriptParser {
         	for(Picture pic : pictures){
         		pic.setId(UUID.randomUUID().toString());
         		pic.setTid(task.getId());
-        		pic.setNum(ParseEngine.genNum(task.getTotal(), i));
+        		pic.setNum(genNum(task.getTotal(), i));
         		pic.setSaveAsName(setting.isSaveAsName());
         		i ++;
         	}
@@ -213,11 +219,14 @@ public class ScriptParser {
 	
 	/**
 	 * 重建任务，主要重新采集语言、封面、小标题等信息
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 */
-	public static void rebuildTask(Task task, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException, WebClientException{
+	public static void rebuildTask(Task task, Setting setting) throws SpiderException, ScriptException, WebClientException, KeyManagementException, NoSuchAlgorithmException, IOException{
 //		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
 //				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
-			String source = WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+			String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), null, setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
@@ -237,10 +246,13 @@ public class ScriptParser {
 	
 	/**
 	 * 获取图片真实下载地址
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 */
-	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, WebClientException{
+	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws WebClientException, KeyManagementException, NoSuchAlgorithmException, IOException{
 		String url = null;
-		String source = WebClient.postRequestWithCookie(sourceUrl, setting.getCookieInfo());
+		String source = WebClient.getRequestUseJavaWithCookie(sourceUrl, null, setting.getCookieInfo());
 		try {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
@@ -269,7 +281,7 @@ public class ScriptParser {
 	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
 		String source;
 		try {
-			source = WebClient.postRequestWithCookie(url, setting.getCookieInfo());
+			source = WebClient.getRequestUseJavaWithCookie(url, null, setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			Object result = parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath()));
@@ -295,7 +307,7 @@ public class ScriptParser {
 					//展示第一张图片的真实下载地址
 					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
 					if(pics != null){
-						source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
+						source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), null, setting.getCookieInfo());
 						param.put("htmlSource", source);
 						result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
 						if(result == null){
@@ -310,7 +322,7 @@ public class ScriptParser {
 				//展示第一张图片的真实下载地址
 				List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
 				if(pics != null){
-					source = WebClient.postRequestWithCookie(pics.get(0).getUrl(), setting.getCookieInfo());
+					source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), null, setting.getCookieInfo());
 					param.put("htmlSource", source);
 					result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
 					if(result == null){
@@ -397,4 +409,30 @@ public class ScriptParser {
 			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
 		}
 	}*/
+	/**
+	 * 
+	 * @param total
+	 * @param index
+	 * @return
+	 */
+	public static String genNum(int total, int index){
+		int bit = 2;
+		if(total <= 10){
+			bit = 2;
+		}else if(total <= 100){
+			bit = 3;
+		}else if(total <= 1000){
+			bit = 4;
+		}else if(total <= 10000){
+			bit = 5;
+		}else{
+			bit = 6;
+		}
+		String num = "";
+		int index_ = index + 1;
+		for(int i = 1; i < bit - (index_ + "").length(); i++){
+			num += "0";
+		}
+		return num + index_;
+	}
 }

@@ -10,6 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +29,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.arong.util.https.HttpsUtils;
 
 /**
  * 获取远程url地址页面的源文件
@@ -306,9 +309,13 @@ public class WebClient {
 		return result;
 	}
 	
+	 public static InputStream getStreamUseJava(final String urlString)
+	            throws IOException,SocketTimeoutException,ConnectTimeoutException, KeyManagementException, NoSuchAlgorithmException {
+		 return getStreamUseJavaWithCookie(urlString, null);
+	 }
     
-    public static InputStream getStreamUseJava(final String urlString)
-            throws IOException,SocketTimeoutException,ConnectTimeoutException {
+    public static InputStream getStreamUseJavaWithCookie(final String urlString, final String cookie)
+            throws IOException,SocketTimeoutException,ConnectTimeoutException, KeyManagementException, NoSuchAlgorithmException {
 
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
@@ -323,15 +330,14 @@ public class WebClient {
 
         Map<String, String> headers = new HashMap<String, String>();
 
-        URL url = new URL(nURL);
+        //URL url = new URL(nURL);
         
 
         try{
 	        do {
 	        	HttpURLConnection urlConnection = null;
 	            if(Proxy.getNetProxy() != null){
-	            	urlConnection = (HttpURLConnection) url
-                    .openConnection(Proxy.getNetProxy());
+	            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
 	            	if(Proxy.username != null && Proxy.pwd != null){
 	            		//格式如下：  
 	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
@@ -340,8 +346,7 @@ public class WebClient {
 	            		urlConnection.setRequestProperty(headerKey, headerValue);
 	            	}
 	            }else{
-	            	urlConnection = (HttpURLConnection) url
-	                        .openConnection();
+	            	urlConnection = HttpsUtils.getConnection(nURL, null);
 	            }
 	            // 添加访问授权
 	            if (digest != null) {
@@ -357,6 +362,11 @@ public class WebClient {
 	            //模拟http头文件
 	            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36");
 	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
+	            
+	            if(cookie != null){
+	            	urlConnection.setRequestProperty("Cookie", cookie); 
+	            }
+	            
 	            //追加http头文件
 	            Set<Entry<String, String>> headersSet = headers.entrySet();
 	            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
@@ -375,7 +385,7 @@ public class WebClient {
 	            if (responseCode == 302) {
 	                // 重定向
 	                String location = urlConnection.getHeaderField("Location");
-	                url = new URL(location);
+	                nURL = location;
 	                foundRedirect = true;
 	            } else {
 	                if (responseCode == 200 || responseCode == 201) {
@@ -416,7 +426,11 @@ public class WebClient {
         return inputStream;
     }
     
-    
+    public static String getRequestUseJava(final String urlString,
+            final String encoding)
+            throws IOException, KeyManagementException, NoSuchAlgorithmException {
+    	return getRequestUseJavaWithCookie(urlString, encoding, null);
+    }
    
     /**
      * 向指定url发送请求并获得响应数据(使用原生JDK API)
@@ -426,10 +440,12 @@ public class WebClient {
      * @param parameter
      * @return
      * @throws IOException
+     * @throws NoSuchAlgorithmException 
+     * @throws KeyManagementException 
      */
-    public static String getRequestUseJava(final String urlString,
-            final String encoding)
-            throws IOException {
+    public static String getRequestUseJavaWithCookie(final String urlString,
+            final String encoding, String cookie)
+            throws IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
@@ -444,15 +460,14 @@ public class WebClient {
 
         Map<String, String> headers = new HashMap<String, String>();
 
-        URL url = new URL(nURL);
+        //URL url = new URL(nURL);
 
         try{
 	        do {
 	        	
 	            HttpURLConnection urlConnection = null;
 	            if(Proxy.getNetProxy() != null){
-	            	urlConnection = (HttpURLConnection) url
-                    .openConnection(Proxy.getNetProxy());
+	            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
 	            	if(Proxy.username != null && Proxy.pwd != null){
 	            		//格式如下：  
 	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
@@ -461,8 +476,7 @@ public class WebClient {
 	            		urlConnection.setRequestProperty(headerKey, headerValue);
 	            	}
 	            }else{
-	            	urlConnection = (HttpURLConnection) url
-	                        .openConnection();
+	            	urlConnection = HttpsUtils.getConnection(nURL, null);
 	            }
 	            
 	            // 添加访问授权
@@ -477,6 +491,11 @@ public class WebClient {
 	            //模拟http头文件
 	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
 	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
+	           
+	            if(cookie != null){
+	            	urlConnection.setRequestProperty("Cookie", cookie); 
+	            }
+	            
 	            //追加http头文件
 	            Set<Entry<String, String>> headersSet = headers.entrySet();
 	            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
@@ -497,7 +516,7 @@ public class WebClient {
 	            if (responseCode == 302) {
 	                // 重定向
 	                String location = urlConnection.getHeaderField("Location");
-	                url = new URL(location);
+	                nURL = location;
 	                foundRedirect = true;
 	            } else {
 	                BufferedInputStream in;

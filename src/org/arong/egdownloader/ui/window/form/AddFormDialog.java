@@ -220,21 +220,22 @@ public class AddFormDialog extends JDialog {
 	private static boolean isValidUrl(Setting setting, String url){
 		if(url != null){
 			//假设url合法:http://exhentai.org/g/446779/553f5c4086/
-			if(url.matches("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")){
+			/*if(url.matches("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")){
 				//获取http://exhentai.org/部分
 				String host;
-				if(url.lastIndexOf("/") > 7){
+				if(url.lastIndexOf("/") > 8){
 					String protocal = "http://";
 					if(url.indexOf("https") != -1){
 						protocal = "https://";
 					}
 					String url_ = url.substring(url.indexOf(protocal) + 7, url.length());
-					host = "http://" + url_.substring(0, url_.indexOf("/"));
+					host = protocal + url_.substring(0, url_.indexOf("/"));
 				}else{
 					host = url;
 				}
 				return url.matches(host + setting.getGidPrefix() + "[a-zA-Z0-9]+/[a-zA-Z0-9]+/*");
-			}
+			}*/
+			return url.matches("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 		}
 		return false;
 	}

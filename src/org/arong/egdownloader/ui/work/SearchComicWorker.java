@@ -9,7 +9,6 @@ import javax.swing.SwingWorker;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.util.JsonUtil;
@@ -31,7 +30,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
-			String source = WebClient.postRequestWithCookie(this.url, mainWindow.setting.getCookieInfo());
+			String source = WebClient.getRequestUseJavaWithCookie(this.url, null, mainWindow.setting.getCookieInfo());
 			String[] result = ScriptParser.search(source, mainWindow.setting);
 			if(result != null){
 				String json = result[1];
@@ -64,9 +63,6 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			}
 		} catch (ScriptException e) {
 			e.printStackTrace();
-		} catch (WebClientException e) {
-			searchComicWindow.key = " ";
-			searchComicWindow.totalLabel.setText("当前无网络");
 		} catch (Exception e) {
 			searchComicWindow.key = " ";
 			searchComicWindow.totalLabel.setText(e.getMessage());

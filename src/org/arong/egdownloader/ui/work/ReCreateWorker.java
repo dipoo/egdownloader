@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
@@ -46,7 +45,7 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			if(setting.isOpenScript()){
 				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
 			}else{
-				task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
+				//task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
 			}
 			
 			if(task != null && task.getPictures() != null){

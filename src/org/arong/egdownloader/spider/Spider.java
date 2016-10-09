@@ -2,9 +2,8 @@ package org.arong.egdownloader.spider;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketTimeoutException;
-
-import org.apache.commons.httpclient.ConnectTimeoutException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 /**
  * 分析指定的url或者html源码页面，抓取网页特定内容
  * @author 阿荣
@@ -19,15 +18,16 @@ public final class Spider {
      * @param trail 所要抓取字符串的后面紧跟的特定字符串
      * @return
 	 * @throws SpiderException 
-	 * @throws ConnectTimeoutException 
-	 * @throws SocketTimeoutException 
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 * @throws UnsupportedEncodingException 
 	 * @throws Exception 
      */
     public static String getText(final String url, final String encoding, final String prefix,
-            final String suffix) throws SpiderException, WebClientException, ConnectTimeoutException, SocketTimeoutException {
+            final String suffix) throws SpiderException, WebClientException, KeyManagementException, NoSuchAlgorithmException, IOException {
         String text = null;
-        String serverResponse = WebClient.postRequest(url, encoding);
+        String serverResponse = WebClient.getRequestUseJava(url, encoding);//WebClient.postRequest(url, encoding);
         if(serverResponse != null){
 	        int pos = serverResponse.indexOf(prefix);
 	        if (pos != -1) {
@@ -45,7 +45,7 @@ public final class Spider {
         return text;
     }
     public static String getTextUseJava(final String url, final String encoding, final String prefix,
-            final String suffix) throws SpiderException, WebClientException {
+            final String suffix) throws SpiderException, WebClientException, KeyManagementException, NoSuchAlgorithmException {
         String text = null;
         try {
 			String serverResponse = WebClient.getRequestUseJava(url, encoding);
@@ -124,8 +124,8 @@ public final class Spider {
         return text;
     }
     
-    public static Boolean containText(String url, String encoding, String text) throws WebClientException, SpiderException, ConnectTimeoutException, SocketTimeoutException{
-    	String serverResponse = WebClient.postRequest(url, encoding);
+    public static Boolean containText(String url, String encoding, String text) throws WebClientException, SpiderException, KeyManagementException, NoSuchAlgorithmException, IOException{
+    	String serverResponse = WebClient.getRequestUseJava(url, encoding);//WebClient.postRequest(url, encoding);
     	containTextFromSource(serverResponse, text);
     	return true;
     }

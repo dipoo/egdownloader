@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.script.ScriptException;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.egdownloader.model.ParseEngine;
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
@@ -38,10 +41,10 @@ public class DownloadCoverWork implements IMenuListenerTask {
 			InputStream is;
 			try {
 				if(task.getCoverUrl() == null){
-					ParseEngine.rebuildTask(task, mainWindow.setting);
+					ScriptParser.rebuildTask(task, mainWindow.setting);
 				}
 				//下载封面
-				is =  WebClient.postRequestAsStreamWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
+				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
 				int size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				if(size == 0){
 					JOptionPane.showMessageDialog(mainWindow, "下载失败，地址错误或者地址不可访问");
@@ -60,6 +63,12 @@ public class DownloadCoverWork implements IMenuListenerTask {
 			} catch (SpiderException e) {
 				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} catch (WebClientException e) {
+				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
+			} catch (KeyManagementException e) {
+				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
+			} catch (NoSuchAlgorithmException e) {
+				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
+			} catch (ScriptException e) {
 				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} finally{
 				mainWindow.tablePopupMenu.setVisible(false);

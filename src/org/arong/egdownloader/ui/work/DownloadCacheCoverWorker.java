@@ -35,12 +35,12 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 				if(cover == null || !cover.exists()){
 					try{
 						FileUtil.storeStream(ComponentConst.CACHE_PATH, FileUtil.filterDir(task.getUrl()),
-								WebClient.postRequestAsStreamWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+								WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
 					}catch(Exception e){
 						//最多下两次
 						try{
 							FileUtil.storeStream(ComponentConst.CACHE_PATH, FileUtil.filterDir(task.getUrl()),
-									WebClient.postRequestAsStreamWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+									WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
 						}catch(Exception e1){
 							
 						}

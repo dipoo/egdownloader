@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -160,6 +162,10 @@ public class InitWindow extends JWindow {
 			startMain();
 		} catch (IOException e) {
 			startMain();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 		}
 	}
 	
