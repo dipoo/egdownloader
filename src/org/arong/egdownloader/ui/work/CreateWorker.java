@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
@@ -65,12 +64,12 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				}
 				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
 			}else{
-				task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
+				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
 			}
 			
 			if(task != null){
 				//下载封面
-				is =  WebClient.postRequestAsStreamWithCookie(task.getCoverUrl(), setting.getCookieInfo());
+				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
 				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				
 				//设置最后创建时间

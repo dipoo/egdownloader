@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
@@ -64,7 +63,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(setting.isOpenScript()){
 							pic.setRealUrl(ScriptParser.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 						}else{
-							pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+							//pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 						}
 						
 						if(pic.getRealUrl() == null){
@@ -74,7 +73,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						if(pic.getRealUrl().contains("exhentai.org")){
-							pic.setRealUrl(WebClient.postRequestWithCookie(pic.getRealUrl(), "utf-8", null, setting.getCookieInfo(), false));
+							pic.setRealUrl(WebClient.getRequestUseJavaWithCookie(pic.getRealUrl(), "utf-8", setting.getCookieInfo()));
 							is =  WebClient.getStreamUseJava(pic.getRealUrl());
 						}else{
 							is =  WebClient.getStreamUseJava(pic.getRealUrl());

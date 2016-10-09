@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.arong.egdownloader.model.ParseEngine;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
@@ -128,7 +127,7 @@ public class DownloadWorker2 extends SwingWorker<Void, Void>{
 			if(setting.isOpenScript()){
 				pic.setRealUrl(ScriptParser.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 			}else{
-				pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+				//pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 			}
 			
 			if(pic.getRealUrl() == null){
