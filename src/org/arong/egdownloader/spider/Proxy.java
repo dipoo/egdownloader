@@ -31,9 +31,11 @@ public class Proxy {
 		
 		if("http".equals(type_)){
 			type = java.net.Proxy.Type.HTTP;
-		}else if("socks".equals(type_)){
-			type = java.net.Proxy.Type.SOCKS;
 		}
+		//jdk的socks4代理存在bug
+		/*else if("socks".equals(type_)){
+			type = java.net.Proxy.Type.SOCKS;
+		}*/
 		//proxy();
 	}
 	
