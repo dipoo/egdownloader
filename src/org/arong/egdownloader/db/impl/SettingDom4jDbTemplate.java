@@ -294,7 +294,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setSearchScriptPath(ele.attributeValue("searchScriptPath") == null ? t.getSearchScriptPath() : ele.attributeValue("searchScriptPath"));
 		
 		t.setUseProxy("true".equals(ele.attributeValue("useProxy")) ? true : false);
-		t.setProxyIp(ele.attributeValue("proxyType"));
+		t.setProxyType(ele.attributeValue("proxyType"));
 		t.setProxyIp(ele.attributeValue("proxyIp"));
 		t.setProxyPort(ele.attributeValue("proxyPort"));
 		t.setProxyUsername(ele.attributeValue("proxyUsername"));

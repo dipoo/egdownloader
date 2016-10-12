@@ -8,12 +8,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -47,12 +45,12 @@ public class TestProxyWindow extends JDialog{
 		JLabel urlLabel = new AJLabel("测试地址:", Color.BLUE, 10, 15, 60, 30);
 		final JTextField urlField = new AJTextField("http://1212.ip138.com/ic.asp", "", 70, 15, 435, 30);
 		JLabel typeLabel = new AJLabel("测试类型:", Color.BLUE, 10, 55, 60, 30);
-		ButtonGroup buttonGroup = new ButtonGroup();
-		final JRadioButton rb1 = new JRadioButton("内置", true);
+//		ButtonGroup buttonGroup = new ButtonGroup();
+		/*final JRadioButton rb1 = new JRadioButton("内置", true);
 		rb1.setBounds(125, 55, 100, 30);
-		/*final JRadioButton rb2 = new JRadioButton("HttpClient");
+		final JRadioButton rb2 = new JRadioButton("HttpClient");
 		rb2.setBounds(225, 55, 100, 30);*/
-		buttonGroup.add(rb1);
+//		buttonGroup.add(rb1);
 //		buttonGroup.add(rb2);
 		final JTextArea resultArea = new AJTextArea();
 		resultArea.setEditable(false);
@@ -78,9 +76,9 @@ public class TestProxyWindow extends JDialog{
 				//resultArea.setText("");
 				String result = null;
 				try{
-					if(rb1.isSelected()){
+//					if(rb1.isSelected()){
 						result = WebClient.getRequestUseJava(url, "gb2312");
-					}
+//					}
 					/*if(rb2.isSelected()){
 						result = WebClient.postRequest(url, "gb2312");
 					}*/
@@ -93,7 +91,7 @@ public class TestProxyWindow extends JDialog{
 		}), 515, 15, 60, 30);
 		
 		
-		ComponentUtil.addComponents(getContentPane(), urlLabel, urlField, testBtn, typeLabel, rb1, /*rb2,*/ consolePane);
+		ComponentUtil.addComponents(getContentPane(), urlLabel, urlField, testBtn, typeLabel, /*rb1, rb2,*/ consolePane);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//关闭后显示主界面
