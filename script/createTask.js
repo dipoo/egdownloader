@@ -2,7 +2,7 @@ var mark = {
     name : ['<h1 id="gn">', '</h1><h1'],
     subname : ['</h1><h1 id="gj">', '</h1></div>'],
 	type : ['png" alt="', '" class="ic'],//
-	coverUrl : ['<div id="gd1"><img src="', '" alt="" /></div></div>'],
+	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
 	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;']
