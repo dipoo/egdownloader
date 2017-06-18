@@ -129,7 +129,7 @@ public class ScriptParser {
 		if(task.getId() == null){
 			task.setId(UUID.randomUUID().toString());
 		}
-		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), null, setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
