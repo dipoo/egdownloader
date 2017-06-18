@@ -154,6 +154,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						setting.setLastDownloadTime(pic.getTime());
 						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "下载完成。");
 						success ++;
+						continue;
 					}catch (SocketTimeoutException e){
 						//碰到异常
 						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试");
