@@ -54,6 +54,7 @@ public class Task {
 	private Long byteLength = 0L;
 	private Long oldByteLength = 0L;
 	private String downSpeed = "";//下载速度
+	private String shortCreatetime = "";
 	
 	public String getDisplayName(){
 		return subname == null || "".equals(subname) ? name : subname;
@@ -160,6 +161,14 @@ public class Task {
 			   "结束索引:" + end;
 	}
 	
+	public String getShortCreatetime() {
+		return shortCreatetime;
+	}
+
+	public void setShortCreatetime(String shortCreatetime) {
+		this.shortCreatetime = shortCreatetime;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -222,6 +231,9 @@ public class Task {
 		return createTime;
 	}
 	public void setCreateTime(String createTime) {
+		if(createTime != null && createTime.length() > 10){
+			this.shortCreatetime = createTime.substring(2, 10).replaceAll("-", "/");
+		}
 		this.createTime = createTime;
 	}
 	public String getCompletedTime() {
