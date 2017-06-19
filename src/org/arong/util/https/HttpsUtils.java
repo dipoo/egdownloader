@@ -13,6 +13,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
+import org.arong.util.Tracker;
+
 public class HttpsUtils {
 
         public static HttpURLConnection getConnection(String urlStr, Proxy proxy) throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
@@ -45,17 +47,18 @@ public class HttpsUtils {
                 try{
 	                // 不验证服务器主机名和证书
 	                conn.setHostnameVerifier(new IgnoreHostnameVerifier());
-	                TrustManager[] tm = { new MyX509TrustManager() };
+	                TrustManager[] tm = { new X509TrustManager4None() };
 	                SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
 	                sslContext.init(null, tm, new java.security.SecureRandom());
 	                
 	                SSLSocketFactory ssf = sslContext.getSocketFactory();
-	                for(String cs : ssf.getSupportedCipherSuites()){
+	                /*for(String cs : ssf.getSupportedCipherSuites()){
 	                	System.out.println(cs);
-	                }
+	                }*/
 	                
 	                conn.setSSLSocketFactory(ssf);
                 }catch (Exception e){
+                	System.out.println("HTTPS需要JDK(JRE)1.7及以上版本的支持");
                 	e.printStackTrace();
                 }
                 return conn;

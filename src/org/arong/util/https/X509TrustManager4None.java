@@ -5,7 +5,7 @@ import java.security.cert.X509Certificate;
 
 import javax.net.ssl.X509TrustManager;
 
-public class X509TrustManager4Portal implements X509TrustManager {
+public class X509TrustManager4None implements X509TrustManager {
 
 	private X509Certificate[] certificates;
 	
