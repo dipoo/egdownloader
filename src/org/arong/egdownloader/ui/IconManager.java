@@ -258,52 +258,52 @@ public class IconManager {
 			return tImage;
 		}else if("artistcg".equals(name)){
 			if(artistcgImage == null){
-				artistcgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "artistcg.png"));
+				artistcgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "ARTISTCG.png"));
 			}
 			return artistcgImage;
 		}else if("asianporn".equals(name)){
 			if(asianpornImage == null){
-				asianpornImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "asianporn.png"));
+				asianpornImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "ASIANPORN.png"));
 			}
 			return asianpornImage;
 		}else if("cosplay".equals(name)){
 			if(cosplayImage == null){
-				cosplayImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "cosplay.png"));
+				cosplayImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "COSPLAY.png"));
 			}
 			return cosplayImage;
 		}else if("doujinshi".equals(name)){
 			if(doujinshiImage == null){
-				doujinshiImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "doujinshi.png"));
+				doujinshiImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "DOUJINSHI.png"));
 			}
 			return doujinshiImage;
 		}else if("gamecg".equals(name)){
 			if(gamecgImage == null){
-				gamecgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "gamecg.png"));
+				gamecgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "GAMECG.png"));
 			}
 			return gamecgImage;
 		}else if("imageset".equals(name)){
 			if(imagesetImage == null){
-				imagesetImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "imageset.png"));
+				imagesetImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "IMAGESET.png"));
 			}
 			return imagesetImage;
 		}else if("manga".equals(name)){
 			if(mangaImage == null){
-				mangaImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "manga.png"));
+				mangaImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "MANGA.png"));
 			}
 			return mangaImage;
 		}else if("misc".equals(name)){
 			if(miscImage == null){
-				miscImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "misc.png"));
+				miscImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "MISC.png"));
 			}
 			return miscImage;
 		}else if("non-h".equals(name)){
 			if(non_hImage == null){
-				non_hImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "non-h.png"));
+				non_hImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "NON-H.png"));
 			}
 			return non_hImage;
 		}else if("western".equals(name)){
 			if(westernImage == null){
-				westernImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "western.png"));
+				westernImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "WESTERN.png"));
 			}
 			return westernImage;
 		}

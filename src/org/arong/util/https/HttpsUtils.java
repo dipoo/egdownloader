@@ -34,7 +34,7 @@ public class HttpsUtils {
                 return conn;
         }
        
-        private static HttpsURLConnection getHttpsConnection(String urlStr, Proxy proxy) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        private static HttpsURLConnection getHttpsConnection(String urlStr, Proxy proxy) throws IOException {
                 URL url = new URL(urlStr);
                 HttpsURLConnection conn = null;
                 if(proxy != null){
@@ -42,13 +42,22 @@ public class HttpsUtils {
                 }else{
                 	conn = (HttpsURLConnection) url.openConnection();
                 }
-                // 不验证服务器主机名和证书
-                conn.setHostnameVerifier(new IgnoreHostnameVerifier());
-                TrustManager[] tm = { new X509TrustManager4Portal() };
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, tm, null);
-                SSLSocketFactory ssf = sslContext.getSocketFactory();
-                conn.setSSLSocketFactory(ssf);
+                try{
+	                // 不验证服务器主机名和证书
+	                conn.setHostnameVerifier(new IgnoreHostnameVerifier());
+	                TrustManager[] tm = { new MyX509TrustManager() };
+	                SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+	                sslContext.init(null, tm, new java.security.SecureRandom());
+	                
+	                SSLSocketFactory ssf = sslContext.getSocketFactory();
+	                for(String cs : ssf.getSupportedCipherSuites()){
+	                	System.out.println(cs);
+	                }
+	                
+	                conn.setSSLSocketFactory(ssf);
+                }catch (Exception e){
+                	e.printStackTrace();
+                }
                 return conn;
         }
 }
