@@ -76,9 +76,9 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 				String subname = task.getSubname().trim();
 				JLabel nameLabel = null;
 				if(subname.length() > 230){
-					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[<i>" + task.getTag() + "</i> ]</font>" + subname.substring(0, 223) + " ......</html>", fontColor, font, JLabel.LEFT);
+					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[<i>" + task.getTag() + "</i> ][" + task.getShortCreatetime() + "]</font>" + subname.substring(0, 223) + " ......</html>", fontColor, font, JLabel.LEFT);
 				}else{
-					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[<i>" + task.getTag() + "</i> ]</font>" + subname + "</html>", fontColor, font, JLabel.LEFT);
+					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[<i>" + task.getTag() + "</i> ][" + task.getShortCreatetime() + "]</font>" + subname + "</html>", fontColor, font, JLabel.LEFT);
 				}
 				if(value != null){
 					nameLabel.setToolTipText(task.getName());//设置鼠标移过提示

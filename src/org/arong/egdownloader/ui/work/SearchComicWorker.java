@@ -30,7 +30,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
-			String source = WebClient.getRequestUseJavaWithCookie(this.url, null, mainWindow.setting.getCookieInfo());
+			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo());
 			String[] result = ScriptParser.search(source, mainWindow.setting);
 			if(result != null){
 				String json = result[1];

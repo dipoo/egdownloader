@@ -88,6 +88,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							continue;
 						}
 						int size = is.available();
+						/*System.out.println(size);
 						if(size < 1000){
 							pic.setRealUrl(null);
 							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
@@ -100,7 +101,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							is.close();
 							exceptionNum ++;
 							continue;
-						}
+						}*/
 						String name = pic.getName();
 						//是否以真实名称保存，是的话则要判断是否重复并处理
 						if(! pic.isSaveAsName()){
@@ -118,6 +119,19 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}
 						}
 						size = task.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), name, is);//保存到目录
+						if(size < 1000){
+							pic.setRealUrl(null);
+							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
+							delete(existNameFs);
+							exceptionNum ++;
+							continue;
+						}else if(size < 1010){
+							pic.setRealUrl(null);
+							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":509");
+							delete(existNameFs);
+							exceptionNum ++;
+							continue;
+						}
 						if(this.isCancelled()){//是否暂停
 							//删除已经下载的文件
 							delete(existNameFs);
@@ -140,6 +154,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						setting.setLastDownloadTime(pic.getTime());
 						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "下载完成。");
 						success ++;
+						continue;
 					}catch (SocketTimeoutException e){
 						//碰到异常
 						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试");
