@@ -8,5 +8,5 @@
 	<classpathentry kind="lib" path="libs/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/jaxen-1.1.1.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin"/> 
 </classpath>
