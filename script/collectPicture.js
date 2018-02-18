@@ -1,7 +1,7 @@
 var mark = {//
-    listSource : ['</table><div id="gdt">', '<div class="c"></div></div><table'],//
-	intercept : ['style="height', "gdtm"],//
-	showUrl : ['no-repeat"><a href="', '"><img alt='],//
+    listSource : ['<div id="gdt">', '<div id="cdiv" class="gm">'],//
+	intercept : ['style="height', "gdtl"],//
+	showUrl : ['px"><a href="', '"><img alt='],//
 	name : ['title="', '" src=']//
 };
 
