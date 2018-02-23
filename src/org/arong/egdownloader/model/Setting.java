@@ -48,7 +48,7 @@ public class Setting {
 	private String namePrefix = "TITLE";//用于获取漫画名
 	private String fileListPrefix = "FILELIST";//漫画集合前缀
 	private String fileListSuffix = "INFORMATION";//漫画集合后缀
-	private int pageCount = 40;//一页最多图片数
+	private int pageCount = 20;//一页最多图片数
 	private String pageParam = "p";//切换分页的参数名
 	private String sourcePrefix = "&gt;";//获取url源码的前缀
 	private String sourceSuffix = "</html>";//获取url源码的后缀
