@@ -1,6 +1,6 @@
 var mark = {//
     listSource : ['<div id="gdt">', '<div id="cdiv" class="gm">'],//
-	intercept : ['style="height', "gdtm"],//
+	intercept : ['style="height', "gdtl"],//
 	showUrl : ['"><a href="', '"><img alt='],//
 	name : ['title="', '" src=']//
 };
