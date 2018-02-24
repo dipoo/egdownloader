@@ -1,6 +1,7 @@
 var mark = {//
     listSource : ['<div id="gdt">', '<div id="cdiv" class="gm">'],//
 	intercept : ['style="height', "gdtl"],//
+	interceptReg : /<div class="gdt\w" style="height:\d+px">((?!<\/div>).)*<\/div>/g,
 	showUrl : ['"><a href="', '"><img alt='],//
 	name : ['title="', '" src=']//
 };
@@ -47,9 +48,13 @@ function trim(s){
     
 function parse(temp){
 	var newpics = [];
-	var prefix = mark.intercept[1];//
-	temp = subFromSource(temp, prefix);
-	while(temp.indexOf(mark.intercept[0]) != -1){
+	var count=0;
+	var tmp;
+	print("start");
+	while(tmp = mark.interceptReg.exec(temp)){
+		print(tmp[0] + "test " + count+ "\n");
+		var targetStr = tmp[0];
+		count ++;
 		var picture = {};
 		//
 		picture.url = interceptFromSource(temp, mark.showUrl[0], mark.showUrl[1]);
@@ -58,7 +63,6 @@ function parse(temp){
 		var s = interceptFromSource(temp, mark.name[0], mark.name[1]);//Page 1: img00001.jpg
 		picture.name = trim(s.split(':')[1]);
 		newpics.push(picture);
-		temp = subFromSource(temp, prefix);
 	}
 	var pictures = newpics.concat(pictures);
 	return parseJsonArray(pictures);

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,17 +172,12 @@ public class ScriptParser {
 		//获取图片集合
 		//计算页数(每40张一页)
         int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;
-        List<Picture> pictures = null;
-        int currCount = 0;
-        for(int i = 0; i < page; i++){
-        	if(i == page - 1){
-				currCount = task.getTotal();// - (page - 1) * setting.getPageCount();
-			}else{
-				currCount = (i + 1) * setting.getPageCount();
-			}
+        List<Picture> pictures = new ArrayList<Picture>();
+        int i = 0;
+        while(pictures.size() < task.getTotal() && i < page){
         	try{
 	        	if(i == 0){
-	        		pictures = collectpictrues(source, setting.getCollectPictureScriptPath(), creatingWindow);
+	        		pictures.addAll(collectpictrues(source, setting.getCollectPictureScriptPath(), creatingWindow));
 	        	}else{
 	        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
 	        		pictures.addAll(collectpictrues(source, setting.getCollectPictureScriptPath(), creatingWindow));
@@ -190,10 +186,11 @@ public class ScriptParser {
             	//未采集状态
             	task.setStatus(TaskStatus.UNCREATED);
             }
-        	creatingWindow.bar.setValue(currCount);
+        	creatingWindow.bar.setValue(pictures.size());
+        	i ++;
         }
         if(pictures != null){
-        	int i = 0;
+        	i = 0;
         	for(Picture pic : pictures){
         		pic.setId(UUID.randomUUID().toString());
         		pic.setTid(task.getId());
