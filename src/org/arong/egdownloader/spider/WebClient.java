@@ -483,6 +483,8 @@ public class WebClient {
 	            urlConnection.setUseCaches(false);
 	            urlConnection.setInstanceFollowRedirects(false);
 	            urlConnection.setRequestMethod(method);
+	            urlConnection.setConnectTimeout(20000);  
+	            urlConnection.setReadTimeout(20000);
 	            //模拟http头文件
 	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
 	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");

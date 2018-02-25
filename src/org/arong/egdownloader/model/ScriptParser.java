@@ -133,42 +133,46 @@ public class ScriptParser {
 		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
-		Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
-		//获取名称
-		task.setName(t.getName());
-		//获取子名称
-		task.setSubname(t.getSubname());
-		//获取漫画类别
-		task.setType(t.getType());
-        //获取封面路径
-        task.setCoverUrl(t.getCoverUrl());
-        //获取数目及大小
-        task.setTotal(t.getTotal());
-        task.setSize(t.getSize());
-        //设置下载结束索引
-        task.setEnd(task.getTotal());
-        //获取漫画语言
-        task.setLanguage(t.getLanguage());
-        Tracker.println(ScriptParser.class, task.getName());
-        Tracker.println(ScriptParser.class, task.getSubname());
-        Tracker.println(ScriptParser.class, task.getType());
-        Tracker.println(ScriptParser.class, task.getLanguage());
-        Tracker.println(ScriptParser.class, task.getTotal() + "");
-        Tracker.println(ScriptParser.class, task.getSize());
-        Tracker.println(ScriptParser.class, task.getCoverUrl());
-		creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + task.getName());
-		creatingWindow.subnameLabel.setText(creatingWindow.subnameLabel.getText() + task.getSubname());
-		creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + task.getTotal());
-		creatingWindow.sizeLabel.setText(creatingWindow.sizeLabel.getText() + task.getSize());
-		creatingWindow.languageLabel.setText(creatingWindow.languageLabel.getText() + task.getLanguage());
-		creatingWindow.nameLabel.setVisible(true);
-		creatingWindow.subnameLabel.setVisible(true);
-		creatingWindow.totalLabel.setVisible(true);
-		creatingWindow.sizeLabel.setVisible(true);
-		creatingWindow.languageLabel.setVisible(true);
-		creatingWindow.bar.setMaximum(task.getTotal());
-		task.setSaveDir(task.getSaveDir() + "/" + FileUtil.filterDir(task.getName()));
-		
+		try{
+			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			//获取名称
+			task.setName(t.getName());
+			//获取子名称
+			task.setSubname(t.getSubname());
+			//获取漫画类别
+			task.setType(t.getType());
+	        //获取封面路径
+	        task.setCoverUrl(t.getCoverUrl());
+	        //获取数目及大小
+	        task.setTotal(t.getTotal());
+	        task.setSize(t.getSize());
+	        //设置下载结束索引
+	        task.setEnd(task.getTotal());
+	        //获取漫画语言
+	        task.setLanguage(t.getLanguage());
+	        Tracker.println(ScriptParser.class, task.getName());
+	        Tracker.println(ScriptParser.class, task.getSubname());
+	        Tracker.println(ScriptParser.class, task.getType());
+	        Tracker.println(ScriptParser.class, task.getLanguage());
+	        Tracker.println(ScriptParser.class, task.getTotal() + "");
+	        Tracker.println(ScriptParser.class, task.getSize());
+	        Tracker.println(ScriptParser.class, task.getCoverUrl());
+			creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + task.getName());
+			creatingWindow.subnameLabel.setText(creatingWindow.subnameLabel.getText() + task.getSubname());
+			creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + task.getTotal());
+			creatingWindow.sizeLabel.setText(creatingWindow.sizeLabel.getText() + task.getSize());
+			creatingWindow.languageLabel.setText(creatingWindow.languageLabel.getText() + task.getLanguage());
+			creatingWindow.nameLabel.setVisible(true);
+			creatingWindow.subnameLabel.setVisible(true);
+			creatingWindow.totalLabel.setVisible(true);
+			creatingWindow.sizeLabel.setVisible(true);
+			creatingWindow.languageLabel.setVisible(true);
+			creatingWindow.bar.setMaximum(task.getTotal());
+			task.setSaveDir(task.getSaveDir() + "/" + FileUtil.filterDir(task.getName()));
+		}catch(Exception e){
+			e.printStackTrace();
+			Tracker.println(ScriptParser.class, setting.getCreateTaskScriptPath() + "脚本解析错误:" + e.getMessage());
+		}
 		//获取图片集合
 		//计算页数(每40张一页)
         int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;
@@ -211,6 +215,9 @@ public class ScriptParser {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		Object o = parseJsScript(param, getCollectScriptFile(scriptPath));
+		if(o == null){
+			Tracker.println(ScriptParser.class, scriptPath + "脚本解析错误");
+		}
 		return JsonUtil.jsonArray2beanList(Picture.class, o.toString());
 	}
 	

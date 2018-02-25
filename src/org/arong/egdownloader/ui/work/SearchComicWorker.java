@@ -12,6 +12,7 @@ import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.util.JsonUtil;
+import org.arong.util.Tracker;
 /**
  * 搜索漫画线程类
  * @author dipoo
@@ -31,6 +32,10 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
 			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo());
+			if(source == null){
+				Tracker.println(this.getClass(), this.url + ":搜索出错");
+				return null;
+			}
 			String[] result = ScriptParser.search(source, mainWindow.setting);
 			if(result != null){
 				String json = result[1];
