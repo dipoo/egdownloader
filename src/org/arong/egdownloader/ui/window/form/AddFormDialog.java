@@ -158,9 +158,9 @@ public class AddFormDialog extends JDialog {
 						if("/".equals(url.substring(url.length() - 1, url.length()))){
 							url = url.substring(0, url.length() - 1);
 						}
-						/*if(url.startsWith("https:")){
+						if(!setting.isHttps() && url.startsWith("https:")){
 							url = url.replace("https:", "http:");
-						}*/
+						}
 						//重复性验证
 						if(! mainWindow.taskDbTemplate.exsits("url", url)){
 							if(addTaskBtn.isEnabled()){

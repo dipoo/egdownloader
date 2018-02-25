@@ -175,7 +175,7 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, true);
 		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, true);
 		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, true);
-		JCheckBox c6 = new AJCheckBox("NON-H", Color.BLUE, font, true);
+		JCheckBox c6 = new AJCheckBox("NONH", Color.BLUE, font, true);
 		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, true);
 		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
 		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
@@ -183,7 +183,7 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c11 = new AJCheckBox("BT", Color.RED, font, false);//
 		c11.setToolTipText("是否可以下载BT文件");
 		c11.setName("sto");
-		language = new JComboBox(new String[]{"全部", "中文", "英文", "韩文", "法文", "西班牙"});
+		language = new JComboBox(new String[]{"全部", "中文", "日文", "英文", "韩文", "法文"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -206,21 +206,21 @@ public class SearchComicWindow extends JFrame {
 						keyField.setText("language:chinese " + key);
 						break;
 					case 2:
+						keyField.setText("language:japanese " + key);
+						break;	
+					case 3:
 						keyField.setText("language:english " + key);
 						break;
-					case 3:
+					case 4:
 						keyField.setText("language:korean " + key);
 						break;
-					case 4:
+					case 5:
 						keyField.setText("language:french " + key);
 						break;
-					case 5:
-						keyField.setText("language:spanish " + key);
-						break;	
 				}
 			}
 		});
-		final JCheckBox c12 = new AJCheckBox("ALL", Color.RED, font, true);
+		final JCheckBox c12 = new AJCheckBox("All", Color.RED, font, true);
 		c12.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
@@ -326,7 +326,7 @@ public class SearchComicWindow extends JFrame {
 			rightBtn.setEnabled(false);
 			
 			key = k;
-			String exurl = "http://exhentai.org/?advsearch=1&f_sh=on&f_apply=Apply+Filter&f_sname=on&f_stags=on&f_sh=on&f_srdd=2&page=" + (Integer.parseInt(page) - 1) + parseOption();
+			String exurl = mainWindow.setting.isHttps() ? "https" : "http" + "://exhentai.org/?advsearch=1&f_sh=on&f_apply=Apply+Filter&f_sname=on&f_stags=on&f_sh=on&f_srdd=2&page=" + (Integer.parseInt(page) - 1) + parseOption();
 			if(!keyText.equals("")){
 				//过滤key
 				try {
