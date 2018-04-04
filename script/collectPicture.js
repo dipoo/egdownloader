@@ -1,6 +1,6 @@
 var mark = {//
     listSource : ['<div id="gdt">', '<div id="cdiv" class="gm">'],//
-	intercept : ['style="height', "gdtm", "gdtl"],//
+	intercept : ['style="height', "gdtm"],//
 	showUrl : ['"><a href="', '"><img alt='],//
 	name : ['title="', '" src=']//
 };
@@ -47,7 +47,7 @@ function trim(s){
     
 function parse(temp){
 	var newpics = [];
-	var prefix = temp.indexOf(mark.intercept[1]) != -1 ? mark.intercept[1] : mark.intercept[2];//
+	var prefix = mark.intercept[1];//
 	temp = subFromSource(temp, prefix);
 	while(temp.indexOf(mark.intercept[0]) != -1){
 		var picture = {};

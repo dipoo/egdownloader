@@ -154,17 +154,8 @@ public class InitWindow extends JWindow {
 			}else{
 				startMain();
 			}
-		}catch (SocketTimeoutException e) {
+		}catch (Exception e) {
 			startMain();
-		}catch (ConnectTimeoutException e) {
-			startMain();
-		} catch (FileNotFoundException e) {
-			startMain();
-		} catch (IOException e) {
-			startMain();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}

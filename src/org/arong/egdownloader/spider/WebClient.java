@@ -102,7 +102,7 @@ public class WebClient {
 				// 获取服务器响应字符串
 				postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
 				result = postMethod.getResponseBodyAsString();
-			}else if (statusCode == 302) {
+			}else if (statusCode == 302 || statusCode == 301) {
                 // 重定向
                 String location = postMethod.getResponseHeader("Location").getValue();
                 if(requestLocation){
@@ -195,7 +195,7 @@ public class WebClient {
 //			             System.out.println(cookies[i].toString());
 			         }  
 			      }
-			}else if (statusCode == 302) {
+			}else if (statusCode == 302 || statusCode == 301) {
                 // 重定向
                 String location = postMethod.getResponseHeader("Location").getValue();
                 return getCookieByPostWithCookie(location, encoding, rawParams, cookieInfo);
@@ -287,7 +287,7 @@ public class WebClient {
 			if (statusCode == 200 || statusCode == 201) {
 				// 获取服务器响应流
 				result = postMethod.getResponseBodyAsStream();
-			}else if (statusCode == 302) {
+			}else if (statusCode == 302 || statusCode == 301) {
                 // 重定向
                 String location = postMethod.getResponseHeader("Location").getValue();
                 return postRequestAsStreamWithCookie(location, encoding, rawParams, cookieInfo);
@@ -377,7 +377,7 @@ public class WebClient {
 	            }
 	            // 获得响应状态
 	            int responseCode = urlConnection.getResponseCode();
-	            if (responseCode == 302) {
+	            if (responseCode == 301 || responseCode == 302) {
 	                // 重定向
 	                String location = urlConnection.getHeaderField("Location");
 	                nURL = location;
@@ -399,7 +399,7 @@ public class WebClient {
 	                    ByteArrayOutputStream out = new ByteArrayOutputStream();
 	                    byte[] bytes = new byte[size];
 	                    int read;
-	                    while ((read = in.read(bytes)) >= 0) {
+	                    while ((read = in.read(bytes)) > 0) {
 	                        out.write(bytes, 0, read);
 	                    }
 	                    responseContent = new String(out.toByteArray());
@@ -510,7 +510,7 @@ public class WebClient {
 	            int responseCode = urlConnection.getResponseCode();
 	            // 获得返回的数据长度
 	            int responseLength = urlConnection.getContentLength();
-	            if (responseCode == 302) {
+	            if (responseCode == 301 || responseCode == 302) {
 	                // 重定向
 	                String location = urlConnection.getHeaderField("Location");
 	                nURL = location;
@@ -529,7 +529,7 @@ public class WebClient {
 	                    ByteArrayOutputStream out = new ByteArrayOutputStream();
 	                    byte[] bytes = new byte[size];
 	                    int read;
-	                    while ((read = in.read(bytes)) >= 0) {
+	                    while ((read = in.read(bytes)) > 0) {
 	                        out.write(bytes, 0, read);
 	                    }
 	                    responseContent = new String(out.toByteArray());
@@ -542,6 +542,7 @@ public class WebClient {
 	        } while (foundRedirect);
         }catch (SocketTimeoutException e) {
         	//捕获到超时，不再请资源，返回null
+        	e.printStackTrace();
 		}
         return responseContent;
     }
@@ -619,7 +620,7 @@ public class WebClient {
 	            }
 	            // 获得响应状态
 	            int responseCode = urlConnection.getResponseCode();
-	            if (responseCode == 302) {
+	            if (responseCode == 301 || responseCode == 302) {
 	                // 重定向
 	                String location = urlConnection.getHeaderField("Location");
 	                url = new URL(location);
