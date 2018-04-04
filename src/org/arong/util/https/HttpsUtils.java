@@ -13,8 +13,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import org.arong.util.Tracker;
-
 public class HttpsUtils {
 
         public static HttpURLConnection getConnection(String urlStr, Proxy proxy) throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
@@ -27,6 +25,7 @@ public class HttpsUtils {
         }
         private static HttpURLConnection getHttpConnection(String urlStr, Proxy proxy) throws MalformedURLException, IOException {
                 URL url = new URL(urlStr);
+                System.out.println(urlStr + ",proxy:" + proxy);
                 HttpURLConnection conn = null;
                 if(proxy != null){
                 	conn = (HttpURLConnection) url.openConnection(proxy);
@@ -38,17 +37,23 @@ public class HttpsUtils {
        
         private static HttpsURLConnection getHttpsConnection(String urlStr, Proxy proxy) throws IOException {
                 URL url = new URL(urlStr);
+                System.out.println(urlStr + ",proxy:" + proxy);
                 HttpsURLConnection conn = null;
                 if(proxy != null){
                 	conn = (HttpsURLConnection) url.openConnection(proxy);
                 }else{
                 	conn = (HttpsURLConnection) url.openConnection();
                 }
+                /*try {
+					SslUtils.ignoreSsl();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}*/
                 try{
 	                // 不验证服务器主机名和证书
 	                conn.setHostnameVerifier(new IgnoreHostnameVerifier());
 	                TrustManager[] tm = { new X509TrustManager4None() };
-	                SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+	                SSLContext sslContext = SSLContext.getInstance("SSL");
 	                sslContext.init(null, tm, new java.security.SecureRandom());
 	                
 	                SSLSocketFactory ssf = sslContext.getSocketFactory();
