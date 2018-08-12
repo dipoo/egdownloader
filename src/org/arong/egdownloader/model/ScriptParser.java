@@ -24,6 +24,7 @@ import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.window.CreatingWindow;
+import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil;
 import org.arong.util.JsonUtil;
 import org.arong.util.Tracker;
@@ -260,6 +261,7 @@ public class ScriptParser {
 		try {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
+			param.put("version", Version.VERSION);
 			param.put("down_original", setting.isDownloadOriginal());//是否下载原图
 			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
 		} catch (Exception e) {

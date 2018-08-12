@@ -40,6 +40,7 @@ public class TaskingTable extends JTable {
 
 	private static final long serialVersionUID = 8917533573337061263L;
 	private TaskList<Task> tasks;
+	private TaskList<Task> hiddentasks;
 	private EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
 	private boolean rebuild;
@@ -53,6 +54,7 @@ public class TaskingTable extends JTable {
 	public void changeModel(EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		this.tasks = mainWindow.tasks;
+		this.setHiddentasks(mainWindow.tasks);
 		final TaskingTable table = this;
 		this.tasks.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -460,5 +462,13 @@ public class TaskingTable extends JTable {
 
 	public void setRefresh(boolean refresh) {
 		this.refresh = refresh;
+	}
+
+	public TaskList<Task> getHiddentasks() {
+		return hiddentasks;
+	}
+
+	public void setHiddentasks(TaskList<Task> hiddentasks) {
+		this.hiddentasks = hiddentasks;
 	}
 }

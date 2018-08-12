@@ -71,10 +71,9 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							continue;
 						}
 						if(this.isCancelled())//是否暂停
-							return null;
+							return null; 
 						if(pic.getRealUrl().contains("exhentai.org")){
-							pic.setRealUrl(WebClient.getRequestUseJavaWithCookie(pic.getRealUrl(), "utf-8", setting.getCookieInfo()));
-							is =  WebClient.getStreamUseJava(pic.getRealUrl());
+							is =  WebClient.getStreamUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo());
 						}else{
 							is =  WebClient.getStreamUseJava(pic.getRealUrl());
 						}
@@ -88,20 +87,6 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							continue;
 						}
 						int size = is.available();
-						/*System.out.println(size);
-						if(size < 1000){
-							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
-							is.close();
-							exceptionNum ++;
-							continue;
-						}else if(size < 1010){
-							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":509");
-							is.close();
-							exceptionNum ++;
-							continue;
-						}*/
 						String name = pic.getName();
 						//是否以真实名称保存，是的话则要判断是否重复并处理
 						if(! pic.isSaveAsName()){
