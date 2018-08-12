@@ -1,10 +1,8 @@
 package org.arong.egdownloader.ui.work;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 
-import javax.script.ScriptException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -13,9 +11,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CreatingWindow;
@@ -106,16 +102,8 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
 		} catch (ConnectTimeoutException e){
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
-		} catch (SpiderException e) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (WebClientException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (ScriptException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (Throwable e) {
-			e.printStackTrace();
 		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();

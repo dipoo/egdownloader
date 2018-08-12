@@ -326,7 +326,6 @@ public class WebClient {
         Map<String, String> headers = new HashMap<String, String>();
 
         //URL url = new URL(nURL);
-        
 
         try{
 	        do {
@@ -380,6 +379,7 @@ public class WebClient {
 	            if (responseCode == 301 || responseCode == 302) {
 	                // 重定向
 	                String location = urlConnection.getHeaderField("Location");
+	                System.out.println(responseCode + " " + location);
 	                nURL = location;
 	                foundRedirect = true;
 	            } else {
