@@ -305,12 +305,12 @@ public class WebClient {
 	}
 	
 	 public static InputStream getStreamUseJava(final String urlString)
-	            throws IOException,SocketTimeoutException,ConnectTimeoutException, KeyManagementException, NoSuchAlgorithmException {
+	            throws Exception {
 		 return getStreamUseJavaWithCookie(urlString, null);
 	 }
     
     public static InputStream getStreamUseJavaWithCookie(final String urlString, final String cookie)
-            throws IOException,SocketTimeoutException,ConnectTimeoutException, KeyManagementException, NoSuchAlgorithmException {
+            throws Exception {
 
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
@@ -327,103 +327,72 @@ public class WebClient {
 
         //URL url = new URL(nURL);
 
-        try{
-	        do {
-	        	HttpURLConnection urlConnection = null;
-	            if(Proxy.getNetProxy() != null){
-	            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
-	            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
-	            		//格式如下：  
-	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
-	            		String headerKey = "Proxy-Authorization";  
-	            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
-	            		urlConnection.setRequestProperty(headerKey, headerValue);
-	            	}
-	            }else{
-	            	urlConnection = HttpsUtils.getConnection(nURL, null);
-	            }
-	            // 添加访问授权
-	            if (digest != null) {
-	                urlConnection.setRequestProperty("Authorization", digest);
-	            }
-	            urlConnection.setDoOutput(true);
-	            urlConnection.setDoInput(true);
-	            urlConnection.setUseCaches(false);
-	            urlConnection.setInstanceFollowRedirects(false);
-	            urlConnection.setRequestMethod(method);
-	            urlConnection.setConnectTimeout(20000);
-	            urlConnection.setReadTimeout(20000);
-	            //模拟http头文件
-	            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36");
-	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
-	            
-	            if(cookie != null){
-	            	urlConnection.setRequestProperty("Cookie", cookie); 
-	            }
-	            
-	            //追加http头文件
-	            Set<Entry<String, String>> headersSet = headers.entrySet();
-	            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
-	                Entry<String, String> entry = (Entry<String, String>) it.next();
-	                urlConnection.setRequestProperty((String) entry.getKey(),
-	                        (String) entry.getValue());
-	            }
-	            if (post != null) {
-	                OutputStreamWriter outRemote = new OutputStreamWriter(
-	                        urlConnection.getOutputStream());
-	                outRemote.write(post);
-	                outRemote.flush();
-	            }
-	            // 获得响应状态
-	            int responseCode = urlConnection.getResponseCode();
-	            if (responseCode == 301 || responseCode == 302) {
-	                // 重定向
-	                String location = urlConnection.getHeaderField("Location");
-	                System.out.println(responseCode + " " + location);
-	                nURL = location;
-	                foundRedirect = true;
-	            } else {
-	                if (responseCode == 200 || responseCode == 201) {
-	                	inputStream = urlConnection.getInputStream();
-	                }else{
-	                	// 获得返回的数据长度
-	    	            int responseLength = urlConnection.getContentLength();
-	                	BufferedInputStream in;
-		                if (responseCode == 200 || responseCode == 201) {
-		                    in = new BufferedInputStream(urlConnection.getInputStream());
-		                } else {
-		                    in = new BufferedInputStream(urlConnection.getErrorStream());
-		                }
-		                int size = responseLength == -1 ? 4096 : responseLength;
-		                String responseContent = null;
-	                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                    byte[] bytes = new byte[size];
-	                    int read;
-	                    while ((read = in.read(bytes)) > 0) {
-	                        out.write(bytes, 0, read);
-	                    }
-	                    responseContent = new String(out.toByteArray());
-	                    in.close();
-	                    out.close();
-	                    System.out.println(responseContent);
-	                }
-	                foundRedirect = false;
-	            }
-	            // 如果重定向则继续
-	        } while (foundRedirect);
-        }catch (SocketTimeoutException e) {
-        	//捕获到超时，不再请资源，返回null
-        	throw e;
-		}catch (ConnectTimeoutException e) {
-        	//捕获到超时，不再请资源，返回null
-        	throw e;
-		}
+        do {
+        	HttpURLConnection urlConnection = null;
+            if(Proxy.getNetProxy() != null){
+            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
+            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
+            		//格式如下：  
+            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
+            		String headerKey = "Proxy-Authorization";  
+            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
+            		urlConnection.setRequestProperty(headerKey, headerValue);
+            	}
+            }else{
+            	urlConnection = HttpsUtils.getConnection(nURL, null);
+            }
+            // 添加访问授权
+            if (digest != null) {
+                urlConnection.setRequestProperty("Authorization", digest);
+            }
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.setInstanceFollowRedirects(false);
+            urlConnection.setRequestMethod(method);
+            urlConnection.setConnectTimeout(20000);
+            urlConnection.setReadTimeout(20000);
+            //模拟http头文件
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36");
+            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
+            
+            if(cookie != null){
+            	urlConnection.setRequestProperty("Cookie", cookie); 
+            }
+            
+            //追加http头文件
+            Set<Entry<String, String>> headersSet = headers.entrySet();
+            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
+                Entry<String, String> entry = (Entry<String, String>) it.next();
+                urlConnection.setRequestProperty((String) entry.getKey(),
+                        (String) entry.getValue());
+            }
+            if (post != null) {
+                OutputStreamWriter outRemote = new OutputStreamWriter(
+                        urlConnection.getOutputStream());
+                outRemote.write(post);
+                outRemote.flush();
+            }
+            // 获得响应状态
+            int responseCode = urlConnection.getResponseCode();
+            if (responseCode == 301 || responseCode == 302) {
+                // 重定向
+                String location = urlConnection.getHeaderField("Location");
+                System.out.println(responseCode + " " + location);
+                nURL = location;
+                foundRedirect = true;
+            } else {
+                if (responseCode == 200 || responseCode == 201) {
+                	inputStream = urlConnection.getInputStream();
+                }
+                foundRedirect = false;
+            }
+            // 如果重定向则继续
+        } while (foundRedirect);
         return inputStream;
     }
     
-    public static String getRequestUseJava(final String urlString,
-            final String encoding)
-            throws IOException, KeyManagementException, NoSuchAlgorithmException {
+    public static String getRequestUseJava(final String urlString, final String encoding) throws Exception {
     	return getRequestUseJavaWithCookie(urlString, encoding, null);
     }
    
@@ -434,13 +403,9 @@ public class WebClient {
      * @param encoding
      * @param parameter
      * @return
-     * @throws IOException
-     * @throws NoSuchAlgorithmException 
-     * @throws KeyManagementException 
      */
-    public static String getRequestUseJavaWithCookie(final String urlString,
-            final String encoding, String cookie)
-            throws IOException, KeyManagementException, NoSuchAlgorithmException {
+    public static String getRequestUseJavaWithCookie(final String urlString, final String encoding, String cookie)
+            throws Exception {
 
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
@@ -457,93 +422,88 @@ public class WebClient {
 
         //URL url = new URL(nURL);
 
-        try{
-	        do {
-	        	
-	            HttpURLConnection urlConnection = null;
-	            if(Proxy.getNetProxy() != null){
-	            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
-	            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
-	            		//格式如下：  
-	            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
-	            		String headerKey = "Proxy-Authorization";  
-	            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
-	            		urlConnection.setRequestProperty(headerKey, headerValue);
-	            	}
-	            }else{
-	            	urlConnection = HttpsUtils.getConnection(nURL, null);
-	            }
-	            
-	            // 添加访问授权
-	            if (digest != null) {
-	                urlConnection.setRequestProperty("Authorization", digest);
-	            }
-	            urlConnection.setDoOutput(true);
-	            urlConnection.setDoInput(true);
-	            urlConnection.setUseCaches(false);
-	            urlConnection.setInstanceFollowRedirects(false);
-	            urlConnection.setRequestMethod(method);
-	            urlConnection.setConnectTimeout(20000);  
-	            urlConnection.setReadTimeout(20000);
-	            //模拟http头文件
-	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
-	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
-	           
-	            if(cookie != null){
-	            	urlConnection.setRequestProperty("Cookie", cookie); 
-	            }
-	            
-	            //追加http头文件
-	            Set<Entry<String, String>> headersSet = headers.entrySet();
-	            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
-	                Entry<String, String> entry = (Entry<String, String>) it.next();
-	                urlConnection.setRequestProperty((String) entry.getKey(),
-	                        (String) entry.getValue());
-	            }
-	            if (post != null) {
-	                OutputStreamWriter outRemote = new OutputStreamWriter(
-	                        urlConnection.getOutputStream());
-	                outRemote.write(post);
-	                outRemote.flush();
-	            }
-	            // 获得响应状态
-	            int responseCode = urlConnection.getResponseCode();
-	            // 获得返回的数据长度
-	            int responseLength = urlConnection.getContentLength();
-	            if (responseCode == 301 || responseCode == 302) {
-	                // 重定向
-	                String location = urlConnection.getHeaderField("Location");
-	                nURL = location;
-	                foundRedirect = true;
-	            } else {
-	                BufferedInputStream in;
-	                if (responseCode == 200 || responseCode == 201) {
-	                    in = new BufferedInputStream(urlConnection.getInputStream());
-	                } else {
-	                    in = new BufferedInputStream(urlConnection.getErrorStream());
-	                }
-	                int size = responseLength == -1 ? 4096 : responseLength;
-	                if (encoding != null) {
-	                    responseContent = read(in, size, encoding);
-	                } else {
-	                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                    byte[] bytes = new byte[size];
-	                    int read;
-	                    while ((read = in.read(bytes)) > 0) {
-	                        out.write(bytes, 0, read);
-	                    }
-	                    responseContent = new String(out.toByteArray());
-	                    in.close();
-	                    out.close();
-	                }
-	                foundRedirect = false;
-	            }
-	            // 如果重定向则继续
-	        } while (foundRedirect);
-        }catch (SocketTimeoutException e) {
-        	//捕获到超时，不再请资源，返回null
-        	e.printStackTrace();
-		}
+        do {
+        	
+            HttpURLConnection urlConnection = null;
+            if(Proxy.getNetProxy() != null){
+            	urlConnection = HttpsUtils.getConnection(nURL, Proxy.getNetProxy());
+            	if(Proxy.username != null && !"".equals(Proxy.username) && Proxy.pwd != null && !"".equals(Proxy.pwd)){
+            		//格式如下：  
+            		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
+            		String headerKey = "Proxy-Authorization";  
+            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
+            		urlConnection.setRequestProperty(headerKey, headerValue);
+            	}
+            }else{
+            	urlConnection = HttpsUtils.getConnection(nURL, null);
+            }
+            
+            // 添加访问授权
+            if (digest != null) {
+                urlConnection.setRequestProperty("Authorization", digest);
+            }
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.setInstanceFollowRedirects(false);
+            urlConnection.setRequestMethod(method);
+            urlConnection.setConnectTimeout(20000);  
+            urlConnection.setReadTimeout(20000);
+            //模拟http头文件
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
+            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
+           
+            if(cookie != null){
+            	urlConnection.setRequestProperty("Cookie", cookie); 
+            }
+            
+            //追加http头文件
+            Set<Entry<String, String>> headersSet = headers.entrySet();
+            for (Iterator<Entry<String, String>> it = headersSet.iterator(); it.hasNext();) {
+                Entry<String, String> entry = (Entry<String, String>) it.next();
+                urlConnection.setRequestProperty((String) entry.getKey(),
+                        (String) entry.getValue());
+            }
+            if (post != null) {
+                OutputStreamWriter outRemote = new OutputStreamWriter(
+                        urlConnection.getOutputStream());
+                outRemote.write(post);
+                outRemote.flush();
+            }
+            // 获得响应状态
+            int responseCode = urlConnection.getResponseCode();
+            // 获得返回的数据长度
+            int responseLength = urlConnection.getContentLength();
+            if (responseCode == 301 || responseCode == 302) {
+                // 重定向
+                String location = urlConnection.getHeaderField("Location");
+                nURL = location;
+                foundRedirect = true;
+            } else {
+                BufferedInputStream in;
+                if (responseCode == 200 || responseCode == 201) {
+                    in = new BufferedInputStream(urlConnection.getInputStream());
+                } else {
+                    in = new BufferedInputStream(urlConnection.getErrorStream());
+                }
+                int size = responseLength == -1 ? 4096 : responseLength;
+                if (encoding != null) {
+                    responseContent = read(in, size, encoding);
+                } else {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    byte[] bytes = new byte[size];
+                    int read;
+                    while ((read = in.read(bytes)) > 0) {
+                        out.write(bytes, 0, read);
+                    }
+                    responseContent = new String(out.toByteArray());
+                    in.close();
+                    out.close();
+                }
+                foundRedirect = false;
+            }
+            // 如果重定向则继续
+        } while (foundRedirect);
         return responseContent;
     }
     
