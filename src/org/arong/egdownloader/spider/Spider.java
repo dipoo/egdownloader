@@ -25,7 +25,7 @@ public final class Spider {
 	 * @throws Exception 
      */
     public static String getText(final String url, final String encoding, final String prefix,
-            final String suffix) throws SpiderException, WebClientException, KeyManagementException, NoSuchAlgorithmException, IOException {
+            final String suffix) throws Exception {
         String text = null;
         String serverResponse = WebClient.getRequestUseJava(url, encoding);//WebClient.postRequest(url, encoding);
         if(serverResponse != null){
@@ -45,7 +45,7 @@ public final class Spider {
         return text;
     }
     public static String getTextUseJava(final String url, final String encoding, final String prefix,
-            final String suffix) throws SpiderException, WebClientException, KeyManagementException, NoSuchAlgorithmException {
+            final String suffix) throws Exception {
         String text = null;
         try {
 			String serverResponse = WebClient.getRequestUseJava(url, encoding);
@@ -124,7 +124,7 @@ public final class Spider {
         return text;
     }
     
-    public static Boolean containText(String url, String encoding, String text) throws WebClientException, SpiderException, KeyManagementException, NoSuchAlgorithmException, IOException{
+    public static Boolean containText(String url, String encoding, String text) throws Exception{
     	String serverResponse = WebClient.getRequestUseJava(url, encoding);//WebClient.postRequest(url, encoding);
     	containTextFromSource(serverResponse, text);
     	return true;

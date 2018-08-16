@@ -141,6 +141,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						success ++;
 						continue;
 					}catch (SocketTimeoutException e){
+						exceptionNum ++;
 						//碰到异常
 						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试");
 						//删除已经下载的文件
@@ -148,6 +149,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						//继续下一个
 						continue;
 					}catch (ConnectTimeoutException e){
+						exceptionNum ++;
 						//碰到异常
 						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-连接超时，滞后重试");
 						//继续下一个
@@ -161,6 +163,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						table.startWaitingTask();
 						return null;
 					}catch (Exception e){
+						exceptionNum ++;
 						//碰到异常
 						e.printStackTrace();
 						Tracker.println(task.getDisplayName() + ":" + pic.getName() + e.getLocalizedMessage());

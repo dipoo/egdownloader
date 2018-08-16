@@ -3,21 +3,15 @@ package org.arong.egdownloader.ui.work.listenerWork;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
-import javax.script.ScriptException;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -58,17 +52,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 				JOptionPane.showMessageDialog(mainWindow, "读取文件超时，请检查网络后重试");
 			} catch (ConnectTimeoutException e){
 				JOptionPane.showMessageDialog(mainWindow, "连接超时，请检查网络后重试");
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-			} catch (SpiderException e) {
-				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-			} catch (WebClientException e) {
-				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-			} catch (KeyManagementException e) {
-				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-			} catch (NoSuchAlgorithmException e) {
-				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-			} catch (ScriptException e) {
+			} catch (Exception e) {
 				JOptionPane.showMessageDialog(mainWindow, e.getMessage());
 			} finally{
 				mainWindow.tablePopupMenu.setVisible(false);

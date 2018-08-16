@@ -22,7 +22,6 @@ import javax.swing.JTextArea;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil;
@@ -126,7 +125,7 @@ public class ScriptParser {
 	 * @throws NoSuchAlgorithmException 
 	 * @throws KeyManagementException 
 	 */
-	public static Task buildTaskByJavaScript(Task task, Setting setting, JDialog window) throws SpiderException, WebClientException, ScriptException, KeyManagementException, NoSuchAlgorithmException, IOException{
+	public static Task buildTaskByJavaScript(Task task, Setting setting, JDialog window) throws Exception{
 		CreatingWindow creatingWindow = (CreatingWindow)window;
 		if(task.getId() == null){
 			task.setId(UUID.randomUUID().toString());
@@ -171,8 +170,8 @@ public class ScriptParser {
 			creatingWindow.bar.setMaximum(task.getTotal());
 			task.setSaveDir(task.getSaveDir() + "/" + FileUtil.filterDir(task.getName()));
 		}catch(Exception e){
-			e.printStackTrace();
 			Tracker.println(ScriptParser.class, setting.getCreateTaskScriptPath() + "脚本解析错误:" + e.getMessage());
+			throw e;
 		}
 		//获取图片集合
 		//计算页数(每40张一页)
@@ -228,7 +227,7 @@ public class ScriptParser {
 	 * @throws NoSuchAlgorithmException 
 	 * @throws KeyManagementException 
 	 */
-	public static void rebuildTask(Task task, Setting setting) throws SpiderException, ScriptException, WebClientException, KeyManagementException, NoSuchAlgorithmException, IOException{
+	public static void rebuildTask(Task task, Setting setting) throws Exception{
 //		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
 //				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
 			String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());
@@ -255,7 +254,7 @@ public class ScriptParser {
 	 * @throws NoSuchAlgorithmException 
 	 * @throws KeyManagementException 
 	 */
-	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws WebClientException, KeyManagementException, NoSuchAlgorithmException, IOException{
+	public static String getdownloadUrl(String taskName, String sourceUrl, Setting setting) throws Exception{
 		String url = null;
 		String source = WebClient.getRequestUseJavaWithCookie(sourceUrl, "UTF-8", setting.getCookieInfo());
 		try {

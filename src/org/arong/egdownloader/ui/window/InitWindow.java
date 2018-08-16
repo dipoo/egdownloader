@@ -119,6 +119,7 @@ public class InitWindow extends JWindow {
 				}
 			});*/
 			int p_historyCount = 0;
+			textLabel.setText("读取图片列表");
 			for (Task task : tasks) {
 				task.setPictures(pictureDbTemplate.query("tid", task.getId()));
 				p_historyCount += task.getTotal();
