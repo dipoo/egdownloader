@@ -24,6 +24,7 @@ import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.TaskSqliteDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.TaskList;
@@ -107,7 +108,7 @@ public class InitWindow extends JWindow {
 		}
 		textLabel.setForeground(Color.WHITE);
 		textLabel.setText("读取任务列表");
-		taskDbTemplate = new TaskDom4jDbTemplate();
+		taskDbTemplate = new TaskSqliteDbTemplate();//TaskDom4jDbTemplate();
 		pictureDbTemplate = new PictureDom4jDbTemplate();
 		tasks = (TaskList<Task>) taskDbTemplate.query();
 		if(tasks != null){
