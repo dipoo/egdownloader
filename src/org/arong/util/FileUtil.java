@@ -282,4 +282,21 @@ public final class FileUtil {
 		    file.delete(); 
 		} 
 	}
+	/**
+	 * 获取项目根目录，如在eclipse中则为bin目录，jar中则为jar包所在目录
+	 */
+	public static String getProjectPath(){
+		String filePath = System.getProperty("java.class.path");  
+        String pathSplit = System.getProperty("path.separator");//windows下是";",linux下是":"  
+          
+        if(filePath.contains(pathSplit)){  
+            filePath = filePath.substring(0,filePath.indexOf(pathSplit));  
+        }else if (filePath.endsWith(".jar")) {//截取路径中的jar包名,可执行jar包运行的结果里包含".jar"  
+            //此时的路径是"E:\workspace\Demorun\Demorun_fat.jar"，用"/"分割不行  
+            //下面的语句输出是-1，应该改为lastIndexOf("\\")或者lastIndexOf(File.separator)  
+//          System.out.println("getPath2:"+filePath.lastIndexOf("/"));
+            filePath = filePath.substring(0, filePath.lastIndexOf(File.separator) + 1);  
+        }  
+        return filePath;  
+	}
 }

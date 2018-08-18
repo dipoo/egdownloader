@@ -1,10 +1,17 @@
 package org.arong.egdownloader.ui;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
 import javax.swing.JTextArea;
+
+import org.arong.util.FileUtil;
+import org.arong.utils.DateUtil;
 
 /**
  * 用于将控制台信息即System.out.println打印的信息转移到Swing组件JtextArea上显示
@@ -13,6 +20,20 @@ import javax.swing.JTextArea;
  * @since 2013-8-18
  */
 public class SwingPrintStream extends PrintStream {
+	static BufferedWriter logfw = null;
+	static{
+		//获取日志文件
+		File logfile = new File(FileUtil.getProjectPath() + File.separator + "console.log");
+		try {
+			//大于10M则另存为
+			if(logfile.exists() && logfile.length() > 1024 * 1024 * 10){
+				logfile.renameTo(new File(FileUtil.getProjectPath() + File.separator + "console.log." + DateUtil.getStringToday()));
+			}
+			logfw = new BufferedWriter(new FileWriter(logfile, true), 4096);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	private JTextArea logTextArea;
 
 	public SwingPrintStream(OutputStream out, JTextArea logTextArea)
@@ -30,6 +51,13 @@ public class SwingPrintStream extends PrintStream {
 		// 让光标置于最下方
 		logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
 		logTextArea.paintImmediately(logTextArea.getBounds());
+		try {
+			//写日志
+			logfw.append(DateUtil.getStringToday() + " " + message);
+			logfw.flush();
+		} catch (IOException e) {
+			//e.printStackTrace();
+		}
 	}
 	
 	/**
