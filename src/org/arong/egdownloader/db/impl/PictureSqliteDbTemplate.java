@@ -1,0 +1,230 @@
+package org.arong.egdownloader.db.impl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.model.Picture;
+import org.arong.jdbc.JdbcUtil;
+import org.arong.util.JdbcSqlExecutor;
+import org.arong.utils.StringUtil;
+
+public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
+	
+	static{
+		StringBuffer sqlsb = new StringBuffer("create table picture (")
+		.append("id VARCHAR(256) PRIMARY KEY NOT NULL,")
+		.append("tid VARCHAR(256) NOT NULL,")
+		.append("num VARCHAR(64) NOT NULL,")
+		.append("name VARCHAR(1024),")
+		.append("url VARCHAR(512),")
+		.append("realUrl VARCHAR(512),")
+		.append("size VARCHAR(64),")
+		.append("time VARCHAR(64),")
+		.append("saveAsName VARCHAR(64),")
+		.append("isCompleted VARCHAR(64));");
+		try {
+			JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+		} catch (SQLException e1) {
+		}
+	}
+	
+	public boolean store(Picture model) {
+		StringBuffer sqlsb = new StringBuffer();
+		storeSql(model, sqlsb);
+		try {
+			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+			return c > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean store(List<Picture> list) {
+		if(list != null && list.size() > 0){
+			StringBuffer sqlsb = new StringBuffer();
+			for (Picture model : list) {
+				storeSql(model, sqlsb);
+			}
+			try {
+				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
+				return c > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		/*for (Picture model : list) {
+			store(model);
+		}*/
+		return false;
+	}
+
+	public boolean update(Picture t) {
+		StringBuffer sqlsb = new StringBuffer();
+		updateSql(t, sqlsb);
+		try {
+			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+			return c > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean update(List<Picture> list) {
+		if(list != null && list.size() > 0){
+			StringBuffer sqlsb = new StringBuffer();
+			for (Picture t : list) {
+				updateSql(t, sqlsb);
+			}
+			try {
+				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
+				return c > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		/*for (Picture model : list) {
+			update(model);
+		}*/
+		return false;
+	}
+
+	public boolean delete(Picture t) {
+		StringBuffer sqlsb = new StringBuffer();
+		deleteSql(t, sqlsb);
+		try {
+			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+			return c > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean delete(List<Picture> list) {
+		StringBuffer sqlsb = new StringBuffer();
+		for (Picture model : list) {
+			deleteSql(model, sqlsb);
+			try {
+				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
+				return c > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	public List<Picture> query() {
+		return query(null);
+	}
+
+	public List<Picture> query(Object o) {
+		if(o == null){
+			o = new Picture();
+		}
+		if(o instanceof Picture){
+			Picture model = (Picture)o;
+			StringBuffer sqlsb = new StringBuffer("select * from picture where 1=1");
+			if(StringUtil.notBlank(model.getTid())){
+				sqlsb.append(" and tid = '").append(model.getTid()).append("'");
+			}
+			sqlsb.append(" order by num desc");
+			try {
+				return JdbcSqlExecutor.getInstance().executeQuery(sqlsb.toString(), JdbcUtil.getConnection(), new JdbcSqlExecutor.CallBack<List<Picture>>() {
+					public List<Picture> action(ResultSet rs) throws SQLException {
+						List<Picture> list = new ArrayList<Picture>();
+						Picture model = null;
+						while(rs.next()){
+							model = new Picture();
+							resultSet2Picture(rs, model);
+							list.add(model);
+						}
+						return list;
+					}
+				});
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}else{
+			Picture model = new Picture();
+			model.setId(o.toString());
+			return query(model);
+		}
+	}
+
+	public List<Picture> query(String name, String value) {
+		String sql = "select * from picture where " + name + "='" + value + "'";
+		try {
+			return JdbcSqlExecutor.getInstance().executeQuery(sql, JdbcUtil.getConnection(), new JdbcSqlExecutor.CallBack<List<Picture>>() {
+				public List<Picture> action(ResultSet rs) throws SQLException {
+					List<Picture> list = new ArrayList<Picture>();
+					Picture model = null;
+					while(rs.next()){
+						model = new Picture();
+						resultSet2Picture(rs, model);
+						list.add(model);
+					}
+					return list;
+				}
+			});
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Picture get(Object id) {
+		List<Picture> list = query(id);
+		return list != null && list.size() > 0 ? list.get(0) : null;
+	}
+
+	public boolean exsits(String name, String value) {
+		return query(name, value) != null && query(name, value).size() > 0;
+	}
+	private void resultSet2Picture(ResultSet rs, Picture model) throws SQLException{
+		model.setId(rs.getString("id"));
+		model.setNum(rs.getString("num"));
+		model.setTid(rs.getString("tid"));
+		model.setUrl(rs.getString("url"));
+		model.setName(rs.getString("name"));
+		model.setRealUrl(rs.getString("realUrl"));
+		model.setTime(rs.getString("time"));
+		model.setSize(rs.getString("size") == null ? 1 : Integer.parseInt(rs.getString("size")));
+		model.setSaveAsName("true".equals(rs.getString("saveAsName")));
+		model.setCompleted("true".equals(rs.getString("isCompleted")));
+	}
+	
+	private void storeSql(Picture model, StringBuffer sqlsb){
+		sqlsb.append("insert into picture(id,tid,num,name,url,realUrl,size,time,saveAsName,isCompleted) values('")
+		.append(model.getId()).append("','").append(model.getTid()).append("','")
+		.append(model.getNum()).append("','").append(model.getName()).append("','")
+		.append(model.getUrl()).append("','").append(model.getRealUrl()).append("','")
+		.append(model.getSize()).append("','").append(model.getTime() == null ? "" : model.getTime()).append("','")
+		.append(model.isSaveAsName()).append("','").append(model.isCompleted())
+		.append("');");
+	}
+	
+	private void updateSql(Picture t, StringBuffer sqlsb){
+		sqlsb.append("update picture set ")
+		.append("tid='").append(t.getTid()).append("',")
+		.append("num='").append(t.getNum()).append("',")
+		.append("name='").append(t.getName()).append("',")
+		.append("url='").append(t.getUrl()).append("',")
+		.append("realUrl='").append(t.getRealUrl()).append("',")
+		.append("size='").append(t.getSize()).append("',")
+		.append("time='").append(t.getTime()).append("',")
+		.append("saveAsName='").append(t.isSaveAsName()).append("',")
+		.append("isCompleted='").append(t.isCompleted())
+		.append("' where id='").append(t.getId()).append("';");
+	}
+	
+	private void deleteSql(Picture t, StringBuffer sqlsb){
+		sqlsb.append("delete from picture where id='").append(t.getId()).append("'");
+	}
+}

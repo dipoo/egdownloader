@@ -64,6 +64,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			}
 			
 			if(task != null){
+				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
 				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
 				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
@@ -75,6 +76,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				//设置历史图片总数
 				setting.setPictureHistoryCount(setting.getPictureHistoryCount() + task.getTotal());
 				//保存到数据库
+				window.creatingWindow.setTitle("正在保存数据");
 				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
 				window.taskDbTemplate.store(task);//保存任务
 				window.settingDbTemplate.update(setting);//保存配置
@@ -104,6 +106,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
+			e.printStackTrace();
 		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();

@@ -44,7 +44,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		for (Task model : tasks) {
 			store(model);
 		}
-		return false;
+		return true;
 	}
 	
 	public boolean store(Task model) {
@@ -60,7 +60,6 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 				.append(model.getStart()).append("','").append(model.getEnd()).append("'")
 				.append(");");
 		try {
-			System.out.println(sqlsb.toString());
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
@@ -81,7 +80,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		.append("tag='").append(t.getTag()).append("',")
 		.append("readed='").append(t.isReaded()).append("',")
 		.append("createTime='").append(t.getCreateTime()).append("',")
-		.append("completedTime='").append(t.getCompletedTime()).append("',")
+		.append("completedTime='").append(t.getCompletedTime() == null ? "" : t.getCompletedTime()).append("',")
 		.append("total='").append(t.getTotal()).append("',")
 		.append("current='").append(t.getCurrent()).append("',")
 		.append("size='").append(t.getSize()).append("',")
@@ -90,7 +89,6 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		.append("end='").append(t.getEnd()).append("' where id='")
 		.append(t.getId()).append("'");
 		try {
-			System.out.println(sqlsb.toString());
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
@@ -103,7 +101,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		for (Task model : tasks) {
 			update(model);
 		}
-		return false;
+		return true;
 	}
 
 	public boolean delete(Task t) {
@@ -121,7 +119,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		for (Task model : tasks) {
 			delete(model);
 		}
-		return false;
+		return true;
 	}
 
 	public List<Task> query() {
@@ -150,7 +148,6 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 			}
 			sqlsb.append(" order by createTime desc");
 			try {
-				System.out.println(sqlsb.toString());
 				return JdbcSqlExecutor.getInstance().executeQuery(sqlsb.toString(), JdbcUtil.getConnection(), new JdbcSqlExecutor.CallBack<List<Task>>() {
 					public List<Task> action(ResultSet rs) throws SQLException {
 						TaskList<Task> list = new TaskList<Task>();
@@ -175,7 +172,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 	}
 
 	public List<Task> query(String name, String value) {
-		String sql = "select * from task where name='" + value + "'";
+		String sql = "select * from task where " + name + "='" + value + "'";
 		try {
 			return JdbcSqlExecutor.getInstance().executeQuery(sql, JdbcUtil.getConnection(), new JdbcSqlExecutor.CallBack<List<Task>>() {
 				public List<Task> action(ResultSet rs) throws SQLException {

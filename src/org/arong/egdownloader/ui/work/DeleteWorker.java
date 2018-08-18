@@ -14,6 +14,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DeletingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
+import org.arong.util.Tracker;
 /**
  * 删除任务线程类
  * @author 阿荣
@@ -46,6 +47,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					tasks.add(task);
 					w.setData((i + 1) + "/" + rows.length);
 					w.setInfo("收集:" + task.getName());
+					Tracker.println("待删除：" + task.getName());
 					if(task.getPictures() != null && task.getPictures().size() > 0){
 						pics.addAll(task.getPictures());
 					}
@@ -69,6 +71,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					}
 				}
 				w.setInfo("正在删除任务");
+				Tracker.println("正在删除" + tasks.size() + "个任务");
 				mainWindow.taskDbTemplate.delete(tasks);//删除任务
 				//更新内存
 				table.getTasks().removeAll(tasks);

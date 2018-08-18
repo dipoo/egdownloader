@@ -4,12 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -19,16 +14,16 @@ import javax.swing.JPanel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.PictureSqliteDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskSqliteDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
-import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
@@ -109,8 +104,20 @@ public class InitWindow extends JWindow {
 		textLabel.setForeground(Color.WHITE);
 		textLabel.setText("读取任务列表");
 		taskDbTemplate = new TaskSqliteDbTemplate();//TaskDom4jDbTemplate();
-		pictureDbTemplate = new PictureDom4jDbTemplate();
+		pictureDbTemplate = new PictureSqliteDbTemplate();//PictureDom4jDbTemplate();
 		tasks = (TaskList<Task>) taskDbTemplate.query();
+		/*if(tasks == null || tasks.size() == 0){
+			DbTemplate<Task> taskDbTemplate_ = new TaskDom4jDbTemplate();
+			tasks = (TaskList<Task>) taskDbTemplate_.query();
+			taskDbTemplate.store(tasks);
+			if(tasks != null){
+				DbTemplate<Picture> pictureDbTemplate_ = new PictureDom4jDbTemplate();
+				for (Task task : tasks) {
+					task.setPictures(pictureDbTemplate_.query("tid", task.getId()));
+					pictureDbTemplate.store(task.getPictures());
+				}
+			}
+		}*/
 		if(tasks != null){
 			//按照名称排序
 			/*Collections.sort(tasks, new Comparator<Task>() {
@@ -122,7 +129,9 @@ public class InitWindow extends JWindow {
 			int p_historyCount = 0;
 			textLabel.setText("读取图片列表");
 			for (Task task : tasks) {
-				task.setPictures(pictureDbTemplate.query("tid", task.getId()));
+				if(task.getPictures() == null){
+					task.setPictures(pictureDbTemplate.query("tid", task.getId()));
+				}
 				p_historyCount += task.getTotal();
 			}
 			/**

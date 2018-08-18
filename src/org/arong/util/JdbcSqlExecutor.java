@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 /**
  * 减少jdbc执行产生的代码量
  */
@@ -53,15 +54,28 @@ public class JdbcSqlExecutor {
 	}
 	
 	public int executeUpdate(String sql, Connection conn) throws SQLException{
+		return executeUpdate(sql, false, conn);
+	}
+	
+	public int executeUpdate(String sql, boolean batUpdate, Connection conn) throws SQLException{
 		
 		PreparedStatement pst = null;
+		Statement st = null;
 		ResultSet rs = null;
 		int result = 0;
 		try {
-			pst = conn.prepareStatement(sql);
-			result = pst.executeUpdate();
+			if(batUpdate){
+				st = conn.createStatement();
+				String[] sqls = sql.split(";");
+				for(int i = 0; i < sqls.length; i ++){
+					st.addBatch(sqls[i]);
+				}
+				result =  st.executeBatch()[0];
+			}else{
+				pst = conn.prepareStatement(sql);
+				result = pst.executeUpdate();
+			}
 			return result;
-			
 		} catch (SQLException e) {
 			throw e;
 		} finally{
@@ -75,6 +89,13 @@ public class JdbcSqlExecutor {
 			if(pst != null){
 				try {
 					pst.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(st != null){
+				try {
+					st.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
