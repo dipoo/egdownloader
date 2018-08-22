@@ -43,6 +43,7 @@ import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
+import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJCheckBox;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -86,6 +87,8 @@ public class SearchComicWindow extends JFrame {
 	public List<String> keyList = new ArrayList<String>();//关键字缓存
 	private Font font = new Font("宋体", 0, 12); 
 	public String page = "1";
+	public SearchWindowPopMenu popMenu;
+	public int viewModel = 1;//1为图片浏览；2为表格浏览
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
@@ -421,7 +424,7 @@ public class SearchComicWindow extends JFrame {
 			coverLabel.setToolTipText(searchTasks.get(i).getName() + "[" + searchTasks.get(i).getUploader() + "]");
 			coverLabel.setName((i + 1)+ "");
 			coverLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-			final String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(searchTasks.get(i).getUrl());
+			final String path = ComponentConst.CACHE_PATH + "/1.jpg"/* + FileUtil.filterDir(searchTasks.get(i).getUrl())*/;
 			File cover = new File(path);
 			if(cover == null || !cover.exists()){
 				coverLabel.setSize(20, 20);
