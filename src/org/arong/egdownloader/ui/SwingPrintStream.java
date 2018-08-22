@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 
 import org.arong.util.FileUtil;
 import org.arong.utils.DateUtil;
+import org.arong.utils.StringUtil;
 
 /**
  * 用于将控制台信息即System.out.println打印的信息转移到Swing组件JtextArea上显示
@@ -25,8 +26,8 @@ public class SwingPrintStream extends PrintStream {
 		//获取日志文件
 		File logfile = new File(FileUtil.getProjectPath() + File.separator + "console.log");
 		try {
-			//大于10M则另存为
-			if(logfile.exists() && logfile.length() > 1024 * 1024 * 10){
+			//大于20M则另存为
+			if(logfile.exists() && logfile.length() > 1024 * 1024 * 20){
 				logfile.renameTo(new File(FileUtil.getProjectPath() + File.separator + "console.log." + DateUtil.getStringToday()));
 			}
 			logfw = new BufferedWriter(new FileWriter(logfile, true), 4096);
@@ -47,16 +48,18 @@ public class SwingPrintStream extends PrintStream {
 	public void write(byte[] buf, int off, int len) {
 		filter(logTextArea);
 		final String message = new String(buf, off, len);
-		logTextArea.append(message);
-		// 让光标置于最下方
-		logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
-		logTextArea.paintImmediately(logTextArea.getBounds());
-		try {
-			//写日志
-			logfw.append(DateUtil.getStringToday() + " " + message);
-			logfw.flush();
-		} catch (IOException e) {
-			//e.printStackTrace();
+		if(StringUtil.notBlank(message)){
+			logTextArea.insert("--" + message + "\n", 0);//logTextArea.append(message);
+			// 让光标置于最上方
+			logTextArea.setCaretPosition(0);
+			logTextArea.paintImmediately(logTextArea.getBounds());
+			try {
+				//写日志
+				logfw.append(DateUtil.getStringToday() + " " + message + "\n");
+				logfw.flush();
+			} catch (IOException e) {
+				//e.printStackTrace();
+			}
 		}
 	}
 	
@@ -66,7 +69,7 @@ public class SwingPrintStream extends PrintStream {
 	 */
 	private void filter(JTextArea logTextArea){
 		String text = logTextArea.getText();
-		if(text.length() > 1000){
+		if(text.length() > 20000){
 			logTextArea.setText(text.substring(text.length() - 1000, text.length()));
 		}
 	}

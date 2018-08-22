@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 
 /**
@@ -20,9 +21,11 @@ public class TaskTableHeaderRenderer implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 			JLabel l = null;
+			TaskingTable t = (TaskingTable)table;
 		switch (column){
 			case 0://类别
-				l = new AJLabel("", "", color, JLabel.CENTER);
+				l = new AJLabel(t.getTasks().size() + "", "", color, JLabel.CENTER);
+				l.setFont(FontConst.Georgia_BOLD_12);
 				l.setToolTipText("漫画总数(按照阅读状态排序)");
 				return l;
 			case 1://名称

@@ -15,9 +15,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
+import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.IconManager;
@@ -27,6 +29,7 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.util.FileUtil;
+import org.arong.util.Tracker;
 /**
  * 任务组列表
  * @author dipoo
@@ -117,6 +120,15 @@ public class GroupList extends JList {
 					}
 					int r = JOptionPane.showConfirmDialog(this_, "删除任务组将会删除已下载的漫画，且不可恢复，您确定要删除任务组：" + name + "吗？");
 					if(r == JOptionPane.OK_OPTION){
+						List<Task> tasks = mainWindow.taskDbTemplate.query("groupname", name);
+						if(tasks.size() > 0){
+							for (Task t : tasks) {
+								Tracker.println("删除任务：[" + (StringUtils.isBlank(t.getSubname()) ? t.getName() : t.getSubname()) + "]所有图片");
+								mainWindow.pictureDbTemplate.delete("tid", t.getId());
+							}
+							Tracker.println("删除任务组：[" + name + "]所有任务");
+							mainWindow.taskDbTemplate.delete("groupname", name);
+						}
 						//如果是在主界面切换的任务组，且选择的任务组不变，则关闭主窗口
 						if(mainWindow != null && name.equals(ComponentConst.groupName)){
 							mainWindow.saveTaskGroupData();

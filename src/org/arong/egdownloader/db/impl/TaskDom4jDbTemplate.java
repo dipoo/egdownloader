@@ -360,4 +360,10 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		task.setEnd(ele.attributeValue("end") == null ? task.getTotal() : Integer.parseInt(ele.attributeValue("end")));
 		return task;
 	}
+
+	@Override
+	public boolean delete(String name, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

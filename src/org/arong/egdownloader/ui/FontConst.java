@@ -1,4 +1,7 @@
 package org.arong.egdownloader.ui;
+
+import java.awt.Font;
+
 /**
  * 用于将所有组件的字体改变
  * @author 阿荣
@@ -27,4 +30,13 @@ public class FontConst {
 		UIManager.put(FontConst.DEFAULT_FONT[i], new Font("微软雅黑",
 				Font.BOLD, 13));
 	}*/
+	
+	public final static Font Comic_Sans_MS_BOLD_12 = new Font("Comic Sans MS", Font.BOLD, 12);
+	public final static Font Comic_Sans_MS_BOLD_11 = new Font("Comic Sans MS", Font.BOLD, 11);
+	public final static Font Georgia_BOLD_12 = new Font("Georgia", Font.BOLD, 12);
+	public final static Font Songti_PLAIN_11 = new Font("宋体", Font.PLAIN, 11);
+	public final static Font Songti_BOLD_12 = new Font("宋体", Font.BOLD, 12);
+	public final static Font Microsoft_PLAIN_11 = new Font("微软雅黑", Font.PLAIN, 11);
+	public final static Font Microsoft_BOLD_11 = new Font("微软雅黑", Font.BOLD, 11);
+	public final static Font Microsoft_BOLD_12 = new Font("微软雅黑", Font.BOLD, 12);
 }

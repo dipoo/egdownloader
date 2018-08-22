@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.FontConst;
 import org.jb2011.lnf.beautyeye.ch14_combox.BEComboBoxUI;
 
 /**
@@ -41,7 +42,7 @@ public class AJComboBox extends JComboBox {
 		BEComboBoxUI.createUI(this);
 		this.setMaximumRowCount(maximumRowCount);
 		this.setCursor(CursorManager.getPointerCursor());
-		this.setFont(new Font("微软雅黑", Font.BOLD, 12));
+		this.setFont(FontConst.Microsoft_BOLD_12);
 		if (listen && actionListener != null) {
 			this.addActionListener(actionListener);
 		}

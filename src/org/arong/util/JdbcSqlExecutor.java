@@ -11,6 +11,7 @@ import java.sql.Statement;
 public class JdbcSqlExecutor {
 	private static JdbcSqlExecutor executor = null;
 	private JdbcSqlExecutor(){}
+	public final static String BAT_SPLIT = "@<;>@";
 	public static JdbcSqlExecutor getInstance(){
 		if(executor == null){
 			executor = new JdbcSqlExecutor();
@@ -66,13 +67,13 @@ public class JdbcSqlExecutor {
 		try {
 			if(batUpdate){
 				st = conn.createStatement();
-				String[] sqls = sql.split(";");
+				String[] sqls = sql.split(BAT_SPLIT);
 				for(int i = 0; i < sqls.length; i ++){
 					st.addBatch(sqls[i]);
 				}
 				result =  st.executeBatch()[0];
 			}else{
-				pst = conn.prepareStatement(sql);
+				pst = conn.prepareStatement(sql.replaceAll(BAT_SPLIT, ""));
 				result = pst.executeUpdate();
 			}
 			return result;

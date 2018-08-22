@@ -13,6 +13,7 @@ public interface DbTemplate<T> {
 	public boolean update(T t);
 	public boolean update(List<T> t);
 	public boolean delete(T t);
+	public boolean delete(String name, String value);
 	public boolean delete(List<T> list);
 	public List<T> query();
 	public List<T> query(Object id);

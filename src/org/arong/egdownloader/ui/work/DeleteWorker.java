@@ -73,6 +73,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 				w.setInfo("正在删除任务");
 				Tracker.println("正在删除" + tasks.size() + "个任务");
 				mainWindow.taskDbTemplate.delete(tasks);//删除任务
+				Tracker.println("删除" + tasks.size() + "个任务完成");
 				//更新内存
 				table.getTasks().removeAll(tasks);
 			}

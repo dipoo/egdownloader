@@ -3,7 +3,6 @@ package org.arong.egdownloader.ui.table;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -30,6 +29,7 @@ import javax.swing.table.TableModel;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -76,12 +76,12 @@ public class SearchTasksTable extends JTable {
 //		this.setOpaque(false);//设为透明
 		TableModel tableModel = new SearchTaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
+		this.setRowHeight(300);
 //		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 //		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, new TableCellRenderer() {
 			private Color c = new Color(47,110,178);
 			private Color uploaderColor = Color.getHSBColor(122, 255, 122);
-			private Font font = new Font("微软雅黑", Font.PLAIN, 11);
 			public Component getTableCellRendererComponent(JTable table, Object value,
 					boolean isSelected, boolean hasFocus, int row, int column) {
 				
@@ -94,7 +94,8 @@ public class SearchTasksTable extends JTable {
 				TableColumn tc = tb.getColumnModel().getColumn(column);
 				if(column == 0){//类型
 					tc.setPreferredWidth(105);
-					tc.setMaxWidth(105);
+					tc.setMaxWidth(150);
+					
 					JLabel l = new AJLabel("", c, JLabel.LEFT);
 					if(tasks.get(row).getType() != null){
 						ImageIcon icon = IconManager.getIcon(tasks.get(row).getType().toLowerCase());
@@ -108,7 +109,7 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 1){//名称
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					SearchTask task = tasks.get(row);
 					if(task.getBtUrl() != null){
 						try{
@@ -122,14 +123,14 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 2){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					JLabel l = new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;
 				}else if(column == 3){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					return new AJLabel(value.toString(), c, font, JLabel.LEFT);
+					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				}else{
 					return null;
 				}

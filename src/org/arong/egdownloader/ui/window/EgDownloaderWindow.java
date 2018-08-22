@@ -106,6 +106,7 @@ public class EgDownloaderWindow extends JFrame {
 
 	private static final long serialVersionUID = 8904976570969033245L;
 	
+	public String wtitle;//窗口标题
 	TrayIcon tray;//系统托盘
 	JPopupMenu trayMenu;
 	JWindow minTips;
@@ -143,6 +144,27 @@ public class EgDownloaderWindow extends JFrame {
 	public DbTemplate<Picture> pictureDbTemplate;
 	public DbTemplate<Setting> settingDbTemplate;
 	
+	Timer netSpeedtimer;
+	private void setupNetSpeedtimer(final EgDownloaderWindow mainWindow){
+		//设置下载速度检测定时器
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+				//当前一秒内的流量
+				Long length = FileUtil.byteLength - FileUtil.oldByteLength;
+				//显示到标题栏
+				mainWindow.setTitle(mainWindow.wtitle + " (" + FileUtil.showSizeStr(length) + "/S)");
+				if(FileUtil.byteLength > 999900000){
+					FileUtil.byteLength = 0L;
+					FileUtil.oldByteLength = 0L;
+				}else{
+					FileUtil.oldByteLength = FileUtil.byteLength;
+				}
+			}
+		};
+		netSpeedtimer = new Timer(true);
+		//1秒执行一次
+		netSpeedtimer.schedule(timerTask, 1000, 1000);
+	}
 	public EgDownloaderWindow(Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
 		final EgDownloaderWindow mainWindow = this;
 		
@@ -157,27 +179,8 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
-		final String title = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
-		this.setTitle(title);
-		
-		//设置下载速度检测定时器
-		TimerTask timerTask = new TimerTask() {
-			public void run() {
-				//当前一秒内的流量
-				Long length = FileUtil.byteLength - FileUtil.oldByteLength;
-				//显示到标题栏
-				mainWindow.setTitle(title + " (" + FileUtil.showSizeStr(length) + "/S)");
-				if(FileUtil.byteLength > 999900000){
-					FileUtil.byteLength = 0L;
-					FileUtil.oldByteLength = 0L;
-				}else{
-					FileUtil.oldByteLength = FileUtil.byteLength;
-				}
-			}
-		};
-		Timer timer = new Timer(true);
-		//1秒执行一次
-		timer.schedule(timerTask, 1000, 1000);
+		this.wtitle = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
+		this.setTitle(this.wtitle);
 		
 		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
@@ -543,13 +546,15 @@ public class EgDownloaderWindow extends JFrame {
 		consoleArea.setAutoscrolls(true);
 		consoleArea.setLineWrap(true);
 		consoleArea.setBorder(null);
-		consoleArea.setFont(new Font("宋体", Font.BOLD, 12));
-		consoleArea.setForeground(new Color(63,127,95));
-		consolePane = new JScrollPane(consoleArea);
+		consoleArea.setFont(new Font("宋体", Font.BOLD, 13));
+		consoleArea.setForeground(new Color(63,127,95));//
+		//consoleArea.setBackground(Color.GRAY);
+		consolePane = new JScrollPane();
 		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
 		consolePane.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
 		consolePane.setAutoscrolls(true);
 		consolePane.setBorder(border);
+		consolePane.setViewportView(consoleArea);
 		try {
 			//将syso信息推送到控制台
 			new SwingPrintStream(System.out, consoleArea);
@@ -570,7 +575,7 @@ public class EgDownloaderWindow extends JFrame {
 		});
 		
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), jMenuBar, tablePane, tablePopupMenu, emptyPanel, consolePane);
+		ComponentUtil.addComponents(getContentPane(), consolePane, jMenuBar, tablePane, tablePopupMenu, emptyPanel);
 		if(tasks == null || tasks.size() == 0){
 			tablePane.setVisible(false);
 		}else{
@@ -643,6 +648,8 @@ public class EgDownloaderWindow extends JFrame {
 					window.deletingWindow.requestFocus();
 				}else if(window.simpleSearchWindow != null && window.simpleSearchWindow.isVisible()){
 					window.simpleSearchWindow.requestFocus();
+				}else{
+					window.consolePane.setVisible(true);
 				}
 			}
 
@@ -650,6 +657,8 @@ public class EgDownloaderWindow extends JFrame {
 				if(trayMenu != null){
 					trayMenu.setVisible(false);
 				}
+				/*EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
+				window.consolePane.setVisible(false);*/
 			}
 		});
 		//窗口大小变化监听
@@ -695,6 +704,9 @@ public class EgDownloaderWindow extends JFrame {
 				}
 			}
 		});
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//开启网络下载速度监听
+		setupNetSpeedtimer(mainWindow);
 	}
 	
 	protected void processWindowEvent(WindowEvent e) {
@@ -763,8 +775,9 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks.clear();
 		//加载任务列表
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
+		this.wtitle = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
 		// 设置主窗口
-		this.setTitle(Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName));
+		this.setTitle(wtitle);
 		if(this.tasks.isEmpty()){
 			this.tablePane.setVisible(false);
 			this.emptyPanel.setVisible(true);
@@ -774,5 +787,8 @@ public class EgDownloaderWindow extends JFrame {
 			this.runningTable.changeModel(this);
 		}
 		this.consoleArea.setText("");//清空控制台
+		//开启网络下载速度监听
+		netSpeedtimer.cancel();
+		setupNetSpeedtimer(this);
 	}
 }

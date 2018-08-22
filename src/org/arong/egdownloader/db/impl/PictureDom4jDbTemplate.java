@@ -331,4 +331,10 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		return pic;
 	}
 
+	@Override
+	public boolean delete(String name, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
