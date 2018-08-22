@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -33,10 +36,12 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJCheckBox;
@@ -69,6 +74,7 @@ public class SearchComicWindow extends JFrame {
 	private JButton clearCacheBtn;
 	public SearchTasksTable searchTable;
 	public JScrollPane tablePane;
+	public JPanel picturePane;
 	public JPanel optionPanel;
 	public AJPager pager;
 	public boolean haveBt;//是否有bt下载文件
@@ -114,7 +120,10 @@ public class SearchComicWindow extends JFrame {
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
 			
 			public void actionPerformed(ActionEvent ae) {
+				mainWindow.searchComicWindow.toFront();
+				mainWindow.consolePane.setVisible(false);
 				search(page);
+				mainWindow.consolePane.setVisible(true);
 			}
 			
 		}, 470, 20, 60, 30);
@@ -255,6 +264,14 @@ public class SearchComicWindow extends JFrame {
 				JFrame w = (JFrame)e.getSource();
 				w.dispose();
 			}
+			public void windowGainedFocus(WindowEvent e) {
+				//SearchComicWindow window = (SearchComicWindow) e.getSource();
+				//window.mainWindow.consolePane.setVisible(false);
+			}
+			public void windowActivated(WindowEvent e) {
+				//picturePane = null;
+				//showResult("4", 1);
+			}
 		});
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -280,7 +297,16 @@ public class SearchComicWindow extends JFrame {
 				if(searchTable != null){
 					int height = window.getHeight() - 210;
 					tablePane.setSize(window.getWidth() - 20, height);
-					searchTable.setSize(window.getWidth() - 20, height);
+					searchTable.setSize(window.getWidth() - 20, height + 20);
+				}
+				//设置图片面板大小
+				if(picturePane != null){
+					int height = window.getHeight() - 210;
+					tablePane.setSize(window.getWidth() - 20, height);
+					
+					int hr = (int)(tablePane.getWidth() / 220);
+					int zr = (int)(25 / hr) + 1;
+					picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 320));
 				}
 				//设置分页面板大小
 				if(pager != null){
@@ -304,6 +330,8 @@ public class SearchComicWindow extends JFrame {
 		
 		//检测是否存在缓存目录,不存在则创建
 		FileUtil.ifNotExistsThenCreate(ComponentConst.CACHE_PATH);
+		
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 	}
 	
 	public void search(String page){
@@ -360,7 +388,97 @@ public class SearchComicWindow extends JFrame {
 		return option;
 	}
 	
-	public void showResult(String totalPage, Integer currentPage){
+	public void showResult(final String totalPage, final Integer currentPage){
+		if(tablePane == null){
+			//searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20, this.getHeight() - 210, searchTasks, this);
+			tablePane = new JScrollPane();
+			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
+			tablePane.getViewport().setBackground(new Color(254,254,254));
+			mainWindow.searchComicWindow.getContentPane().add(tablePane);
+		}
+		if(picturePane == null){
+			picturePane = new JPanel();
+			picturePane.setLayout(new FlowLayout(FlowLayout.CENTER));
+			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
+			int hr = (int)(tablePane.getWidth() / 220);
+			int zr = (int)(25 / hr) + 1;
+			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 320));
+			tablePane.setViewportView(picturePane);
+		}else{
+			picturePane.removeAll();
+		}
+		
+		for(int i = 0; i < searchTasks.size(); i ++){
+			final JLabel coverLabel = new JLabel();
+			coverLabel.setOpaque(true);
+			coverLabel.setBackground(Color.BLACK);
+			coverLabel.setForeground(Color.WHITE);
+			coverLabel.setFont(FontConst.Microsoft_BOLD_12);
+			//coverLabel.setVerticalAlignment(JLabel.TOP);
+			coverLabel.setVerticalTextPosition(JLabel.TOP);
+			coverLabel.setHorizontalTextPosition(JLabel.CENTER);
+			coverLabel.setText((StringUtils.isNotBlank(searchTasks.get(i).getType()) ? "[" + searchTasks.get(i).getType().toUpperCase() + "] " : " ") + searchTasks.get(i).getDate());
+			coverLabel.setToolTipText(searchTasks.get(i).getName() + "[" + searchTasks.get(i).getUploader() + "]");
+			coverLabel.setName((i + 1)+ "");
+			coverLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+			final String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(searchTasks.get(i).getUrl());
+			File cover = new File(path);
+			if(cover == null || !cover.exists()){
+				coverLabel.setSize(20, 20);
+				coverLabel.setIcon(IconManager.getIcon("loading"));
+				new Thread(new Runnable() {
+					public void run() {
+						File cover = new File(path);
+						int i = 1;
+						ImageIcon icon = null;
+						while(!cover.exists() && i < 100){
+							i ++;
+							cover = new File(path);
+						}
+						icon = new ImageIcon(path);
+						coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+						icon.getImage().flush();//解决加载图片不完全问题
+						coverLabel.setIcon(icon);
+					}
+				}).start();
+			}else{
+				ImageIcon icon = new ImageIcon(path);
+				if(icon.getIconWidth() == -1){
+					coverLabel.setSize(20, 20);
+					coverLabel.setIcon(IconManager.getIcon("loading"));
+				}else{
+					coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+					icon.getImage().flush();//解决加载图片不完全问题
+					coverLabel.setIcon(icon);
+				}
+			}
+			coverLabel.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					//JLabel l = (JLabel) e.getSource();
+					picturePane.removeAll();
+					tablePane.remove(picturePane);
+					tablePane.setViewportView(null);
+					tablePane = null;
+					picturePane = null;
+					showResult2(totalPage, currentPage);
+				}
+			});
+			ComponentUtil.addComponents(picturePane, coverLabel);
+			/*if(i == searchTasks.size() - 1){
+				
+			}*/
+		}
+		
+		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
+		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
+		jScrollBar.setUnitIncrement(20);
+		if(totalPage != null && currentPage != null){
+			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
+			mainWindow.searchComicWindow.pager.setVisible(true);
+		}
+	}
+	
+	public void showResult2(String totalPage, Integer currentPage){
 		if(searchTable == null){
 			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
 					this.getHeight() - 210, searchTasks, this);

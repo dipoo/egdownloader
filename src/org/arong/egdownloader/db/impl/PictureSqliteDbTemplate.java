@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.jdbc.JdbcUtil;
@@ -98,6 +99,17 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 		deleteSql(t, sqlsb);
 		try {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+			return c > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean delete(String name, String value) {
+		String sql = "delete from picture where " + name + "='" + value + "'";
+		try {
+			int c = JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -203,28 +215,28 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 	private void storeSql(Picture model, StringBuffer sqlsb){
 		sqlsb.append("insert into picture(id,tid,num,name,url,realUrl,size,time,saveAsName,isCompleted) values('")
 		.append(model.getId()).append("','").append(model.getTid()).append("','")
-		.append(model.getNum()).append("','").append(model.getName()).append("','")
-		.append(model.getUrl()).append("','").append(model.getRealUrl()).append("','")
+		.append(model.getNum()).append("','").append(StringEscapeUtils.escapeSql(model.getName())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getRealUrl())).append("','")
 		.append(model.getSize()).append("','").append(model.getTime() == null ? "" : model.getTime()).append("','")
 		.append(model.isSaveAsName()).append("','").append(model.isCompleted())
-		.append("');");
+		.append("')").append(JdbcSqlExecutor.BAT_SPLIT);
 	}
 	
 	private void updateSql(Picture t, StringBuffer sqlsb){
 		sqlsb.append("update picture set ")
 		.append("tid='").append(t.getTid()).append("',")
 		.append("num='").append(t.getNum()).append("',")
-		.append("name='").append(t.getName()).append("',")
-		.append("url='").append(t.getUrl()).append("',")
-		.append("realUrl='").append(t.getRealUrl()).append("',")
+		.append("name='").append(StringEscapeUtils.escapeSql(t.getName())).append("',")
+		.append("url='").append(StringEscapeUtils.escapeSql(t.getUrl())).append("',")
+		.append("realUrl='").append(StringEscapeUtils.escapeSql(t.getRealUrl())).append("',")
 		.append("size='").append(t.getSize()).append("',")
 		.append("time='").append(t.getTime()).append("',")
 		.append("saveAsName='").append(t.isSaveAsName()).append("',")
 		.append("isCompleted='").append(t.isCompleted())
-		.append("' where id='").append(t.getId()).append("';");
+		.append("' where id='").append(t.getId()).append("'").append(JdbcSqlExecutor.BAT_SPLIT);
 	}
 	
 	private void deleteSql(Picture t, StringBuffer sqlsb){
-		sqlsb.append("delete from picture where id='").append(t.getId()).append("'");
+		sqlsb.append("delete from picture where id='").append(t.getId()).append("'").append(JdbcSqlExecutor.BAT_SPLIT);
 	}
 }

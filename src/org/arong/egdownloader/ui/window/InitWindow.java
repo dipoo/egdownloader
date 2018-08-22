@@ -15,10 +15,8 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 import org.arong.egdownloader.db.DbTemplate;
-import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.PictureSqliteDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
-import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskSqliteDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
@@ -26,6 +24,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.table.TaskingTable;
@@ -79,7 +78,9 @@ public class InitWindow extends JWindow {
 		backPanel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
 		JLabel v = new AJLabel(Version.NAME + "v" + Version.VERSION, Color.WHITE, 0, 10, icon.getIconWidth(), 30);
 		v.setHorizontalAlignment(JLabel.CENTER);
+		v.setFont(FontConst.Songti_BOLD_12);
 		textLabel = new AJLabel("程序初始化",Color.WHITE,0,100,icon.getIconWidth(),30);
+		textLabel.setFont(FontConst.Songti_BOLD_12);
 		textLabel.setHorizontalAlignment(JLabel.CENTER);
 		backPanel.add(v);
 		backPanel.add(textLabel);
@@ -105,7 +106,8 @@ public class InitWindow extends JWindow {
 		textLabel.setText("读取任务列表");
 		taskDbTemplate = new TaskSqliteDbTemplate();//TaskDom4jDbTemplate();
 		pictureDbTemplate = new PictureSqliteDbTemplate();//PictureDom4jDbTemplate();
-		tasks = (TaskList<Task>) taskDbTemplate.query();
+		Task t = new Task();t.setGroupname(ComponentConst.groupName);t.setStatus(null);
+		tasks = (TaskList<Task>) taskDbTemplate.query(t);
 		/*if(tasks == null || tasks.size() == 0){
 			DbTemplate<Task> taskDbTemplate_ = new TaskDom4jDbTemplate();
 			tasks = (TaskList<Task>) taskDbTemplate_.query();

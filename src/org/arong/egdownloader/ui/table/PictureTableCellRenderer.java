@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.util.FileUtil;
 /**
@@ -21,7 +22,6 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 5170655726223645364L;
 	
 	private Color fontColor;
-	private Font font = new Font("宋体", Font.PLAIN, 11);
 	
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
@@ -58,6 +58,6 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setPreferredWidth(180);
 			tc.setMaxWidth(180);
 		}
-		return new AJLabel(val, fontColor, font, JLabel.LEFT);
+		return new AJLabel(val, fontColor, FontConst.Songti_PLAIN_11, JLabel.LEFT);
 	}
 }

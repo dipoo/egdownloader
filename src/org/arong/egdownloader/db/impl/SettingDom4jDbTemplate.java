@@ -303,5 +303,10 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setProxyPwd(CodeUtil.myDecode(ele.attributeValue("proxyPwd")));
 		return t;
 	}
+	@Override
+	public boolean delete(String name, String value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

@@ -27,6 +27,7 @@ import org.arong.util.FileUtil;
 public class Task {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);//属性变化监听支持
 	private String id;//id
+	private String groupname;//任务组名称
 	private String url;//下载地址
 	private String name;//名称
 	private String subname;//子名称
@@ -424,5 +425,13 @@ public class Task {
 			changeSupport.firePropertyChange("", null, null);
 		}
 		this.downSpeed = downSpeed;
+	}
+
+	public String getGroupname() {
+		return groupname;
+	}
+
+	public void setGroupname(String groupname) {
+		this.groupname = groupname;
 	}
 }

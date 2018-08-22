@@ -4,15 +4,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.jdbc.JdbcUtil;
 import org.arong.util.JdbcSqlExecutor;
 import org.arong.utils.StringUtil;
 
 public class TaskSqliteDbTemplate implements DbTemplate<Task> {
+	
+	public static void main(String[] args) {
+		String sql = "alter table task add column groupname varchar(512)";
+		System.out.println(new TaskSqliteDbTemplate().executeSql(sql));
+	}
+	public int executeSql(String sql){
+		try {
+			return JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return 0;
+	}
 	
 	static{
 			StringBuffer sqlsb = new StringBuffer("create table task (")
@@ -41,24 +57,27 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 	}
 
 	public boolean store(List<Task> tasks) {
-		for (Task model : tasks) {
-			store(model);
+		if(tasks != null && tasks.size() > 0){
+			StringBuffer sqlsb = new StringBuffer();
+			for (Task t : tasks) {
+				storeSql(t, sqlsb);
+			}
+			try {
+				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
+				return c > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		/*for (Task model : tasks) {
+			store(model);
+		}*/
 		return true;
 	}
 	
 	public boolean store(Task model) {
-		StringBuffer sqlsb = new StringBuffer("insert into task(id,url,name,subname,coverUrl,language,type,saveDir,tag,readed,createTime,completedTime,total,current,size,status,start,end) values('")
-				.append(model.getId()).append("','").append(model.getUrl()).append("','")
-				.append(model.getName()).append("','").append(model.getSubname()).append("','")
-				.append(model.getCoverUrl()).append("','").append(model.getLanguage()).append("','")
-				.append(model.getType()).append("','").append(model.getSaveDir()).append("','")
-				.append(model.getTag()).append("','").append(model.isReaded()).append("','")
-				.append(model.getCreateTime()).append("','").append(model.getCompletedTime() == null ? "" : model.getCompletedTime()).append("','")
-				.append(model.getTotal()).append("','").append(model.getCurrent()).append("','")
-				.append(model.getSize()).append("','").append(model.getStatus().getStatus()).append("','")
-				.append(model.getStart()).append("','").append(model.getEnd()).append("'")
-				.append(");");
+		StringBuffer sqlsb = new StringBuffer();
+		storeSql(model, sqlsb);	
 		try {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
@@ -67,27 +86,10 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		}
 		return false;
 	}
-
+	
 	public boolean update(Task t) {
-		StringBuffer sqlsb = new StringBuffer("update task set ")
-		.append("url='").append(t.getUrl()).append("',")
-		.append("name='").append(t.getName()).append("',")
-		.append("subname='").append(t.getSubname()).append("',")
-		.append("coverUrl='").append(t.getCoverUrl()).append("',")
-		.append("language='").append(t.getLanguage()).append("',")
-		.append("type='").append(t.getType()).append("',")
-		.append("saveDir='").append(t.getSaveDir()).append("',")
-		.append("tag='").append(t.getTag()).append("',")
-		.append("readed='").append(t.isReaded()).append("',")
-		.append("createTime='").append(t.getCreateTime()).append("',")
-		.append("completedTime='").append(t.getCompletedTime() == null ? "" : t.getCompletedTime()).append("',")
-		.append("total='").append(t.getTotal()).append("',")
-		.append("current='").append(t.getCurrent()).append("',")
-		.append("size='").append(t.getSize()).append("',")
-		.append("status='").append(TaskStatus.STARTED == t.getStatus() ? TaskStatus.STOPED.getStatus() : t.getStatus().getStatus()).append("',")
-		.append("start='").append(t.getStart()).append("',")
-		.append("end='").append(t.getEnd()).append("' where id='")
-		.append(t.getId()).append("'");
+		StringBuffer sqlsb = new StringBuffer();
+		updateSql(t, sqlsb);
 		try {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
@@ -98,9 +100,21 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 	}
 
 	public boolean update(List<Task> tasks) {
-		for (Task model : tasks) {
-			update(model);
+		if(tasks != null && tasks.size() > 0){
+			StringBuffer sqlsb = new StringBuffer();
+			for (Task t : tasks) {
+				updateSql(t, sqlsb);
+			}
+			try {
+				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
+				return c > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		/*for (Task model : tasks) {
+			update(model);
+		}*/
 		return true;
 	}
 
@@ -114,12 +128,30 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		}
 		return false;
 	}
+	
+	public boolean delete(String name, String value) {
+		String sql = "delete from task where " + name + "='" + value + "'";
+		try {
+			int c = JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
+			return c > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	public boolean delete(List<Task> tasks) {
+		StringBuffer sqlsb = new StringBuffer();
 		for (Task model : tasks) {
-			delete(model);
+			deleteSql(model, sqlsb);
+			try {
+				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
+				return c > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		return true;
+		return false;
 	}
 
 	public List<Task> query() {
@@ -145,6 +177,11 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 			}
 			if(model.getStatus() != null){
 				sqlsb.append(" and status = '").append(model.getStatus().getStatus()).append("'");
+			}
+			if(StringUtils.isNotBlank(model.getGroupname())){
+				sqlsb.append(" and groupname = '").append(model.getGroupname()).append("'");
+			}else{
+				sqlsb.append(" and (groupname is null or groupname = '')");
 			}
 			sqlsb.append(" order by createTime desc");
 			try {
@@ -203,6 +240,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 
 	private void resultSet2Task(ResultSet rs, Task model) throws SQLException{
 		model.setId(rs.getString("id"));
+		model.setGroupname(rs.getString("groupname"));
 		model.setUrl(rs.getString("url"));
 		model.setName(rs.getString("name"));
 		model.setSubname(rs.getString("subname") == null ? "" : rs.getString("subname"));
@@ -220,5 +258,46 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		model.setStatus(TaskStatus.parseTaskStatus(rs.getString("status")));
 		model.setStart(rs.getString("start") == null ? 1 : Integer.parseInt(rs.getString("start")));
 		model.setEnd(rs.getString("end") == null ? model.getTotal() : Integer.parseInt(rs.getString("end")));
+	}
+	
+	private void storeSql(Task model, StringBuffer sqlsb){
+		sqlsb.append("insert into task(id,groupname,url,name,subname,coverUrl,language,type,saveDir,tag,readed,createTime,completedTime,total,current,size,status,start,end) values('")
+		.append(model.getId()).append("','").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("','").append(StringEscapeUtils.escapeSql(model.getUrl())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getName())).append("','").append(StringEscapeUtils.escapeSql(model.getSubname())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getCoverUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getLanguage())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getType())).append("','").append(StringEscapeUtils.escapeSql(model.getSaveDir())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getTag())).append("','").append(model.isReaded()).append("','")
+		.append(model.getCreateTime()).append("','").append(model.getCompletedTime() == null ? "" : model.getCompletedTime()).append("','")
+		.append(model.getTotal()).append("','").append(model.getCurrent()).append("','")
+		.append(model.getSize()).append("','").append(model.getStatus().getStatus()).append("','")
+		.append(model.getStart()).append("','").append(model.getEnd()).append("'")
+		.append(")").append(JdbcSqlExecutor.BAT_SPLIT);
+	}
+	
+	private void updateSql(Task t, StringBuffer sqlsb){
+		sqlsb.append("update task set ")
+		.append("groupname='").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("',")
+		.append("url='").append(StringEscapeUtils.escapeSql(t.getUrl())).append("',")
+		.append("name='").append(StringEscapeUtils.escapeSql(t.getName())).append("',")
+		.append("subname='").append(StringEscapeUtils.escapeSql(t.getSubname())).append("',")
+		.append("coverUrl='").append(StringEscapeUtils.escapeSql(t.getCoverUrl())).append("',")
+		.append("language='").append(StringEscapeUtils.escapeSql(t.getLanguage())).append("',")
+		.append("type='").append(StringEscapeUtils.escapeSql(t.getType())).append("',")
+		.append("saveDir='").append(StringEscapeUtils.escapeSql(t.getSaveDir())).append("',")
+		.append("tag='").append(StringEscapeUtils.escapeSql(t.getTag())).append("',")
+		.append("readed='").append(t.isReaded()).append("',")
+		.append("createTime='").append(t.getCreateTime()).append("',")
+		.append("completedTime='").append(t.getCompletedTime() == null ? "" : t.getCompletedTime()).append("',")
+		.append("total='").append(t.getTotal()).append("',")
+		.append("current='").append(t.getCurrent()).append("',")
+		.append("size='").append(t.getSize()).append("',")
+		.append("status='").append(TaskStatus.STARTED == t.getStatus() ? TaskStatus.STOPED.getStatus() : t.getStatus().getStatus()).append("',")
+		.append("start='").append(t.getStart()).append("',")
+		.append("end='").append(t.getEnd()).append("' where id='")
+		.append(t.getId()).append("'").append(JdbcSqlExecutor.BAT_SPLIT);
+	}
+	
+	private void deleteSql(Task t, StringBuffer sqlsb){
+		sqlsb.append("delete from task where id='").append(t.getId()).append("'").append(JdbcSqlExecutor.BAT_SPLIT);
 	}
 }
