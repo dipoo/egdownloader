@@ -10,8 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -308,10 +306,12 @@ public class WebClient {
 	            throws Exception {
 		 return getStreamUseJavaWithCookie(urlString, null);
 	 }
-    
-    public static InputStream getStreamUseJavaWithCookie(final String urlString, final String cookie)
+	 public static InputStream getStreamUseJavaWithCookie(final String urlString, final String cookie) throws Exception {
+		 return (InputStream) getStreamAndLengthUseJavaWithCookie(urlString, cookie)[0];
+	 }
+    public static Object[] getStreamAndLengthUseJavaWithCookie(final String urlString, final String cookie)
             throws Exception {
-
+    	Object[] objects = new Object[2];
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
                 .intern();
@@ -384,12 +384,14 @@ public class WebClient {
             } else {
                 if (responseCode == 200 || responseCode == 201) {
                 	inputStream = urlConnection.getInputStream();
+                	objects[1] = urlConnection.getContentLength();
                 }
                 foundRedirect = false;
             }
             // 如果重定向则继续
         } while (foundRedirect);
-        return inputStream;
+        objects[0] = inputStream;
+        return objects;
     }
     
     public static String getRequestUseJava(final String urlString, final String encoding) throws Exception {

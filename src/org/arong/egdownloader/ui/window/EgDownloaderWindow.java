@@ -1,6 +1,7 @@
 ﻿package org.arong.egdownloader.ui.window;
 
 import java.awt.AWTException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -548,6 +549,8 @@ public class EgDownloaderWindow extends JFrame {
 		consoleArea.setBorder(null);
 		consoleArea.setFont(new Font("宋体", Font.BOLD, 13));
 		consoleArea.setForeground(new Color(63,127,95));//
+		consoleArea.setFocusable(false);
+		consoleArea.setLocation(0, 20);
 		//consoleArea.setBackground(Color.GRAY);
 		consolePane = new JScrollPane();
 		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
@@ -761,7 +764,7 @@ public class EgDownloaderWindow extends JFrame {
 	}
 
 	public void saveTaskGroupData(){
-		this.taskDbTemplate.update(this.tasks);
+		//this.taskDbTemplate.update(this.tasks);
 		this.settingDbTemplate.update(this.setting);
 	}
 	

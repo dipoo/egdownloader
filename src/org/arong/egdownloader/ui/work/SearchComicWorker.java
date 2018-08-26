@@ -60,7 +60,12 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 					searchComicWindow.pageInfo.put(searchComicWindow.key, totalPage);
 				}
 				searchComicWindow.datas.get(searchComicWindow.key).put((currentPage) + "", searchTasks);
-				searchComicWindow.showResult(totalPage, currentPage);
+				if(searchComicWindow.viewModel == 1){
+					searchComicWindow.showResult(totalPage, currentPage);
+				}else{
+					searchComicWindow.showResult2(totalPage, currentPage);
+				}
+				
 			}else{
 				searchComicWindow.totalLabel.setText("搜索不到相关内容");
 				searchComicWindow.hideLoading();

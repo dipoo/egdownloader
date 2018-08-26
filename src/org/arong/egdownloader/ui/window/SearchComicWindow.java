@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -72,6 +73,7 @@ public class SearchComicWindow extends JFrame {
 	public JButton leftBtn;
 	public JButton rightBtn;
 	public JButton tagBtn;
+	public JButton changeViewBtn;
 	private JButton clearCacheBtn;
 	public SearchTasksTable searchTable;
 	public JScrollPane tablePane;
@@ -89,6 +91,7 @@ public class SearchComicWindow extends JFrame {
 	public String page = "1";
 	public SearchWindowPopMenu popMenu;
 	public int viewModel = 1;//1为图片浏览；2为表格浏览
+	public int selectTaskIndex = 0;//操作的任务索引
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
@@ -187,7 +190,7 @@ public class SearchComicWindow extends JFrame {
 		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, true);
 		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, true);
 		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, true);
-		JCheckBox c6 = new AJCheckBox("NONH", Color.BLUE, font, true);
+		JCheckBox c6 = new AJCheckBox("NONH", Color.BLUE, font, true);c6.setName("NON-H");
 		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, true);
 		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
 		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
@@ -243,7 +246,13 @@ public class SearchComicWindow extends JFrame {
 				}
 			}
 		});
-		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12);
+		changeViewBtn = new AJButton("切换视图", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				viewModel = viewModel == 1 ? 2 : 1;
+				searchBtn.doClick();
+			}
+		}, 0, 0, 60, 30);
+		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -348,7 +357,11 @@ public class SearchComicWindow extends JFrame {
 		String k = parseOption() + keyText;
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			searchTasks = datas.get(k).get(page);
-			showResult(pageInfo.get(k), Integer.parseInt(page));
+			if(viewModel == 1){
+				showResult(pageInfo.get(k), Integer.parseInt(page));
+			}else{
+				showResult2(pageInfo.get(k), Integer.parseInt(page));
+			}
 			totalLabel.setText(keyPage.get(k));
 			hideLoading();
 		}else{
@@ -391,140 +404,6 @@ public class SearchComicWindow extends JFrame {
 		return option;
 	}
 	
-	public void showResult(final String totalPage, final Integer currentPage){
-		if(tablePane == null){
-			//searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20, this.getHeight() - 210, searchTasks, this);
-			tablePane = new JScrollPane();
-			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
-			tablePane.getViewport().setBackground(new Color(254,254,254));
-			mainWindow.searchComicWindow.getContentPane().add(tablePane);
-		}
-		if(picturePane == null){
-			picturePane = new JPanel();
-			picturePane.setLayout(new FlowLayout(FlowLayout.CENTER));
-			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
-			int hr = (int)(tablePane.getWidth() / 220);
-			int zr = (int)(25 / hr) + 1;
-			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 320));
-			tablePane.setViewportView(picturePane);
-		}else{
-			picturePane.removeAll();
-		}
-		
-		for(int i = 0; i < searchTasks.size(); i ++){
-			final JLabel coverLabel = new JLabel();
-			coverLabel.setOpaque(true);
-			coverLabel.setBackground(Color.BLACK);
-			coverLabel.setForeground(Color.WHITE);
-			coverLabel.setFont(FontConst.Microsoft_BOLD_12);
-			//coverLabel.setVerticalAlignment(JLabel.TOP);
-			coverLabel.setVerticalTextPosition(JLabel.TOP);
-			coverLabel.setHorizontalTextPosition(JLabel.CENTER);
-			coverLabel.setText((StringUtils.isNotBlank(searchTasks.get(i).getType()) ? "[" + searchTasks.get(i).getType().toUpperCase() + "] " : " ") + searchTasks.get(i).getDate());
-			coverLabel.setToolTipText(searchTasks.get(i).getName() + "[" + searchTasks.get(i).getUploader() + "]");
-			coverLabel.setName((i + 1)+ "");
-			coverLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-			final String path = ComponentConst.CACHE_PATH + "/1.jpg"/* + FileUtil.filterDir(searchTasks.get(i).getUrl())*/;
-			File cover = new File(path);
-			if(cover == null || !cover.exists()){
-				coverLabel.setSize(20, 20);
-				coverLabel.setIcon(IconManager.getIcon("loading"));
-				new Thread(new Runnable() {
-					public void run() {
-						File cover = new File(path);
-						int i = 1;
-						ImageIcon icon = null;
-						while(!cover.exists() && i < 100){
-							i ++;
-							cover = new File(path);
-						}
-						icon = new ImageIcon(path);
-						coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
-						icon.getImage().flush();//解决加载图片不完全问题
-						coverLabel.setIcon(icon);
-					}
-				}).start();
-			}else{
-				ImageIcon icon = new ImageIcon(path);
-				if(icon.getIconWidth() == -1){
-					coverLabel.setSize(20, 20);
-					coverLabel.setIcon(IconManager.getIcon("loading"));
-				}else{
-					coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
-					icon.getImage().flush();//解决加载图片不完全问题
-					coverLabel.setIcon(icon);
-				}
-			}
-			coverLabel.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					//JLabel l = (JLabel) e.getSource();
-					picturePane.removeAll();
-					tablePane.remove(picturePane);
-					tablePane.setViewportView(null);
-					tablePane = null;
-					picturePane = null;
-					showResult2(totalPage, currentPage);
-				}
-			});
-			ComponentUtil.addComponents(picturePane, coverLabel);
-			/*if(i == searchTasks.size() - 1){
-				
-			}*/
-		}
-		
-		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
-		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
-		jScrollBar.setUnitIncrement(20);
-		if(totalPage != null && currentPage != null){
-			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
-			mainWindow.searchComicWindow.pager.setVisible(true);
-		}
-	}
-	
-	public void showResult2(String totalPage, Integer currentPage){
-		if(searchTable == null){
-			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
-					this.getHeight() - 210, searchTasks, this);
-			tablePane = new JScrollPane(searchTable);
-			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
-			tablePane.getViewport().setBackground(new Color(254,254,254));
-			mainWindow.searchComicWindow.getContentPane().add(tablePane);
-		}
-		searchTable.setVisible(true);
-		searchTable.changeModel(searchTasks);
-		searchTable.updateUI();
-		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
-		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
-		if(totalPage != null && currentPage != null){
-			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
-			mainWindow.searchComicWindow.pager.setVisible(true);
-		}
-	}
-	
-	public void showLoading(){
-		totalLabel.setVisible(false);
-		loadingLabel.setVisible(true);
-		searchBtn.setEnabled(false);
-		if(tablePane != null){
-			tablePane.setVisible(false);
-		}
-		pager.setVisible(false);
-	}
-	
-	public void hideLoading(){
-		loadingLabel.setVisible(false);
-		searchBtn.setEnabled(true);
-		totalLabel.setVisible(true);
-		if(tablePane != null){
-			tablePane.setVisible(true);
-		}
-		pager.setVisible(true);
-	}
-	
-	public void setTotalInfo(String totalPage, String totalTasks){
-		totalLabel.setText("共搜索到 " + totalPage + " 页,总计 " + totalTasks + " 本漫画");
-	}
-	
 	public void doSearch(String text){
 		if(text == null || "".equals(text)){
 			return;
@@ -556,6 +435,99 @@ public class SearchComicWindow extends JFrame {
 		keyField.setText(key);
 		searchBtn.doClick();
 	}
+	public void showLoading(){
+		totalLabel.setVisible(false);
+		loadingLabel.setVisible(true);
+		searchBtn.setEnabled(false);
+		if(tablePane != null){
+			tablePane.setVisible(false);
+		}
+		pager.setVisible(false);
+	}
+	
+	public void hideLoading(){
+		loadingLabel.setVisible(false);
+		searchBtn.setEnabled(true);
+		totalLabel.setVisible(true);
+		if(tablePane != null){
+			tablePane.setVisible(true);
+		}
+		pager.setVisible(true);
+	}
+	
+	public void setTotalInfo(String totalPage, String totalTasks){
+		totalLabel.setText("共搜索到 " + totalPage + " 页,总计 " + totalTasks + " 本漫画");
+	}
+	
+	public PirctureLabel[] picLabels = new PirctureLabel[25];
+	public void showResult(final String totalPage, final Integer currentPage){
+		if(picLabels[0] == null){
+			for(int i = 0; i < 25; i ++){
+				PirctureLabel coverLabel = new PirctureLabel(i);
+				picLabels[i] = coverLabel;
+			}
+		}
+		if(searchTable != null){
+			mainWindow.searchComicWindow.getContentPane().remove(tablePane);
+			tablePane = null;
+		}
+		if(tablePane == null){
+			tablePane = new JScrollPane();
+			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
+			tablePane.getViewport().setBackground(new Color(254,254,254));
+			mainWindow.searchComicWindow.getContentPane().add(tablePane);
+		}
+		if(picturePane == null){
+			picturePane = new JPanel();
+			picturePane.setLayout(new FlowLayout(FlowLayout.CENTER));
+			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
+			int hr = (int)(tablePane.getWidth() / 220);
+			int zr = (int)(25 / hr) + 1;
+			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 320));
+		}else{
+			picturePane.removeAll();
+		}
+		picturePane.setVisible(true);
+		tablePane.setViewportView(picturePane);
+		
+		for(int i = 0; i < searchTasks.size(); i ++){
+			final PirctureLabel coverLabel = picLabels[i];
+			coverLabel.flush(searchTasks.get(i), 500 * i);
+			ComponentUtil.addComponents(picturePane, coverLabel);
+		}
+		
+		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
+		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
+		jScrollBar.setUnitIncrement(20);
+		if(totalPage != null && currentPage != null){
+			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
+			mainWindow.searchComicWindow.pager.setVisible(true);
+		}
+	}
+	
+	public void showResult2(String totalPage, Integer currentPage){
+		if(picturePane != null){mainWindow.searchComicWindow.getContentPane().remove(tablePane);tablePane = null;}
+		if(searchTable == null){
+			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
+					this.getHeight() - 210, searchTasks, this);
+		}
+		if(tablePane == null){
+			tablePane = new JScrollPane(searchTable);
+			mainWindow.searchComicWindow.getContentPane().add(tablePane);
+			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
+			tablePane.getViewport().setBackground(new Color(254,254,254));
+		}
+		
+		searchTable.setVisible(true);
+		searchTable.changeModel(searchTasks);
+		searchTable.updateUI();
+		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
+		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
+		if(totalPage != null && currentPage != null){
+			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
+			mainWindow.searchComicWindow.pager.setVisible(true);
+		}
+	}
 	
 	public void dispose() {
 		mainWindow.setEnabled(true);
@@ -573,6 +545,130 @@ public class SearchComicWindow extends JFrame {
 		}else{
 			String e = keyList.remove(0);
 			keyList.add(keyList.size(), e);
+		}
+	}
+	
+	
+	
+	/**
+	 * 封面组件
+	 *
+	 */
+	class PirctureLabel extends JLabel{
+		public boolean iconLoadCompleted; 
+		public final static int DEFAULTWIDTH = 20;
+		public final static int DEFAULTHEIGHT = 20;
+		public PirctureLabel(){
+			this.setOpaque(true);
+			this.setBackground(Color.BLACK);
+			this.setForeground(Color.WHITE);
+			this.setFont(FontConst.Microsoft_BOLD_12);
+			this.setVerticalTextPosition(JLabel.TOP);
+			this.setHorizontalTextPosition(JLabel.CENTER);
+			this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+			final PirctureLabel this_ = this;
+			this.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					mainWindow.searchComicWindow.selectTaskIndex = Integer.parseInt(this_.getName()) - 1;
+					//左键
+					if(e.getButton() == MouseEvent.BUTTON1){}
+					//右键
+					else if(e.getButton() == MouseEvent.BUTTON3){
+						//使之选中
+						if(mainWindow.searchComicWindow.popMenu == null){
+							mainWindow.searchComicWindow.popMenu = new SearchWindowPopMenu(mainWindow);
+						}
+						mainWindow.searchComicWindow.popMenu.show(this_, e.getPoint().x, e.getPoint().y);
+					}
+				}
+
+				public void mouseEntered(MouseEvent e) {
+					this_.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
+					this_.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					if(this_.getIcon().getIconWidth() == DEFAULTWIDTH && this_.iconLoadCompleted){
+						flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(this_.getName()) - 1));
+					}
+				}
+
+				public void mouseExited(MouseEvent e) {
+					JLabel l = (JLabel) e.getSource();
+					l.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+					l.setCursor(Cursor.getDefaultCursor());
+				}
+			});
+		}
+		public PirctureLabel(int index){
+			this();
+			this.setName((index + 1)+ "");
+		}
+		public void flush(SearchTask task){
+			flush(task, 0);
+		}
+		public void flush(SearchTask task, final long delay){
+			this.setForeground(Color.WHITE);
+			boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+			if(contains){this.setForeground(Color.RED);}
+			this.setText((StringUtils.isNotBlank(task.getType()) ? "[" + task.getType().toUpperCase() + "] " : " ") + task.getDate());
+			this.setToolTipText(task.getName() + "[" + task.getUploader() + "]");
+			final PirctureLabel this_ = this;
+			
+			final String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
+			File cover = new File(path);
+			if(cover == null || !cover.exists()){
+				this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);
+				this.setIcon(IconManager.getIcon("loading"));
+				new Thread(new Runnable() {
+					public void run() {
+						if(delay > 0){
+							try {
+								Thread.sleep(delay);
+							} catch (InterruptedException e) {}
+						}
+						File cover = new File(path);
+						int i = 1;
+						ImageIcon icon = null;
+						while(!cover.exists() && i < 60){
+							i ++;
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {}
+							cover = new File(path);
+						}
+						if(!cover.exists()){ 
+							this_.setText(this_.getText() + "<br/>加载失败");
+							this_.setIcon(null);
+							return;
+						}
+						icon = new ImageIcon(path);
+						while(icon.getIconWidth() == -1){
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {}
+							try {
+								icon = new ImageIcon(path);
+							} catch (Exception e) {}
+						}
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {}
+						this_.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+						this_.setIcon(icon);
+						icon.getImage().flush();
+						this_.iconLoadCompleted = true;
+					}
+				}).start();
+			}else{
+				ImageIcon icon = null;
+				icon = new ImageIcon(path);
+				if(icon.getIconWidth() == -1){
+					this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);
+					this.setIcon(IconManager.getIcon("loading"));
+				}else{
+					this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+					icon.getImage().flush();//解决加载图片不完全问题
+					this.setIcon(icon);
+				}
+			}
 		}
 	}
 }

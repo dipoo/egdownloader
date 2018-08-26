@@ -1,9 +1,13 @@
 package org.arong.egdownloader.ui.popmenu;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -14,7 +18,6 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
-import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
@@ -30,11 +33,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
 						mainWindow.setEnabled(false);
-						int selectIndex = 0;
-						if(mainWindow.searchComicWindow.viewModel == 1){
-							
-						}
-						final SearchTask task = table.getTasks().get(table.getSelectedRow());
+						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						if(mainWindow.creatingWindow != null && mainWindow.creatingWindow.isVisible()){
 							mainWindow.creatingWindow.setVisible(true);
 							mainWindow.creatingWindow.toFront();
@@ -52,7 +51,8 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		JMenuItem openPageItem = new AJMenuItem("打开网页", Color.BLACK, IconManager.getIcon("browse"),
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
-						final SearchTask task = table.getTasks().get(table.getSelectedRow());
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
+						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						openPage(task.getUrl());
 					}
 				}));
@@ -61,7 +61,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-						final SearchTask task = table.getTasks().get(table.getSelectedRow());
+						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						if(task.getBtUrl() != null){
 							openPage(task.getBtUrl());
 						}else{
@@ -73,7 +73,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-						final SearchTask task = table.getTasks().get(table.getSelectedRow());
+						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						mainWindow.searchComicWindow.doSearch(task.getName());
 					}
 				}));
@@ -81,9 +81,9 @@ public class SearchWindowPopMenu extends JPopupMenu {
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-						final SearchTask task = table.getTasks().get(table.getSelectedRow());
+						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						if(task.getAuthor() != null){
-							mainWindow.searchComicWindow.doSearch(task.getAuthor());
+							mainWindow.searchComicWindow.doSearch("tag:" + task.getAuthor());
 						}
 					}
 				}));
@@ -91,7 +91,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-						final SearchTask task = table.getTasks().get(table.getSelectedRow());
+						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
 						File coverFile = new File(path);
 						if(coverFile.exists()){
@@ -106,5 +106,26 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		this.add(searchTitleItem);
 		this.add(searchAuthorItem);
 		this.add(clearCoverItem);
+	}
+	
+	public void openPage(String url){
+		try {
+			Desktop.getDesktop().browse(new URI(url));
+		} catch (IOException e1) {
+			try {
+				Runtime.getRuntime().exec("cmd.exe /c start " + url);
+			} catch (IOException e2) {
+				JOptionPane.showMessageDialog(null, "不支持此功能");
+			}
+		} catch (URISyntaxException e1) {
+			try {
+				Runtime.getRuntime().exec("cmd.exe /c start " + url);
+			} catch (IOException e2) {
+				JOptionPane.showMessageDialog(null, "不支持此功能");
+			}
+		}finally{
+			//隐藏popupMenu
+			this.setVisible(false);
+		}
 	}
 }

@@ -2,24 +2,15 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -31,16 +22,10 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
-import org.arong.egdownloader.ui.listener.MenuItemActonListener;
+import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.swing.AJLabel;
-import org.arong.egdownloader.ui.swing.AJMenuItem;
-import org.arong.egdownloader.ui.swing.AJPopupMenu;
-import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
-import org.arong.egdownloader.ui.window.form.AddFormDialog;
-import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
-import org.arong.util.FileUtil;
 /**
  * 搜索结果表格
  * @author dipoo
@@ -107,10 +92,11 @@ public class SearchTasksTable extends JTable {
 					}
 					return l;
 				}else if(column == 1){//名称
+					SearchTask task = tasks.get(row);
+					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
-					SearchTask task = tasks.get(row);
+					JLabel l = new AJLabel((contains ? "[已存在]" : "") + value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));
@@ -173,6 +159,7 @@ public class SearchTasksTable extends JTable {
 				final SearchTasksTable table = (SearchTasksTable)e.getSource();
 				//获取点击的行数
 				int rowIndex = table.rowAtPoint(e.getPoint());
+				comicWindow.selectTaskIndex = rowIndex;
 				int columnIndex = table.columnAtPoint(e.getPoint());
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){
@@ -185,104 +172,15 @@ public class SearchTasksTable extends JTable {
 				else if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
-					if(table.popupMenu == null){
-						JMenuItem downItem = new AJMenuItem("创建任务", Color.BLACK,
-								IconManager.getIcon("add"),
-								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
-									public void doWork(Window window, ActionEvent e) {
-										EgDownloaderWindow this_ = (EgDownloaderWindow) window;
-										this_.setEnabled(false);
-										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
-											this_.creatingWindow.setVisible(true);
-											this_.creatingWindow.toFront();
-										}else{
-											if (this_.addFormWindow == null) {
-												this_.addFormWindow = new AddFormDialog(this_);
-											}
-											((AddFormDialog)this_.addFormWindow).emptyField();
-											((AddFormDialog)this_.addFormWindow).setUrl(task.getUrl());
-											this_.addFormWindow.setVisible(true);
-											this_.addFormWindow.toFront();
-										}
-									}
-								}));
-						JMenuItem openPageItem = new AJMenuItem("打开网页", Color.BLACK, IconManager.getIcon("browse"),
-								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
-									public void doWork(Window window, ActionEvent e) {
-										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										openPage(task.getUrl());
-									}
-								}));
-						JMenuItem openBtPageItem = new AJMenuItem("下载BT", Color.BLACK,
-								IconManager.getIcon("download"),
-								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
-									public void doWork(Window window, ActionEvent e) {
-										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										if(task.getBtUrl() != null){
-											openPage(task.getBtUrl());
-										}else{
-											JOptionPane.showMessageDialog(comicWindow, "该漫画没有可以下载的bt文件");
-										}
-									}
-								}));
-						JMenuItem searchTitleItem = new AJMenuItem("搜索标题", Color.BLACK, "",
-								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
-									public void doWork(Window window, ActionEvent e) {
-										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										comicWindow.doSearch(task.getName());
-									}
-								}));
-						JMenuItem searchAuthorItem = new AJMenuItem("搜索作者", Color.BLACK, "",
-								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
-									public void doWork(Window window, ActionEvent e) {
-										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										if(task.getAuthor() != null){
-											comicWindow.doSearch(task.getAuthor());
-										}
-									}
-								}));
-						JMenuItem clearCoverItem = new AJMenuItem("清理封面", Color.BLACK, IconManager.getIcon("clear"),
-								new MenuItemActonListener(comicWindow.mainWindow, new IMenuListenerTask() {
-									public void doWork(Window window, ActionEvent e) {
-										final SearchTask task = table.getTasks().get(table.getSelectedRow());
-										String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
-										File coverFile = new File(path);
-										if(coverFile.exists()){
-											coverFile.delete();
-											JOptionPane.showMessageDialog(comicWindow, "清理完成");
-										}
-									}
-								}));
-						table.popupMenu = new AJPopupMenu(downItem, openPageItem, openBtPageItem, searchTitleItem, searchAuthorItem, clearCoverItem);
+					if(comicWindow.popMenu == null){
+						comicWindow.popMenu = new SearchWindowPopMenu(comicWindow.mainWindow);
 					}
-					table.popupMenu.show(table, e.getPoint().x, e.getPoint().y);
+					comicWindow.popMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});
 	}
 	
-	public void openPage(String url){
-		try {
-			Desktop.getDesktop().browse(new URI(url));
-		} catch (IOException e1) {
-			try {
-				Runtime.getRuntime().exec("cmd.exe /c start " + url);
-			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(comicWindow, "不支持此功能");
-			}
-		} catch (URISyntaxException e1) {
-			try {
-				Runtime.getRuntime().exec("cmd.exe /c start " + url);
-			} catch (IOException e2) {
-				JOptionPane.showMessageDialog(comicWindow, "不支持此功能");
-			}
-		}finally{
-			//隐藏tablePopupMenu
-			popupMenu.setVisible(false);
-		}
-	}
-
 	public List<SearchTask> getTasks() {
 		return tasks;
 	}

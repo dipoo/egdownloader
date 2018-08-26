@@ -11,7 +11,7 @@ import java.io.PrintStream;
 import javax.swing.JTextArea;
 
 import org.arong.util.FileUtil;
-import org.arong.utils.DateUtil;
+import org.arong.util.DateUtil;
 import org.arong.utils.StringUtil;
 
 /**
@@ -55,7 +55,7 @@ public class SwingPrintStream extends PrintStream {
 			logTextArea.paintImmediately(logTextArea.getBounds());
 			try {
 				//写日志
-				logfw.append(DateUtil.getStringToday() + " " + message + "\n");
+				logfw.append((message.length() > 8 && !":".equals(message.substring(2, 3)) ? DateUtil.showDate("yyyy-MM-dd HH:mm:ss") : DateUtil.getStringToday()) + " " + message + "\n");
 				logfw.flush();
 			} catch (IOException e) {
 				//e.printStackTrace();

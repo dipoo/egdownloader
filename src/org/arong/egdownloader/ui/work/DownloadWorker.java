@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.work;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
@@ -7,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
@@ -21,6 +23,7 @@ import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
 /**
  * 下载线程类，执行耗时的下载任务
@@ -72,11 +75,14 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}
 						if(this.isCancelled())//是否暂停
 							return null; 
+						Object[] streamAndLength =  null;
 						if(pic.getRealUrl().contains("exhentai.org")){
-							is =  WebClient.getStreamUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo());
+							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo());
 						}else{
-							is =  WebClient.getStreamUseJava(pic.getRealUrl());
+							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
 						}
+						is = (InputStream) streamAndLength[0];
+						int totalLength = (Integer) streamAndLength[1];
 						
 						if(this.isCancelled())//是否暂停
 							return null;
@@ -116,13 +122,19 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
+						}else if(totalLength - 1024 * 10 > size){
+							//误差在10K以上则不算下载成功
+							pic.setRealUrl(null);
+							Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(" + FileUtil.showSizeStr((long)size) + "):下载不完整(" + FileUtil.showSizeStr((long)totalLength) + ")");
+							delete(existNameFs);
+							exceptionNum ++;
+							continue;
 						}
 						if(this.isCancelled()){//是否暂停
 							//删除已经下载的文件
 							delete(existNameFs);
 							return null;
 						}
-						//Picture [id=41b2c042-7560-422b-a521-e76b56720a77, num=01, name=P213_.jpg, url=http://exhentai.org/s/b0f5fe0e5c/698928-1, realUrl=http://36.233.48.163:8888/h/b0f5fe0e5c10d164456ed3f2000d8b0ef258ab5d-1385766-1279-1850-jpg/keystamp=1401206100-f2b9d0361c/P213_.jpg, size=0, time=null, saveAsName=true, isCompleted=false, isRunning=false]
 						pic.setSize(size);//设置图片大小
 						pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
 						pic.setCompleted(true);//设置为已下载完成
@@ -135,9 +147,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}
 						//更新图片信息
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
+						//更新任务信息
+						((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 						//设置最后下载时间
 						setting.setLastDownloadTime(pic.getTime());
-						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "下载完成。");
+						BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + image.getWidth() + "x" + image.getHeight() + ")下载完成。");
 						success ++;
 						continue;
 					}catch (SocketTimeoutException e){

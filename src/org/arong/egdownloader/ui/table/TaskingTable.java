@@ -420,7 +420,7 @@ public class TaskingTable extends JTable {
 		}
 	}
 
-	public List<Task> getTasks() {
+	public TaskList<Task> getTasks() {
 		return tasks;
 	}
 
