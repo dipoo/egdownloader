@@ -187,6 +187,7 @@ public class InitWindow extends JWindow {
 				}
 				textLabel.setText("初始化完成");
 				ComponentConst.mainWindow.setVisible(true);
+				ComponentConst.mainWindow.toFront();
 			}
 		});
 		

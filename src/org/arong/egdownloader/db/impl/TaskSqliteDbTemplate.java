@@ -18,8 +18,7 @@ import org.arong.utils.StringUtil;
 public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 	
 	public static void main(String[] args) {
-		String sql = "alter table task add column groupname varchar(512)";
-		System.out.println(new TaskSqliteDbTemplate().executeSql(sql));
+		
 	}
 	public int executeSql(String sql){
 		try {
@@ -52,6 +51,8 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 			.append("end VARCHAR(64));");
 			try {
 				JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+				String sql = "alter table task add column groupname varchar(512)";
+				JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
 			} catch (SQLException e1) {
 			}
 	}
@@ -192,7 +193,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 						while(rs.next()){
 							model = new Task();
 							resultSet2Task(rs, model);
-							list.add(model);
+							list.add(model, model.getUrl().replaceAll("https://", "http://"));
 						}
 						return list;
 					}
@@ -218,7 +219,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 					while(rs.next()){
 						model = new Task();
 						resultSet2Task(rs, model);
-						list.add(model);
+						list.add(model, model.getUrl().replaceAll("https://", "http://"));
 					}
 					return list;
 				}
