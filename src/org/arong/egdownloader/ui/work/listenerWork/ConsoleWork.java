@@ -25,7 +25,7 @@ public class ConsoleWork implements IListenerTask {
 	public JTextArea consoleTextArea;
 	
 	public void doWork(Window window, MouseEvent e) {
-		final EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+		/*final EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 		if(mainWindow.consolePane == null){
 			JTextArea jea = new JTextArea();
 			jea.setEditable(false);
@@ -63,6 +63,6 @@ public class ConsoleWork implements IListenerTask {
 			mainWindow.setSize(ComponentConst.CLIENT_WIDTH, mainWindow.getHeight() + 200);
 		}
 		mainWindow.setLocationRelativeTo(null);//使窗口居中
-	}
+*/	}
 
 }

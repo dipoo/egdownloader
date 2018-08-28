@@ -63,6 +63,7 @@ import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.menuitem.AddTaskGroupMenuItem;
 import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
+import org.arong.egdownloader.ui.menuitem.OpenLogMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ReBuildAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
@@ -131,7 +132,6 @@ public class EgDownloaderWindow extends JFrame {
 	public JPopupMenu tablePopupMenu;
 	public TaskingTable runningTable;
 	public JScrollPane tablePane;
-	public JScrollPane consolePane;
 	public JTextArea consoleArea;
 	public JPopupMenu consolePopupMenu;
 	public JPanel emptyPanel;
@@ -316,7 +316,9 @@ public class EgDownloaderWindow extends JFrame {
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", IconManager.getIcon("select"));
 		JMenuItem clearItem = new ClearConsoleMenuItem("清空控制台", this);
+		JMenuItem openLogItem = new OpenLogMenuItem("打开日志文件", this);
 		consoleMenu.add(clearItem);
+		consoleMenu.add(openLogItem);
 		
 		Component[] menus = new Component[]{
 					newTaskMenu, startTasksMenu, stopTasksMenu, deleteTasksMenu, searchComicMenu, taskGroupMenu, settingMenu, operaMenu, consoleMenu, countMenu, aboutMenu
@@ -548,14 +550,11 @@ public class EgDownloaderWindow extends JFrame {
 		consoleArea.setBorder(null);
 		consoleArea.setFont(new Font("宋体", Font.BOLD, 13));
 		consoleArea.setForeground(new Color(63,127,95));//
-		consoleArea.setLocation(0, 20);
+		//consoleArea.setLocation(0, 20);
 		//consoleArea.setBackground(Color.GRAY);
-		consolePane = new JScrollPane();
 		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
-		consolePane.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
-		consolePane.setAutoscrolls(true);
-		consolePane.setBorder(border);
-		consolePane.setViewportView(consoleArea);
+		consoleArea.setBorder(border);
+		consoleArea.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
 		try {
 			//将syso信息推送到控制台
 			new SwingPrintStream(System.out, consoleArea);
@@ -563,20 +562,20 @@ public class EgDownloaderWindow extends JFrame {
 			JOptionPane.showMessageDialog(this, "控制台初始化错误！");
 		}
 		final JMenuItem clearItemPopup = new ClearConsoleMenuItem("清空控制台", this);
+		final JMenuItem openLogItemPopup = new OpenLogMenuItem("打开日志文件", this);
 		consoleArea.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				//右键
 				if(e.getButton() == MouseEvent.BUTTON3){
 					if(consolePopupMenu == null){
-						consolePopupMenu = new AJPopupMenu(clearItemPopup);
+						consolePopupMenu = new AJPopupMenu(clearItemPopup, openLogItemPopup);
 					}
 					consolePopupMenu.show((Component) e.getSource(), e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});
-		
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), consolePane, jMenuBar, tablePane, tablePopupMenu, emptyPanel);
+		ComponentUtil.addComponents(getContentPane(), consoleArea, jMenuBar, tablePane, tablePopupMenu, emptyPanel);
 		if(tasks == null || tasks.size() == 0){
 			tablePane.setVisible(false);
 		}else{
@@ -650,7 +649,6 @@ public class EgDownloaderWindow extends JFrame {
 				}else if(window.simpleSearchWindow != null && window.simpleSearchWindow.isVisible()){
 					window.simpleSearchWindow.requestFocus();
 				}else{
-					window.consolePane.setVisible(true);
 				}
 			}
 
@@ -688,8 +686,11 @@ public class EgDownloaderWindow extends JFrame {
 					emptyPanel.setBounds(0, ((window.getHeight() - 280) / 2), window.getWidth(), 100);
 				}
 				//设置控制台大小
-				if(consolePane != null){
+				/*if(consolePane != null){
 					consolePane.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
+				}*/
+				if(consoleArea != null){
+					consoleArea.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
 				}
 			}
 		});

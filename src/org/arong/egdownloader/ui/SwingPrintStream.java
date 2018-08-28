@@ -23,8 +23,16 @@ import org.arong.utils.StringUtil;
 public class SwingPrintStream extends PrintStream {
 	static BufferedWriter logfw = null;
 	static{
+		String binPath = FileUtil.getAppPath(SwingPrintStream.class);
+		if(binPath.endsWith("bin")){
+			binPath = binPath.substring(0, binPath.length() - 3);
+		}else{
+			FileUtil.ifNotExistsThenCreate("");
+			File f = new File("");
+			binPath = f.getAbsolutePath();
+		}
 		//获取日志文件
-		File logfile = new File(FileUtil.getProjectPath() + File.separator + "console.log");
+		File logfile = new File(binPath + File.separator + "console.log");
 		try {
 			//大于20M则另存为
 			if(logfile.exists() && logfile.length() > 1024 * 1024 * 20){
@@ -70,7 +78,7 @@ public class SwingPrintStream extends PrintStream {
 	private void filter(JTextArea logTextArea){
 		String text = logTextArea.getText();
 		if(text.length() > 20000){
-			logTextArea.setText(text.substring(text.length() - 1000, text.length()));
+			logTextArea.setText("");
 		}
 	}
 

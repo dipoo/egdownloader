@@ -102,7 +102,7 @@ public class SearchComicWindow extends JFrame {
 		this.setLayout(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		AWTUtilities.setWindowOpaque(this, true);
-		this.getContentPane().setBackground(Color.LIGHT_GRAY);
+		//this.getContentPane().setBackground(Color.LIGHT_GRAY);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		//this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);  
@@ -131,9 +131,7 @@ public class SearchComicWindow extends JFrame {
 			
 			public void actionPerformed(ActionEvent ae) {
 				mainWindow.searchComicWindow.toFront();
-				mainWindow.consolePane.setVisible(false);
 				search(page);
-				mainWindow.consolePane.setVisible(true);
 			}
 			
 		}, 470, 20, 60, 30);
