@@ -51,6 +51,9 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 			.append("end VARCHAR(64));");
 			try {
 				JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
+			try{
 				String sql = "alter table task add column groupname varchar(512)";
 				JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
 			} catch (SQLException e1) {
@@ -256,7 +259,8 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		model.setTotal(rs.getString("total") == null ? 0 : Integer.parseInt(rs.getString("total")));
 		model.setCurrent(rs.getString("current") == null ? 0 : Integer.parseInt(rs.getString("current")));
 		model.setSize(rs.getString("size") == null ? "" : rs.getString("size"));
-		model.setStatus(TaskStatus.parseTaskStatus(rs.getString("status")));
+		TaskStatus status = TaskStatus.parseTaskStatus(rs.getString("status"));
+		model.setStatus(status == null ? TaskStatus.UNSTARTED : status);
 		model.setStart(rs.getString("start") == null ? 1 : Integer.parseInt(rs.getString("start")));
 		model.setEnd(rs.getString("end") == null ? model.getTotal() : Integer.parseInt(rs.getString("end")));
 	}
