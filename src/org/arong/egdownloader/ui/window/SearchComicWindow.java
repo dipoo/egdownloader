@@ -54,6 +54,8 @@ import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.work.SearchComicWorker;
 import org.arong.util.FileUtil;
 
+import com.sun.awt.AWTUtilities;
+
 /**
  * 显示绅士站漫画列表窗口
  * @author dipoo
@@ -99,7 +101,9 @@ public class SearchComicWindow extends JFrame {
 		this.setIconImage(IconManager.getIcon("eh").getImage());
 		this.setLayout(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
+		AWTUtilities.setWindowOpaque(this, true);
+		this.getContentPane().setBackground(Color.LIGHT_GRAY);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		//this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);  
 		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 20, 50, 30);
@@ -343,7 +347,6 @@ public class SearchComicWindow extends JFrame {
 		//检测是否存在缓存目录,不存在则创建
 		FileUtil.ifNotExistsThenCreate(ComponentConst.CACHE_PATH);
 		
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 	}
 	
 	public void search(String page){
