@@ -145,6 +145,7 @@ public final class ComponentConst {
 		SKIN_ICON.put("setting", "_setting.png");
 		SKIN_ICON.put("download", "_download.png");
 		SKIN_ICON.put("select", "_select.png");
+		SKIN_ICON.put("openpic", "_openpic.png");
 		SKIN_ICON.put("folder", "_folder.png");
 		SKIN_ICON.put("size", "_size.png");
 		SKIN_ICON.put("tool", "_tool.png");
@@ -201,6 +202,7 @@ public final class ComponentConst {
 	public final static String DECODE_AND_ENCODE_TAB_TEXT = "加密/解密";
 	
 	public final static String POPUP_START_MENU_TEXT = " 开始任务   ";
+	public final static String POPUP_OPENFILE_MENU_TEXT = " 打开图片   ";
 	public final static String POPUP_STOP_MENU_TEXT = " 暂停任务   ";
 	public final static String POPUP_DETAIL_MENU_TEXT = " 详细信息   ";
 	public final static String POPUP_COPYURL_MENU_TEXT = " 复制地址   ";

@@ -493,7 +493,7 @@ public class SearchComicWindow extends JFrame {
 		
 		for(int i = 0; i < searchTasks.size(); i ++){
 			final PirctureLabel coverLabel = picLabels[i];
-			coverLabel.flush(searchTasks.get(i), 500 * i);
+			coverLabel.flush(searchTasks.get(i), 200 * i);
 			ComponentUtil.addComponents(picturePane, coverLabel);
 		}
 		
@@ -557,8 +557,8 @@ public class SearchComicWindow extends JFrame {
 	 */
 	class PirctureLabel extends JLabel{
 		public boolean iconLoadCompleted; 
-		public final static int DEFAULTWIDTH = 20;
-		public final static int DEFAULTHEIGHT = 20;
+		public final static int DEFAULTWIDTH = 16;
+		public final static int DEFAULTHEIGHT = 16;
 		public PirctureLabel(){
 			this.setOpaque(true);
 			this.setBackground(Color.BLACK);
@@ -567,10 +567,10 @@ public class SearchComicWindow extends JFrame {
 			this.setVerticalTextPosition(JLabel.TOP);
 			this.setHorizontalTextPosition(JLabel.CENTER);
 			this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-			final PirctureLabel this_ = this;
 			this.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					mainWindow.searchComicWindow.selectTaskIndex = Integer.parseInt(this_.getName()) - 1;
+					JLabel l = (JLabel) e.getSource();
+					mainWindow.searchComicWindow.selectTaskIndex = Integer.parseInt(l.getName()) - 1;
 					//左键
 					if(e.getButton() == MouseEvent.BUTTON1){}
 					//右键
@@ -579,15 +579,16 @@ public class SearchComicWindow extends JFrame {
 						if(mainWindow.searchComicWindow.popMenu == null){
 							mainWindow.searchComicWindow.popMenu = new SearchWindowPopMenu(mainWindow);
 						}
-						mainWindow.searchComicWindow.popMenu.show(this_, e.getPoint().x, e.getPoint().y);
+						mainWindow.searchComicWindow.popMenu.show(l, e.getPoint().x, e.getPoint().y);
 					}
 				}
 
 				public void mouseEntered(MouseEvent e) {
-					this_.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
-					this_.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-					if(this_.getIcon().getIconWidth() == DEFAULTWIDTH && this_.iconLoadCompleted){
-						flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(this_.getName()) - 1));
+					JLabel l = (JLabel) e.getSource();
+					l.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
+					l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					if(l.getIcon().getIconWidth() == DEFAULTWIDTH && new File(ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1).getUrl())).exists()){
+						flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1));
 					}
 				}
 
@@ -636,36 +637,48 @@ public class SearchComicWindow extends JFrame {
 							cover = new File(path);
 						}
 						if(!cover.exists()){ 
-							this_.setText(this_.getText() + "<br/>加载失败");
+							this_.setText(this_.getText() + ">加载失败");
 							this_.setIcon(null);
 							return;
 						}
 						icon = new ImageIcon(path);
-						while(icon.getIconWidth() == -1){
+						icon.getImage().flush();//解决加载图片不完全问题
+						while(icon.getIconWidth() == -1 && icon.getImage().getWidth(icon.getImageObserver()) == -1){
 							try {
-								Thread.sleep(2000);
+								Thread.sleep(1000);
 							} catch (InterruptedException e) {}
 							try {
 								icon = new ImageIcon(path);
-							} catch (Exception e) {}
+								icon.getImage().flush();//解决加载图片不完全问题
+							} catch (Exception e) {this_.setText(this_.getText() + ">加载失败");return;}
 						}
 						try {
-							Thread.sleep(2000);
+							Thread.sleep(1000);
 						} catch (InterruptedException e) {}
-						this_.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
-						this_.setIcon(icon);
+						int width = icon.getIconWidth(), height = icon.getIconHeight();
+						if(width == -1){
+							width = icon.getImage().getWidth(icon.getImageObserver());
+							height = icon.getImage().getHeight(icon.getImageObserver());
+						}
+						this_.setSize(width + 4, height + 4);
 						icon.getImage().flush();
+						this_.setIcon(icon);
 						this_.iconLoadCompleted = true;
 					}
 				}).start();
 			}else{
 				ImageIcon icon = null;
 				icon = new ImageIcon(path);
-				if(icon.getIconWidth() == -1){
+				icon.getImage().flush();//解决加载图片不完全问题
+				if(icon.getIconWidth() == -1 && icon.getImage().getWidth(icon.getImageObserver()) == -1){
 					this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);
 					this.setIcon(IconManager.getIcon("loading"));
 				}else{
-					this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+					if(icon.getIconWidth() == -1){
+						this.setSize(icon.getImage().getWidth(icon.getImageObserver()) + 4, icon.getImage().getHeight(icon.getImageObserver()) + 4);
+					}else{
+						this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
+					}
 					icon.getImage().flush();//解决加载图片不完全问题
 					this.setIcon(icon);
 				}

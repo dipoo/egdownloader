@@ -15,6 +15,7 @@ public class IconManager {
 	private static ImageIcon changeImage;
 	private static ImageIcon loadingImage;
 	private static ImageIcon folderImage;
+	private static ImageIcon openpicImage;
 	private static ImageIcon operaImage;
 	
 	private static ImageIcon deleteImage;
@@ -74,6 +75,11 @@ public class IconManager {
 				folderImage = new ImageIcon(IconManager.class.getResource(skinPath + ComponentConst.SKIN_ICON.get("folder")));
 			}
 			return folderImage;
+		}else if("openpic".equals(name)){
+			if(openpicImage == null){
+				openpicImage = new ImageIcon(IconManager.class.getResource(skinPath + ComponentConst.SKIN_ICON.get("openpic")));
+			}
+			return openpicImage;
 		}else if("opera".equals(name)){
 			if(operaImage == null){
 				operaImage = new ImageIcon(IconManager.class.getResource(skinPath + ComponentConst.SKIN_ICON.get("opera")));

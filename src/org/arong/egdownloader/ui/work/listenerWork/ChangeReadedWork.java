@@ -20,6 +20,7 @@ public class ChangeReadedWork implements IMenuListenerTask {
 		int index = table.getSelectedRow();
 		Task task = table.getTasks().get(index);
 		task.setReaded(! task.isReaded());
+		mainWindow.taskDbTemplate.update(task);
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
 	}
