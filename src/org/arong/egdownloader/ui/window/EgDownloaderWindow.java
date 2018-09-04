@@ -3,6 +3,7 @@
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -21,6 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +89,7 @@ import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.DownloadCoverWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
+import org.arong.egdownloader.ui.work.listenerWork.OpenPicWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
 import org.arong.egdownloader.ui.work.listenerWork.ResetTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
@@ -381,6 +384,10 @@ public class EgDownloaderWindow extends JFrame {
 				mainWindow.tablePopupMenu.setVisible(false);
 			}
 		}));
+		//右键菜单：打开图片
+		AJMenuItem openPicPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENFILE_MENU_TEXT, menuItemColor,
+				IconManager.getIcon("openpic"),
+				new MenuItemActonListener(this, new OpenPicWork()));
 		//右键菜单：打开文件夹
 		AJMenuItem openFolderPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("folder"),
@@ -518,7 +525,7 @@ public class EgDownloaderWindow extends JFrame {
 		AJMenu moreMenu = new AJMenu(ComponentConst.POPUP_MORE_MENU_TEXT, "", editMenuItem, resetMenuItem, completedMenuItem, rebuildMenuItem);
 		moreMenu.setForeground(menuItemColor);
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openFolderPopupMenuItem,
+		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openPicPopupMenuItem, openFolderPopupMenuItem,
 				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
 				checkResetMenuItem, changeReadedMenuItem, zipMenuItem, searchAuthorMenuItem, moreMenu);
 		JLabel emptyTableTips = new AJLabel("empty", "", new Color(227,93,81), JLabel.CENTER);
