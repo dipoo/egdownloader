@@ -2,7 +2,6 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -16,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -37,13 +34,12 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.CursorManager;
-import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
+import org.arong.egdownloader.ui.panel.SearchImagePanel;
 import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJCheckBox;
@@ -96,6 +92,7 @@ public class SearchComicWindow extends JFrame {
 	public int selectTaskIndex = 0;//操作的任务索引
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
+		viewModel = mainWindow.setting.getSearchViewModel();
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
 		this.setTitle("搜索里站漫画");
 		this.setIconImage(IconManager.getIcon("eh").getImage());
@@ -251,6 +248,7 @@ public class SearchComicWindow extends JFrame {
 		changeViewBtn = new AJButton("切换视图", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				viewModel = viewModel == 1 ? 2 : 1;
+				mainWindow.setting.setSearchViewModel(viewModel);
 				searchBtn.doClick();
 			}
 		}, 0, 0, 60, 30);
@@ -371,7 +369,7 @@ public class SearchComicWindow extends JFrame {
 			rightBtn.setEnabled(false);
 			
 			key = k;
-			String exurl = mainWindow.setting.isHttps() ? "https" : "http" + "://exhentai.org/?advsearch=1&f_sh=on&f_apply=Apply+Filter&f_sname=on&f_stags=on&f_sh=on&f_srdd=2&page=" + (Integer.parseInt(page) - 1) + parseOption();
+			String exurl = (mainWindow.setting.isHttps() ? "https" : "http") + "://exhentai.org/?advsearch=1&f_sh=on&f_apply=Apply+Filter&f_sname=on&f_stags=on&f_sh=on&f_srdd=2&page=" + (Integer.parseInt(page) - 1) + parseOption();
 			if(!keyText.equals("")){
 				//过滤key
 				try {
@@ -414,19 +412,19 @@ public class SearchComicWindow extends JFrame {
 			case 0:
 				break;
 			case 1:
-				key = "language:chinese " + key;
+				key = "language:chinese$ " + key;
 				break;
 			case 2:
-				key = "language:english " + key;
+				key = "language:english$ " + key;
 				break;
 			case 3:
-				key = "language:korean " + key;
+				key = "language:korean$ " + key;
 				break;
 			case 4:
-				key = "language:french " + key;
+				key = "language:french$ " + key;
 				break;
 			case 5:
-				key = "language:spanish " + key;
+				key = "language:spanish$ " + key;
 				break;	
 		}
 		if(key.equals(keyField.getText())){
@@ -460,11 +458,11 @@ public class SearchComicWindow extends JFrame {
 		totalLabel.setText("共搜索到 " + totalPage + " 页,总计 " + totalTasks + " 本漫画");
 	}
 	
-	public PirctureLabel[] picLabels = new PirctureLabel[25];
+	public SearchImagePanel[] picLabels = new SearchImagePanel[25];
 	public void showResult(final String totalPage, final Integer currentPage){
 		if(picLabels[0] == null){
 			for(int i = 0; i < 25; i ++){
-				PirctureLabel coverLabel = new PirctureLabel(i);
+				SearchImagePanel coverLabel = new SearchImagePanel(i, mainWindow);
 				picLabels[i] = coverLabel;
 			}
 		}
@@ -480,6 +478,7 @@ public class SearchComicWindow extends JFrame {
 		}
 		if(picturePane == null){
 			picturePane = new JPanel();
+			//picturePane.setBackground(Color.LIGHT_GRAY);
 			picturePane.setLayout(new FlowLayout(FlowLayout.CENTER));
 			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
 			int hr = (int)(tablePane.getWidth() / 220);
@@ -492,7 +491,7 @@ public class SearchComicWindow extends JFrame {
 		tablePane.setViewportView(picturePane);
 		
 		for(int i = 0; i < searchTasks.size(); i ++){
-			final PirctureLabel coverLabel = picLabels[i];
+			final SearchImagePanel coverLabel = picLabels[i];
 			coverLabel.flush(searchTasks.get(i), 200 * i);
 			ComponentUtil.addComponents(picturePane, coverLabel);
 		}
@@ -546,143 +545,6 @@ public class SearchComicWindow extends JFrame {
 		}else{
 			String e = keyList.remove(0);
 			keyList.add(keyList.size(), e);
-		}
-	}
-	
-	
-	
-	/**
-	 * 封面组件
-	 *
-	 */
-	class PirctureLabel extends JLabel{
-		public boolean iconLoadCompleted; 
-		public final static int DEFAULTWIDTH = 16;
-		public final static int DEFAULTHEIGHT = 16;
-		public PirctureLabel(){
-			this.setOpaque(true);
-			this.setBackground(Color.BLACK);
-			this.setForeground(Color.WHITE);
-			this.setFont(FontConst.Microsoft_BOLD_12);
-			this.setVerticalTextPosition(JLabel.TOP);
-			this.setHorizontalTextPosition(JLabel.CENTER);
-			this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-			this.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					JLabel l = (JLabel) e.getSource();
-					mainWindow.searchComicWindow.selectTaskIndex = Integer.parseInt(l.getName()) - 1;
-					//左键
-					if(e.getButton() == MouseEvent.BUTTON1){}
-					//右键
-					else if(e.getButton() == MouseEvent.BUTTON3){
-						//使之选中
-						if(mainWindow.searchComicWindow.popMenu == null){
-							mainWindow.searchComicWindow.popMenu = new SearchWindowPopMenu(mainWindow);
-						}
-						mainWindow.searchComicWindow.popMenu.show(l, e.getPoint().x, e.getPoint().y);
-					}
-				}
-
-				public void mouseEntered(MouseEvent e) {
-					JLabel l = (JLabel) e.getSource();
-					l.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
-					l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-					if(l.getIcon().getIconWidth() == DEFAULTWIDTH && new File(ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1).getUrl())).exists()){
-						flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1));
-					}
-				}
-
-				public void mouseExited(MouseEvent e) {
-					JLabel l = (JLabel) e.getSource();
-					l.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-					l.setCursor(Cursor.getDefaultCursor());
-				}
-			});
-		}
-		public PirctureLabel(int index){
-			this();
-			this.setName((index + 1)+ "");
-		}
-		public void flush(SearchTask task){
-			flush(task, 0);
-		}
-		public void flush(SearchTask task, final long delay){
-			this.setForeground(Color.WHITE);
-			boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
-			if(contains){this.setForeground(Color.RED);}
-			this.setText((StringUtils.isNotBlank(task.getType()) ? "[" + task.getType().toUpperCase() + "] " : " ") + task.getDate());
-			this.setToolTipText(task.getName() + "[" + task.getUploader() + "]");
-			final PirctureLabel this_ = this;
-			
-			final String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
-			File cover = new File(path);
-			if(cover == null || !cover.exists()){
-				this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);
-				this.setIcon(IconManager.getIcon("loading"));
-				new Thread(new Runnable() {
-					public void run() {
-						if(delay > 0){
-							try {
-								Thread.sleep(delay);
-							} catch (InterruptedException e) {}
-						}
-						File cover = new File(path);
-						int i = 1;
-						ImageIcon icon = null;
-						while(!cover.exists() && i < 60){
-							i ++;
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {}
-							cover = new File(path);
-						}
-						if(!cover.exists()){ 
-							this_.setText(this_.getText() + ">加载失败");
-							this_.setIcon(null);
-							return;
-						}
-						icon = new ImageIcon(path);
-						icon.getImage().flush();//解决加载图片不完全问题
-						while(icon.getIconWidth() == -1 && icon.getImage().getWidth(icon.getImageObserver()) == -1){
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {}
-							try {
-								icon = new ImageIcon(path);
-								icon.getImage().flush();//解决加载图片不完全问题
-							} catch (Exception e) {this_.setText(this_.getText() + ">加载失败");return;}
-						}
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {}
-						int width = icon.getIconWidth(), height = icon.getIconHeight();
-						if(width == -1){
-							width = icon.getImage().getWidth(icon.getImageObserver());
-							height = icon.getImage().getHeight(icon.getImageObserver());
-						}
-						this_.setSize(width + 4, height + 4);
-						icon.getImage().flush();
-						this_.setIcon(icon);
-						this_.iconLoadCompleted = true;
-					}
-				}).start();
-			}else{
-				ImageIcon icon = null;
-				icon = new ImageIcon(path);
-				icon.getImage().flush();//解决加载图片不完全问题
-				if(icon.getIconWidth() == -1 && icon.getImage().getWidth(icon.getImageObserver()) == -1){
-					this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);
-					this.setIcon(IconManager.getIcon("loading"));
-				}else{
-					if(icon.getIconWidth() == -1){
-						this.setSize(icon.getImage().getWidth(icon.getImageObserver()) + 4, icon.getImage().getHeight(icon.getImageObserver()) + 4);
-					}else{
-						this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
-					}
-					icon.getImage().flush();//解决加载图片不完全问题
-					this.setIcon(icon);
-				}
-			}
 		}
 	}
 }

@@ -25,6 +25,7 @@ import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
+import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
@@ -48,6 +49,7 @@ public class TaskingTable extends JTable {
 	private List<Task> waitingTasks;//排队等待的任务
 	public static int wordNum = 230;//名称列最多显示字数，会随着窗口大小变化而改变
 	public int currentRowIndex = -1;//用于封面显示
+	public int selectRowIndex = 0;
 	private boolean refresh;//是否应该刷新
 	private Timer timer = new Timer(true); 
 	
@@ -242,8 +244,19 @@ public class TaskingTable extends JTable {
 				}
 			}
 			public void mouseClicked(MouseEvent e) {
+				EgDownloaderWindow window = table.getMainWindow();
 				//获取点击的行数
 				int rowIndex = table.rowAtPoint(e.getPoint());
+				selectRowIndex = rowIndex;
+				
+				//切换信息面板tab
+				if(window.infoTabbedPane.getSelectedIndex() == 1){
+					window.taskInfoPanel.parseTask(window.tasks.get(rowIndex), rowIndex);
+				}else if(window.infoTabbedPane.getSelectedIndex() == 2){
+					PicturesInfoPanel infoPanel = (PicturesInfoPanel) window.infoTabbedPane.getComponent(2);
+					infoPanel.showPictures(window.tasks.get(rowIndex));
+				}
+				
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//双击事件
@@ -276,7 +289,6 @@ public class TaskingTable extends JTable {
 							File cover = new File(path);
 							//不存在封面
 							if(cover == null || !cover.exists()){
-								EgDownloaderWindow window = table.getMainWindow();
 								CoverWindow cw = (CoverWindow) window.coverWindow2;
 								if(cw == null){
 									window.coverWindow2 = new CoverWindow(task, window);
@@ -287,6 +299,7 @@ public class TaskingTable extends JTable {
 								cw.setVisible(true);
 							}
 						}
+						
 					}
 					
 				}

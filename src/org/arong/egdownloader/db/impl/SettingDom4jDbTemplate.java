@@ -169,24 +169,12 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("autoDownload", t.isAutoDownload() + "");
 		ele.addAttribute("https", t.isHttps() + "");
 		ele.addAttribute("downloadOriginal", t.isDownloadOriginal() + "");
+		ele.addAttribute("saveDirAsSubname", t.isSaveDirAsSubname() + "");
+		ele.addAttribute("debug", t.isDebug() + "");
 		ele.addAttribute("maxThread", t.getMaxThread() + "");
-		/*ele.addAttribute("gidPrefix", t.getGidPrefix());
-		ele.addAttribute("hentaiHome.uri", t.getHentaiHome().getUri());
-		ele.addAttribute("hentaiHome.firstParameterName", t.getHentaiHome().getFirstParameterName());
-		ele.addAttribute("hentaiHome.secondParameterName", t.getHentaiHome().getSecondParameterName() + "");
-		ele.addAttribute("totalPrefix", t.getTotalPrefix());
-		ele.addAttribute("namePrefix", t.getNamePrefix());
-		ele.addAttribute("fileListPrefix", t.getFileListPrefix());
-		ele.addAttribute("fileListSuffix", t.getFileListSuffix());
-		ele.addAttribute("fileListPrefix", t.getFileListPrefix());
-		ele.addAttribute("pageCount", t.getPageCount() + "");
-		ele.addAttribute("pageParam", t.getPageParam());
-		ele.addAttribute("sourcePrefix", t.getSourcePrefix());
-		ele.addAttribute("sourceSuffix", t.getSourceSuffix());
-		ele.addAttribute("showPicPrefix", t.getShowPicPrefix());
-		ele.addAttribute("showPicSuffix", t.getShowPicSuffix());
-		ele.addAttribute("realUrlPrefix", t.getRealUrlPrefix());
-		ele.addAttribute("realUrlSuffix", t.getRealUrlSuffix());*/
+		ele.addAttribute("viewModel", t.getViewModel() + "");
+		ele.addAttribute("searchViewModel", t.getSearchViewModel() + "");
+		
 		ele.addAttribute("loginUrl", t.getLoginUrl());
 		ele.addAttribute("tags", t.getTags());
 		
@@ -194,27 +182,6 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("lastDownloadTime", t.getLastDownloadTime());
 		ele.addAttribute("taskHostoryCount", t.getTaskHistoryCount() + "");
 		ele.addAttribute("pictureHostoryCount", t.getPictureHistoryCount() + "");
-		
-		/*ele.addAttribute("t_name1", t.getTask_name()[0]);
-		ele.addAttribute("t_name2", t.getTask_name()[1]);
-		ele.addAttribute("t_subname1", t.getTask_subname()[0]);
-		ele.addAttribute("t_subname2", t.getTask_subname()[1]);
-		ele.addAttribute("t_type1", t.getTask_type()[0]);
-		ele.addAttribute("t_type2", t.getTask_type()[1]);
-		ele.addAttribute("t_cover1", t.getTask_coverUrl()[0]);
-		ele.addAttribute("t_cover2", t.getTask_type()[1]);
-		ele.addAttribute("t_totalsize1", t.getTask_total_size()[0]);
-		ele.addAttribute("t_totalsize2", t.getTask_total_size()[1]);
-		ele.addAttribute("t_language1", t.getTask_language()[0]);
-		ele.addAttribute("t_language2", t.getTask_language()[1]);
-		ele.addAttribute("p_intercept1", t.getPicture_intercept()[0]);
-		ele.addAttribute("p_intercept2", t.getPicture_intercept()[1]);
-		ele.addAttribute("p_name1", t.getPicture_name()[0]);
-		ele.addAttribute("p_name2", t.getPicture_name()[1]);
-		ele.addAttribute("p_showUrl1", t.getPicture_showUrl()[0]);
-		ele.addAttribute("p_showUrl2", t.getPicture_showUrl()[1]);
-		ele.addAttribute("p_realUrl1", t.getPicture_realUrl()[0]);
-		ele.addAttribute("p_realUrl2", t.getPicture_realUrl()[1]);*/
 		
 		ele.addAttribute("openScript", t.isOpenScript() + "");
 		ele.addAttribute("createTaskScriptPath", t.getCreateTaskScriptPath());
@@ -236,28 +203,16 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setId(ele.attributeValue("id") == null ? t.getId() : ele.attributeValue("id"));
 		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir") == null ? t.getDefaultSaveDir() : ele.attributeValue("defaultSaveDir"));
 		t.setCookieInfo(ele.attributeValue("cookieInfo") == null ? t.getCookieInfo() : ele.attributeValue("cookieInfo"));
-		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")) ? true : false);
-		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")) ? true : false);
-		t.setHttps("true".equals(ele.attributeValue("https")) ? true : false);
-		t.setDownloadOriginal("true".equals(ele.attributeValue("downloadOriginal")) ? true : false);
+		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")));
+		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")));
+		t.setHttps("true".equals(ele.attributeValue("https")));
+		t.setDownloadOriginal("true".equals(ele.attributeValue("downloadOriginal")));
+		t.setSaveDirAsSubname("true".equals(ele.attributeValue("saveDirAsSubname")));
+		t.setDebug("true".equals(ele.attributeValue("debug")));
 		t.setGidPrefix(ele.attributeValue("gidPrefix") == null ? t.getGidPrefix() : ele.attributeValue("gidPrefix"));
 		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
-		/*t.getHentaiHome().setUri(ele.attributeValue("hentaiHome.uri"));
-		t.getHentaiHome().setFirstParameterName(ele.attributeValue("hentaiHome.firstParameterName"));
-		t.getHentaiHome().setSecondParameterName(ele.attributeValue("hentaiHome.secondParameterName"));
-		t.setTotalPrefix(ele.attributeValue("totalPrefix"));
-		t.setNamePrefix(ele.attributeValue("namePrefix"));
-		t.setFileListPrefix(ele.attributeValue("fileListPrefix"));
-		t.setFileListSuffix(ele.attributeValue("fileListSuffix"));
-		t.setFileListPrefix(ele.attributeValue("fileListPrefix"));
-		t.setPageCount(ele.attributeValue("pageCount") == null ? 0 : Integer.parseInt(ele.attributeValue("pageCount")));
-		t.setPageParam(ele.attributeValue("pageParam") == null ? t.getPageParam() : ele.attributeValue("pageParam"));
-		t.setSourcePrefix(ele.attributeValue("sourcePrefix"));
-		t.setSourceSuffix(ele.attributeValue("sourceSuffix"));
-		t.setShowPicPrefix(ele.attributeValue("showPicPrefix"));
-		t.setShowPicSuffix(ele.attributeValue("showPicSuffix"));
-		t.setRealUrlPrefix(ele.attributeValue("realUrlPrefix"));
-		t.setRealUrlSuffix(ele.attributeValue("realUrlSuffix"));*/
+		t.setViewModel(ele.attributeValue("viewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("viewModel")));
+		t.setSearchViewModel(ele.attributeValue("searchViewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("searchViewModel")));
 		t.setLoginUrl(ele.attributeValue("loginUrl") == null ? t.getLoginUrl() : ele.attributeValue("loginUrl"));
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
@@ -267,27 +222,6 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setPictureHistoryCount(ele.attributeValue("pictureHostoryCount") == null ? 0 : Integer.parseInt(ele.attributeValue("pictureHostoryCount")));
 		t.setLastCreateTime(ele.attributeValue("lastCreateTime"));
 		t.setLastDownloadTime(ele.attributeValue("lastDownloadTime"));
-		
-		/*t.getTask_name()[0] = ele.attributeValue("t_name1") == null ? t.getTask_name()[0] : ele.attributeValue("t_name1");
-		t.getTask_name()[1] = ele.attributeValue("t_name2") == null ? t.getTask_name()[1] : ele.attributeValue("t_name2");
-		t.getTask_subname()[0] = ele.attributeValue("t_subname1") == null ? t.getTask_subname()[0] : ele.attributeValue("t_subname1");
-		t.getTask_subname()[1] = ele.attributeValue("t_subname2") == null ? t.getTask_subname()[1] : ele.attributeValue("t_subname2");
-		t.getTask_type()[0] = ele.attributeValue("t_type1") == null ? t.getTask_type()[0] : ele.attributeValue("t_type1");
-		t.getTask_type()[1] = ele.attributeValue("t_type2") == null ? t.getTask_type()[1] : ele.attributeValue("t_type2");
-		t.getTask_coverUrl()[0] = ele.attributeValue("t_coverUrl1") == null ? t.getTask_coverUrl()[0] : ele.attributeValue("t_coverUrl1");
-		t.getTask_coverUrl()[1] = ele.attributeValue("t_coverUrl2") == null ? t.getTask_coverUrl()[1] : ele.attributeValue("t_coverUrl2");
-		t.getTask_total_size()[0] = ele.attributeValue("t_totalsize1") == null ? t.getTask_total_size()[0] : ele.attributeValue("t_totalsize1");
-		t.getTask_total_size()[1] = ele.attributeValue("t_totalsize2") == null ? t.getTask_total_size()[1] : ele.attributeValue("t_totalsize2");
-		t.getTask_language()[0] = ele.attributeValue("t_language1") == null ? t.getTask_language()[0] : ele.attributeValue("t_language1");
-		t.getTask_language()[1] = ele.attributeValue("t_language2") == null ? t.getTask_language()[1] : ele.attributeValue("t_language2");
-		t.getPicture_intercept()[0] = ele.attributeValue("t_intercept1") == null ? t.getPicture_intercept()[0] : ele.attributeValue("t_intercept1");
-		t.getPicture_intercept()[1] = ele.attributeValue("t_intercept2") == null ? t.getPicture_intercept()[1] : ele.attributeValue("t_intercept2");
-		t.getPicture_name()[0] = ele.attributeValue("p_name1") == null ? t.getPicture_name()[0] : ele.attributeValue("p_name1");
-		t.getPicture_name()[1] = ele.attributeValue("p_name2") == null ? t.getPicture_name()[1] : ele.attributeValue("p_name2");
-		t.getPicture_showUrl()[0] = ele.attributeValue("p_showUrl1") == null ? t.getPicture_showUrl()[0] : ele.attributeValue("p_showUrl1");
-		t.getPicture_showUrl()[1] = ele.attributeValue("p_showUrl2") == null ? t.getPicture_showUrl()[1] : ele.attributeValue("p_showUrl2");
-		t.getPicture_realUrl()[0] = ele.attributeValue("p_realUrl1") == null ? t.getPicture_realUrl()[0] : ele.attributeValue("p_realUrl1");
-		t.getPicture_realUrl()[1] = ele.attributeValue("p_realUrl2") == null ? t.getPicture_realUrl()[1] : ele.attributeValue("p_realUrl2");*/
 		
 		//t.setOpenScript("true".equals(ele.attributeValue("openScript")) ? true : false);
 		t.setCreateTaskScriptPath(ele.attributeValue("createTaskScriptPath") == null ? t.getCreateTaskScriptPath() : ele.attributeValue("createTaskScriptPath"));

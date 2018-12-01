@@ -101,5 +101,4 @@ public class SearchCoverWindow extends JWindow {
 		this.setLocation((int)p.getX(), (int)p.getY() - this.getHeight() / 2 - 50);
 		this.setVisible(true);
 	}
-
 }

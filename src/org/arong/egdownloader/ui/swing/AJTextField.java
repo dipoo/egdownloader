@@ -61,7 +61,7 @@ public class AJTextField extends JTextField {
 				if(selectText != null && !"".equals(selectText)){
 					StringSelection ss = new StringSelection(selectText);
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, ss);
-					this_.setText(this_.getText().replaceAll(selectText, ""));
+					this_.setText(this_.getText().substring(0, this_.getSelectionStart()) + this_.getText().substring(this_.getSelectionEnd()));
 				}
 			}
 		});

@@ -289,7 +289,7 @@ public class SearchTagWindow extends JDialog {
 					//左键
 					if(e.getButton() == MouseEvent.BUTTON1){
 						this_.dispose();
-						searchComicWindow.doSearch("tag:"+ tags.getProperty(key));
+						searchComicWindow.doSearch("female:"+ tags.getProperty(key) + "$");
 					}
 					//右键
 					else if(e.getButton() == MouseEvent.BUTTON3){

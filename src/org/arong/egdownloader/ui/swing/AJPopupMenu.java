@@ -19,4 +19,11 @@ public class AJPopupMenu extends JPopupMenu {
 		}
 	}
 
+	public void add(JMenuItem... menuItems){
+		if(menuItems != null){
+			for (JMenuItem jMenuItem : menuItems) {
+				this.add(jMenuItem);
+			}
+		}
+	}
 }

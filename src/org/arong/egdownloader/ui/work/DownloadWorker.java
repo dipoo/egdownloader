@@ -21,6 +21,7 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
@@ -32,11 +33,11 @@ import org.arong.util.Tracker;
  */
 public class DownloadWorker extends SwingWorker<Void, Void>{
 	
-	private JFrame mainWindow;
+	private EgDownloaderWindow mainWindow;
 	private Task task;
 	private Setting setting;
 	private int exceptionNum = 0;
-	public DownloadWorker(Task task, JFrame mainWindow){
+	public DownloadWorker(Task task, EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.task = task;
 		setting = ((EgDownloaderWindow)mainWindow).setting;
@@ -64,7 +65,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						if(setting.isOpenScript()){
-							pic.setRealUrl(ScriptParser.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+							pic.setRealUrl(ScriptParser.getdownloadUrl(task, setting.getRealUrlBySetting(pic.getUrl()), setting));
 						}else{
 							//pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 						}
@@ -77,7 +78,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null; 
 						Object[] streamAndLength =  null;
 						if(pic.getRealUrl().contains("exhentai.org")){
-							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo());
+							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(setting.getRealUrlBySetting(pic.getRealUrl()), setting.getCookieInfo());
 						}else{
 							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
 						}
@@ -145,14 +146,25 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							delete(existNameFs);
 							return null;
 						}
+						BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+						pic.setPpi(image.getWidth() + "x" + image.getHeight());
+						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + image.getWidth() + "x" + image.getHeight() + ")下载完成。");
+						
+						//刷新信息面板
+						if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
+							mainWindow.taskInfoPanel.parseTask(task, mainWindow.runningTable.selectRowIndex);
+						}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
+							PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);
+							infoPanel.showPictures(task);
+						}
+						
+						image = null;
 						//更新图片信息
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
 						//更新任务信息
 						((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
 						//设置最后下载时间
 						setting.setLastDownloadTime(pic.getTime());
-						BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
-						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + image.getWidth() + "x" + image.getHeight() + ")下载完成。");
 						success ++;
 						continue;
 					}catch (SocketTimeoutException e){
@@ -194,7 +206,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				//是否达到下载区间要求,达到则暂停
 				if(success == requireNum){
-					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + ":完成配置区间下载。】");
+					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + "】:完成配置区间下载。");
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -203,7 +215,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				}
 				if(exceptionNum >= requireNum){
-					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + ":配额不足或者下载异常，停止下载。】");
+					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + "】:配额不足或者下载异常，停止下载。");
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -215,7 +227,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			}else{
 				//设置任务状态为已完成
 				task.setStatus(TaskStatus.COMPLETED);
-				Tracker.println(DownloadWorker.class ,"【" + task.getDisplayName() + "已下载完毕。】");
+				Tracker.println(DownloadWorker.class ,"===========【" + task.getDisplayName() + "】已下载完毕===========");
 				task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 				//更新任务到文件
 				((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);

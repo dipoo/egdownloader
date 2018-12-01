@@ -9,7 +9,21 @@ var mark = {
 	date : ['white-space:nowrap">', '</td><td class="itd" onmouseover'],
 	type : ['.png" alt="', '" class="ic" />'],
 	btUrl : ['</tr>', "return popUp('", "', 610, 590)"],
-	uploader : ['exhentai.org/uploader', '>', '</a>']
+	uploader : ['exhentai.org/uploader', '>', '</a>'],
+	rate_position: ['<div class="ir it4r" style="background-position:', '; opacity:'],
+	rate_mapping: {
+		"0px -1px": "5.0",
+		"0px -21px": "4.5",
+		"-16px -1px": "4.0",
+		"-16px -21px": "3.5",
+		"-32px -1px": "3.0",
+		"-32px -21px": "2.5",
+		"-48px -1px": "2.0",
+		"-48px -21px": "1.5",
+		"-64px -1px": "1.0",
+		"-64px -21px": "0.5",
+		"-80px -1px": "0.0"
+	}
 };
 
 function parseJsonArray(array){
@@ -58,7 +72,7 @@ function pageInfo(source){
 	return count + mark.separator[0] + (parseInt(count) % 25 == 0 ? Math.round(parseInt(count) / 25) : Math.round(parseInt(count) / 25 + 1));
 }
     
-function parse(source){
+function parse(source, openhttps){
 	if(source.indexOf(mark.listSource[0]) != -1){
 		var page = pageInfo(source);
 		source = interceptFromSource(source, mark.listSource[0], mark.listSource[1]);
@@ -70,12 +84,17 @@ function parse(source){
 			var nameTemp = interceptFromSource(source, mark.name[0], mark.name[1]);
 			task.name = interceptFromSource(nameTemp, mark.name[2], mark.name[3]);
 			task.url = interceptFromSource(source, mark.url[0], mark.url[1]);
-			task.url = task.url.replace("https", "http");
+			if(! openhttps){
+				task.url = task.url.replace("https", "http");
+			}
+			task.rating = mark.rate_mapping[interceptFromSource(source, mark.rate_position[0], mark.rate_position[1])];
 			if(i == 0){
 				task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]);
-				task.coverUrl = task.coverUrl.replace("https", "http");
+				if(! openhttps){
+					task.coverUrl = task.coverUrl.replace("https", "http");
+				}
 			}else{
-				task.coverUrl = "http://exhentai.org/" + interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3] + task.name);
+				task.coverUrl = (openhttps ? "https" : "http") + "://exhentai.org/" + interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3] + task.name);
 			}
 			task.date = interceptFromSource(source, mark.date[0], mark.date[1]);
 			task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
@@ -95,4 +114,5 @@ function parse(source){
 		return null;
 	}
 }       
-parse(htmlSource);
+var openhttps = ("undefined" != typeof version && "undefined" != typeof https && https);
+parse(htmlSource, openhttps);

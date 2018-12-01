@@ -2,6 +2,9 @@ package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -17,6 +20,8 @@ import org.arong.egdownloader.ui.ComponentConst;
  */
 public class AJLabel extends JLabel {
 	private static final long serialVersionUID = 4435841561097728806L;
+	public AJLabel() {
+	}
 	public AJLabel(String text, Color color) {
 		super(text);
 		if(color != null)
@@ -68,5 +73,33 @@ public class AJLabel extends JLabel {
 		this(text, color);
 		this.setFont(font);
 		this.setHorizontalAlignment(align);
+	}
+	
+	private ImageIcon image;
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		if(image != null){
+        	Graphics2D g2 = (Graphics2D)g;
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            int w = getWidth();
+            int h = getHeight();
+            int iw = image.getIconWidth();
+            int ih = image.getIconHeight();
+            double xScale = (double)w / iw;
+            double yScale = (double)h / ih;
+            double scale = Math.min(xScale, yScale);    // scale to fit
+            int width = (int)(scale * iw);
+            int height = (int)(scale * ih);
+            int x = (w - width) / 2;
+            int y = (h - height) / 2;
+            g2.drawImage(image.getImage(), x, y, width, height, this);
+        }
+	}
+	public ImageIcon getImage() {
+		return image;
+	}
+	public void setImage(ImageIcon image) {
+		this.image = image;
 	}
 }

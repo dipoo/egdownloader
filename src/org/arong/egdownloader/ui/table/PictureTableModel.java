@@ -34,19 +34,37 @@ public class PictureTableModel extends DefaultTableModel {
 	}
 
 	public Object getValueAt(int row, int column) {
+		Picture pic = pictures.get(row);
 		switch (column) {
 		case 0:
-			return pictures.get(row).getNum();
+			return pic.getNum();
 		case 1:
-			return pictures.get(row).getName();
+			return pic.getName();
 		case 2:
-			return pictures.get(row).getSize();
+			if(pic.isCompleted()){
+				if(!pic.isSaveAsName()){
+					if(pic.getName().indexOf(".") != -1){
+						return pic.getNum() + pic.getName().substring(pic.getName().lastIndexOf("."), pic.getName().length());
+					}else{
+						return pic.getNum() + ".jpg";
+					}
+				}else{
+					return pic.getName();
+				}
+			}else{
+				return "";
+			}
+			
 		case 3:
-			return pictures.get(row).isCompleted() ? "完成" : "未下载";
+			return pic.getSize();
 		case 4:
-			return pictures.get(row).getUrl();
+			return pic.getPpi();	
 		case 5:
-			return pictures.get(row).getTime();
+			return pic.isCompleted() ? "完成" : "未下载";
+		case 6:
+			return pic.getUrl();
+		case 7:
+			return pic.getTime();
 		default:
 			return "";
 		}

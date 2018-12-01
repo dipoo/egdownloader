@@ -1,6 +1,8 @@
 var mark = {
+	postedTime : ['Posted:</td><td class="gdt2">', '</td></tr><tr><td class="gdt1">Parent'],
     name : ['<h1 id="gn">', '</h1><h1'],
     subname : ['</h1><h1 id="gj">', '</h1></div>'],
+    uploader : ['://exhentai.org/uploader/', '</a></div><div id="gdd">', '">'],
 	type : ['png" alt="', '" class="ic'],//
 	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
@@ -37,12 +39,16 @@ function parseJson(json){
 	return s + "}";
 }
 
-function parse(source){
+function parse(source, openhttps){
 	var task = {};
+	task.postedTime = interceptFromSource(source, mark.postedTime[0], mark.postedTime[1]);
 	task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
 	task.subname = interceptFromSource(source, mark.subname[0], mark.subname[1]);
+	task.uploader = interceptFromSource(source, mark.uploader[0], mark.uploader[1]).split(mark.uploader[2])[0];
 	task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]);
-	task.coverUrl = task.coverUrl.replace("https", "http");
+	if(! openhttps){
+		task.coverUrl = task.coverUrl.replace("https", "http");
+	}
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
 	task.total = parseInt(trim(interceptFromSource(source, mark.total[0], mark.total[1])));
 	if(source.indexOf(mark.size[1]) != -1){
@@ -60,4 +66,5 @@ function parse(source){
 	}
 	return parseJson(task);
 }
-parse(htmlSource);
+var openhttps = ("undefined" != typeof version && "undefined" != typeof https && https);
+parse(htmlSource, openhttps);

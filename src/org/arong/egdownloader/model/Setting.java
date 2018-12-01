@@ -17,8 +17,12 @@ public class Setting {
 	private boolean saveAsName = false;//是否以真实名称保存
 	private boolean autoDownload;//创建任务后是否自动下载
 	private boolean downloadOriginal = true;//下载原图
+	private boolean saveDirAsSubname = false;//以子名称作为保存目录
 	private boolean https = false;//是否使用https
+	private int viewModel = 1;//默认显示模式
+	private int searchViewModel = 1;//默认搜索显示模式
 	private int maxThread = 5;
+	private boolean debug = false;
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
 	
 	private boolean openScript = true;//是否启用脚本
@@ -77,7 +81,11 @@ public class Setting {
 	private String proxyUsername;//代理用户名
 	private String proxyPwd;//代理密码
 	
-	
+	/**
+	 * 封面视图大小
+	 */
+	private int coverWidth = 250;
+	private int coverHeight = 360;
 	
 	public String[] getTask_name() {
 		return task_name;
@@ -403,4 +411,45 @@ public class Setting {
 	public void setHttps(boolean https) {
 		this.https = https;
 	}
+	public boolean isSaveDirAsSubname() {
+		return saveDirAsSubname;
+	}
+	public void setSaveDirAsSubname(boolean saveDirAsSubname) {
+		this.saveDirAsSubname = saveDirAsSubname;
+	}
+	
+	public String getRealUrlBySetting(String url){
+		return isHttps() ? url.replace("http://", "https://") : url.replace("https://", "http://");
+	}
+	public int getViewModel() {
+		return viewModel;
+	}
+	public void setViewModel(int viewModel) {
+		this.viewModel = viewModel;
+	}
+	public int getCoverWidth() {
+		return coverWidth;
+	}
+	public void setCoverWidth(int coverWidth) {
+		this.coverWidth = coverWidth;
+	}
+	public int getCoverHeight() {
+		return coverHeight;
+	}
+	public void setCoverHeight(int coverHeight) {
+		this.coverHeight = coverHeight;
+	}
+	public boolean isDebug() {
+		return debug;
+	}
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+	public int getSearchViewModel() {
+		return searchViewModel;
+	}
+	public void setSearchViewModel(int searchViewModel) {
+		this.searchViewModel = searchViewModel;
+	}
+	
 }

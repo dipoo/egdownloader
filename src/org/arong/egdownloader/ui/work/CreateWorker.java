@@ -18,6 +18,7 @@ import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.util.FileUtil;
+import org.arong.util.Tracker;
 /**
  * 新建任务线程类
  * @author 阿荣
@@ -39,7 +40,8 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 		if(((EgDownloaderWindow)mainWindow).taskDbTemplate.exsits("url", task.getUrl())){
 			return null;
 		}
-		EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
+		final EgDownloaderWindow window = (EgDownloaderWindow)mainWindow;
+		window.creatingWindow.setTitle("任务创建中");
 		window.setEnabled(false);
 		window.setVisible(true);
 		AddFormDialog addFormWindow = ((AddFormDialog) window.addFormWindow);
@@ -66,7 +68,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			if(task != null){
 				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
-				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
+				is =  WebClient.getStreamUseJavaWithCookie(setting.getRealUrlBySetting(task.getCoverUrl()), setting.getCookieInfo());
 				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				
 				//设置最后创建时间
@@ -77,13 +79,23 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				setting.setPictureHistoryCount(setting.getPictureHistoryCount() + task.getTotal());
 				//保存到数据库
 				window.creatingWindow.setTitle("正在保存数据");
-				window.pictureDbTemplate.store(task.getPictures());//保存图片信息
 				window.taskDbTemplate.store(task);//保存任务
 				window.settingDbTemplate.update(setting);//保存配置
+				//图片数目大于80则异步存储
+				if(task.getTotal() > 80){
+					new Thread(new Runnable() {
+						public void run() {
+							window.pictureDbTemplate.store(task.getPictures());//保存图片信息
+							Tracker.println(task.getDisplayName() + "(" + task.getTotal() + ")：图片信息保存完成");
+						}
+					}).start();
+				}else{
+					window.pictureDbTemplate.store(task.getPictures());//保存图片信息
+				}
 				
 				//保存到内存
 				final TaskingTable taskTable = (TaskingTable)window.runningTable;
-				taskTable.getTasks().add(0, task);//将任务添加到列表最前面
+				taskTable.getTasks().add(0, task, task.getUrl().replaceAll("https://", "http://"));//将任务添加到列表最前面
 				taskTable.propertyChange(task);//开始观察者模式，显示下载速度
 				if(addFormWindow != null){
 					addFormWindow.emptyField();//清空下载地址
@@ -97,6 +109,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 					taskTable.startTask(task);
 				}
 				task.setCreateWorker(null);
+				if(window.viewModel == 2){
+					window.taskImagePanel.init(taskTable.getTasks());
+				}
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");
 			}

@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -29,13 +30,15 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = 3319745427208195393L;
 	
-	private Color fontColor;
-	private Color unstartedColor;
-	private Color startedColor;
-	private Color stopedColor;
-	private Color completedColor;
-	private Color progressBarBg = Color.WHITE;
-	private Color progressBarBorder = new Color(47,110,178);
+	private static Color fontColor;
+	private static Color unstartedColor;
+	private static Color startedColor;
+	private static Color stopedColor;
+	private static Color waitingColor;
+	private static Color completedColor;
+	private static Color uncreatedColor;
+	private static Color progressBarBg = Color.WHITE;
+	private static Color progressBarBorder = new Color(47,110,178);
 	private Task task;
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
@@ -70,13 +73,15 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else if(column == 1){//第二列：名称
 			tc.setPreferredWidth(480);
 			tc.setMaxWidth(1200);
+			String preffix = "<html><font color=\"#248FB7\">" + ("一般".equals(task.getTag().trim()) ? "" : "[<i>" + task.getTag() + "</i> ]") + "[" + task.getShortCreatetime() + "]</font>";
+			String suffix = (StringUtils.isNotBlank(task.getPostedTime()) ? "<font color=\"#248FB7\">[" + task.getPostedTime() + "]</font>" : "") + "</html>";
 			if(task.getSubname() !=null && !"".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
 				JLabel nameLabel = null;
 				if(subname.length() > 230){
-					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[<i>" + task.getTag() + "</i> ][" + task.getShortCreatetime() + "]</font>" + subname.substring(0, 223) + " ......</html>", fontColor, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					nameLabel = new AJLabel(preffix + subname.substring(0, 223) + " ......" + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				}else{
-					nameLabel = new AJLabel("<html><font color=\"#248FB7\">[<i>" + task.getTag() + "</i> ][" + task.getShortCreatetime() + "]</font>" + subname + "</html>", fontColor, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					nameLabel = new AJLabel(preffix + subname + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				}
 				if(value != null){
 					nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
@@ -86,11 +91,11 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 				return nameLabel;
 			}
 			else if(value != null && value.toString().length() > 120){
-				JLabel nameLabel = new AJLabel(value.toString().substring(0, 113) + " ......</html>", fontColor, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+				JLabel nameLabel = new AJLabel(preffix + value.toString().substring(0, 113) + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
 				return nameLabel;
 			}else{
-				JLabel nameLabel = new AJLabel(value.toString(), fontColor, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+				JLabel nameLabel = new AJLabel(preffix + value.toString() + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
 				return nameLabel;
 			}
@@ -124,22 +129,21 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			if(value.toString().equals(TaskStatus.UNSTARTED.getStatus())){
 				if(unstartedColor == null) unstartedColor = new Color(95,57,45);
 				return new AJLabel(value.toString(), unstartedColor, FontConst.Microsoft_BOLD_11, JLabel.CENTER);
-			}
-			if(value.toString().equals(TaskStatus.STARTED.getStatus())){
+			}else if(value.toString().equals(TaskStatus.STARTED.getStatus())){
 				if(startedColor == null) startedColor = new Color(65,146,225);
 				return new AJLabel(task.getDownSpeed().toLowerCase(), startedColor, FontConst.Microsoft_BOLD_11, JLabel.CENTER);
-			}
-			if(value.toString().equals(TaskStatus.STOPED.getStatus())){
+			}else if(value.toString().equals(TaskStatus.STOPED.getStatus())){
 				if(stopedColor == null) stopedColor = new Color(0,1,89);
 				return new AJLabel(value.toString(), stopedColor, FontConst.Microsoft_BOLD_11, JLabel.CENTER);
-			}
-			if(value.toString().equals(TaskStatus.COMPLETED.getStatus())){
+			}else if(value.toString().equals(TaskStatus.COMPLETED.getStatus())){
 				if(completedColor == null) completedColor = new Color(65,145,65);
 				return new AJLabel(value.toString(), completedColor, FontConst.Microsoft_BOLD_11, JLabel.CENTER);
-			}
-			if(value.toString().equals(TaskStatus.WAITING.getStatus())){
-				if(startedColor == null) startedColor = new Color(65,145,65);
+			}else if(value.toString().equals(TaskStatus.WAITING.getStatus())){
+				if(waitingColor == null) waitingColor = new Color(210,105,30);
 				return new AJLabel(value.toString(), startedColor, FontConst.Microsoft_BOLD_11, JLabel.CENTER);
+			}else if(value.toString().equals(TaskStatus.UNCREATED.getStatus())){
+				if(uncreatedColor == null) uncreatedColor = new Color(218,165,32);
+				return new AJLabel(value.toString(), uncreatedColor, FontConst.Microsoft_BOLD_11, JLabel.CENTER);
 			}
 		}
 		return new AJLabel(value.toString(), fontColor, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);

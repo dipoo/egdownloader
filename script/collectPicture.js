@@ -45,7 +45,7 @@ function trim(s){
 	return s;
 };
     
-function parse(temp){
+function parse(temp, openhttps){
 	var newpics = [];
 	var prefix = mark.intercept[1];//
 	temp = subFromSource(temp, prefix);
@@ -53,7 +53,9 @@ function parse(temp){
 		var picture = {};
 		//
 		picture.url = interceptFromSource(temp, mark.showUrl[0], mark.showUrl[1]);
-		picture.url = picture.url.replace("https", "http");
+		if(! openhttps){
+			picture.url = picture.url.replace("https", "http");
+		}
 		//
 		var s = interceptFromSource(temp, mark.name[0], mark.name[1]);//Page 1: img00001.jpg
 		picture.name = trim(s.split(':')[1]);
@@ -63,4 +65,5 @@ function parse(temp){
 	var pictures = newpics.concat(pictures);
 	return parseJsonArray(pictures);
 }       
-parse(htmlSource);
+var openhttps = ("undefined" != typeof version && "undefined" != typeof https && https);
+parse(htmlSource, openhttps);

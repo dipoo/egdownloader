@@ -42,10 +42,12 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 			List<Picture> pics = new ArrayList<Picture>();
 			List<Task> tasks = new ArrayList<Task>();
 			List<String> urls = new ArrayList<String>();
+			List<Integer> indexes = new ArrayList<Integer>();
 			for(int i = 0; i < rows.length; i ++){
 				if(table.getTasks().size() >= (rows[i])){
 					task = table.getTasks().get(rows[i]);
 					tasks.add(task);
+					indexes.add(rows[i]);
 					urls.add(task.getUrl().replaceAll("https://", "http://"));
 					w.setData((i + 1) + "/" + rows.length);
 					w.setInfo("收集:" + task.getName());
@@ -78,6 +80,9 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 				Tracker.println("删除" + tasks.size() + "个任务完成");
 				//更新内存
 				table.getTasks().removeAll(tasks, urls);
+				if(mainWindow.taskImagePanel != null){
+					mainWindow.taskImagePanel.removeIndexs(indexes);
+				}
 			}
 			table.clearSelection();//使之不选中任何行
 			if(table.getTasks().size() == 0){

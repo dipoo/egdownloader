@@ -20,7 +20,9 @@ public class SearchTask {
 	
 	private String uploader;//上传者
 	
-	private String author;
+	private String rating;//评分
+	
+	private String author;//作者
 	
 	public String getAuthor() {
 		return author;
@@ -94,6 +96,14 @@ public class SearchTask {
 
 	public String getCoverUrl() {
 		return coverUrl;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = rating;
 	}
 	
 }

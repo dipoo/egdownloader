@@ -16,6 +16,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DetailWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
+import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
 /**
  * 下载任务详细信息窗口
@@ -53,6 +54,13 @@ public class ShowDetailWork implements IMenuListenerTask {
 		dw.taskSizeLabel.setText(task.getSize());
 		dw.urlLabel.setText(task.getUrl());
 		dw.coverUrlLabel.setText(task.getCoverUrl());
+		long size = 0;
+		for(Picture pic : task.getPictures()){
+			if(pic.isCompleted()){
+				size += pic.getSize();
+			}
+		}
+		dw.taskDownSizeLabel.setText(FileUtil.showSizeStr(size));
 		dw.pictureTable.updateUI();
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
