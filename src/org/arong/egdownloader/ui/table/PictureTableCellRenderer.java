@@ -2,7 +2,6 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -36,27 +35,38 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setPreferredWidth(40);
 			tc.setMaxWidth(40);
 			return new JLabel(value.toString(), JLabel.LEFT);
-		}else if(column == 1){//第二列：名称
+		}else if(column == 1){//名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(260);
-			tc.setMaxWidth(300);
-		}else if(column == 2){//第三列：大小
+			tc.setPreferredWidth(160);
+			tc.setMaxWidth(200);
+		}else if(column == 2){//存储名称
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(50);
-			tc.setMaxWidth(60);
+			tc.setPreferredWidth(160);
+			tc.setMaxWidth(200);
+		}else if(column == 3){//大小
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(80);
+			tc.setMaxWidth(120);
 			val = FileUtil.showSizeStr(Long.parseLong(val));
-		}else if(column == 3){//第四列：状态
+		}else if(column == 4){//分别率
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(80);
+			tc.setMaxWidth(120);
+		}else if(column == 5){//状态
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(50);
 			tc.setMaxWidth(80);
-		}else if(column == 4){//第五列：地址
+		}else if(column == 6){//地址
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(320);
 			tc.setMaxWidth(320);
-		}else if(column == 5){//第五列：时间
+		}else if(column == 7){//时间
 			TableColumn tc = table.getColumnModel().getColumn(column);
-			tc.setPreferredWidth(180);
-			tc.setMaxWidth(180);
+			tc.setPreferredWidth(220);
+			tc.setMaxWidth(280);
+		}
+		if(isSelected){
+			return new AJLabel(val, fontColor, FontConst.Songti_BOLD_12, JLabel.LEFT);
 		}
 		return new AJLabel(val, fontColor, FontConst.Songti_PLAIN_11, JLabel.LEFT);
 	}

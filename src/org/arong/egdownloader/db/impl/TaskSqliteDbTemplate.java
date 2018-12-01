@@ -54,8 +54,23 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 			} catch (SQLException e1) {
 			}
 			try{
-				String sql = "alter table task add column groupname varchar(512)";
-				JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column groupname varchar(512)", JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
+			try{
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column postedTime varchar(64)", JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
+			try{
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column uploader varchar(64)", JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
+			try{
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column original varchar(64)", JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
+			try{
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column saveDirAsSubname varchar(64)", JdbcUtil.getConnection());
 			} catch (SQLException e1) {
 			}
 	}
@@ -256,6 +271,9 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		model.setReaded("true".equals(rs.getString("readed")));
 		model.setCreateTime(rs.getString("createTime"));
 		model.setCompletedTime(rs.getString("completedTime"));
+		model.setPostedTime(rs.getString("postedTime"));
+		model.setUploader(rs.getString("uploader") == null ? "" : rs.getString("uploader"));
+		model.setOriginal("true".equals(rs.getString("original")));
 		model.setTotal(rs.getString("total") == null ? 0 : Integer.parseInt(rs.getString("total")));
 		model.setCurrent(rs.getString("current") == null ? 0 : Integer.parseInt(rs.getString("current")));
 		model.setSize(rs.getString("size") == null ? "" : rs.getString("size"));
@@ -266,13 +284,15 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 	}
 	
 	private void storeSql(Task model, StringBuffer sqlsb){
-		sqlsb.append("insert into task(id,groupname,url,name,subname,coverUrl,language,type,saveDir,tag,readed,createTime,completedTime,total,current,size,status,start,end) values('")
+		sqlsb.append("insert into task(id,groupname,url,name,subname,coverUrl,language,type,saveDir,tag,readed,createTime,completedTime,postedTime,uploader,original,total,current,size,status,start,end) values('")
 		.append(model.getId()).append("','").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("','").append(StringEscapeUtils.escapeSql(model.getUrl())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getName())).append("','").append(StringEscapeUtils.escapeSql(model.getSubname())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getCoverUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getLanguage())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getType())).append("','").append(StringEscapeUtils.escapeSql(model.getSaveDir())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getTag())).append("','").append(model.isReaded()).append("','")
 		.append(model.getCreateTime()).append("','").append(model.getCompletedTime() == null ? "" : model.getCompletedTime()).append("','")
+		.append(model.getPostedTime() == null ? "" : model.getPostedTime()).append("','")
+		.append(model.getUploader() == null ? "" : model.getUploader()).append("','").append(model.isOriginal()).append("','")
 		.append(model.getTotal()).append("','").append(model.getCurrent()).append("','")
 		.append(model.getSize()).append("','").append(model.getStatus().getStatus()).append("','")
 		.append(model.getStart()).append("','").append(model.getEnd()).append("'")
@@ -293,6 +313,9 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		.append("readed='").append(t.isReaded()).append("',")
 		.append("createTime='").append(t.getCreateTime()).append("',")
 		.append("completedTime='").append(t.getCompletedTime() == null ? "" : t.getCompletedTime()).append("',")
+		.append("postedTime='").append(t.getPostedTime() == null ? "" : t.getPostedTime()).append("',")
+		.append("uploader='").append(t.getUploader()).append("',")
+		.append("original='").append(t.isOriginal()).append("',")
 		.append("total='").append(t.getTotal()).append("',")
 		.append("current='").append(t.getCurrent()).append("',")
 		.append("size='").append(t.getSize()).append("',")

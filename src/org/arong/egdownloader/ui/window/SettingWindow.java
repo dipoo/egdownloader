@@ -67,7 +67,13 @@ public class SettingWindow extends JFrame{
 		public JCheckBox autoDownloadBox;
 		JLabel downloadOriginalLabel;
 		public JCheckBox downloadOriginalBox;
+		JLabel defaultModelLabel;
+		public JCheckBox defaultModelBox;
 		JLabel maxThreadLabel;
+		public JCheckBox httpsBox;
+		JLabel httpsLabel;
+		public JCheckBox saveDirAsSubnameBox;
+		JLabel saveDirAsSubnameLabel;
 		public JTextField maxThreadField;
 		JLabel loginUrlLabel;
 		public JTextField loginUrlField;
@@ -181,7 +187,6 @@ public class SettingWindow extends JFrame{
 					}
 				}
 			}), 570, 30, 60, 30);
-			//当存在原图时，下载原图http://exhentai.org/s/72aa78ff00/913125-7
 			saveAsNameLabel = new AJLabel("以真实名称保存：", labelColor, 25, 70, 100, 30);
 			saveAsNameBox = new JCheckBox("", setting.isSaveAsName());
 			saveAsNameBox.setBounds(118, 70, 30, 30);
@@ -191,17 +196,27 @@ public class SettingWindow extends JFrame{
 			downloadOriginalLabel = new AJLabel("下载原图：", labelColor, 400, 70, 100, 30);
 			downloadOriginalBox = new JCheckBox("", setting.isDownloadOriginal());
 			downloadOriginalBox.setBounds(460, 70, 30, 30);
-			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 110, 100, 30);
-			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 110, 60, 30);
-			loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
-			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);
+			/*defaultModelLabel = new AJLabel("默认封面面板：", labelColor, 25, 110, 100, 30);
+			defaultModelBox = new JCheckBox("", setting.getViewModel() == 2);
+			defaultModelBox.setBounds(118, 110, 30, 30);*/
+			saveDirAsSubnameLabel = new AJLabel("子标题作为目录：", labelColor, 25, 110, 100, 30);
+			saveDirAsSubnameBox = new JCheckBox("", setting.isSaveDirAsSubname());
+			saveDirAsSubnameBox.setBounds(118, 110, 30, 30);
+			httpsLabel = new AJLabel("开启HTTPS：", labelColor, 200, 110, 100, 30);
+			httpsBox = new JCheckBox("", setting.isHttps());
+			httpsBox.setBounds(290, 110, 30, 30);
+			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 150, 100, 30);
+			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 150, 60, 30);
+			/*loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
+			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);*/
 			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
 			cookieArea = new AJTextArea();
 			cookieArea.setText(setting.getCookieInfo());
 			cookieArea.setBounds(125, 190, 360, 200);
 			cookieArea.setLineWrap(true);
+			cookieArea.setEditable(true);
 			cookieArea.setBorder(BorderFactory.createEtchedBorder());
-			cookieButton = new AJButton("登陆", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
+			/*cookieButton = new AJButton("登陆", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
@@ -212,19 +227,20 @@ public class SettingWindow extends JFrame{
 						settingWindow.loginWindow.setVisible(true);
 					}
 				}
-			}), 500, 250, 60, 30);
+			}), 500, 250, 60, 30);*/
 			JButton resumeButton = new AJButton("还原", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
 					settingWindow.cookieArea.setText(new Setting().getCookieInfo());
 				}
-			}), 500, 290, 60, 30);
+			}), 500, 270, 60, 30);
 		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, browseDirButton, openDirButton,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel, autoDownloadBox, downloadOriginalLabel,
-				downloadOriginalBox, maxThreadLabel, maxThreadField,
-				loginUrlLabel, loginUrlField, cookieLabel, cookieArea,
-				cookieButton, resumeButton);
+				downloadOriginalBox/*, defaultModelLabel, defaultModelBox*/,maxThreadLabel, maxThreadField,
+				saveDirAsSubnameLabel,saveDirAsSubnameBox,httpsLabel,httpsBox,
+				/*loginUrlLabel, loginUrlField,*/ cookieLabel, cookieArea,
+				/*cookieButton, */resumeButton);
 		    
 			/*脚本设置*/
 			scriptPanel = new JPanel();
@@ -363,10 +379,13 @@ public class SettingWindow extends JFrame{
 					if(index == 0){
 						String saveDir = settingWindow.saveDirField.getText();
 						String maxThread = settingWindow.maxThreadField.getText();
-						String loginUrl = settingWindow.loginUrlField.getText();
+						/*String loginUrl = settingWindow.loginUrlField.getText();*/
 						boolean saveAsName = settingWindow.saveAsNameBox.getSelectedObjects() == null ? false : true;//是否选择了
 						boolean autoDownload = settingWindow.autoDownloadBox.getSelectedObjects() == null ? false : true;
 						boolean downloadOriginal = settingWindow.downloadOriginalBox.getSelectedObjects() == null ? false : true;
+						boolean saveDirAsSubname = saveDirAsSubnameBox.isSelected();
+						boolean https = httpsBox.isSelected();
+						boolean defaultModel = defaultModelBox.isSelected();
 						String cookieInfo = settingWindow.cookieArea.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
@@ -378,10 +397,10 @@ public class SettingWindow extends JFrame{
 						}else if(!p.matcher(maxThread).matches()){
 							JOptionPane.showMessageDialog(this_, "最多开启任务数必须填写数字,或不能大于10");
 							return;
-						}else if("".equals(loginUrl)){
+						}/*else if("".equals(loginUrl)){
 							JOptionPane.showMessageDialog(this_, "请填写登录地址");
 							return;
-						}else{
+						}*/else{
 							if("".equals(cookieInfo)){
 								int result = JOptionPane.showConfirmDialog(this_, "登陆信息cookie不存在，确认要保存吗？");
 								if(result != JOptionPane.OK_OPTION){//不保存
@@ -392,8 +411,11 @@ public class SettingWindow extends JFrame{
 							setting.setSaveAsName(saveAsName);
 							setting.setAutoDownload(autoDownload);
 							setting.setDownloadOriginal(downloadOriginal);
+							setting.setSaveDirAsSubname(saveDirAsSubname);
+							setting.setHttps(https);
+							setting.setViewModel(defaultModel ? 2 : 1);
 							setting.setMaxThread(Integer.parseInt(maxThread));
-							setting.setLoginUrl(loginUrl);
+							/*setting.setLoginUrl(loginUrl);*/
 							setting.setCookieInfo(cookieInfo);
 							mainWindow.settingDbTemplate.update(setting);//保存
 							JOptionPane.showMessageDialog(this_, "保存成功");

@@ -55,7 +55,7 @@ public final class ComponentConst {
 	
 	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目 /大小", "语言", "已下载", "状态"};
 	
-	public final static String[] PICTURE_TABLE_HEADER = {"序号", "名称", "大小", "状态", "地址", "下载时间"};
+	public final static String[] PICTURE_TABLE_HEADER = {"序号", "名称", "存储名称", "大小", "分辨率", "状态", "地址", "下载时间"};
 	
 	public final static int MAX_TASK_PAGE = 14;//一页显示任务数
 	
@@ -63,7 +63,7 @@ public final class ComponentConst {
 	
 	public final static Map<String, String> SKIN_ICON = new HashMap<String, String>();
 	
-	public static String docHtml;
+	public static String taskinfoHtml;
 	
 	public static String countHtml;
 	
@@ -82,11 +82,24 @@ public final class ComponentConst {
 	public static String SCRIPT_SEARCH_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/search.js";
 	public static String SCRIPT_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/version";
 	
+	public static Map<String, String> typeColorMap = new HashMap<String, String>();
+	
 	static{
+		typeColorMap.put("DOUJINSHI", "<font color='#aa3032'>DOUJINSHI</font>");
+		typeColorMap.put("MANGA", "<font color='orange'>MANGA</font>");
+		typeColorMap.put("ARTISTCG", "<font color='yellow'>ARTISTCG</font>");
+		typeColorMap.put("GAMECG", "<font color='#92c892'>GAMECG</font>");
+		typeColorMap.put("WESTERN", "<font color='#e0ffc2'>WESTERN</font>");
+		typeColorMap.put("NON-H", "<font color='#7ac7ff'>NON-H</font>");
+		typeColorMap.put("IMAGESET", "<font color='#7e7eff'>IMAGESET</font>");
+		typeColorMap.put("COSPLAY", "<font color='#c0a7d3'>COSPLAY</font>");
+		typeColorMap.put("ASIANPORN", "<font color='#f3acf3'>ASIANPORN</font>");
+		typeColorMap.put("MISC", "<font color='#f4f4f4'>MISC</font>");
+		
 		InputStream s = null;
 		try {
-			s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "doc.html");
-			docHtml = WebClient.read(s, 0);
+			s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "taskinfo.html");
+			taskinfoHtml = WebClient.read(s, 0);
 		} finally{
 			if(s != null){
 				try {
@@ -95,8 +108,8 @@ public final class ComponentConst {
 					e.printStackTrace();
 				}
 			}
-			if(docHtml == null)
-				docHtml = "没有找到" + RESOURCES_PATH + "doc.html文件";
+			if(taskinfoHtml == null)
+				taskinfoHtml = "没有找到" + RESOURCES_PATH + "taskinfo.html文件";
 		}
 		try {
 			s = ComponentConst.class.getResourceAsStream(RESOURCES_PATH + "count.html");
@@ -212,7 +225,8 @@ public final class ComponentConst {
 	public final static String POPUP_CHECKRESET_MENU_TEXT = " 查漏补缺   ";
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = " 更改状态   ";
 	public final static String POPUP_MORE_MENU_TEXT = "更多操作   ";
-	public final static String POPUP_SEARCHAUTHOR_MENU_TEXT = " 搜索作者   ";
+	public final static String POPUP_SEARCHAUTHOR_MENU_TEXT = " 在线搜作者 ";
+	public final static String POPUP_LOCAL_SEARCHAUTHOR_MENU_TEXT = " 本地搜作者";
 	public final static String POPUP_ZIP_MENU_TEXT = " 打包ZIP   ";
 	public final static String POPUP_EDIT_MENU_TEXT = "编辑   ";
 	public final static String POPUP_RESET_MENU_TEXT = "重置   ";

@@ -19,5 +19,10 @@ public class AJCheckBox extends JCheckBox {
 		this.setFont(font);
 		this.setSelected(selected);
 	}
+	public AJCheckBox(String text, Color color, boolean selected) {
+		this.setText(text);
+		this.setForeground(color);
+		this.setSelected(selected);
+	}
 
 }

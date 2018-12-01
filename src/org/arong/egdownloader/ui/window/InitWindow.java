@@ -1,16 +1,26 @@
 package org.arong.egdownloader.ui.window;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
@@ -41,6 +51,9 @@ public class InitWindow extends JWindow {
 	private static final long serialVersionUID = -7316667195338580556L;
 	
 	public JLabel textLabel;
+	
+	public TrayIcon tray;//系统托盘
+	public JPopupMenu trayMenu;
 	
 	public DbTemplate<Setting> settingDbTemplate;
 	
@@ -108,33 +121,16 @@ public class InitWindow extends JWindow {
 		pictureDbTemplate = new PictureSqliteDbTemplate();//PictureDom4jDbTemplate();
 		Task t = new Task();t.setGroupname(ComponentConst.groupName);t.setStatus(null);
 		tasks = (TaskList<Task>) taskDbTemplate.query(t);
-		/*if(tasks == null || tasks.size() == 0){
-			DbTemplate<Task> taskDbTemplate_ = new TaskDom4jDbTemplate();
-			tasks = (TaskList<Task>) taskDbTemplate_.query();
-			taskDbTemplate.store(tasks);
-			if(tasks != null){
-				DbTemplate<Picture> pictureDbTemplate_ = new PictureDom4jDbTemplate();
-				for (Task task : tasks) {
-					task.setPictures(pictureDbTemplate_.query("tid", task.getId()));
-					pictureDbTemplate.store(task.getPictures());
-				}
-			}
-		}*/
 		if(tasks != null){
-			//按照名称排序
-			/*Collections.sort(tasks, new Comparator<Task>() {
-				@Override
-				public int compare(Task o1, Task o2) {
-					return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-				}
-			});*/
 			int p_historyCount = 0;
 			textLabel.setText("读取图片列表");
-			for (Task task : tasks) {
-				if(task.getPictures() == null){
-					task.setPictures(pictureDbTemplate.query("tid", task.getId()));
+			for (int i = 0; i < tasks.size(); i ++) {
+				tasks.get(i).setPictureSqliteDbTemplate(pictureDbTemplate);
+				//预先读取前25条任务的图片列表
+				if(i < 25){
+					tasks.get(i).setPictures(pictureDbTemplate.query("tid", tasks.get(i).getId()));
 				}
-				p_historyCount += task.getTotal();
+				p_historyCount += tasks.get(i).getTotal();
 			}
 			/**
 			 * 为了兼容历史版本的db文件
@@ -146,36 +142,86 @@ public class InitWindow extends JWindow {
 				setting.setPictureHistoryCount(p_historyCount);
 			}
 		}
-		textLabel.setText("检测远程脚本");
-		//检测脚本是否发生变化
-		try {
-			scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
-			//V.2015.03.26
-			String currentVersion = FileUtil.getTextFromReader(new FileReader("script/version"));
+		if(!setting.isDebug()){
+			textLabel.setText("检测远程脚本");
+			//检测脚本是否发生变化
+			try {
+				scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
+				//V.2015.03.26
+				String currentVersion = FileUtil.getTextFromReader(new FileReader("script/version"));
 
-			//版本返回信息需要以V.2字符串开头，否则可能获取的数据不正确，不做更新操作
-			if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){
-				ComponentConst.remoteScriptVersion = scriptVersion;
-				ComponentConst.scriptChange = true;
-				int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
-				this.toFront();
-				if(r == JOptionPane.OK_OPTION){
-					new UpdateScriptWorker(this).execute();
+				//版本返回信息需要以V.2字符串开头，否则可能获取的数据不正确，不做更新操作
+				if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){
+					ComponentConst.remoteScriptVersion = scriptVersion;
+					ComponentConst.scriptChange = true;
+					int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
+					this.toFront();
+					if(r == JOptionPane.OK_OPTION){
+						new UpdateScriptWorker(this).execute();
+					}else{
+						startMain();
+					}
 				}else{
 					startMain();
 				}
-			}else{
+			}catch (Exception e) {
 				startMain();
+				e.printStackTrace();
 			}
-		}catch (Exception e) {
+		}else{
 			startMain();
-			e.printStackTrace();
+		}
+		
+		//系统托盘
+		if (SystemTray.isSupported()) {// 判断系统是否托盘
+		    tray = new TrayIcon(IconManager.getIcon("download").getImage());// 创建一个托盘图标对象
+		    tray.setImageAutoSize(true);
+		    tray.setToolTip(Version.NAME);
+		    trayMenu = new JPopupMenu();// 创建弹出菜单
+		    final JMenuItem item = new JMenuItem("退出");// 创建一个菜单项
+		    trayMenu.add(item);// 将菜单项添加到菜单列表
+		    item.addMouseListener(new MouseAdapter() {
+		    	public void mouseExited(MouseEvent e) {
+		    		trayMenu.setVisible(false);
+				}
+			});
+		    item.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+					//保存数据
+			    	ComponentConst.mainWindow.saveTaskGroupData();
+					System.exit(0);
+			    }
+		    });
+		    tray.addMouseListener(new MouseAdapter() {
+		    	public void mouseReleased(MouseEvent e) {
+		    		//弹出菜单
+					if(e.isPopupTrigger()){
+						trayMenu.setLocation(e.getX(), e.getY() - trayMenu.getComponentCount() * 30);
+						trayMenu.setInvoker(trayMenu);
+						trayMenu.setVisible(true);
+					}
+				}
+				public void mouseClicked(MouseEvent e) {
+					if(e.getClickCount()== 2){//鼠标双击图标
+						ComponentConst.mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);//设置状态为正常  
+						ComponentConst.mainWindow.setEnabled(true);
+						ComponentConst.mainWindow.setVisible(true);
+					}
+				}
+			});
+		    SystemTray st = SystemTray.getSystemTray();// 获取系统托盘
+		    try {
+		    	st.add(tray);// 将托盘图表添加到系统托盘
+			} catch (AWTException e1) {
+//						e1.printStackTrace();
+			}
 		}
 	}
 	
 	//启动主界面
 	public void startMain(){
 		this.dispose();//释放此窗口占用的资源，否则会消耗大量CPU
+		final InitWindow this_ = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				if(ComponentConst.mainWindow != null){
@@ -183,7 +229,7 @@ public class InitWindow extends JWindow {
 					((TaskingTable)ComponentConst.mainWindow.runningTable).stopAllTasks();
 					ComponentConst.mainWindow.changeTaskGroup(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 				}else{
-					ComponentConst.mainWindow = new EgDownloaderWindow(setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
+					ComponentConst.mainWindow = new EgDownloaderWindow(this_, setting, tasks, taskDbTemplate, pictureDbTemplate, settingDbTemplate);
 				}
 				textLabel.setText("初始化完成");
 				ComponentConst.mainWindow.setVisible(true);

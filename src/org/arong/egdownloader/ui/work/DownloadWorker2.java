@@ -125,7 +125,7 @@ public class DownloadWorker2 extends SwingWorker<Void, Void>{
 			if(this.isCancelled())//是否暂停
 				return null;
 			if(setting.isOpenScript()){
-				pic.setRealUrl(ScriptParser.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+				pic.setRealUrl(ScriptParser.getdownloadUrl(task, pic.getUrl(), setting));
 			}else{
 				//pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 			}

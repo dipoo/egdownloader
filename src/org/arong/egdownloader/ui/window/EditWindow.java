@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.swing.AJButton;
+import org.arong.egdownloader.ui.swing.AJCheckBox;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
@@ -41,6 +43,7 @@ public class EditWindow extends JDialog {
 	private JTextField startField;
 	private JLabel endLabel;
 	private JTextField endField;
+	private JCheckBox originalCheckBox;
 	private Task task;
 	EgDownloaderWindow mainWindow;
 	
@@ -48,21 +51,23 @@ public class EditWindow extends JDialog {
 		this.mainWindow = _mainWindow;
 		this.setTask(_task);
 		this.setTitle("编辑任务信息");
-		this.setSize(480, 250);
+		this.setSize(600, 250);
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		
 		nameLabel = new AJLabel("名称：", Color.BLUE, 5, 10, 40, 30);
-		nameField = new AJTextField("", 65, 10, 395, 30);
+		nameField = new AJTextField("", 65, 10, 500, 30);
 		subnameLabel = new AJLabel("子标题", Color.BLUE, 5, 55, 40, 30);
-		subnameField = new AJTextField("", 65, 55, 395, 30);
+		subnameField = new AJTextField("", 65, 55, 500, 30);
 		tagLabel = new AJLabel("标签：", Color.BLUE, 5, 100, 40, 30);
 		tagField = new AJTextField("", 65, 100, 160, 30);
 		startLabel = new AJLabel("开始：", Color.BLUE, 250, 100, 40, 30);
-		startField = new AJTextField("", 290, 100, 60, 30);
+		startField = new AJTextField("", 290, 100, 50, 30);
 		endLabel = new AJLabel("结束：", Color.BLUE, 360, 100, 40, 30);
-		endField = new AJTextField("", 400, 100, 60, 30);
+		endField = new AJTextField("", 400, 100, 50, 30);
+		originalCheckBox = new AJCheckBox("是否下载原图", Color.BLUE, task.isOriginal());
+		originalCheckBox.setBounds(460, 100, 150, 30);
 		editTaskBtn = new AJButton("保存", IconManager.getIcon("save"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window dialog, MouseEvent event) {
 				String name = nameField.getText().trim();
@@ -70,7 +75,7 @@ public class EditWindow extends JDialog {
 				String tag = tagField.getText().trim();
 				String start = startField.getText().trim();
 				String end = endField.getText().trim();
-				
+				boolean original = originalCheckBox.isSelected();
 				if("".equals(name)){
 					JOptionPane.showMessageDialog(dialog, "请填写任务名称");
 				}else if(!start.matches("^[0-9]*[1-9][0-9]*$")){
@@ -93,15 +98,16 @@ public class EditWindow extends JDialog {
 					task.setTag(tag);
 					task.setStart(Integer.parseInt(start));
 					task.setEnd(Integer.parseInt(end));
+					task.setOriginal(original);
 					//保存
 					mainWindow.taskDbTemplate.update(task);
 					dialog.dispose();
 				}
 			}
-		}), 190, 145, 100, 30);
+		}), 250, 145, 100, 30);
 		ComponentUtil.addComponents(getContentPane(), nameLabel, nameField,
 				subnameLabel, subnameField, tagLabel, tagField, startLabel,
-				startField, endLabel, endField, editTaskBtn);
+				startField, endLabel, endField, originalCheckBox, editTaskBtn);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

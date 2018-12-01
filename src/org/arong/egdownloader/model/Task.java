@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.egdownloader.ui.work.ReCreateWorker;
@@ -26,6 +27,8 @@ import org.arong.util.FileUtil;
  */
 public class Task {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);//属性变化监听支持
+	private DbTemplate<Picture> pictureSqliteDbTemplate;
+	
 	private String id;//id
 	private String groupname;//任务组名称
 	private String url;//下载地址
@@ -45,6 +48,11 @@ public class Task {
 	private TaskStatus status = TaskStatus.UNSTARTED;//是否已完成
 	private int start = 1;//下载开始索引
 	private int end = total;//下载结束索引
+	private String postedTime;//发布时间
+	private String uploader;//上传者
+	private boolean original;//是否下载原图
+	private boolean saveDirAsSubname;//以子名称作为保存目录
+	
 	private List<Picture> pictures;
 	private DownloadWorker downloadWorker;//下载线程实例,不保存
 	private ReCreateWorker reCreateWorker;//重新创建线程实例,不保存
@@ -148,6 +156,7 @@ public class Task {
 			   "子名称:" + subname + "\n" + 
 			   "封面地址:" + coverUrl + "\n" + 
 			   "保存目录:" + saveDir + "\n" + 
+			   "上传者：" + uploader + "\n" +
 			   "漫画语言:" + language + "\n" + 
 			   "分类:" + type + "\n" + 
 			   "标签:" + tag + "\n" + 
@@ -163,11 +172,10 @@ public class Task {
 	}
 	
 	public String getShortCreatetime() {
+		if(createTime != null && createTime.length() > 10){
+			this.shortCreatetime = createTime.substring(2, 10).replaceAll("-", "/");
+		}
 		return shortCreatetime;
-	}
-
-	public void setShortCreatetime(String shortCreatetime) {
-		this.shortCreatetime = shortCreatetime;
 	}
 
 	public String getUrl() {
@@ -232,9 +240,6 @@ public class Task {
 		return createTime;
 	}
 	public void setCreateTime(String createTime) {
-		if(createTime != null && createTime.length() > 10){
-			this.shortCreatetime = createTime.substring(2, 10).replaceAll("-", "/");
-		}
 		this.createTime = createTime;
 	}
 	public String getCompletedTime() {
@@ -305,6 +310,9 @@ public class Task {
 	}
 
 	public List<Picture> getPictures() {
+		if(pictures == null){
+			pictures = pictureSqliteDbTemplate.query("tid", this.getId());
+		}
 		return pictures;
 	}
 
@@ -433,5 +441,46 @@ public class Task {
 
 	public void setGroupname(String groupname) {
 		this.groupname = groupname;
+	}
+
+	public DbTemplate<Picture> getPictureSqliteDbTemplate() {
+		return pictureSqliteDbTemplate;
+	}
+
+	public void setPictureSqliteDbTemplate(
+			DbTemplate<Picture> pictureSqliteDbTemplate) {
+		this.pictureSqliteDbTemplate = pictureSqliteDbTemplate;
+	}
+
+	public String getPostedTime() {
+		return postedTime;
+	}
+
+	public void setPostedTime(String postedTime) {
+		this.postedTime = postedTime;
+	}
+
+	public String getUploader() {
+		return uploader;
+	}
+
+	public void setUploader(String uploader) {
+		this.uploader = uploader;
+	}
+
+	public boolean isOriginal() {
+		return original;
+	}
+
+	public void setOriginal(boolean original) {
+		this.original = original;
+	}
+
+	public boolean isSaveDirAsSubname() {
+		return saveDirAsSubname;
+	}
+
+	public void setSaveDirAsSubname(boolean saveDirAsSubname) {
+		this.saveDirAsSubname = saveDirAsSubname;
 	}
 }

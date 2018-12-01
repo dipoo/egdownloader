@@ -26,7 +26,7 @@ public class DeleteTaskWork implements IListenerTask {
 			JOptionPane.showMessageDialog(mainWindow, "请选择至少一个任务");
 			return;
 		}
-		int option = JOptionPane.showConfirmDialog(mainWindow, "确定要删除" + (rows.length > 1 ? "这些" : "这个") + "任务吗");
+		int option = JOptionPane.showConfirmDialog(mainWindow, "确定要删除" + (rows.length > 1 ? "这" + rows.length + "个" : "这个【"  + table.getTasks().get(rows[0]).getDisplayName() + "】") + "任务吗");
 		if(option == JOptionPane.OK_OPTION){
 			mainWindow.setEnabled(false);
 			DeletingWindow w = (DeletingWindow) mainWindow.deletingWindow;

@@ -30,6 +30,7 @@ public class OpenPicWork implements IMenuListenerTask{
 		Task task = table.getTasks().get(index);
 		if(task.getCurrent() > 0){
 			List<Picture> pics = task.getPictures();
+			int c = 0;
 			for (Picture pic : pics) {
 				if(pic.isCompleted()){
 					try {
@@ -46,7 +47,10 @@ public class OpenPicWork implements IMenuListenerTask{
 							Desktop.getDesktop().open(new File(task.getSaveDir() + File.separator + pic.getName()));
 							break;
 						} catch (Exception e2) {
-							JOptionPane.showMessageDialog(mainWindow, "图片不存在");
+							if(c < 1){
+								c ++;
+								JOptionPane.showMessageDialog(mainWindow, "图片不存在");
+							}
 						}
 					}
 				}

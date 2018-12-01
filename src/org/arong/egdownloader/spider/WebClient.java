@@ -612,10 +612,11 @@ public class WebClient {
      * @param in
      * @param size
      * @return
+     * @throws Exception 
      * @throws IOException
      */
     private static String read(final InputStream in, final int size,
-            final String encoding){
+            final String encoding) throws Exception{
         StringBuilder sbr = new StringBuilder();
         int nSize = size;
         if (nSize == 0) {
@@ -626,23 +627,25 @@ public class WebClient {
         InputStreamReader isr = null;
 		try {
 			isr = new InputStreamReader(in, encoding);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-        try {
 			while ((offset = isr.read(buffer)) != -1) {
 			    sbr.append(buffer, 0, offset);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw e;
+		} finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				if(isr != null){
+					isr.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-        try {
-			in.close();
-			 isr.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-       
         return sbr.toString();
     }
     
@@ -659,20 +662,24 @@ public class WebClient {
 					out.write(buffer, 0, offset);
 				}
 			}
+			try {
+				return new String(out.toByteArray(), "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-        try {
-			in.close();
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-       
-        try {
-			return new String(out.toByteArray(), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		} finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
         return null;
     }

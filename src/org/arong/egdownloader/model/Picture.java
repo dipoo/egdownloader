@@ -13,6 +13,7 @@ public class Picture {
 	private String url;//浏览地址
 	private String realUrl;//真实下载地址
 	private int size;//大小
+	private String ppi;//分辨率
 	private String time;//下载时间
 	private boolean saveAsName = true;//是否以真实名称保存，否则以人物名+num保存
 	private boolean isCompleted;//是否下载完成
@@ -90,5 +91,11 @@ public class Picture {
 	}
 	public void setTid(String tid) {
 		this.tid = tid;
+	}
+	public String getPpi() {
+		return ppi;
+	}
+	public void setPpi(String ppi) {
+		this.ppi = ppi;
 	}
 }

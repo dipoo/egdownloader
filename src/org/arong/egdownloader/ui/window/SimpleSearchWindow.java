@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -31,6 +33,7 @@ public class SimpleSearchWindow extends JDialog {
 	
 	public JTextField keyTextField;
 	EgDownloaderWindow mainWindow;
+	public JButton searchBtn;
 	
 	public SimpleSearchWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -56,7 +59,7 @@ public class SimpleSearchWindow extends JDialog {
 		JLabel descLabel = new AJLabel("Tips:搜索的结果会显示在控制台", Color.GRAY, 200, 10, 180, 30);
 		JLabel keyLabel = new AJLabel("关键字：", Color.BLUE, 10, 50, 50, 30);
 		keyTextField = new AJTextField("", "", 70, 50, 430, 30);
-		JButton searchBtn = new AJButton("搜索", "", new ActionListener() {
+		searchBtn = new AJButton("搜索", "", new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String key = keyTextField.getText();
 				if(key == null || "".equals(key.trim())){
@@ -66,22 +69,38 @@ public class SimpleSearchWindow extends JDialog {
 				TaskingTable table = (TaskingTable)mainWindow.runningTable;
 				List<Task> allTasks = table.getTasks();
 				int j = 0;
+				List<Integer> indexs = new ArrayList<Integer>();
 				for(int i = 0; i < allTasks.size(); i++){
 					j ++;
 					if(allTasks.get(i).getName().toLowerCase().contains(key.toLowerCase())){
-						Tracker.println("简单搜索[" + key + "]:" + (i + 1) + "、" + allTasks.get(i).getName());
+						allTasks.add(0, allTasks.remove(i));
+						indexs.add(i);
 					}else if(allTasks.get(i).getSubname().contains(key.toLowerCase())){
-						Tracker.println("简单搜索[" + key + "]:" + (i + 1) + "、" +  allTasks.get(i).getSubname());
+						allTasks.add(0, allTasks.remove(i));
+						indexs.add(i);
 					}else{
 						j --;
 						continue;
 					}
 					//定位到第一条任务处
-					if(j == 1){
+					/*if(j == 1){
 						//使之选中
 						table.setRowSelectionInterval(i, i);
 						//定位
 						table.scrollRectToVisible(table.getCellRect(i, 0, true));
+					}*/
+				}
+				if(j > 0){
+					if(mainWindow.viewModel == 1){
+						table.setRowSelectionInterval(0, 0);
+						table.scrollRectToVisible(table.getCellRect(0, 0, true));
+					}else{
+						mainWindow.taskImagePanel.removeIndexs(indexs);
+						for(int i = 0; i < j; i ++){
+							mainWindow.taskImagePanel.imagePanels.remove(table.getTasks().get(i).getId());
+						}
+						mainWindow.taskImagePanel.init(table.getTasks());
+						mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));
 					}
 				}
 				Tracker.println("[" + key + "]搜索完毕,结果【" + j + "】条。");

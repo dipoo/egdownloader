@@ -8,8 +8,10 @@ import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
+import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.jdbc.JdbcUtil;
 import org.arong.util.JdbcSqlExecutor;
+import org.arong.util.Tracker;
 import org.arong.utils.StringUtil;
 
 public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
@@ -28,6 +30,10 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 		.append("isCompleted VARCHAR(64));");
 		try {
 			JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
+		} catch (SQLException e1) {
+		}
+		try{
+			JdbcSqlExecutor.getInstance().executeUpdate("alter table picture add column ppi varchar(64)", JdbcUtil.getConnection());
 		} catch (SQLException e1) {
 		}
 	}
@@ -70,7 +76,15 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(DownloadWorker.class , "database is locked, trying update picture...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return update(t);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -208,16 +222,17 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 		model.setRealUrl(rs.getString("realUrl"));
 		model.setTime(rs.getString("time"));
 		model.setSize(rs.getString("size") == null ? 1 : Integer.parseInt(rs.getString("size")));
+		model.setPpi(rs.getString("ppi") == null ? "" : rs.getString("ppi"));
 		model.setSaveAsName("true".equals(rs.getString("saveAsName")));
 		model.setCompleted("true".equals(rs.getString("isCompleted")));
 	}
 	
 	private void storeSql(Picture model, StringBuffer sqlsb){
-		sqlsb.append("insert into picture(id,tid,num,name,url,realUrl,size,time,saveAsName,isCompleted) values('")
+		sqlsb.append("insert into picture(id,tid,num,name,url,realUrl,size,ppi,time,saveAsName,isCompleted) values('")
 		.append(model.getId()).append("','").append(model.getTid()).append("','")
 		.append(model.getNum()).append("','").append(StringEscapeUtils.escapeSql(model.getName())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getRealUrl())).append("','")
-		.append(model.getSize()).append("','").append(model.getTime() == null ? "" : model.getTime()).append("','")
+		.append(model.getSize()).append("','").append(model.getPpi() == null ? "" : model.getPpi()).append("','").append(model.getTime() == null ? "" : model.getTime()).append("','")
 		.append(model.isSaveAsName()).append("','").append(model.isCompleted())
 		.append("')").append(JdbcSqlExecutor.BAT_SPLIT);
 	}
@@ -230,6 +245,7 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 		.append("url='").append(StringEscapeUtils.escapeSql(t.getUrl())).append("',")
 		.append("realUrl='").append(StringEscapeUtils.escapeSql(t.getRealUrl())).append("',")
 		.append("size='").append(t.getSize()).append("',")
+		.append("ppi='").append(t.getPpi()).append("',")
 		.append("time='").append(t.getTime()).append("',")
 		.append("saveAsName='").append(t.isSaveAsName()).append("',")
 		.append("isCompleted='").append(t.isCompleted())

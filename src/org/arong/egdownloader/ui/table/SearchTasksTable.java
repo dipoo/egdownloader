@@ -17,6 +17,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
@@ -96,7 +97,7 @@ public class SearchTasksTable extends JTable {
 					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel((contains ? "[已存在]" : "") + value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel((contains ? "【已存在】" : "") + value.toString(), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));
@@ -106,14 +107,18 @@ public class SearchTasksTable extends JTable {
 					}
 					l.setToolTipText(value.toString());
 					return l;
-				}else if(column == 2){//上传者
+				}else if(column == 2){//评分
+					tc.setPreferredWidth(80);
+					tc.setMaxWidth(120);
+					return new AJLabel("<html>&nbsp;&nbsp;&nbsp;&nbsp;" + value.toString() + "★</html>", c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+				}else if(column == 3){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
 					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;
-				}else if(column == 3){//发布时间
+				}else if(column == 4){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
 					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
@@ -164,7 +169,7 @@ public class SearchTasksTable extends JTable {
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//点击上传者
-					if(columnIndex == 2){
+					if(columnIndex == 3){
 						comicWindow.doSearch("uploader:" + tasks.get(rowIndex).getUploader());
 					}
 				}
@@ -174,6 +179,20 @@ public class SearchTasksTable extends JTable {
 					table.setRowSelectionInterval(rowIndex, rowIndex);
 					if(comicWindow.popMenu == null){
 						comicWindow.popMenu = new SearchWindowPopMenu(comicWindow.mainWindow);
+					}
+					SearchTask task = comicWindow.searchTasks.get(comicWindow.selectTaskIndex);
+					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+					if(contains){
+						comicWindow.popMenu.openPictureItem.setVisible(true);
+						comicWindow.popMenu.downItem.setVisible(false);
+					}else{
+						comicWindow.popMenu.openPictureItem.setVisible(false);
+						comicWindow.popMenu.downItem.setVisible(true);
+					}
+					if(StringUtils.isBlank(task.getBtUrl())){
+						comicWindow.popMenu.openBtPageItem.setVisible(true);
+					}else{
+						comicWindow.popMenu.openBtPageItem.setVisible(false);
 					}
 					comicWindow.popMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}

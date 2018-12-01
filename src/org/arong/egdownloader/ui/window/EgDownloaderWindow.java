@@ -1,36 +1,29 @@
 ﻿package org.arong.egdownloader.ui.window;
 
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.SystemTray;
 import java.awt.Toolkit;
-import java.awt.TrayIcon;
 import java.awt.Window;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -42,28 +35,27 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JWindow;
-import javax.swing.border.TitledBorder;
+import javax.swing.ScrollPaneConstants;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
-import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
-import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.Proxy;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.SwingPrintStream;
-import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.listener.MenuMouseListener;
 import org.arong.egdownloader.ui.listener.MouseAction;
 import org.arong.egdownloader.ui.listener.OperaBtnMouseListener;
 import org.arong.egdownloader.ui.menuitem.AddTaskGroupMenuItem;
+import org.arong.egdownloader.ui.menuitem.ChangeViewMenuItem;
+import org.arong.egdownloader.ui.menuitem.ChangeViewSizeMenuItem;
 import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenLogMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
@@ -72,33 +64,25 @@ import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
+import org.arong.egdownloader.ui.panel.ConsolePanel;
+import org.arong.egdownloader.ui.panel.InfoTabbedPane;
+import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
+import org.arong.egdownloader.ui.panel.TaskImagePanel;
+import org.arong.egdownloader.ui.panel.TaskInfoPanel;
+import org.arong.egdownloader.ui.popmenu.MainPopupMenu;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
-import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPanel;
-import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
-import org.arong.egdownloader.ui.work.ZIPWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
-import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
-import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
-import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
 import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
-import org.arong.egdownloader.ui.work.listenerWork.DownloadCoverWork;
-import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
-import org.arong.egdownloader.ui.work.listenerWork.OpenPicWork;
-import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
-import org.arong.egdownloader.ui.work.listenerWork.ResetTaskWork;
-import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
-import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
 import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil;
-import org.arong.util.Tracker;
 
 /**
  * 主线程类
@@ -111,11 +95,10 @@ public class EgDownloaderWindow extends JFrame {
 	private static final long serialVersionUID = 8904976570969033245L;
 	
 	public String wtitle;//窗口标题
-	TrayIcon tray;//系统托盘
-	JPopupMenu trayMenu;
 	JWindow minTips;
 	
 	JMenuBar jMenuBar;// 菜单栏
+	public InitWindow initWindow;
 	public JFrame settingWindow;
 	public JDialog aboutWindow;
 	public JDialog addFormWindow;
@@ -135,9 +118,11 @@ public class EgDownloaderWindow extends JFrame {
 	public JPopupMenu tablePopupMenu;
 	public TaskingTable runningTable;
 	public JScrollPane tablePane;
-	public JTextArea consoleArea;
-	public JPopupMenu consolePopupMenu;
+	public InfoTabbedPane infoTabbedPane;
+	public ConsolePanel consolePanel;
 	public JPanel emptyPanel;
+	public TaskImagePanel taskImagePanel;
+	public TaskInfoPanel taskInfoPanel;
 	
 	
 	public Setting setting;
@@ -148,6 +133,7 @@ public class EgDownloaderWindow extends JFrame {
 	public DbTemplate<Setting> settingDbTemplate;
 	
 	Timer netSpeedtimer;
+	public int viewModel = 1;//1:表格模式2：图片模式 
 	private void setupNetSpeedtimer(final EgDownloaderWindow mainWindow){
 		//设置下载速度检测定时器
 		TimerTask timerTask = new TimerTask() {
@@ -168,9 +154,10 @@ public class EgDownloaderWindow extends JFrame {
 		//1秒执行一次
 		netSpeedtimer.schedule(timerTask, 1000, 1000);
 	}
-	public EgDownloaderWindow(Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
+	public EgDownloaderWindow(InitWindow initWindow, Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
 		final EgDownloaderWindow mainWindow = this;
 		
+		this.initWindow = initWindow;
 		this.taskDbTemplate = taskDbTemplate;
 		this.pictureDbTemplate = pictureDbTemplate;
 		this.settingDbTemplate = settingDbTemplate;
@@ -181,19 +168,18 @@ public class EgDownloaderWindow extends JFrame {
 		//加载任务列表
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口
-		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		this.wtitle = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
 		this.setTitle(this.wtitle);
 		
 		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
-		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
-		this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
-		//this.setResizable(false);
+		//this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
+		this.setResizable(false);
 		this.setBackground(Color.WHITE);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Color menuItemColor = new Color(0,0,85);
 		
 		Component newTaskMenu = null;// 菜单：新建
 		Component startTasksMenu = null;// 菜单：开始
@@ -313,8 +299,16 @@ public class EgDownloaderWindow extends JFrame {
 		taskMenu.add(new ResetMenuItem("重置所有任务", this));
 		taskMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
 		operaMenu.add(taskMenu);
+		JMenu sizeMenu = new AJMenu("视图封面", "", IconManager.getIcon("task"));
+		sizeMenu.add(new ChangeViewSizeMenuItem("大√", this, 1));
+		sizeMenu.add(new ChangeViewSizeMenuItem("中", this, 2));
+		sizeMenu.add(new ChangeViewSizeMenuItem("小", this, 3));
+		operaMenu.add(sizeMenu);
+		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));
 		operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
+		
+		
 		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,
 				"", IconManager.getIcon("select"));
@@ -331,203 +325,38 @@ public class EgDownloaderWindow extends JFrame {
 		// 正在下载table
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
 				(tasks == null ? 0 :tasks.size()) * 28, this.tasks, this);
-		tablePane = new JScrollPane(runningTable);
+		
+		viewModel = setting.getViewModel();
+		if(viewModel == 1){
+			tablePane = new JScrollPane(runningTable);
+		}else{
+			tablePane = new JScrollPane();
+			taskImagePanel = new TaskImagePanel(this);
+			tablePane.setViewportView(taskImagePanel);
+			tablePane.getVerticalScrollBar().setUnitIncrement(20);
+			tablePane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+				public void adjustmentValueChanged(AdjustmentEvent e) {
+					JScrollBar bar = (JScrollBar) e.getSource();
+					if(e.getValue() + bar.getHeight() == bar.getMaximum()){
+						taskImagePanel.setPreferredSize(new Dimension((int)taskImagePanel.getPreferredSize().getWidth(), (int)taskImagePanel.getPreferredSize().getHeight() + bar.getUnitIncrement()));
+						taskImagePanel.init(runningTable.getTasks());
+					}
+				}
+			});
+			new Timer().schedule(new TimerTask() {
+				public void run() {
+					taskImagePanel.init(runningTable.getTasks(), false, false);
+				}
+			}, 5000);
+		}
+		tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
 		tablePane.getViewport().setBackground(new Color(254,254,254));
-		//右键菜单：开始
-		AJMenuItem startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("start"),
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						//如果正在重建，则不下载
-						if(table.isRebuild()){
-							Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
-							return;
-						}
-						int index = table.getSelectedRow();
-						table.startTask(table.getTasks().get(index));
-					}
-		}));
-		//右键菜单：暂停
-		AJMenuItem stopPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_STOP_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("stop"),
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						//如果正在重建，则不执行
-						if(table.isRebuild()){
-							Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
-							return;
-						}
-						int index = table.getSelectedRow();
-						table.stopTask(table.getTasks().get(index));
-					}
-		}));
-		//右键菜单：查看详细
-		AJMenuItem detailPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("detail"),
-				new MenuItemActonListener(this, new ShowDetailWork()));
-		//右键菜单：复制网址
-		AJMenuItem copyUrlPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_COPYURL_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("copy"),
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-			public void doWork(Window window, ActionEvent e) {
-				EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-				TaskingTable table = (TaskingTable) mainWindow.runningTable;
-				int index = table.getSelectedRow();
-				Task task = table.getTasks().get(index);
-				StringSelection ss = new StringSelection(task.getUrl());
-				table.getToolkit().getSystemClipboard().setContents(ss, ss);
-				mainWindow.tablePopupMenu.setVisible(false);
-			}
-		}));
-		//右键菜单：打开图片
-		AJMenuItem openPicPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENFILE_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("openpic"),
-				new MenuItemActonListener(this, new OpenPicWork()));
-		//右键菜单：打开文件夹
-		AJMenuItem openFolderPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENFOLDER_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("folder"),
-				new MenuItemActonListener(this, new OpenFolderTaskWork()));
-		//右键菜单：打开网页
-		AJMenuItem openWebPageMenuItem = new AJMenuItem(ComponentConst.POPUP_OPENWEBPAGE_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("browse"),
-				new MenuItemActonListener(this, new OpenWebPageWork()));
-		//右键菜单：下载封面
-		AJMenuItem downloadCoverMenuItem = new AJMenuItem(ComponentConst.POPUP_DOWNLOADCOVER_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("download"),
-				new MenuItemActonListener(this, new DownloadCoverWork()));
-		//右键菜单：查漏补缺
-		AJMenuItem checkResetMenuItem = new AJMenuItem(ComponentConst.POPUP_CHECKRESET_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("check"),
-				new MenuItemActonListener(this, new CheckResetWork()));
-		//右键菜单：更改阅读状态
-		AJMenuItem changeReadedMenuItem = new AJMenuItem(ComponentConst.POPUP_CHANGEREADED_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("change"),
-				new MenuItemActonListener(this, new ChangeReadedWork()));
-		//右键菜单：打包ZIP
-		AJMenuItem zipMenuItem = new AJMenuItem(ComponentConst.POPUP_ZIP_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("zip"),
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						
-						if(zipWindow == null){
-							zipWindow = new ZiptingWindow(mainWindow);
-						}
-						mainWindow.tablePopupMenu.setVisible(false);
-						ZIPWorker zipWordker = new ZIPWorker(mainWindow, table, (ZiptingWindow)zipWindow);
-						zipWordker.execute();
-					}
-				}));
-		//右键菜单：搜索作者
-		AJMenuItem searchAuthorMenuItem = new AJMenuItem(ComponentConst.POPUP_SEARCHAUTHOR_MENU_TEXT, menuItemColor,
-				"",
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						int index = table.getSelectedRow();
-						Task task = table.getTasks().get(index);
-						if(searchComicWindow == null){
-							searchComicWindow = new SearchComicWindow(mainWindow);
-						}
-						SearchComicWindow scw = mainWindow.searchComicWindow;
-						if(task.getAuthor() != null){
-							scw.doSearch(task.getAuthor());
-							scw.setVisible(true);
-						}
-					}
-				}));
-		//右键菜单：编辑任务信息
-		AJMenuItem editMenuItem = new AJMenuItem(ComponentConst.POPUP_EDIT_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("save"),
-				new MenuItemActonListener(this, new ShowEditWork()));
-		//右键菜单：重置任务
-		AJMenuItem resetMenuItem = new AJMenuItem(ComponentConst.POPUP_RESET_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("reset"),
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						int index = table.getSelectedRow();
-						Task task = table.getTasks().get(index);
-						if(task.getStatus() == TaskStatus.STARTED){
-							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能重置！");
-							return;
-						}
-						List<Task> tasks = new ArrayList<Task>();
-						tasks.add(task);
-						new ResetTaskWork(mainWindow, tasks, "重置后将无法还原，确定要重置【"
-						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
-						"】任务到初始状态吗？");
-					}
-				}));
-		//右键菜单：完成任务
-		AJMenuItem completedMenuItem = new AJMenuItem(ComponentConst.POPUP_COMPLETED_MENU_TEXT, menuItemColor,
-				IconManager.getIcon("ok"),
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						int index = table.getSelectedRow();
-						Task task = table.getTasks().get(index);
-						if(task.getStatus() == TaskStatus.STARTED){
-							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能执行此操作！");
-							return;
-						}
-						//询问是否执行此操作
-						int result = JOptionPane.showConfirmDialog(mainWindow, "此操作后将无法还原，确定要将【"
-						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
-						"】置为完成状态吗？");
-						if(result == JOptionPane.OK_OPTION){//确定
-							task.setCurrent(task.getTotal());
-							task.setStatus(TaskStatus.COMPLETED);
-							//保存数据
-							mainWindow.taskDbTemplate.update(mainWindow.tasks);
-							JOptionPane.showMessageDialog(mainWindow, "操作完成！");
-						}
-					}
-				}));
-		//右键菜单：重建任务
-		AJMenuItem rebuildMenuItem = new AJMenuItem(ComponentConst.POPUP_REBUILD_MENU_TEXT, menuItemColor,
-				"",
-				new MenuItemActonListener(this, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
-						int index = table.getSelectedRow();
-						Task task = table.getTasks().get(index);
-						if(task.getStatus() == TaskStatus.STARTED){
-							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能执行此操作！");
-							return;
-						}
-						//询问是否执行此操作
-						int result = JOptionPane.showConfirmDialog(mainWindow, "此操作后将无法还原，确定要重建【"
-						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
-						"】这个任务吗？");
-						if(result == JOptionPane.OK_OPTION){//确定
-							try {
-								ScriptParser.rebuildTask(task, mainWindow.setting);
-								//保存数据
-								mainWindow.taskDbTemplate.update(task);
-								JOptionPane.showMessageDialog(mainWindow, "操作完成！");
-							}catch (Exception e1) {
-								JOptionPane.showMessageDialog(mainWindow, "操作失败！" + e1.getMessage());
-							}
-						}
-					}
-				}));
-		AJMenu moreMenu = new AJMenu(ComponentConst.POPUP_MORE_MENU_TEXT, "", editMenuItem, resetMenuItem, completedMenuItem, rebuildMenuItem);
-		moreMenu.setForeground(menuItemColor);
+		
+		
 		//表格的右键菜单
-		tablePopupMenu = new AJPopupMenu(startPopupMenuItem, stopPopupMenuItem, detailPopupMenuItem, openPicPopupMenuItem, openFolderPopupMenuItem,
-				copyUrlPopupMenuItem, openWebPageMenuItem, downloadCoverMenuItem,
-				checkResetMenuItem, changeReadedMenuItem, zipMenuItem, searchAuthorMenuItem, moreMenu);
+		tablePopupMenu = new MainPopupMenu(this);
+		
 		JLabel emptyTableTips = new AJLabel("empty", "", new Color(227,93,81), JLabel.CENTER);
 		emptyTableTips.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
 		JButton emptyBtn = new AJButton("当前任务组没有下载任务，请点击搜索漫画");
@@ -547,90 +376,50 @@ public class EgDownloaderWindow extends JFrame {
 		emptyPanel.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
 		emptyPanel.setLayout(new FlowLayout());
 		
+		
+		infoTabbedPane = new InfoTabbedPane(this);
+		infoTabbedPane.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
+		
 		/**
 		 * 控制台
 		 */
-		consoleArea = new JTextArea();
-		consoleArea.setEditable(false);
-		consoleArea.setAutoscrolls(true);
-		consoleArea.setLineWrap(true);
-		consoleArea.setBorder(null);
-		consoleArea.setFont(new Font("宋体", Font.BOLD, 13));
-		consoleArea.setForeground(new Color(63,127,95));//
-		//consoleArea.setLocation(0, 20);
-		//consoleArea.setBackground(Color.GRAY);
-		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
-		consoleArea.setBorder(border);
-		consoleArea.setBounds(5, ComponentConst.CLIENT_HEIGHT - 240, ComponentConst.CLIENT_WIDTH - 20, 200);
+		consolePanel = new ConsolePanel(this);
+		/*consolePanel.setEditable(false);
+		consolePanel.setAutoscrolls(true);
+		consolePanel.setBorder(null);
+		consolePanel.setFont(new Font("宋体", Font.BOLD, 13));
+		consolePanel.setForeground(new Color(63,127,95));*///
+		//consolePanel.setLocation(0, 20);
+		//consolePanel.setBackground(Color.GRAY);
+		/*TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
+		consolePanel.setBorder(border);*/
+		consolePanel.setBounds(5, 5, ComponentConst.CLIENT_WIDTH - 20, 200);
+		
 		try {
 			//将syso信息推送到控制台
-			new SwingPrintStream(System.out, consoleArea);
+			new SwingPrintStream(System.out, consolePanel);
 		} catch (FileNotFoundException e1) {
 			JOptionPane.showMessageDialog(this, "控制台初始化错误！");
 		}
-		final JMenuItem clearItemPopup = new ClearConsoleMenuItem("清空控制台", this);
-		final JMenuItem openLogItemPopup = new OpenLogMenuItem("打开日志文件", this);
-		consoleArea.addMouseListener(new MouseAdapter() {
+		
+		taskInfoPanel = new TaskInfoPanel(this);
+		taskInfoPanel.setBounds(5, 5, ComponentConst.CLIENT_WIDTH - 20, 200);
+		
+		infoTabbedPane.add("控制台", consolePanel);
+		infoTabbedPane.add("任务信息", taskInfoPanel);
+		infoTabbedPane.add("图片列表", new PicturesInfoPanel(this));
+		/*infoTabbedPane.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				//右键
-				if(e.getButton() == MouseEvent.BUTTON3){
-					if(consolePopupMenu == null){
-						consolePopupMenu = new AJPopupMenu(clearItemPopup, openLogItemPopup);
-					}
-					consolePopupMenu.show((Component) e.getSource(), e.getPoint().x, e.getPoint().y);
-				}
+				System.out.println(infoTabbedPane.getToolkit());
 			}
-		});
+			
+		});*/
 		// 添加各个子组件
-		ComponentUtil.addComponents(getContentPane(), consoleArea, jMenuBar, tablePane, tablePopupMenu, emptyPanel);
+		ComponentUtil.addComponents(getContentPane(), infoTabbedPane, jMenuBar, tablePane, tablePopupMenu, emptyPanel);
 		if(tasks == null || tasks.size() == 0){
 			tablePane.setVisible(false);
 		}else{
 			emptyPanel.setVisible(false);
-		}
-		
-		//系统托盘
-		if (SystemTray.isSupported()) {// 判断系统是否托盘
-		    tray = new TrayIcon(IconManager.getIcon("download").getImage());// 创建一个托盘图标对象
-		    tray.setImageAutoSize(true);
-		    tray.setToolTip(Version.NAME);
-		    trayMenu = new JPopupMenu();// 创建弹出菜单
-		    final JMenuItem item = new JMenuItem("退出");// 创建一个菜单项
-		    trayMenu.add(item);// 将菜单项添加到菜单列表
-		    item.addMouseListener(new MouseAdapter() {
-		    	public void mouseExited(MouseEvent e) {
-		    		trayMenu.setVisible(false);
-				}
-			});
-		    item.addActionListener(new ActionListener() {
-			    public void actionPerformed(ActionEvent e) {
-					//保存数据
-					mainWindow.saveTaskGroupData();
-					System.exit(0);
-			    }
-		    });
-		    tray.addMouseListener(new MouseAdapter() {
-		    	public void mouseReleased(MouseEvent e) {
-		    		//弹出菜单
-					if(e.isPopupTrigger()){
-						trayMenu.setLocation(e.getX(), e.getY() - trayMenu.getComponentCount() * 30);
-						trayMenu.setInvoker(trayMenu);
-						trayMenu.setVisible(true);
-					}
-				}
-				public void mouseClicked(MouseEvent e) {
-					if(e.getClickCount()== 2){//鼠标双击图标
-						mainWindow.setExtendedState(JFrame.NORMAL);//设置状态为正常  
-						mainWindow.setVisible(true);
-					}
-				}
-			});
-		    SystemTray st = SystemTray.getSystemTray();// 获取系统托盘
-		    try {
-		    	st.add(tray);// 将托盘图表添加到系统托盘
-			} catch (AWTException e1) {
-//				e1.printStackTrace();
-			}
 		}
 		
 		//聚焦监听
@@ -660,8 +449,9 @@ public class EgDownloaderWindow extends JFrame {
 			}
 
 			public void windowLostFocus(WindowEvent e) {
-				if(trayMenu != null){
-					trayMenu.setVisible(false);
+				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
+				if(window.initWindow.trayMenu != null){
+					window.initWindow.trayMenu.setVisible(false);
 				}
 				/*EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				window.consolePane.setVisible(false);*/
@@ -696,8 +486,11 @@ public class EgDownloaderWindow extends JFrame {
 				/*if(consolePane != null){
 					consolePane.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
 				}*/
-				if(consoleArea != null){
-					consoleArea.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
+				if(infoTabbedPane != null){
+					infoTabbedPane.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
+				}
+				if(consolePanel != null){
+					consolePanel.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
 				}
 			}
 		});
@@ -713,7 +506,6 @@ public class EgDownloaderWindow extends JFrame {
 				}
 			}
 		});
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//开启网络下载速度监听
 		setupNetSpeedtimer(mainWindow);
 	}
@@ -730,7 +522,7 @@ public class EgDownloaderWindow extends JFrame {
 		}
 		//最小化，隐藏到托盘
 		else if(e.getID() == WindowEvent.WINDOW_ICONIFIED){
-			if(tray != null){
+			if(initWindow.tray != null){
 				if(minTips == null){
 					minTips = new JWindow();
 					minTips.setSize(150, 30);
@@ -795,7 +587,7 @@ public class EgDownloaderWindow extends JFrame {
 			this.emptyPanel.setVisible(false);
 			this.runningTable.changeModel(this);
 		}
-		this.consoleArea.setText("");//清空控制台
+		this.consolePanel.setText("");//清空控制台
 		//开启网络下载速度监听
 		netSpeedtimer.cancel();
 		setupNetSpeedtimer(this);

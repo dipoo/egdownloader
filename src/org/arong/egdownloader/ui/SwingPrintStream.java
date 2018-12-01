@@ -8,10 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import javax.swing.JTextArea;
-
-import org.arong.util.FileUtil;
+import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.DateUtil;
+import org.arong.util.FileUtil;
 import org.arong.utils.StringUtil;
 
 /**
@@ -43,24 +42,26 @@ public class SwingPrintStream extends PrintStream {
 			e.printStackTrace();
 		}
 	}
-	private JTextArea logTextArea;
+	private ConsolePanel consolePanel;
 
-	public SwingPrintStream(OutputStream out, JTextArea logTextArea)
+	public SwingPrintStream(OutputStream out, ConsolePanel consolePanel)
 			throws FileNotFoundException {
 		super(out);
 		System.setOut(this);
-		this.logTextArea = logTextArea;
+		this.consolePanel = consolePanel;
 	}
 
 	// 重写write方法，这是什么模式？装饰？代理？
 	public void write(byte[] buf, int off, int len) {
-		filter(logTextArea);
+		filter(consolePanel);
 		final String message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			logTextArea.insert("--" + message + "\n", 0);//logTextArea.append(message);
-			// 让光标置于最上方
-			logTextArea.setCaretPosition(0);
-			logTextArea.paintImmediately(logTextArea.getBounds());
+			//consolePanel.insert("--" + message + "\n", 0);//consolePanel.append(message);
+			consolePanel.setText(consolePanel.getTextPane().getText() + "\n--" + message + "");
+			// 让光标置于最下方
+			//consolePanel.paintImmediately(consolePanel.getBounds());
+			consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength());  
+			consolePanel.updateUI();
 			try {
 				//写日志
 				logfw.append((message.length() > 8 && !":".equals(message.substring(2, 3)) ? DateUtil.showDate("yyyy-MM-dd HH:mm:ss") : DateUtil.getStringToday()) + " " + message + "\n");
@@ -73,12 +74,12 @@ public class SwingPrintStream extends PrintStream {
 	
 	/**
 	 * 当控制台的字符过多，则截断
-	 * @param logTextArea
+	 * @param consolePanel
 	 */
-	private void filter(JTextArea logTextArea){
-		String text = logTextArea.getText();
+	private void filter(ConsolePanel consolePanel){
+		String text = consolePanel.getTextPane().getText();
 		if(text.length() > 20000){
-			logTextArea.setText("");
+			consolePanel.setText("");
 		}
 	}
 
