@@ -55,7 +55,7 @@ public final class ComponentConst {
 	
 	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目 /大小", "语言", "已下载", "状态"};
 	
-	public final static String[] PICTURE_TABLE_HEADER = {"序号", "名称", "存储名称", "大小", "分辨率", "状态", "地址", "下载时间"};
+	public final static String[] PICTURE_TABLE_HEADER = {"序号", "名称", "存储名称", "大小", "分辨率", "状态", "地址", "下载时间", "查看"};
 	
 	public final static int MAX_TASK_PAGE = 14;//一页显示任务数
 	

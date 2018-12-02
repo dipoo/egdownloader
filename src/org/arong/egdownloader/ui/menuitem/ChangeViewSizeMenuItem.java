@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 /**
- * 暂停所有任务
+ * 切换封面视图大小
  * @author dipoo
  * @since 2014-12-07
  */
@@ -40,7 +40,9 @@ public class ChangeViewSizeMenuItem extends JMenuItem {
 					window.setting.setCoverHeight(360);
 				}
 				this_.setText(this_.getText() + "√");
-				window.taskImagePanel.changeViewSize();
+				if(window.taskImagePanel != null){
+					window.taskImagePanel.changeViewSize();
+				}
 				window.tablePane.repaint();
 				window.tablePane.updateUI();
 				window.repaint();

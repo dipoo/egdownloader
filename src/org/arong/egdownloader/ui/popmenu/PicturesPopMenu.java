@@ -66,7 +66,7 @@ public class PicturesPopMenu extends JPopupMenu {
 						worker.run();
 					}
 				}));
-		JMenuItem resetStatusItem = new AJMenuItem("重置状态", Color.BLACK, IconManager.getIcon("browse"),
+		JMenuItem resetStatusItem = new AJMenuItem("重置状态", Color.BLACK, IconManager.getIcon("change"),
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;

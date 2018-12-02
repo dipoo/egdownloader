@@ -65,6 +65,8 @@ public class PictureTableModel extends DefaultTableModel {
 			return pic.getUrl();
 		case 7:
 			return pic.getTime();
+		case 8:
+			return "";	
 		default:
 			return "";
 		}
