@@ -2,6 +2,9 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -9,6 +12,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.arong.egdownloader.ui.FontConst;
+import org.arong.egdownloader.ui.IconManager;
+import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.util.FileUtil;
 /**
@@ -23,7 +28,8 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 	private Color fontColor;
 	
 	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
+			boolean isSelected, boolean hasFocus, final int row, int column) {
+		final PictureTable pt = (PictureTable) table;
 		if(isSelected){
 			fontColor = Color.BLUE;
 		}else{
@@ -64,6 +70,12 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(220);
 			tc.setMaxWidth(280);
+		}else if(column == 8){//查看
+			TableColumn tc = table.getColumnModel().getColumn(column);
+			tc.setPreferredWidth(100);
+			tc.setMaxWidth(100);
+			AJLabel aj = new AJLabel("", IconManager.getIcon("openpic"), fontColor, JLabel.LEFT);
+			return aj;
 		}
 		if(isSelected){
 			return new AJLabel(val, fontColor, FontConst.Songti_BOLD_12, JLabel.LEFT);

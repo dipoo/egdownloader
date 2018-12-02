@@ -27,7 +27,7 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 public class TaskImagePanel extends JPanel {
 	private EgDownloaderWindow mainWindow;
 	public int selectIndex = 0;
-	public static final int FISRTSIZE = 10;
+	public static final int FISRTSIZE = 200;
 	private FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 	public Map<String, JPanel> imagePanels = new HashMap<String, JPanel>(); 
 	public TaskImagePanel(final EgDownloaderWindow mainWindow){
@@ -145,6 +145,7 @@ public class TaskImagePanel extends JPanel {
 							l.setImage(icon);
 						}
 						icon.getImage().flush();//解决加载图片不完全问题
+						//l.setIcon(icon);
 						l.setIcon(icon);
 					}
 					p.add(l);

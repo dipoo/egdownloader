@@ -2,19 +2,23 @@ package org.arong.egdownloader.ui.table;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.popmenu.PicturesPopMenu;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SearchCoverWindow;
 /**
  * 任务详细面板图片表格类
  * @author 阿荣
@@ -29,6 +33,7 @@ public class PictureTable extends JTable {
 	public JPopupMenu popupMenu;	
 	
 	public void changeModel(Task task){
+		this.task = task;
 		this.scrollRectToVisible(new Rectangle(0, 0));
 		this.setModel(new PictureTableModel(task.getPictures()));
 	}
@@ -54,7 +59,34 @@ public class PictureTable extends JTable {
 		
 		this.setModel(new PictureTableModel(task.getPictures()));
 		this.setDefaultRenderer(Object.class, new PictureTableCellRenderer());
+		this.addMouseMotionListener(new MouseAdapter() {
+			int moveCurrentRow = -1;
+			public void mouseMoved(MouseEvent e) {
+				PictureTable table = (PictureTable)e.getSource();
+				int rowIndex = table.rowAtPoint(e.getPoint());
+				int columnIndex = table.columnAtPoint(e.getPoint());
+				//最后一列
+				if(columnIndex == ComponentConst.PICTURE_TABLE_HEADER.length - 1){
+					if(moveCurrentRow != rowIndex){
+						moveCurrentRow = rowIndex;
+						Task task = table.getTask();
+						//切换行
+						if(table.mainWindow.coverWindow == null){
+							table.mainWindow.coverWindow = new SearchCoverWindow(table.mainWindow);
+						}
+						table.mainWindow.coverWindow.showCover(task, task.getPictures().get(rowIndex), new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+					}
+				}else{
+					moveCurrentRow = -1;
+					if(table.mainWindow.coverWindow != null){
+						table.mainWindow.coverWindow.setVisible(false);
+						table.mainWindow.coverWindow.releaseCover();
+					}
+				}
+			}
+		});
 		this.addMouseListener(new MouseAdapter() {
+			
 			public void mouseClicked(MouseEvent e) {
 				PictureTable table = (PictureTable)e.getSource();
 				int rowIndex = table.rowAtPoint(e.getPoint());
@@ -66,7 +98,6 @@ public class PictureTable extends JTable {
 					popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}
-			
 		});
 	}
 
