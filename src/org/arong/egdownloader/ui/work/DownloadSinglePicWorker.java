@@ -6,10 +6,8 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -22,7 +20,6 @@ import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
-import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
 import org.arong.util.Tracker;
@@ -88,7 +85,14 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 			pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
 			if(!pic.isCompleted()){
 				pic.setCompleted(true);//设置为已下载完成
-				task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
+				if(task.getCurrent() < task.getTotal()){
+					task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
+					if(task.getCurrent() == task.getTotal()){
+						task.setStatus(TaskStatus.COMPLETED);
+					}else{
+						task.setStatus(TaskStatus.STOPED);
+					}
+				}
 			}
 			BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
 			pic.setPpi(image.getWidth() + "x" + image.getHeight());
@@ -122,12 +126,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 		}
 		return null;
 	}
-	private void delete(File existNameFs){
-		//是否以真实名称保存，是的话则要删除下载不完整的文件
-		if(mainWindow.setting.isSaveAsName() && existNameFs != null && existNameFs.exists()){
-			existNameFs.delete();
-		}
-	}
+	
 	public Task getTask() {
 		return task;
 	}

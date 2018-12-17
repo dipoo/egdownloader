@@ -373,7 +373,7 @@ public class EgDownloaderWindow extends JFrame {
 			}
 		});
 		emptyPanel = new AJPanel(/*emptyTableTips, */emptyBtn);
-		emptyPanel.setBounds(0, 160, ComponentConst.CLIENT_WIDTH, 100);
+		emptyPanel.setBounds(0, 160, (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), 100);
 		emptyPanel.setLayout(new FlowLayout());
 		
 		

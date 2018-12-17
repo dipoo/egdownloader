@@ -385,7 +385,7 @@ public class SettingWindow extends JFrame{
 						boolean downloadOriginal = settingWindow.downloadOriginalBox.getSelectedObjects() == null ? false : true;
 						boolean saveDirAsSubname = saveDirAsSubnameBox.isSelected();
 						boolean https = httpsBox.isSelected();
-						boolean defaultModel = defaultModelBox.isSelected();
+						/*boolean defaultModel = defaultModelBox.isSelected();*/
 						String cookieInfo = settingWindow.cookieArea.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
@@ -413,7 +413,7 @@ public class SettingWindow extends JFrame{
 							setting.setDownloadOriginal(downloadOriginal);
 							setting.setSaveDirAsSubname(saveDirAsSubname);
 							setting.setHttps(https);
-							setting.setViewModel(defaultModel ? 2 : 1);
+							/*setting.setViewModel(defaultModel ? 2 : 1);*/
 							setting.setMaxThread(Integer.parseInt(maxThread));
 							/*setting.setLoginUrl(loginUrl);*/
 							setting.setCookieInfo(cookieInfo);

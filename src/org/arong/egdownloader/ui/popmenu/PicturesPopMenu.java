@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.arong.egdownloader.model.Picture;
+import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
@@ -61,8 +62,13 @@ public class PicturesPopMenu extends JPopupMenu {
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
+						if(table.getTask().getStatus() == TaskStatus.STARTED || table.getTask().getStatus() == TaskStatus.WAITING){
+							JOptionPane.showMessageDialog(null, "任务正在运行，请先暂停");
+							return;
+						}
 						Picture pic = table.getTask().getPictures().get(table.getSelectedRow());
 						DownloadSinglePicWorker worker = new DownloadSinglePicWorker(table.getTask(), pic, mainWindow);
+						table.getTask().setStatus(TaskStatus.STARTED);
 						worker.run();
 					}
 				}));

@@ -29,7 +29,7 @@ public class TaskInfoPanel extends JScrollPane {
 	
 	public TaskInfoPanel(final EgDownloaderWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		textPane = new AJTextPane(ComponentConst.taskinfoHtml,
+		textPane = new AJTextPane(null,
 				Color.BLUE);
 		textPane.setBorder(null);
 		this.setViewportView(textPane);

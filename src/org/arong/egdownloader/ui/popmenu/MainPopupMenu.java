@@ -28,12 +28,12 @@ import org.arong.egdownloader.ui.work.ZIPWorker;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
 import org.arong.egdownloader.ui.work.listenerWork.CheckResetWork;
+import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.DownloadCoverWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenFolderTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenPicWork;
 import org.arong.egdownloader.ui.work.listenerWork.OpenWebPageWork;
 import org.arong.egdownloader.ui.work.listenerWork.ResetTaskWork;
-import org.arong.egdownloader.ui.work.listenerWork.ShowDetailWork;
 import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
 import org.arong.util.Tracker;
 /**
@@ -41,7 +41,7 @@ import org.arong.util.Tracker;
  *
  */
 public class MainPopupMenu extends AJPopupMenu{
-	public MainPopupMenu(EgDownloaderWindow mainWindow){
+	public MainPopupMenu(final EgDownloaderWindow mainWindow){
 		Color menuItemColor = new Color(0,0,85);
 		//右键菜单：开始
 		AJMenuItem startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
@@ -75,6 +75,14 @@ public class MainPopupMenu extends AJPopupMenu{
 						table.stopTask(table.getTasks().get(index));
 					}
 		}));
+		//右键菜单：删除new MenuItemActonListener(mainWindow, new DeleteTaskWork())
+		AJMenuItem deletePopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DELETE_MENU_TEXT, menuItemColor,
+						IconManager.getIcon("delete"), new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
+							public void doWork(Window window, ActionEvent e) {
+								EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+								new DeleteTaskWork().doWork(mainWindow, null);
+							}
+						}));
 		//右键菜单：查看详细
 		/*AJMenuItem detailPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DETAIL_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("detail"),
@@ -253,7 +261,7 @@ public class MainPopupMenu extends AJPopupMenu{
 		AJMenu moreMenu = new AJMenu(ComponentConst.POPUP_MORE_MENU_TEXT, "", editMenuItem, resetMenuItem, completedMenuItem, rebuildMenuItem, copyUrlPopupMenuItem,
 				checkResetMenuItem, downloadCoverMenuItem);
 		moreMenu.setForeground(menuItemColor);
-		this.add(startPopupMenuItem, stopPopupMenuItem/*, detailPopupMenuItem*/, openPicPopupMenuItem, openFolderPopupMenuItem,
+		this.add(startPopupMenuItem, stopPopupMenuItem, deletePopupMenuItem/*, detailPopupMenuItem*/, openPicPopupMenuItem, openFolderPopupMenuItem,
 				 openWebPageMenuItem, changeReadedMenuItem, zipMenuItem, searchAuthorMenuItem, searchLocalAuthorMenuItem, moreMenu);
 	}
 }

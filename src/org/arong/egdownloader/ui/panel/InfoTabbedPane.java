@@ -13,12 +13,14 @@ public class InfoTabbedPane extends JTabbedPane {
 			public void stateChanged(ChangeEvent e) {
 				InfoTabbedPane this_ = (InfoTabbedPane) e.getSource();
 				int index = mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex;
-				Task t = mainWindow.tasks.get(index);
-				if(this_.getSelectedIndex() == 1){
-					mainWindow.taskInfoPanel.parseTask(t, index);
-				}else if(this_.getSelectedIndex() == 2){
-					PicturesInfoPanel p = (PicturesInfoPanel) this_.getComponent(2);
-					p.showPictures(t);
+				if(mainWindow.tasks.size() > index){
+					Task t = mainWindow.tasks.get(index);
+					if(this_.getSelectedIndex() == 1){
+						mainWindow.taskInfoPanel.parseTask(t, index);
+					}else if(this_.getSelectedIndex() == 2){
+						PicturesInfoPanel p = (PicturesInfoPanel) this_.getComponent(2);
+						p.showPictures(t);
+					}
 				}
 			}
 		});

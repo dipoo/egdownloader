@@ -54,17 +54,21 @@ public class SwingPrintStream extends PrintStream {
 	// 重写write方法，这是什么模式？装饰？代理？
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
-		final String message = new String(buf, off, len);
+		String message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
 			//consolePanel.insert("--" + message + "\n", 0);//consolePanel.append(message);
-			consolePanel.setText(consolePanel.getTextPane().getText() + "\n--" + message + "");
-			// 让光标置于最下方
-			//consolePanel.paintImmediately(consolePanel.getBounds());
-			consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength());  
-			consolePanel.updateUI();
+			message = (message.length() > 8 && !":".equals(message.substring(2, 3)) ? DateUtil.showDate("yyyy-MM-dd HH:mm:ss") : DateUtil.getStringToday()) + " " + message + "\n";
 			try {
+				consolePanel.setText(consolePanel.getTextPane().getText() + message);
+				if(!consolePanel.locked){
+					// 让光标置于最下方
+					//consolePanel.paintImmediately(consolePanel.getBounds());
+					consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
+					consolePanel.updateUI();
+				}
+			
 				//写日志
-				logfw.append((message.length() > 8 && !":".equals(message.substring(2, 3)) ? DateUtil.showDate("yyyy-MM-dd HH:mm:ss") : DateUtil.getStringToday()) + " " + message + "\n");
+				logfw.append(message);
 				logfw.flush();
 			} catch (IOException e) {
 				//e.printStackTrace();
@@ -78,7 +82,7 @@ public class SwingPrintStream extends PrintStream {
 	 */
 	private void filter(ConsolePanel consolePanel){
 		String text = consolePanel.getTextPane().getText();
-		if(text.length() > 20000){
+		if(text.length() > 200000){
 			consolePanel.setText("");
 		}
 	}
