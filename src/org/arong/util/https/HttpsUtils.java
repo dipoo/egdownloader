@@ -63,7 +63,7 @@ public class HttpsUtils {
 	                
 	                conn.setSSLSocketFactory(ssf);
                 }catch (Exception e){
-                	System.out.println("HTTPS需要JDK(JRE)1.7及以上版本的支持");
+                	System.out.println("java版本：" + System.getProperty("java.version") + "，当前版本无法支持Https协议，建议使用JDK(JRE)1.7及以上版本:" + e.getMessage());
                 	e.printStackTrace();
                 }
                 return conn;

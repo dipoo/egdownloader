@@ -217,6 +217,7 @@ public final class ComponentConst {
 	public final static String POPUP_START_MENU_TEXT = " 开始任务   ";
 	public final static String POPUP_OPENFILE_MENU_TEXT = " 打开图片   ";
 	public final static String POPUP_STOP_MENU_TEXT = " 暂停任务   ";
+	public final static String POPUP_DELETE_MENU_TEXT = " 删除任务   ";
 	public final static String POPUP_DETAIL_MENU_TEXT = " 详细信息   ";
 	public final static String POPUP_COPYURL_MENU_TEXT = " 复制地址   ";
 	public final static String POPUP_OPENFOLDER_MENU_TEXT = " 打开目录   ";

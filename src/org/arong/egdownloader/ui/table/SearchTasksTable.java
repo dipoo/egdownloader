@@ -76,6 +76,8 @@ public class SearchTasksTable extends JTable {
 				}else{
 					c = Color.DARK_GRAY;
 				}
+				if(value == null) return null;
+				
 				SearchTasksTable tb = (SearchTasksTable) table;
 				TableColumn tc = tb.getColumnModel().getColumn(column);
 				if(column == 0){//类型

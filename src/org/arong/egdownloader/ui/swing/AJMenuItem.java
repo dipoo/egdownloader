@@ -55,10 +55,11 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 		this.setText(text);
 		this.setCursor(CursorManager.getPointerCursor());
 		if(icon != null){
-			URL url = getClass().getResource(ComponentConst.ICON_PATH + icon);
+			/*URL url = getClass().getResource(ComponentConst.ICON_PATH + icon);
 			if(url != null){
 				this.setIcon(new ImageIcon(url));
-			}
+			}*/
+			this.setIcon(icon);
 		}	
 		this.addMouseListener(listener);
 	}

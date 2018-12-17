@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -193,7 +192,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						exceptionNum ++;
 						//碰到异常
 						e.printStackTrace();
-						Tracker.println(task.getDisplayName() + ":" + pic.getName() + e.getLocalizedMessage());
+						Tracker.println(task.getDisplayName() + ":" + pic.getName() + ">>>" + e.getLocalizedMessage());
 						//继续下一个
 						continue;
 					}
