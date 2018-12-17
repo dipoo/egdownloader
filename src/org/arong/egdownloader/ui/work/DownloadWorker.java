@@ -1,14 +1,19 @@
 package org.arong.egdownloader.ui.work;
 
-import java.awt.image.BufferedImage;
+import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -135,19 +140,21 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							delete(existNameFs);
 							return null;
 						}
-						pic.setSize(size);//设置图片大小
-						pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
-						pic.setCompleted(true);//设置为已下载完成
-						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
-						//保存数据
+						
+						Dimension dim = getImageDim(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
+						pic.setPpi((int)dim.getWidth() + "x" + (int)dim.getHeight());
+						
 						if(this.isCancelled()){//是否暂停
 							//删除已经下载的文件
 							delete(existNameFs);
 							return null;
 						}
-						BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
-						pic.setPpi(image.getWidth() + "x" + image.getHeight());
-						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + image.getWidth() + "x" + image.getHeight() + ")下载完成。");
+						pic.setSize(size);//设置图片大小
+						pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
+						pic.setCompleted(true);//设置为已下载完成
+						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
+						
+						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 						
 						//刷新信息面板
 						if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
@@ -157,7 +164,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							infoPanel.showPictures(task);
 						}
 						
-						image = null;
+						
 						//更新图片信息
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);
 						//更新任务信息
@@ -247,5 +254,50 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	public Task getTask() {
 		return task;
 	}
-	
+	/**
+     * 获取图片的分辨率
+     * 
+     * @param path
+     * @return
+     */
+    public static Dimension getImageDim(String path) {
+        Dimension result = null;
+        String suffix = getFileSuffix(path);
+        //解码具有给定后缀的文件
+        Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+        if (iter.hasNext()) {
+            ImageReader reader = iter.next();
+            try {
+                ImageInputStream stream = new FileImageInputStream(new File(
+                        path));
+                reader.setInput(stream);
+                int width = reader.getWidth(reader.getMinIndex());
+                int height = reader.getHeight(reader.getMinIndex());
+                result = new Dimension(width, height);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                reader.dispose();
+            }
+        }
+        return result;
+    }
+    /**
+     * 获得图片的后缀名
+     * @param path
+     * @return
+     */
+    private static String getFileSuffix(final String path) {
+        String result = null;
+        if (path != null) {
+            result = "";
+            if (path.lastIndexOf('.') != -1) {
+                result = path.substring(path.lastIndexOf('.'));
+                if (result.startsWith(".")) {
+                    result = result.substring(1);
+                }
+            }
+        }
+        return result;
+    }
 }
