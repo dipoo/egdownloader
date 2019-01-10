@@ -86,15 +86,19 @@ public final class ComponentConst {
 	
 	static{
 		typeColorMap.put("DOUJINSHI", "<font color='#aa3032'>DOUJINSHI</font>");
-		typeColorMap.put("MANGA", "<font color='orange'>MANGA</font>");
+		typeColorMap.put("MANGA", "<font color='yellow'>MANGA</font>");
 		typeColorMap.put("ARTISTCG", "<font color='yellow'>ARTISTCG</font>");
+		typeColorMap.put("ARTIST CG SETS", "<font color='yellow'>ARTISTCG</font>");
 		typeColorMap.put("GAMECG", "<font color='#92c892'>GAMECG</font>");
+		typeColorMap.put("GAME CG SETS", "<font color='#92c892'>GAMECG</font>");
 		typeColorMap.put("WESTERN", "<font color='#e0ffc2'>WESTERN</font>");
 		typeColorMap.put("NON-H", "<font color='#7ac7ff'>NON-H</font>");
 		typeColorMap.put("IMAGESET", "<font color='#7e7eff'>IMAGESET</font>");
+		typeColorMap.put("IMAGE SETS", "<font color='#7e7eff'>IMAGESET</font>");
 		typeColorMap.put("COSPLAY", "<font color='#c0a7d3'>COSPLAY</font>");
 		typeColorMap.put("ASIANPORN", "<font color='#f3acf3'>ASIANPORN</font>");
 		typeColorMap.put("MISC", "<font color='#f4f4f4'>MISC</font>");
+		typeColorMap.put("other", "<font color='#f4f4f4'>%s</font>");
 		
 		InputStream s = null;
 		try {

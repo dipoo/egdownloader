@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
+import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -141,8 +142,17 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null;
 						}
 						
-						Dimension dim = getImageDim(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
-						pic.setPpi((int)dim.getWidth() + "x" + (int)dim.getHeight());
+						//Dimension dim = getImageDim(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
+						//pic.setPpi((int)dim.getWidth() + "x" + (int)dim.getHeight());
+						try {
+							//BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+							//pic.setPpi(image.getWidth() + "x" + image.getHeight());
+							ImageIcon icon = new ImageIcon(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
+							pic.setPpi(icon.getIconWidth() + "x" + icon.getIconHeight());
+							icon = null;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						
 						if(this.isCancelled()){//是否暂停
 							//删除已经下载的文件

@@ -86,7 +86,10 @@ public class SearchImagePanel extends JLabel {
 		this.setForeground(Color.WHITE);
 		boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
-		this.setText("<html><font color='#f2e986'>" + task.getRating() + "</font> " + (StringUtils.isNotBlank(task.getType()) ? ComponentConst.typeColorMap.get(task.getType().toUpperCase()) : "") + " " + task.getDate() + "</html>");
+		this.setText("<html><font color='#f2e986'>" + task.getRating() + "</font> " + 
+				(StringUtils.isNotBlank(task.getType()) ? 
+						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
+						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate()) + " " + (StringUtils.isBlank(task.getFilenum()) ? "" : task.getFilenum() + "P") + "</html>");
 		this.setToolTipText(task.getName() + "[" + task.getUploader() + "]");
 		final SearchImagePanel this_ = this;
 		

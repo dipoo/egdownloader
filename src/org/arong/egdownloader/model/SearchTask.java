@@ -24,6 +24,8 @@ public class SearchTask {
 	
 	private String author;//作者
 	
+	private String filenum;//图片个数
+	
 	public String getAuthor() {
 		return author;
 	}
@@ -104,6 +106,14 @@ public class SearchTask {
 
 	public void setRating(String rating) {
 		this.rating = rating;
+	}
+
+	public String getFilenum() {
+		return filenum;
+	}
+
+	public void setFilenum(String filenum) {
+		this.filenum = filenum;
 	}
 	
 }

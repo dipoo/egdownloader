@@ -43,7 +43,7 @@ public class ScriptParser {
 	private static File createScriptFile;
 	private static File collectScriptFile;
 	private static File downloadScriptFile;
-	private static File searchScriptFile;
+	public static File searchScriptFile;
 	
 	public static void clearFiles(){
 		createScriptFile = null;
@@ -301,7 +301,7 @@ public class ScriptParser {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		param.put("https", setting.isHttps());
-		Object result = parseJsScript(param, getSearchScriptFile(setting.getSearchScriptPath()));
+		Object result = parseJsScript(param, getSearchScriptFile(setting.getCurrentSearchScriptPath()));
 		return result == null ? null : result.toString().split("\\###");
 	}
 	

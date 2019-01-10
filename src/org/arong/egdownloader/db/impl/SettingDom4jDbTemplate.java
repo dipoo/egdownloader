@@ -188,6 +188,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("collectPictureScriptPath", t.getCollectPictureScriptPath());
 		ele.addAttribute("downloadScriptPath", t.getDownloadScriptPath());
 		ele.addAttribute("searchScriptPath", t.getSearchScriptPath());
+		ele.addAttribute("searchScriptPath2", t.getSearchScriptPath2());
 		
 		ele.addAttribute("useProxy", t.isUseProxy() + "");
 		ele.addAttribute("proxyType", t.getProxyType());
@@ -228,6 +229,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setCollectPictureScriptPath(ele.attributeValue("collectPictureScriptPath") == null ? t.getCollectPictureScriptPath() : ele.attributeValue("collectPictureScriptPath"));
 		t.setDownloadScriptPath(ele.attributeValue("downloadScriptPath") == null ? t.getDownloadScriptPath() : ele.attributeValue("downloadScriptPath"));
 		t.setSearchScriptPath(ele.attributeValue("searchScriptPath") == null ? t.getSearchScriptPath() : ele.attributeValue("searchScriptPath"));
+		t.setSearchScriptPath2(ele.attributeValue("searchScriptPath2") == null ? t.getSearchScriptPath2() : ele.attributeValue("searchScriptPath2"));
 		
 		t.setUseProxy("true".equals(ele.attributeValue("useProxy")) ? true : false);
 		t.setProxyType(ele.attributeValue("proxyType"));
