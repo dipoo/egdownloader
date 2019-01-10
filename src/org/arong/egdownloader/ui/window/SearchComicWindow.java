@@ -34,6 +34,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
@@ -249,6 +250,7 @@ public class SearchComicWindow extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				viewModel = viewModel == 1 ? 2 : 1;
 				mainWindow.setting.setSearchViewModel(viewModel);
+				ScriptParser.searchScriptFile = null;
 				searchBtn.doClick();
 			}
 		}, 0, 0, 60, 30);

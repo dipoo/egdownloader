@@ -1,13 +1,12 @@
 package org.arong.egdownloader.ui.work;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -94,16 +93,18 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 					}
 				}
 			}
-			BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
-			pic.setPpi(image.getWidth() + "x" + image.getHeight());
-			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + image.getWidth() + "x" + image.getHeight() + ")下载完成。");
+			//BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+			//pic.setPpi(image.getWidth() + "x" + image.getHeight());
+			ImageIcon icon = new ImageIcon(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
+			pic.setPpi(icon.getIconWidth() + "x" + icon.getIconHeight());
+			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 			
 			if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
 				PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);
 				infoPanel.showPictures(task);
 			}
 			
-			image = null;
+			icon = null;
 			//更新图片信息
 			mainWindow.pictureDbTemplate.update(pic);
 			//更新任务信息

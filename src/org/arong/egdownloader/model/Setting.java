@@ -24,12 +24,14 @@ public class Setting {
 	private int maxThread = 5;
 	private boolean debug = false;
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
+	private String cookieInfo2 = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;s=1b0e7b0b3; sk=px6ms37kr0j3lf0m2fjtr1o8q2zu; lv=1544856920-1545910092;";
 	
 	private boolean openScript = true;//是否启用脚本
 	private String createTaskScriptPath = "script/createTask.js";//创建任务脚本
 	private String collectPictureScriptPath = "script/collectPicture.js";//收集图片脚本
 	private String downloadScriptPath = "script/download.js";//任务下载脚本
 	private String searchScriptPath = "script/search.js";//搜索漫画列表脚本
+	private String searchScriptPath2 = "script/search2.js";//搜索漫画图文脚本
 	private UpdateScriptWorker updateScriptWorker;//脚本更新器
 	
 	//前后缀
@@ -450,6 +452,22 @@ public class Setting {
 	}
 	public void setSearchViewModel(int searchViewModel) {
 		this.searchViewModel = searchViewModel;
+	}
+	public String getSearchScriptPath2() {
+		return searchScriptPath2;
+	}
+	public void setSearchScriptPath2(String searchScriptPath2) {
+		this.searchScriptPath2 = searchScriptPath2;
+	}
+	
+	public String getCurrentSearchScriptPath() {
+		return searchViewModel == 1 ? searchScriptPath2 : searchScriptPath;
+	}
+	public String getCookieInfo2() {
+		return cookieInfo2;
+	}
+	public void setCookieInfo2(String cookieInfo2) {
+		this.cookieInfo2 = cookieInfo2;
 	}
 	
 }
