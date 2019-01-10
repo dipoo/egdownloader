@@ -31,7 +31,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
-			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo());
+			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getSearchViewModel() == 2 ? mainWindow.setting.getCookieInfo() : mainWindow.setting.getCookieInfo2());
 			if(source == null){
 				Tracker.println(this.getClass(), this.url + ":搜索出错");
 				return null;
