@@ -94,11 +94,15 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			}
 			else if(value != null && value.toString().length() > 120){
 				JLabel nameLabel = new AJLabel(preffix + value.toString().substring(0, 113) + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
-				nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
+				if(StringUtils.isNotBlank(task.getSubname())){
+					nameLabel.setToolTipText(task.getSubname());//设置鼠标移过提示
+				}
 				return nameLabel;
 			}else{
 				JLabel nameLabel = new AJLabel(preffix + value.toString() + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
-				nameLabel.setToolTipText(task.getName());//设置鼠标移过提示
+				if(StringUtils.isNotBlank(task.getSubname())){
+					nameLabel.setToolTipText(task.getSubname());//设置鼠标移过提示
+				}
 				return nameLabel;
 			}
 		}else if(column == 2){//第三列：图片总数
