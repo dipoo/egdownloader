@@ -21,6 +21,7 @@ public class Setting {
 	private boolean https = false;//是否使用https
 	private int viewModel = 1;//默认显示模式
 	private int searchViewModel = 2;//默认搜索显示模式
+	private boolean showAsSubname = true;//以子名称展示
 	private int maxThread = 5;
 	private boolean debug = false;
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
@@ -468,6 +469,12 @@ public class Setting {
 	}
 	public void setCookieInfo2(String cookieInfo2) {
 		this.cookieInfo2 = cookieInfo2;
+	}
+	public boolean isShowAsSubname() {
+		return showAsSubname;
+	}
+	public void setShowAsSubname(boolean showAsSubname) {
+		this.showAsSubname = showAsSubname;
 	}
 	
 }

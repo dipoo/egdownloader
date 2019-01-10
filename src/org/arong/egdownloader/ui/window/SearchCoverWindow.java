@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JWindow;
@@ -68,7 +69,7 @@ public class SearchCoverWindow extends JWindow {
 				this.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
 				coverLabel.setSize(icon.getIconWidth() + 4, icon.getIconHeight() + 4);
 				coverLabel.setIcon(icon);
-				coverLabel.setImage(icon);
+				//coverLabel.setImage(icon);
 				this.setLocationRelativeTo(mainWindow);
 				this.setLocation((int)p.getX(), (int)p.getY() - this.getHeight() / 2 + 50);
 				this.setVisible(true);
@@ -109,6 +110,7 @@ public class SearchCoverWindow extends JWindow {
 	 * 图片列表使用
 	 */
 	public void showCover(Task task, Picture pic, Point p){
+		this.setVisible(false);
 		String name = pic.getName();
 		if(name.indexOf(".") != -1){
 			name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
@@ -120,7 +122,16 @@ public class SearchCoverWindow extends JWindow {
 		if(cover == null || !cover.exists()){
 			this.setVisible(false);
 		}else{
-			icon = new ImageIcon(path);
+			try{
+				if(icon == null){
+					icon = new ImageIcon(ImageIO.read(new File(path)));
+				}else{
+					icon.setImage(ImageIO.read(new File(path)));
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			//icon = new ImageIcon(path);
 			if(icon.getIconWidth() == -1){
 				this.setVisible(false);
 			}else{

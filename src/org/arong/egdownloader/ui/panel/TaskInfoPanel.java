@@ -53,6 +53,7 @@ public class TaskInfoPanel extends JScrollPane {
 	}
 	
 	public void parseTask(Task t, int index){
+		textPane.setText("");
 		try{
 			if(t != null){
 				this.t = t;

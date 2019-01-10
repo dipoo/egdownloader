@@ -90,7 +90,7 @@ public class SearchImagePanel extends JLabel {
 				(StringUtils.isNotBlank(task.getType()) ? 
 						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
 						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate()) + " " + (StringUtils.isBlank(task.getFilenum()) ? "" : task.getFilenum() + "P") + "</html>");
-		this.setToolTipText(task.getName() + "[" + task.getUploader() + "]");
+		this.setToolTipText(task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : ""));
 		final SearchImagePanel this_ = this;
 		
 		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());

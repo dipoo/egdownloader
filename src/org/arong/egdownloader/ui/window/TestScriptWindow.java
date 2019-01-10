@@ -27,6 +27,7 @@ import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextArea;
 import org.arong.egdownloader.ui.swing.AJTextField;
+import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 /**
  * 脚本测试窗口
@@ -70,19 +71,23 @@ public class TestScriptWindow extends JDialog{
 		
 		final JButton testBtn = new AJButton("测试脚本", "", "", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window window, MouseEvent e) {
-				String url = urlField.getText();
+				final String url = urlField.getText();
 				if("".equals(url)){
 					JOptionPane.showMessageDialog(null, "地址不能为空");
 					return;
 				}
-				Setting s = new Setting();
+				final Setting s = new Setting();
 				s.setCreateTaskScriptPath(createScript);
 				s.setCollectPictureScriptPath(collectScript);
 				s.setDownloadScriptPath(downloadScript);
 				s.setCookieInfo(setting.getCookieInfo());
 				resultArea.setText("");
-				ScriptParser.testScript(url, resultArea, s, createCb.getSelectedObjects() != null,
-						collectCb.getSelectedObjects() != null, downloadCb.getSelectedObjects() != null);
+				new CommonSwingWorker(new Runnable() {
+					public void run() {
+						ScriptParser.testScript(url, resultArea, s, createCb.getSelectedObjects() != null,
+								collectCb.getSelectedObjects() != null, downloadCb.getSelectedObjects() != null);
+					}
+				}).execute();
 			}
 		}), 515, 15, 60, 30);
 		
