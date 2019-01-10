@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
-import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -30,6 +29,7 @@ import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
+import org.arong.util.SimpleImageInfo;
 import org.arong.util.Tracker;
 /**
  * 下载线程类，执行耗时的下载任务
@@ -142,14 +142,9 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null;
 						}
 						
-						//Dimension dim = getImageDim(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
-						//pic.setPpi((int)dim.getWidth() + "x" + (int)dim.getHeight());
 						try {
-							//BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
-							//pic.setPpi(image.getWidth() + "x" + image.getHeight());
-							ImageIcon icon = new ImageIcon(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
-							pic.setPpi(icon.getIconWidth() + "x" + icon.getIconHeight());
-							icon = null;
+							SimpleImageInfo sii = new SimpleImageInfo(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+							pic.setPpi(sii.getWidth() + "x" + sii.getHeight());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -165,15 +160,15 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						
 						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
-						
-						//刷新信息面板
-						if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
-							mainWindow.taskInfoPanel.parseTask(task, mainWindow.runningTable.selectRowIndex);
-						}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
-							PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);
-							infoPanel.showPictures(task);
+						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
+							//刷新信息面板
+							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
+								mainWindow.taskInfoPanel.parseTask(task, mainWindow.runningTable.selectRowIndex);
+							}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
+								PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);
+								infoPanel.pictureTable.updateUI();
+							}
 						}
-						
 						
 						//更新图片信息
 						((EgDownloaderWindow)mainWindow).pictureDbTemplate.update(pic);

@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.apache.commons.lang.StringUtils;
+import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -50,6 +51,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}
 		TableColumn tc = table.getColumnModel().getColumn(column);
 		task = ((TaskingTable)table).getTasks().get(row); 
+		Setting setting = ((TaskingTable)table).getMainWindow().setting;
 		if(column == 0){//第一列：图标
 			tc.setPreferredWidth(130);
 			tc.setMaxWidth(150);
@@ -75,7 +77,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setMaxWidth(1200);
 			String preffix = "<html><font color=\"#248FB7\">" + ("一般".equals(task.getTag().trim()) ? "" : "[<i>" + task.getTag() + "</i> ]") + "[" + task.getShortCreatetime() + "]</font>";
 			String suffix = (StringUtils.isNotBlank(task.getPostedTime()) ? "<font color=\"#248FB7\">[" + task.getPostedTime() + "]</font>" : "") + "</html>";
-			if(task.getSubname() !=null && !"".equals(task.getSubname().trim())){
+			if(setting.isShowAsSubname() && task.getSubname() !=null && !"".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
 				JLabel nameLabel = null;
 				if(subname.length() > 230){

@@ -69,7 +69,7 @@ public class PicturesPopMenu extends JPopupMenu {
 						Picture pic = table.getTask().getPictures().get(table.getSelectedRow());
 						DownloadSinglePicWorker worker = new DownloadSinglePicWorker(table.getTask(), pic, mainWindow);
 						table.getTask().setStatus(TaskStatus.STARTED);
-						worker.run();
+						worker.execute();
 					}
 				}));
 		JMenuItem resetStatusItem = new AJMenuItem("重置状态", Color.BLACK, IconManager.getIcon("change"),

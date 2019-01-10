@@ -6,7 +6,6 @@ import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -21,6 +20,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil;
+import org.arong.util.SimpleImageInfo;
 import org.arong.util.Tracker;
 /**
  * 下载单个图片线程类，执行耗时的下载任务
@@ -93,10 +93,12 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 					}
 				}
 			}
-			//BufferedImage image = ImageIO.read(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
-			//pic.setPpi(image.getWidth() + "x" + image.getHeight());
-			ImageIcon icon = new ImageIcon(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
-			pic.setPpi(icon.getIconWidth() + "x" + icon.getIconHeight());
+			try {
+				SimpleImageInfo sii = new SimpleImageInfo(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+				pic.setPpi(sii.getWidth() + "x" + sii.getHeight());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 			
 			if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
@@ -104,7 +106,6 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 				infoPanel.showPictures(task);
 			}
 			
-			icon = null;
 			//更新图片信息
 			mainWindow.pictureDbTemplate.update(pic);
 			//更新任务信息

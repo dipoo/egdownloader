@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -57,9 +58,13 @@ public class TaskImagePanel extends JPanel {
 							int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
 							l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
 							l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-							if(height < mainWindow.setting.getCoverHeight()){
-								l.setImage(icon);
-							}
+							/*try {
+								BufferedImage image = Thumbnails.of((BufferedImage)icon.getImage()).size((int)w, height).asBufferedImage();
+								icon.setImage(null);
+								icon.setImage(image);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}*/
 							icon.getImage().flush();//解决加载图片不完全问题
 							l.setIcon(icon);
 						}
@@ -136,17 +141,18 @@ public class TaskImagePanel extends JPanel {
 					final String path = ComponentConst.getSavePathPreffix() + tasks.get(i).getSaveDir() + "/cover.jpg";
 					File cover = new File(path);
 					if(cover != null && cover.exists()){
-						ImageIcon icon = new ImageIcon(path);
-						double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
-						int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
-						l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
-						l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-						if(height < mainWindow.setting.getCoverHeight()){
+						try{
+							ImageIcon icon = new ImageIcon(ImageIO.read(cover));
+							double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
+							int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
+							l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
+							l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
+							icon.getImage().flush();//解决加载图片不完全问题
 							l.setImage(icon);
+							l.setIcon(icon);
+						}catch(Exception e){
+							e.printStackTrace();
 						}
-						icon.getImage().flush();//解决加载图片不完全问题
-						//l.setIcon(icon);
-						l.setIcon(icon);
 					}
 					p.add(l);
 					imagePanels.put(tasks.get(i).getId(), p);

@@ -67,8 +67,8 @@ public class SettingWindow extends JFrame{
 		public JCheckBox autoDownloadBox;
 		JLabel downloadOriginalLabel;
 		public JCheckBox downloadOriginalBox;
-		JLabel defaultModelLabel;
-		public JCheckBox defaultModelBox;
+		JLabel showAsSubnameLabel;
+		public JCheckBox showAsSubnameBox;
 		JLabel maxThreadLabel;
 		public JCheckBox httpsBox;
 		JLabel httpsLabel;
@@ -79,6 +79,8 @@ public class SettingWindow extends JFrame{
 		public JTextField loginUrlField;
 		JLabel cookieLabel;
 		public JTextArea cookieArea;
+		JLabel cookieLabel2;
+		public JTextArea cookieArea2;
 		JButton cookieButton;
 		
 		JButton save_Btn;
@@ -141,11 +143,11 @@ public class SettingWindow extends JFrame{
 			final Setting setting = ((EgDownloaderWindow)mainWindow).setting;
 			this.setIconImage(IconManager.getIcon("setting").getImage());
 			this.getContentPane().setLayout(null);
-			this.setSize(800, 480);
+			this.setSize(800, 640);
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 			
-			settingTabPanel.setBounds(20, 0, 780, 450);
+			settingTabPanel.setBounds(20, 0, 780, 630);
 			
 			/* 基本配置 */
 			basicPanel = new JPanel();
@@ -196,26 +198,35 @@ public class SettingWindow extends JFrame{
 			downloadOriginalLabel = new AJLabel("下载原图：", labelColor, 400, 70, 100, 30);
 			downloadOriginalBox = new JCheckBox("", setting.isDownloadOriginal());
 			downloadOriginalBox.setBounds(460, 70, 30, 30);
-			/*defaultModelLabel = new AJLabel("默认封面面板：", labelColor, 25, 110, 100, 30);
-			defaultModelBox = new JCheckBox("", setting.getViewModel() == 2);
-			defaultModelBox.setBounds(118, 110, 30, 30);*/
 			saveDirAsSubnameLabel = new AJLabel("子标题作为目录：", labelColor, 25, 110, 100, 30);
 			saveDirAsSubnameBox = new JCheckBox("", setting.isSaveDirAsSubname());
 			saveDirAsSubnameBox.setBounds(118, 110, 30, 30);
-			httpsLabel = new AJLabel("开启HTTPS：", labelColor, 200, 110, 100, 30);
+			showAsSubnameLabel = new AJLabel("列表子标题展示：", labelColor, 200, 110, 100, 30);
+			showAsSubnameBox = new JCheckBox("", setting.isShowAsSubname());
+			showAsSubnameBox.setBounds(290, 110, 30, 30);
+			httpsLabel = new AJLabel("开启HTTPS：", labelColor, 400, 110, 100, 30);
 			httpsBox = new JCheckBox("", setting.isHttps());
-			httpsBox.setBounds(290, 110, 30, 30);
+			httpsBox.setBounds(460, 110, 30, 30);
 			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 150, 100, 30);
 			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 150, 60, 30);
 			/*loginUrlLabel = new AJLabel("登录地址：", labelColor, 25, 150, 100, 30);
 			loginUrlField = new AJTextField(setting.getLoginUrl(), "", 125, 150, 360, 30);*/
-			cookieLabel = new AJLabel("登录信息：", labelColor, 25, 190, 100, 30);
+			cookieLabel = new AJLabel("Cookie：", labelColor, 25, 190, 100, 30);
+			cookieLabel.setToolTipText("用于用户认证");
 			cookieArea = new AJTextArea();
 			cookieArea.setText(setting.getCookieInfo());
-			cookieArea.setBounds(125, 190, 360, 200);
+			cookieArea.setBounds(125, 190, 360, 150);
 			cookieArea.setLineWrap(true);
 			cookieArea.setEditable(true);
 			cookieArea.setBorder(BorderFactory.createEtchedBorder());
+			cookieLabel2 = new AJLabel("Cookie2：", labelColor, 25, 360, 100, 30);
+			cookieArea2 = new AJTextArea();
+			cookieArea2.setText(setting.getCookieInfo2());
+			cookieArea2.setBounds(125, 360, 360, 150);
+			cookieArea2.setLineWrap(true);
+			cookieArea2.setEditable(true);
+			cookieArea2.setToolTipText("用于图文搜索");
+			cookieArea2.setBorder(BorderFactory.createEtchedBorder());
 			/*cookieButton = new AJButton("登陆", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
@@ -233,13 +244,14 @@ public class SettingWindow extends JFrame{
 					EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 					SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
 					settingWindow.cookieArea.setText(new Setting().getCookieInfo());
+					settingWindow.cookieArea2.setText(new Setting().getCookieInfo2());
 				}
-			}), 500, 270, 60, 30);
+			}), 500, 340, 60, 30);
 		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, browseDirButton, openDirButton,
 				saveAsNameLabel, saveAsNameBox, autoDownloadLabel, autoDownloadBox, downloadOriginalLabel,
-				downloadOriginalBox/*, defaultModelLabel, defaultModelBox*/,maxThreadLabel, maxThreadField,
+				downloadOriginalBox, showAsSubnameLabel, showAsSubnameBox, maxThreadLabel, maxThreadField,
 				saveDirAsSubnameLabel,saveDirAsSubnameBox,httpsLabel,httpsBox,
-				/*loginUrlLabel, loginUrlField,*/ cookieLabel, cookieArea,
+				/*loginUrlLabel, loginUrlField,*/ cookieLabel, cookieArea, cookieLabel2, cookieArea2,
 				/*cookieButton, */resumeButton);
 		    
 			/*脚本设置*/
@@ -385,8 +397,9 @@ public class SettingWindow extends JFrame{
 						boolean downloadOriginal = settingWindow.downloadOriginalBox.getSelectedObjects() == null ? false : true;
 						boolean saveDirAsSubname = saveDirAsSubnameBox.isSelected();
 						boolean https = httpsBox.isSelected();
-						/*boolean defaultModel = defaultModelBox.isSelected();*/
+						boolean showAsSubname = showAsSubnameBox.isSelected();
 						String cookieInfo = settingWindow.cookieArea.getText();
+						String cookieInfo2 = settingWindow.cookieArea2.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
 							JOptionPane.showMessageDialog(this_, "请填写保存目录");
@@ -413,10 +426,11 @@ public class SettingWindow extends JFrame{
 							setting.setDownloadOriginal(downloadOriginal);
 							setting.setSaveDirAsSubname(saveDirAsSubname);
 							setting.setHttps(https);
-							/*setting.setViewModel(defaultModel ? 2 : 1);*/
+							setting.setShowAsSubname(showAsSubname);
 							setting.setMaxThread(Integer.parseInt(maxThread));
 							/*setting.setLoginUrl(loginUrl);*/
 							setting.setCookieInfo(cookieInfo);
+							setting.setCookieInfo2(cookieInfo2);
 							mainWindow.settingDbTemplate.update(setting);//保存
 							JOptionPane.showMessageDialog(this_, "保存成功");
 						}
