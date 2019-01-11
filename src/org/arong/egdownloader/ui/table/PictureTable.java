@@ -29,7 +29,8 @@ public class PictureTable extends JTable {
 	
 	private Task task;
 	public EgDownloaderWindow mainWindow;
-	public JPopupMenu popupMenu;	
+	public JPopupMenu popupMenu;
+	public int showPictureTimes = 0;
 	
 	public void changeModel(Task task){
 		this.task = task;
@@ -73,6 +74,7 @@ public class PictureTable extends JTable {
 						if(table.mainWindow.coverWindow == null){
 							table.mainWindow.coverWindow = new SearchCoverWindow(table.mainWindow);
 						}
+						showPictureTimes ++;
 						table.mainWindow.coverWindow.showCover(task, task.getPictures().get(rowIndex), new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
 					}
 				}else{
@@ -80,6 +82,9 @@ public class PictureTable extends JTable {
 					if(table.mainWindow.coverWindow != null){
 						table.mainWindow.coverWindow.setVisible(false);
 						table.mainWindow.coverWindow.releaseCover();
+						if(showPictureTimes % 3 == 0){
+							System.gc();
+						}
 					}
 				}
 			}
