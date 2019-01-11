@@ -206,7 +206,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setId(ele.attributeValue("id") == null ? t.getId() : ele.attributeValue("id"));
 		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir") == null ? t.getDefaultSaveDir() : ele.attributeValue("defaultSaveDir"));
 		t.setCookieInfo(ele.attributeValue("cookieInfo") == null ? t.getCookieInfo() : ele.attributeValue("cookieInfo"));
-		t.setCookieInfo(ele.attributeValue("cookieInfo2") == null ? t.getCookieInfo2() : ele.attributeValue("cookieInfo2"));
+		t.setCookieInfo2(ele.attributeValue("cookieInfo2") == null ? t.getCookieInfo2() : ele.attributeValue("cookieInfo2"));
 		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")));
 		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")));
 		t.setHttps("true".equals(ele.attributeValue("https")));
