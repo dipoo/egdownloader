@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -95,10 +94,7 @@ public class SimpleSearchWindow extends JDialog {
 						table.setRowSelectionInterval(0, 0);
 						table.scrollRectToVisible(table.getCellRect(0, 0, true));
 					}else{
-						mainWindow.taskImagePanel.removeIndexs(indexs);
-						for(int i = 0; i < j; i ++){
-							mainWindow.taskImagePanel.imagePanels.remove(table.getTasks().get(i).getId());
-						}
+						mainWindow.taskImagePanel.page = 1;
 						mainWindow.taskImagePanel.init(table.getTasks());
 						mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));
 					}

@@ -326,6 +326,7 @@ public class EgDownloaderWindow extends JFrame {
 		runningTable = new TaskingTable(5, 40, ComponentConst.CLIENT_WIDTH - 20,
 				(tasks == null ? 0 :tasks.size()) * 28, this.tasks, this);
 		
+		
 		viewModel = setting.getViewModel();
 		if(viewModel == 1){
 			tablePane = new JScrollPane(runningTable);
@@ -339,15 +340,9 @@ public class EgDownloaderWindow extends JFrame {
 					JScrollBar bar = (JScrollBar) e.getSource();
 					if(e.getValue() + bar.getHeight() == bar.getMaximum()){
 						taskImagePanel.setPreferredSize(new Dimension((int)taskImagePanel.getPreferredSize().getWidth(), (int)taskImagePanel.getPreferredSize().getHeight() + bar.getUnitIncrement()));
-						taskImagePanel.init(runningTable.getTasks());
 					}
 				}
 			});
-			new Timer().schedule(new TimerTask() {
-				public void run() {
-					taskImagePanel.init(runningTable.getTasks(), false, false);
-				}
-			}, 5000);
 		}
 		tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));

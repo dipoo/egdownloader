@@ -81,7 +81,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 				//更新内存
 				table.getTasks().removeAll(tasks, urls);
 				if(mainWindow.taskImagePanel != null){
-					mainWindow.taskImagePanel.removeIndexs(indexes);
+					mainWindow.taskImagePanel.init();
 				}
 			}
 			table.clearSelection();//使之不选中任何行
