@@ -300,8 +300,8 @@ public class EgDownloaderWindow extends JFrame {
 		taskMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
 		operaMenu.add(taskMenu);
 		JMenu sizeMenu = new AJMenu("视图封面", "", IconManager.getIcon("task"));
-		sizeMenu.add(new ChangeViewSizeMenuItem("大√", this, 1));
-		sizeMenu.add(new ChangeViewSizeMenuItem("中", this, 2));
+		sizeMenu.add(new ChangeViewSizeMenuItem("大", this, 1));
+		sizeMenu.add(new ChangeViewSizeMenuItem("中√", this, 2));
 		sizeMenu.add(new ChangeViewSizeMenuItem("小", this, 3));
 		operaMenu.add(sizeMenu);
 		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));

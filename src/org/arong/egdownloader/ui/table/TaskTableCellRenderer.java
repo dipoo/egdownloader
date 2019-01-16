@@ -77,7 +77,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			tc.setMaxWidth(1200);
 			String preffix = "<html><font color=\"#248FB7\">" + ("一般".equals(task.getTag().trim()) ? "" : "[<i>" + task.getTag() + "</i> ]") + "[" + task.getShortCreatetime() + "]</font>";
 			String suffix = (StringUtils.isNotBlank(task.getPostedTime()) ? "<font color=\"#248FB7\">[" + task.getPostedTime() + "]</font>" : "") + "</html>";
-			if(setting.isShowAsSubname() && task.getSubname() !=null && !"".equals(task.getSubname().trim())){
+			if(setting.isShowAsSubname() && task.getSubname() !=null && !"".equals(task.getSubname().trim()) && !"null".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
 				JLabel nameLabel = null;
 				if(subname.length() > 230){
@@ -94,13 +94,13 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			}
 			else if(value != null && value.toString().length() > 120){
 				JLabel nameLabel = new AJLabel(preffix + value.toString().substring(0, 113) + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
-				if(StringUtils.isNotBlank(task.getSubname())){
+				if(StringUtils.isNotBlank(task.getSubname()) && !"null".equals(task.getSubname().trim())){
 					nameLabel.setToolTipText(task.getSubname());//设置鼠标移过提示
 				}
 				return nameLabel;
 			}else{
 				JLabel nameLabel = new AJLabel(preffix + value.toString() + suffix, fontColor, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
-				if(StringUtils.isNotBlank(task.getSubname())){
+				if(StringUtils.isNotBlank(task.getSubname()) && !"null".equals(task.getSubname().trim())){
 					nameLabel.setToolTipText(task.getSubname());//设置鼠标移过提示
 				}
 				return nameLabel;

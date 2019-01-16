@@ -63,16 +63,6 @@ public class DeletingWindow extends JDialog {
 		super.dispose();
 	}
 	
-	@Override
-	protected void processWindowEvent(WindowEvent e) {
-		//关闭事件
-		if(e.getID() == WindowEvent.WINDOW_CLOSING){
-			//do nothing
-		}else{
-			super.processWindowEvent(e);
-		}
-	}
-
 	public void setData(String data){
 		dataLabel.setText(data);
 	}

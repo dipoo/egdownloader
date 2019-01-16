@@ -87,8 +87,8 @@ public class Setting {
 	/**
 	 * 封面视图大小
 	 */
-	private int coverWidth = 250;
-	private int coverHeight = 360;
+	private int coverWidth = 150;
+	private int coverHeight = 216;
 	
 	public String[] getTask_name() {
 		return task_name;
