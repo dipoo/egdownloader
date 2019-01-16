@@ -304,7 +304,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		.append("groupname='").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("',")
 		.append("url='").append(StringEscapeUtils.escapeSql(t.getUrl())).append("',")
 		.append("name='").append(StringEscapeUtils.escapeSql(t.getName())).append("',")
-		.append("subname='").append(StringEscapeUtils.escapeSql(t.getSubname())).append("',")
+		.append("subname='").append(StringEscapeUtils.escapeSql(t.getSubname() == null ? "" : t.getSubname())).append("',")
 		.append("coverUrl='").append(StringEscapeUtils.escapeSql(t.getCoverUrl())).append("',")
 		.append("language='").append(StringEscapeUtils.escapeSql(t.getLanguage())).append("',")
 		.append("type='").append(StringEscapeUtils.escapeSql(t.getType())).append("',")
