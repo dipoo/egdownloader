@@ -15,7 +15,6 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
-import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
@@ -24,6 +23,7 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.ZiptingWindow;
+import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.egdownloader.ui.work.ZIPWorker;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.egdownloader.ui.work.listenerWork.ChangeReadedWork;
@@ -52,7 +52,7 @@ public class MainPopupMenu extends AJPopupMenu{
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						//如果正在重建，则不下载
 						if(table.isRebuild()){
-							Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
+							Tracker.println(MainPopupMenu.class, "正在重建任务");
 							return;
 						}
 						int index = table.getSelectedRow();
@@ -68,7 +68,7 @@ public class MainPopupMenu extends AJPopupMenu{
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						//如果正在重建，则不执行
 						if(table.isRebuild()){
-							Tracker.println(StartAllTaskMenuItem.class, "正在重建任务");
+							Tracker.println(MainPopupMenu.class, "正在重建任务");
 							return;
 						}
 						int index = table.getSelectedRow();
@@ -234,10 +234,10 @@ public class MainPopupMenu extends AJPopupMenu{
 				"",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
-						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						final EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						final TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						int index = table.getSelectedRow();
-						Task task = table.getTasks().get(index);
+						final Task task = table.getTasks().get(index);
 						if(task.getStatus() == TaskStatus.STARTED){
 							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能执行此操作！");
 							return;
@@ -247,14 +247,29 @@ public class MainPopupMenu extends AJPopupMenu{
 						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
 						"】这个任务吗？");
 						if(result == JOptionPane.OK_OPTION){//确定
-							try {
-								ScriptParser.rebuildTask(task, mainWindow.setting);
-								//保存数据
-								mainWindow.taskDbTemplate.update(task);
-								JOptionPane.showMessageDialog(mainWindow, "操作完成！");
-							}catch (Exception e1) {
-								JOptionPane.showMessageDialog(mainWindow, "操作失败！" + e1.getMessage());
-							}
+							new CommonSwingWorker(new Runnable() {
+								public void run() {
+									table.setRebuild(true);
+									try {
+										ScriptParser.rebuildTask(task, mainWindow.setting);
+										if(task.getPictures() != null){
+											//保存数据
+											mainWindow.taskDbTemplate.update(task);
+											//删除原来的图片
+											mainWindow.pictureDbTemplate.delete("tid", task.getId());
+											//添加新采集的图片
+											mainWindow.pictureDbTemplate.store(task.getPictures());
+											JOptionPane.showMessageDialog(mainWindow, "重建操作完成！");
+										}else{
+											JOptionPane.showMessageDialog(mainWindow, "重建操作失败：无法完成采集图片列表");
+										}
+									}catch (Exception e1) {
+										JOptionPane.showMessageDialog(mainWindow, "重建操作失败！" + e1.getMessage());
+									}finally {
+										table.setRebuild(false);
+									}
+								}
+							}).execute();
 						}
 					}
 				}));

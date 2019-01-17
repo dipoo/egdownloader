@@ -28,14 +28,24 @@ public class ReBuildAllTaskWorker extends SwingWorker<Void, Void> {
 		//设置重建状态
 		table.setRebuild(true);
 		int i = 0;
+		long t = System.currentTimeMillis();
 		for(Task task : tasks){
 			i ++;
 			ScriptParser.rebuildTask(task, setting);
-			Tracker.println(ReBuildAllTaskWorker.class, "重建任务-" + i + "/" + tasks.size());
+			if(task.getPictures() != null){
+				//保存数据
+				window.taskDbTemplate.update(task);
+				//删除原来的图片
+				window.pictureDbTemplate.delete("tid", task.getId());
+				//添加新采集的图片
+				window.pictureDbTemplate.store(task.getPictures());
+				Tracker.println(ReBuildAllTaskWorker.class, "重建任务-" + i + "/" + tasks.size() + ", 成功");
+			}else{
+				Tracker.println(ReBuildAllTaskWorker.class, "重建任务-" + i + "/" + tasks.size() + ", 失败");
+			}
 		}
-		window.taskDbTemplate.update(tasks);
 		table.setRebuild(false);
-		Tracker.println(ReBuildAllTaskWorker.class, "重建任务完成！");
+		Tracker.println(ReBuildAllTaskWorker.class, "重建任务完成！耗时：" + (System.currentTimeMillis() - t) / 1000L + " 秒");
 		return null;
 	}
 

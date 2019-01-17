@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.DateUtil;
@@ -20,6 +23,12 @@ import org.arong.utils.StringUtil;
  * @since 2013-8-18
  */
 public class SwingPrintStream extends PrintStream {
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+	static {
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+		sdf2.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+	}
 	static BufferedWriter logfw = null;
 	static{
 		String binPath = FileUtil.getAppPath(SwingPrintStream.class);
@@ -35,7 +44,7 @@ public class SwingPrintStream extends PrintStream {
 		try {
 			//大于20M则另存为
 			if(logfile.exists() && logfile.length() > 1024 * 1024 * 20){
-				logfile.renameTo(new File(FileUtil.getProjectPath() + File.separator + "console.log." + DateUtil.getStringToday()));
+				logfile.renameTo(new File(FileUtil.getProjectPath() + File.separator + "console.log." + sdf2.format(new Date())));
 			}
 			logfw = new BufferedWriter(new FileWriter(logfile, true), 4096);
 		} catch (IOException e) {
@@ -57,7 +66,7 @@ public class SwingPrintStream extends PrintStream {
 		String message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
 			//consolePanel.insert("--" + message + "\n", 0);//consolePanel.append(message);
-			message = (message.length() > 8 && !":".equals(message.substring(2, 3)) ? DateUtil.showDate("yyyy-MM-dd HH:mm:ss") : DateUtil.getStringToday()) + " " + message + "\n";
+			message = (message.length() > 8 && !":".equals(message.substring(2, 3)) ? sdf.format(new Date()) : sdf2.format(new Date())) + " " + message + "\n";
 			try {
 				consolePanel.setText(consolePanel.getTextPane().getText() + message);
 				if(!consolePanel.locked){

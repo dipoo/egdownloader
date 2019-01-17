@@ -223,21 +223,20 @@ public final class ComponentConst {
 	public final static String POPUP_STOP_MENU_TEXT = " 暂停任务   ";
 	public final static String POPUP_DELETE_MENU_TEXT = " 删除任务   ";
 	public final static String POPUP_DETAIL_MENU_TEXT = " 详细信息   ";
-	public final static String POPUP_COPYURL_MENU_TEXT = " 复制地址   ";
 	public final static String POPUP_OPENFOLDER_MENU_TEXT = " 打开目录   ";
 	public final static String POPUP_OPENWEBPAGE_MENU_TEXT = " 打开网页   ";
-	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = " 下载封面   ";
-	public final static String POPUP_CHECKRESET_MENU_TEXT = " 查漏补缺   ";
 	public final static String POPUP_CHANGEREADED_MENU_TEXT = " 更改状态   ";
-	public final static String POPUP_MORE_MENU_TEXT = "更多操作   ";
-	public final static String POPUP_SEARCHAUTHOR_MENU_TEXT = " 在线搜作者 ";
-	public final static String POPUP_LOCAL_SEARCHAUTHOR_MENU_TEXT = " 本地搜作者";
 	public final static String POPUP_ZIP_MENU_TEXT = " 打包ZIP   ";
-	public final static String POPUP_EDIT_MENU_TEXT = "编辑   ";
-	public final static String POPUP_RESET_MENU_TEXT = "重置   ";
-	public final static String POPUP_COMPLETED_MENU_TEXT = "完成   " ;
-	public final static String POPUP_REBUILD_MENU_TEXT = "重建   ";
-	
+	public final static String POPUP_SEARCHAUTHOR_MENU_TEXT = " 在线搜作者";
+	public final static String POPUP_LOCAL_SEARCHAUTHOR_MENU_TEXT = " 本地搜作者";
+	public final static String POPUP_MORE_MENU_TEXT = "更多操作   ";
+	public final static String POPUP_EDIT_MENU_TEXT = "编辑任务   ";
+	public final static String POPUP_RESET_MENU_TEXT = "重置任务   ";
+	public final static String POPUP_COMPLETED_MENU_TEXT = "置为完成   " ;
+	public final static String POPUP_REBUILD_MENU_TEXT = "重建任务   ";
+	public final static String POPUP_COPYURL_MENU_TEXT = "复制地址   ";
+	public final static String POPUP_CHECKRESET_MENU_TEXT = "查漏补缺   ";
+	public final static String POPUP_DOWNLOADCOVER_MENU_TEXT = "下载封面   ";
 	
 	/*AboutMenuWindow内的组件*/
 	public final static String ABOUT_TEXTPANE_TEXT ="<h3>" + Version.NAME +

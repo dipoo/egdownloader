@@ -10,12 +10,13 @@ import java.util.TimeZone;
  */
 public final class Tracker {
 	private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-	public static void println(Class<?> clazz, String message){
+	static {
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+	}
+	public static void println(Class<?> clazz, String message){
 		System.out.println(sdf.format(new Date()) + "-" + clazz.getSimpleName() + "-" + message);
 	}
 	public static void println(String message){
-		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		System.out.println(sdf.format(new Date()) + "-" + message);
 	}
 }
