@@ -191,24 +191,26 @@ public class ScriptParser {
 			throw e;
 		}
 		//获取图片集合
-		//计算页数(每40张一页)
         int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;
         List<Picture> pictures = new ArrayList<Picture>();
         int i = 0;
         while(pictures.size() < task.getTotal() && i < page){
         	try{
 	        	if(i == 0){
-	        		pictures.addAll(collectpictrues(source, setting, creatingWindow));
+	        		pictures.addAll(collectpictrues(source, setting));
 	        	}else{
 	        		source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()) + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
-	        		pictures.addAll(collectpictrues(source, setting, creatingWindow));
+	        		pictures.addAll(collectpictrues(source, setting));
 	        	}
+	        	creatingWindow.bar.setValue(pictures.size());
+	        	i ++;
         	}catch(Exception e){
             	//未采集状态
             	task.setStatus(TaskStatus.UNCREATED);
+            	//重置图片列表
+            	pictures = null;
+            	break;
             }
-        	creatingWindow.bar.setValue(pictures.size());
-        	i ++;
         }
         if(pictures != null){
         	i = 0;
@@ -219,8 +221,8 @@ public class ScriptParser {
         		pic.setSaveAsName(setting.isSaveAsName());
         		i ++;
         	}
+        	task.setPictures(pictures);
         }
-		task.setPictures(pictures);
 		return task;
 	}
 	
@@ -239,7 +241,7 @@ public class ScriptParser {
 	 * 收集图片
 	 * @return List<Picture>
 	 */
-	private static List<Picture> collectpictrues(String source, Setting setting, CreatingWindow creatingWindow) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException{
+	private static List<Picture> collectpictrues(String source, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException{
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		param.put("https", setting.isHttps());
@@ -275,6 +277,40 @@ public class ScriptParser {
 	        task.setSize(t.getSize());
 	        //获取漫画语言
 	        task.setLanguage(t.getLanguage());
+	        //获取发布时间
+	        task.setPostedTime(t.getPostedTime());
+	        
+	        //获取图片集合
+	        int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;
+	        List<Picture> pictures = new ArrayList<Picture>();
+	        int i = 0;
+	        while(pictures.size() < task.getTotal() && i < page){
+	        	try{
+		        	if(i == 0){
+		        		pictures.addAll(collectpictrues(source, setting));
+		        	}else{
+		        		source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()) + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());
+		        		pictures.addAll(collectpictrues(source, setting));
+		        	}
+		        	i ++;
+	        	}catch(Exception e){
+	            	//未采集状态
+	            	task.setStatus(TaskStatus.UNCREATED);
+	            	pictures = null;
+	            	break;
+	            }
+	        }
+	        if(pictures != null){
+	        	i = 0;
+	        	for(Picture pic : pictures){
+	        		pic.setId(UUID.randomUUID().toString());
+	        		pic.setTid(task.getId());
+	        		pic.setNum(genNum(task.getTotal(), i));
+	        		pic.setSaveAsName(setting.isSaveAsName());
+	        		i ++;
+	        	}
+	        }
+	        task.setPictures(pictures);
 //		}
 	}
 	
