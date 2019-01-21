@@ -43,6 +43,9 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 		List<Picture> pics = task.getPictures();
 		ZipOutputStream out = null;
 		BufferedOutputStream bo = null;
+		FileOutputStream fos = null;
+		int success = 0;
+		String zipfilepath = null;
 		try{
 			w.nameLabel.setText(task.getName());
 			int fileLength = task.getTotal();
@@ -53,10 +56,11 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 			w.setVisible(true);//显示窗口
 			
 			Tracker.println(task.getDisplayName() + "：打包中...");
-			out = new ZipOutputStream(new FileOutputStream(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + task.getName() + ".zip"));  
+			zipfilepath = ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + task.getRealSaveDirName() + ".zip";
+			fos = new FileOutputStream(zipfilepath);
+			out = new ZipOutputStream(fos);
 	        bo = new BufferedOutputStream(out);  
 	        //zip(out, inputFile, inputFile.getName(), bo);
-	        int success = 0;
 			for(int i = 0; i < pics.size(); i ++){
 				boolean succ = zip(out, new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + pics.get(i).getName()), pics.get(i).getName(), bo);
 				if(succ){
@@ -65,7 +69,7 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 			}
 			if(success == 0){
 				w.bar.setValue(0);
-				out = new ZipOutputStream(new FileOutputStream(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + task.getName() + ".zip"));  
+				//out = new ZipOutputStream(new FileOutputStream(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + task.getRealSaveDirName() + ".zip"));  
 		        bo = new BufferedOutputStream(out);  
 				for(int i = 0; i < pics.size(); i ++){
 					boolean succ = zip(out, new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + pics.get(i).getNum() + ".jpg"), pics.get(i).getNum() + ".jpg", bo);
@@ -74,14 +78,11 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 					}
 				}
 				if(success > 0){
-					try {
-						Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir()));
-					} catch (Exception e1) {
-					}
+					Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir()));
 				}
 			}
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}finally{
 			if(bo != null){
 				try{
@@ -95,6 +96,20 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 					out.close();
 				}catch(Exception e){
 					e.printStackTrace();
+				}
+			}
+			if(fos != null){
+				try{
+					fos.close();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			if(success == 0 && zipfilepath != null){
+				Tracker.println(task.getDisplayName() + "：不存在可以打包的图片");
+				File zipfile = new File(zipfilepath);//删除空的zip文件
+				if(zipfile.exists()){
+					zipfile.delete();
 				}
 			}
 			Tracker.println(task.getDisplayName() + "：打包完成（保存在下载目录）");

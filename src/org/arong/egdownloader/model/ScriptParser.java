@@ -343,10 +343,18 @@ public class ScriptParser {
 	 * 第二个元素为漫画列表JSON字符串
 	 */
 	public static String[] search(String source, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
+		return search(source, setting, true);
+	}
+	
+	/**
+	 * 搜索漫画列表,第一个元素为分页信息字符串，格式为 count,pageCount；
+	 * 第二个元素为漫画列表JSON字符串
+	 */
+	public static String[] search(String source, Setting setting, boolean first) throws ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		param.put("https", setting.isHttps());
-		Object result = parseJsScript(param, getSearchScriptFile(setting.getCurrentSearchScriptPath()));
+		Object result = parseJsScript(param, getSearchScriptFile(first ? setting.getCurrentSearchScriptPath() : setting.getNoCurrentSearchScriptPath()));
 		return result == null ? null : result.toString().split("\\###");
 	}
 	

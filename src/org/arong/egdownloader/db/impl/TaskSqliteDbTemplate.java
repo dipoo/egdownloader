@@ -69,10 +69,6 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column original varchar(64)", JdbcUtil.getConnection());
 			} catch (SQLException e1) {
 			}
-			try{
-				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column saveDirAsSubname varchar(64)", JdbcUtil.getConnection());
-			} catch (SQLException e1) {
-			}
 	}
 
 	public boolean store(List<Task> tasks) {

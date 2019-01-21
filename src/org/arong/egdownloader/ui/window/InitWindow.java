@@ -25,8 +25,10 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.PictureSqliteDbTemplate;
 import org.arong.egdownloader.db.impl.SettingDom4jDbTemplate;
+import org.arong.egdownloader.db.impl.TaskDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.TaskSqliteDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
@@ -121,7 +123,7 @@ public class InitWindow extends JWindow {
 		pictureDbTemplate = new PictureSqliteDbTemplate();//PictureDom4jDbTemplate();
 		Task t = new Task();t.setGroupname(ComponentConst.groupName);t.setStatus(null);
 		tasks = (TaskList<Task>) taskDbTemplate.query(t);
-		if(tasks != null){
+		if(tasks != null && tasks.size() > 0){
 			int p_historyCount = 0;
 			textLabel.setText("读取图片列表");
 			for (int i = 0; i < tasks.size(); i ++) {
@@ -140,6 +142,31 @@ public class InitWindow extends JWindow {
 			}
 			if(setting.getPictureHistoryCount() == 0){
 				setting.setPictureHistoryCount(p_historyCount);
+			}
+		}else{
+			//检测是否存在task.xml
+			tasks = (TaskList<Task>)new TaskDom4jDbTemplate().query();
+			if(tasks != null && tasks.size() > 0){
+				textLabel.setText("导入任务");
+				taskDbTemplate.store(tasks);
+				int p_historyCount = 0;
+				DbTemplate<Picture> pictemp = new PictureDom4jDbTemplate();
+				for (int i = 0; i < tasks.size(); i ++) {
+					textLabel.setText("导入图片" + i + "/" + tasks.size());
+					tasks.get(i).setPictures(pictemp.query("tid", tasks.get(i).getId()));
+					p_historyCount += tasks.get(i).getTotal();
+					//保存
+					pictureDbTemplate.store(tasks.get(i).getPictures());
+				}
+				/**
+				 * 为了兼容历史版本的db文件
+				 */
+				if(setting.getTaskHistoryCount() == 0){
+					setting.setTaskHistoryCount(tasks.size());
+				}
+				if(setting.getPictureHistoryCount() == 0){
+					setting.setPictureHistoryCount(p_historyCount);
+				}
 			}
 		}
 		if(!setting.isDebug()){
