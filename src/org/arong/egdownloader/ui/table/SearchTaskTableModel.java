@@ -38,13 +38,13 @@ public class SearchTaskTableModel extends AbstractTableModel {
 			case 1 :
 				return tasks.get(rowIndex).getName();
 			case 2 :
-				return tasks.get(rowIndex).getFilenum();
+				return tasks.get(rowIndex).getFilenum() == null ? "" : tasks.get(rowIndex).getFilenum();
 			case 3 :
-				return tasks.get(rowIndex).getRating();
+				return tasks.get(rowIndex).getRating() == null ? "" : tasks.get(rowIndex).getRating();
 			case 4 :
-				return tasks.get(rowIndex).getUploader();
+				return tasks.get(rowIndex).getUploader() == null ? "" : tasks.get(rowIndex).getUploader();
 			case 5 :
-				return tasks.get(rowIndex).getDate();	
+				return tasks.get(rowIndex).getDate() == null ? "" : tasks.get(rowIndex).getDate();	
 			default :
 				return "";
 		}

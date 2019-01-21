@@ -195,7 +195,7 @@ public class SearchTasksTable extends JTable {
 						comicWindow.popMenu.openPictureItem.setVisible(false);
 						comicWindow.popMenu.downItem.setVisible(true);
 					}
-					if(StringUtils.isBlank(task.getBtUrl())){
+					if(StringUtils.isNotBlank(task.getBtUrl())){
 						comicWindow.popMenu.openBtPageItem.setVisible(true);
 					}else{
 						comicWindow.popMenu.openBtPageItem.setVisible(false);

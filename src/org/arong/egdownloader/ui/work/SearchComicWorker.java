@@ -87,6 +87,9 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 												if(StringUtils.isNotBlank(searchTask.getFilenum())){
 													ost.setFilenum(searchTask.getFilenum());
 												}
+												if(StringUtils.isNotBlank(searchTask.getUploader())){
+													ost.setUploader(searchTask.getUploader());
+												}
 											}
 										}
 									}

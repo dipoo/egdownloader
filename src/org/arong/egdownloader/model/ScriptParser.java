@@ -80,13 +80,14 @@ public class ScriptParser {
 			if(searchScriptFile2 == null){
 				searchScriptFile2 = new File(filePath);
 			}
-			return searchScriptFile2;
-		}else{
-			if(searchScriptFile == null){
-				searchScriptFile = new File(filePath);
+			if(searchScriptFile2.exists()){
+				return searchScriptFile2;
 			}
-			return searchScriptFile;
 		}
+		if(searchScriptFile == null){
+			searchScriptFile = new File(filePath);
+		}
+		return searchScriptFile;
 	}
 	
 	/**
