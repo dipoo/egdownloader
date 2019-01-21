@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.DownloadWorker;
@@ -482,5 +483,12 @@ public class Task {
 
 	public void setSaveDirAsSubname(boolean saveDirAsSubname) {
 		this.saveDirAsSubname = saveDirAsSubname;
+	}
+	
+	public String getRealSaveDirName(){
+		if(saveDirAsSubname && subname != null){
+			return FileUtil.filterDir(StringUtils.isNotBlank(subname.trim()) ? subname.trim() : name);
+		}
+		return FileUtil.filterDir(name);
 	}
 }

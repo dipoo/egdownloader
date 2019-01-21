@@ -109,18 +109,22 @@ public class SearchTasksTable extends JTable {
 					}
 					l.setToolTipText(value.toString());
 					return l;
-				}else if(column == 2){//评分
+				}else if(column == 2){//图片个数
+					tc.setPreferredWidth(60);
+					tc.setMaxWidth(80);
+					return new AJLabel("   " + value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+				}else if(column == 3){//评分
 					tc.setPreferredWidth(80);
 					tc.setMaxWidth(120);
 					return new AJLabel("<html>&nbsp;&nbsp;&nbsp;&nbsp;" + value.toString() + "★</html>", c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
-				}else if(column == 3){//上传者
+				}else if(column == 4){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
 					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;
-				}else if(column == 4){//发布时间
+				}else if(column == 5){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
 					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
@@ -171,7 +175,7 @@ public class SearchTasksTable extends JTable {
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//点击上传者
-					if(columnIndex == 3){
+					if(columnIndex == 4){
 						comicWindow.doSearch("uploader:" + tasks.get(rowIndex).getUploader());
 					}
 				}

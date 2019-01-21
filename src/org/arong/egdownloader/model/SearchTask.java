@@ -54,11 +54,13 @@ public class SearchTask {
 		return uploader;
 	}
 
+
+	@Override
 	public String toString() {
-		return "SearchTask [btUrl=" + btUrl + ", date=" + date + ", uploader="
-				+ uploader + ", coverUrl=" + getCoverUrl()
-				+ ", name=" + getName() + ", type=" + getType()
-				+ ", url=" + getUrl() + "]";
+		return "SearchTask [url=" + url + ", name=" + name + ", type=" + type
+				+ ", coverUrl=" + coverUrl + ", date=" + date + ", btUrl="
+				+ btUrl + ", uploader=" + uploader + ", rating=" + rating
+				+ ", author=" + author + ", filenum=" + filenum + "]";
 	}
 
 	public void setUrl(String url) {

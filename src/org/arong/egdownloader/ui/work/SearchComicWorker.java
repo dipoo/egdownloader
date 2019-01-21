@@ -6,6 +6,7 @@ import java.util.List;
 import javax.script.ScriptException;
 import javax.swing.SwingWorker;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.spider.WebClient;
@@ -50,10 +51,55 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				String totalPage = result[0].split(",")[1];//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
 				
 				searchComicWindow.setTotalInfo(totalPage, totalTasks);
+				searchComicWindow.searchTasks = searchTasks;
 				
 				//下载封面线程
 				new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
-				searchComicWindow.searchTasks = searchTasks;
+				//二次搜索线程
+				new CommonSwingWorker(new Runnable() {
+					public void run() {
+						try {
+							String source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", mainWindow.setting.getSearchViewModel() == 2 ? mainWindow.setting.getCookieInfo2() : mainWindow.setting.getCookieInfo());
+							if(source == null){
+								return;
+							}
+							String[] result = ScriptParser.search(source, mainWindow.setting, false);
+							if(result != null){
+								String json = result[1];
+								if(result.length > 2){
+									for(int i = 2; i < result.length; i ++){
+										json += "###" + result[i];
+									}
+								}
+								List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
+								if(searchTasks != null){
+									boolean p = false;
+									for(SearchTask searchTask : searchTasks){
+										for(SearchTask ost : mainWindow.searchComicWindow.searchTasks){
+											if(ost.getUrl().equals(searchTask.getUrl())){
+												p = true;
+												if(StringUtils.isNotBlank(searchTask.getDate())){
+													ost.setDate(searchTask.getDate());
+												}
+												if(StringUtils.isNotBlank(searchTask.getRating())){
+													ost.setRating(searchTask.getRating());
+												}
+												if(StringUtils.isNotBlank(searchTask.getFilenum())){
+													ost.setFilenum(searchTask.getFilenum());
+												}
+											}
+										}
+									}
+									if(p){
+										mainWindow.searchComicWindow.searchBtn.doClick();
+									}
+								}
+								
+							}
+						 } catch (Exception e) {}
+					}
+				}).execute();
+				
 				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());
 					searchComicWindow.keyPage.put(searchComicWindow.key, searchComicWindow.totalLabel.getText());
