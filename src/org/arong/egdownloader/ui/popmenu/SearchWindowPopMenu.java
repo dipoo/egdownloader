@@ -101,7 +101,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						openPage(task.getUrl());
 					}
 				}));
-		openBtPageItem = new AJMenuItem("下载BT", Color.BLACK,
+		openBtPageItem = new AJMenuItem("下载  BT", Color.BLACK,
 				IconManager.getIcon("download"),
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {

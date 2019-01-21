@@ -320,7 +320,7 @@ public class SearchComicWindow extends JFrame {
 					
 					int hr = (int)(tablePane.getWidth() / 220);
 					int zr = (int)(25 / hr) + 1;
-					picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 320));
+					picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 330));
 				}
 				//设置分页面板大小
 				if(pager != null){

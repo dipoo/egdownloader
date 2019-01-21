@@ -54,6 +54,11 @@ public class SearchImagePanel extends JLabel {
 						mainWindow.searchComicWindow.popMenu.openPictureItem.setVisible(false);
 						mainWindow.searchComicWindow.popMenu.downItem.setVisible(true);
 					}
+					if(StringUtils.isNotBlank(task.getBtUrl())){
+						mainWindow.searchComicWindow.popMenu.openBtPageItem.setVisible(true);
+					}else{
+						mainWindow.searchComicWindow.popMenu.openBtPageItem.setVisible(false);
+					}
 					mainWindow.searchComicWindow.popMenu.show(l, e.getPoint().x, e.getPoint().y);
 				}
 			}
@@ -89,7 +94,7 @@ public class SearchImagePanel extends JLabel {
 		this.setText("<html><font color='#f2e986'>" + task.getRating() + "</font> " + 
 				(StringUtils.isNotBlank(task.getType()) ? 
 						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
-						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate()) + " " + (StringUtils.isBlank(task.getFilenum()) ? "" : task.getFilenum() + "P") + "</html>");
+						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate().substring(2)) + " " + (StringUtils.isBlank(task.getFilenum()) ? "" : task.getFilenum() + "P") + "</html>");
 		this.setToolTipText(task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : ""));
 		final SearchImagePanel this_ = this;
 		
