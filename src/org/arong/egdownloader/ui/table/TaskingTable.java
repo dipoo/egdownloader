@@ -42,7 +42,7 @@ public class TaskingTable extends JTable {
 	private static final long serialVersionUID = 8917533573337061263L;
 	private TaskList<Task> tasks;
 	private TaskList<Task> hiddentasks;
-	private EgDownloaderWindow mainWindow;
+	public EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
 	private boolean rebuild;
 	private int sort = 1;//0为名称排序，1为时间排序
@@ -53,7 +53,7 @@ public class TaskingTable extends JTable {
 	private boolean refresh;//是否应该刷新
 	private Timer timer = new Timer(true); 
 	
-	public void changeModel(EgDownloaderWindow mainWindow){
+	public void changeModel(final EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		this.tasks = mainWindow.tasks;
 		this.setHiddentasks(mainWindow.tasks);
@@ -63,10 +63,13 @@ public class TaskingTable extends JTable {
 				table.setRefresh(true);
 			}
 		});
-		for(Task task : this.tasks){
+		for(final Task task : this.tasks){
 			task.addPropertyChangeListener(new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
 					table.setRefresh(true);
+					if(mainWindow.viewModel == 2){
+						mainWindow.taskImagePanel.flush(task); 
+					}
 				}
 			});
 		}
@@ -74,7 +77,7 @@ public class TaskingTable extends JTable {
 		this.setModel(tableModel);//设置数据模型
 	}
 	
-	public TaskingTable(int x, int y, int width, int height, TaskList<Task> tasks, EgDownloaderWindow mainWindow){
+	public TaskingTable(int x, int y, int width, int height, TaskList<Task> tasks, final EgDownloaderWindow mainWindow){
 		this.setMainWindow(mainWindow);
 		final TaskingTable table = this;
 		this.tasks = (tasks == null ? new TaskList<Task>() : tasks);
@@ -318,10 +321,13 @@ public class TaskingTable extends JTable {
 				table.setRefresh(true);
 			}
 		});
-		for(Task task : tasks){
+		for(final Task task : tasks){
 			task.addPropertyChangeListener(new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
 					table.setRefresh(true);
+					if(mainWindow.viewModel == 2){
+						mainWindow.taskImagePanel.flush(task); 
+					}
 				}
 			});
 		}
@@ -338,11 +344,14 @@ public class TaskingTable extends JTable {
 			}
 		}, 1000, 1000);
 	}
-	public void propertyChange(Task task){
+	public void propertyChange(final Task task){
 		final TaskingTable table = this;
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				table.setRefresh(true);
+				if(mainWindow.viewModel == 2){
+					mainWindow.taskImagePanel.flush(task); 
+				}
 			}
 		});
 	}
