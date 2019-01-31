@@ -21,7 +21,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import org.arong.egdownloader.model.Task;
@@ -69,7 +68,7 @@ public class TaskImagePanel extends AJPanel {
 	
 	public void changeViewSize(){
 		if(this.getComponents() != null){
-			this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((this.getComponents().length / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * mainWindow.setting.getCoverHeight()));
+			this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((this.getComponents().length / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
 			this.scrollRectToVisible(new Rectangle(0, 0));
 			for(int i = 0; i < this.getComponents().length; i ++){
 				AJPanel p = (AJPanel) this.getComponents()[i];
@@ -131,7 +130,7 @@ public class TaskImagePanel extends AJPanel {
 					l2.setText(getTaskInfo(task));
 				}
 			}
-		});
+		}).execute();
 	}
 	public void init(final List<Task> tasks){
 		final TaskImagePanel this_ = this;
@@ -145,7 +144,7 @@ public class TaskImagePanel extends AJPanel {
 					for(int i = (page - 1) * PAGESIZE; i < page * PAGESIZE && i < tasks.size(); i ++){
 						ptasks.add(tasks.get(i));
 					}
-					this_.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((ptasks.size() / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * mainWindow.setting.getCoverHeight()));
+					this_.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((ptasks.size() / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
 					for(int i = 0; i < ptasks.size(); i ++){
 						//判断AJPanel是否存在
 						//AJPanel p = null;
@@ -176,7 +175,9 @@ public class TaskImagePanel extends AJPanel {
 								public void mouseClicked(MouseEvent e) {
 									for(int i = 0; i < this_.getComponents().length; i ++){
 										//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
-										((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+										if(this_.getComponents()[i] instanceof AJPanel){
+											((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+										}
 									}
 									AJPanel p = (AJPanel)e.getSource();
 									p.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
