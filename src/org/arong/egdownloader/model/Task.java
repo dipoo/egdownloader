@@ -69,6 +69,9 @@ public class Task {
 	public String getDisplayName(){
 		return subname == null || "".equals(subname) ? name : subname;
 	}
+	public String getDisplayName(Setting setting){
+		return setting.isShowAsSubname() || subname == null || "".equals(subname) ? name : subname;
+	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		changeSupport.addPropertyChangeListener(l);
