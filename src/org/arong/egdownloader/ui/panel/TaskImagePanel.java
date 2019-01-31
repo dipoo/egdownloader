@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.panel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -20,13 +21,16 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
+import org.arong.egdownloader.ui.swing.AJPanel;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 /**
@@ -34,7 +38,7 @@ import org.arong.egdownloader.ui.work.CommonSwingWorker;
  * @author Administrator
  *
  */
-public class TaskImagePanel extends JPanel {
+public class TaskImagePanel extends AJPanel {
 	private EgDownloaderWindow mainWindow;
 	public int selectIndex = 0;
 	public static final int PAGESIZE = 200;
@@ -68,7 +72,7 @@ public class TaskImagePanel extends JPanel {
 			this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((this.getComponents().length / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * mainWindow.setting.getCoverHeight()));
 			this.scrollRectToVisible(new Rectangle(0, 0));
 			for(int i = 0; i < this.getComponents().length; i ++){
-				JPanel p = (JPanel) this.getComponents()[i];
+				AJPanel p = (AJPanel) this.getComponents()[i];
 				for(int j = 0; j < p.getComponents().length; j ++){
 					if(p.getComponents()[j].getName() != null && p.getComponents()[j].getName().startsWith("cover")){
 						
@@ -91,6 +95,44 @@ public class TaskImagePanel extends JPanel {
 	public void init(){
 		init(mainWindow.tasks);
 	}
+	public void flush(final Task task){
+		final TaskImagePanel this_ = this;
+		new CommonSwingWorker(new Runnable() {
+			public void run() {
+				Component[] oldcomps = this_.getComponents();
+				AJPanel p = null;
+				for(Component comp : oldcomps){
+					if(comp.getName() != null && comp.getName().startsWith(task.getId() + "|")){
+						p = (AJPanel)comp;
+						break;
+					}
+				}
+				if(p != null){
+					AJLabel l = (AJLabel)p.getComponent(0);
+					if(l.getIcon() == null){
+						String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
+						File cover = new File(path);
+						if(cover != null && cover.exists()){
+							try{
+								ImageIcon icon = new ImageIcon(ImageIO.read(cover));
+								double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
+								int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
+								l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
+								l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
+								icon.getImage().flush();//解决加载图片不完全问题
+								l.setImage(icon);
+								l.setIcon(icon);
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}
+					}
+					AJLabel l2 = (AJLabel)p.getComponent(1);
+					l2.setText(getTaskInfo(task));
+				}
+			}
+		});
+	}
 	public void init(final List<Task> tasks){
 		final TaskImagePanel this_ = this;
 		new CommonSwingWorker(new Runnable() {
@@ -105,30 +147,39 @@ public class TaskImagePanel extends JPanel {
 					}
 					this_.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((ptasks.size() / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * mainWindow.setting.getCoverHeight()));
 					for(int i = 0; i < ptasks.size(); i ++){
-						//判断JPanel是否存在
-						JPanel p = null;
+						//判断AJPanel是否存在
+						//AJPanel p = null;
+						AJPanel p = null;
 						for(Component comp : oldcomps){
-							if(comp.getName() != null && comp.getName().startsWith(ptasks.get(i).getId())){
-								p = (JPanel)comp;
+							if(comp.getName() != null && comp.getName().startsWith(ptasks.get(i).getId() + "|")){
+								p = (AJPanel)comp;
 								break;
 							}
 						}
 						if(p != null){
 							//name规则：taskID|list索引
-							p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE) + i + "");
+							p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
+							AJLabel l2 = (AJLabel)p.getComponent(1);
+							l2.setText(getTaskInfo(ptasks.get(i)));
 						}else{
-							p = new JPanel();
+							//p = new AJPanel();
+							p = new AJPanel();
 							//name规则：taskID|list索引
-							p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE) + i + "");
-							p.setLayout(layout);
+							p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
+							p.setToolTipText("<" + ((page - 1) * PAGESIZE + i) + ">" + ptasks.get(i).getDisplayName(mainWindow.setting));
+							p.setLayout(new BorderLayout());
 							p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+							p.setBackground(Color.WHITE);
+							p.setForeground(Color.WHITE);
+							p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 							p.addMouseListener(new MouseAdapter() {
 								public void mouseClicked(MouseEvent e) {
 									for(int i = 0; i < this_.getComponents().length; i ++){
-										((JPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
+										//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
+										((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 									}
-									JPanel p = (JPanel)e.getSource();
-									p.setBackground(Color.MAGENTA);
+									AJPanel p = (AJPanel)e.getSource();
+									p.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
 									selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
 									//同步任务表格的选中状态
 									mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
@@ -149,14 +200,16 @@ public class TaskImagePanel extends JPanel {
 									}
 								}
 								public void mouseEntered(MouseEvent e) {
-									JPanel p = (JPanel)e.getSource();
-									p.setBackground(Color.ORANGE);
+									AJPanel p = (AJPanel)e.getSource();
+									//p.setBackground(Color.ORANGE);
+									p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
 								}
 
 								public void mouseExited(MouseEvent e) {
-									JPanel p = (JPanel)e.getSource();
+									AJPanel p = (AJPanel)e.getSource();
 									if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
-										p.setBackground(Color.WHITE);
+										//p.setBackground(Color.WHITE);
+										p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 									}
 								}
 							});
@@ -168,7 +221,8 @@ public class TaskImagePanel extends JPanel {
 							l.setFont(FontConst.Microsoft_BOLD_12);
 							l.setVerticalTextPosition(JLabel.TOP);
 							l.setHorizontalTextPosition(JLabel.LEADING);
-							l.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+							//Border border = BorderFactory.createLineBorder(Color.BLACK);
+							l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
 							final String path = ComponentConst.getSavePathPreffix() + ptasks.get(i).getSaveDir() + "/cover.jpg";
 							File cover = new File(path);
 							if(cover != null && cover.exists()){
@@ -185,7 +239,11 @@ public class TaskImagePanel extends JPanel {
 									e.printStackTrace();
 								}
 							}
-							p.add(l);
+							
+							AJLabel l2 = new AJLabel(getTaskInfo(ptasks.get(i)), Color.BLACK);
+							l2.setBorder(new EmptyBorder(0, 5, 5, 0));
+							p.add(l, BorderLayout.SOUTH);
+							p.add(l2, BorderLayout.NORTH);
 						}
 						this_.add(p, i);
 						this_.updateUI();
@@ -201,5 +259,27 @@ public class TaskImagePanel extends JPanel {
 				System.gc();
 			}
 		}).execute();
+	}
+	
+	private String getTaskInfo(Task task){
+		StringBuffer txtsb = new StringBuffer("<html><b>").append(task.getTotal()).append("P ");
+		String statusColor = "";
+		if(task.getStatus() == TaskStatus.UNSTARTED){
+			statusColor = "#5f392d";
+		}else if(task.getStatus() == TaskStatus.STARTED){
+			statusColor = "#4192ff";
+		}else if(task.getStatus() == TaskStatus.STOPED){
+			statusColor = "#000159";
+		}else if(task.getStatus() == TaskStatus.COMPLETED){
+			statusColor = "#419141";
+		}else if(task.getStatus() == TaskStatus.WAITING){
+			statusColor = "#d2691e";
+		}
+		txtsb.append("<font color='" + statusColor + "'>").append(task.getStatus().getStatus()).append("</font>");
+		if(task.isReaded()){
+			txtsb.append(" √");
+		}
+		txtsb.append("</b></html>");
+		return txtsb.toString();
 	}
 }
