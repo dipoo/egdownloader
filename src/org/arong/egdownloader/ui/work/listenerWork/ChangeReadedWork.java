@@ -23,10 +23,6 @@ public class ChangeReadedWork implements IMenuListenerTask {
 		mainWindow.taskDbTemplate.update(task);
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
-		if(mainWindow.viewModel == 2){
-			//mainWindow.taskImagePanel.init();
-			mainWindow.taskImagePanel.flush(task); 
-		}
 	}
 
 }

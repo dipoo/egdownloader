@@ -21,7 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JProgressBar;
 
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
@@ -44,6 +44,8 @@ public class TaskImagePanel extends AJPanel {
 	public int page = 1;
 	private FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 	public AJPager imageTaskPager;
+	private static Color progressBarBorder = new Color(47,110,178);
+	private static Color progressBarBorder2 = new Color(65,145,65);//已完成颜色
 	public TaskImagePanel(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setLayout(layout);
@@ -71,21 +73,23 @@ public class TaskImagePanel extends AJPanel {
 			this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((this.getComponents().length / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
 			this.scrollRectToVisible(new Rectangle(0, 0));
 			for(int i = 0; i < this.getComponents().length; i ++){
-				AJPanel p = (AJPanel) this.getComponents()[i];
-				for(int j = 0; j < p.getComponents().length; j ++){
-					if(p.getComponents()[j].getName() != null && p.getComponents()[j].getName().startsWith("cover")){
-						
-						AJLabel l = (AJLabel) p.getComponents()[j];
-						ImageIcon icon = (ImageIcon) l.getIcon();
-						if(icon != null){
-							double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
-							int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
-							l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
-							l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-							icon.getImage().flush();//解决加载图片不完全问题
-							l.setIcon(icon);
+				if(this.getComponents()[i] instanceof AJPanel){
+					AJPanel p = (AJPanel) this.getComponents()[i];
+					for(int j = 0; j < p.getComponents().length; j ++){
+						if(p.getComponents()[j].getName() != null && p.getComponents()[j].getName().startsWith("cover")){
+							
+							AJLabel l = (AJLabel) p.getComponents()[j];
+							ImageIcon icon = (ImageIcon) l.getIcon();
+							if(icon != null){
+								double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
+								int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
+								l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
+								l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
+								icon.getImage().flush();//解决加载图片不完全问题
+								l.setIcon(icon);
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
@@ -126,8 +130,12 @@ public class TaskImagePanel extends AJPanel {
 							}
 						}
 					}
-					AJLabel l2 = (AJLabel)p.getComponent(1);
-					l2.setText(getTaskInfo(task));
+					JProgressBar bar = (JProgressBar)p.getComponent(1);
+					bar.setValue(task.getCurrent());
+					bar.setString(getTaskInfo(task));
+					if(task.getStatus() == TaskStatus.COMPLETED){
+						bar.setForeground(progressBarBorder2);
+					}
 				}
 			}
 		}).execute();
@@ -158,8 +166,8 @@ public class TaskImagePanel extends AJPanel {
 						if(p != null){
 							//name规则：taskID|list索引
 							p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
-							AJLabel l2 = (AJLabel)p.getComponent(1);
-							l2.setText(getTaskInfo(ptasks.get(i)));
+							/*AJLabel l2 = (AJLabel)p.getComponent(1);
+							l2.setText(getTaskInfo(ptasks.get(i)));*/
 						}else{
 							//p = new AJPanel();
 							p = new AJPanel();
@@ -170,17 +178,17 @@ public class TaskImagePanel extends AJPanel {
 							p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 							p.setBackground(Color.WHITE);
 							p.setForeground(Color.WHITE);
-							p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+							p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 							p.addMouseListener(new MouseAdapter() {
 								public void mouseClicked(MouseEvent e) {
 									for(int i = 0; i < this_.getComponents().length; i ++){
 										//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
 										if(this_.getComponents()[i] instanceof AJPanel){
-											((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+											((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 										}
 									}
 									AJPanel p = (AJPanel)e.getSource();
-									p.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
+									p.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 1));
 									selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
 									//同步任务表格的选中状态
 									mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
@@ -203,14 +211,14 @@ public class TaskImagePanel extends AJPanel {
 								public void mouseEntered(MouseEvent e) {
 									AJPanel p = (AJPanel)e.getSource();
 									//p.setBackground(Color.ORANGE);
-									p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
+									p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
 								}
 
 								public void mouseExited(MouseEvent e) {
 									AJPanel p = (AJPanel)e.getSource();
 									if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
 										//p.setBackground(Color.WHITE);
-										p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+										p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 									}
 								}
 							});
@@ -223,7 +231,7 @@ public class TaskImagePanel extends AJPanel {
 							l.setVerticalTextPosition(JLabel.TOP);
 							l.setHorizontalTextPosition(JLabel.LEADING);
 							//Border border = BorderFactory.createLineBorder(Color.BLACK);
-							l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+							//l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
 							final String path = ComponentConst.getSavePathPreffix() + ptasks.get(i).getSaveDir() + "/cover.jpg";
 							File cover = new File(path);
 							if(cover != null && cover.exists()){
@@ -241,10 +249,22 @@ public class TaskImagePanel extends AJPanel {
 								}
 							}
 							
-							AJLabel l2 = new AJLabel(getTaskInfo(ptasks.get(i)), Color.BLACK);
-							l2.setBorder(new EmptyBorder(0, 5, 5, 0));
+							//AJLabel l2 = new AJLabel(getTaskInfo(ptasks.get(i)), Color.BLACK);
+							//l2.setBorder(new EmptyBorder(-4, 5, 1, 0));
+							JProgressBar bar = new JProgressBar(0, ptasks.get(i).getTotal());
+							bar.setBackground(Color.WHITE);
+							bar.setString(getTaskInfo(ptasks.get(i)));
+							bar.setStringPainted(true);
+							bar.setFont(FontConst.Microsoft_BOLD_11);bar.setPreferredSize(new Dimension(110, 13));
+							if(ptasks.get(i).getStatus() == TaskStatus.COMPLETED){
+								bar.setForeground(progressBarBorder2);
+							}else{
+								bar.setForeground(progressBarBorder);
+							}
+							//bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
+							bar.setValue(ptasks.get(i).getCurrent());
 							p.add(l, BorderLayout.SOUTH);
-							p.add(l2, BorderLayout.NORTH);
+							p.add(bar, BorderLayout.NORTH);
 						}
 						this_.add(p, i);
 						this_.updateUI();
@@ -263,8 +283,12 @@ public class TaskImagePanel extends AJPanel {
 	}
 	
 	private String getTaskInfo(Task task){
-		StringBuffer txtsb = new StringBuffer("<html><b>").append(task.getTotal()).append("P ");
-		String statusColor = "";
+		StringBuffer txtsb = new StringBuffer("");
+		if(task.getStatus() != TaskStatus.COMPLETED && task.getCurrent() > 0){
+			txtsb.append(task.getCurrent()).append("/");
+		} 
+		txtsb.append(task.getTotal()).append(" ");
+		/*String statusColor = "";
 		if(task.getStatus() == TaskStatus.UNSTARTED){
 			statusColor = "#5f392d";
 		}else if(task.getStatus() == TaskStatus.STARTED){
@@ -275,12 +299,16 @@ public class TaskImagePanel extends AJPanel {
 			statusColor = "#419141";
 		}else if(task.getStatus() == TaskStatus.WAITING){
 			statusColor = "#d2691e";
-		}
-		txtsb.append("<font color='" + statusColor + "'>").append(task.getStatus().getStatus()).append("</font>");
+		}*/
+		if(task.getStatus() == TaskStatus.STARTED){
+			txtsb.append(task.getDownSpeed().toLowerCase());
+		}/*else{
+			txtsb.append(task.getStatus().getStatus());
+		}*/
 		if(task.isReaded()){
 			txtsb.append(" √");
 		}
-		txtsb.append("</b></html>");
+		//txtsb.append("</b></html>");
 		return txtsb.toString();
 	}
 }
