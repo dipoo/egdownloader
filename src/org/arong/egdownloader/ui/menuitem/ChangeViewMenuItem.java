@@ -44,8 +44,9 @@ public class ChangeViewMenuItem extends JMenuItem {
 					window.tablePane = new JScrollPane();
 					if(window.taskImagePanel == null){
 						window.taskImagePanel = new TaskImagePanel(window);
+					}else{
+						window.taskImagePanel.init(window.tasks);
 					}
-					window.taskImagePanel.init(window.tasks);
 					window.tablePane.setViewportView(window.taskImagePanel);
 					window.tablePane.getVerticalScrollBar().setUnitIncrement(20);
 					window.tablePane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
