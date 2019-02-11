@@ -330,7 +330,7 @@ public class ScriptParser {
 			param.put("version", Version.VERSION);
 			param.put("down_original", task.isOriginal());//是否下载原图
 			param.put("https", setting.isHttps());
-			url = setting.getRealUrlBySetting(parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString());
+			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Tracker.println(ScriptParser.class, task.getName() + ":getdownloadUrl异常,请检查" + setting.getDownloadScriptPath() + "脚本是否出现问题！");
