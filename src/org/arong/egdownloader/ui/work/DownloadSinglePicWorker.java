@@ -41,7 +41,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":开始下载");
 		Setting setting = mainWindow.setting;
-		pic.setRealUrl(ScriptParser.getdownloadUrl(task, setting.getRealUrlBySetting(pic.getUrl()), setting));
+		pic.setRealUrl(ScriptParser.getdownloadUrl(task, pic.getUrl(), setting));
 		InputStream is;
 		try{
 			Object[] streamAndLength =  null;
