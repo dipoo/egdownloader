@@ -20,13 +20,16 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.FontConst;
+import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
 import org.arong.egdownloader.ui.swing.AJPanel;
@@ -44,26 +47,22 @@ public class TaskImagePanel extends AJPanel {
 	public int page = 1;
 	private FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 	public AJPager imageTaskPager;
+	public JPanel container;
 	private static Color progressBarBorder = new Color(47,110,178);
 	private static Color progressBarBorder2 = new Color(65,145,65);//已完成颜色
 	public TaskImagePanel(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
-		this.setLayout(layout);
+		this.setLayout(new BorderLayout());
 		this.setBounds(10, 5, mainWindow.getWidth() - 20, 250 * 6);
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				//init(mainWindow.tasks);
 			}
 		});
+		container = new JPanel(layout);
 		final TaskImagePanel this_ = this;
-		imageTaskPager = new AJPager(0, 0, this.getWidth() - 20, 200, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JButton btn = (JButton) e.getSource();
-				this_.page = Integer.parseInt(btn.getName());
-				this_.init();
-			}
-		});
-		imageTaskPager.setName("");
+		this_.add(container, BorderLayout.CENTER);
+		
 		//初始化组件
 		init(mainWindow.tasks);
 	}
@@ -99,10 +98,9 @@ public class TaskImagePanel extends AJPanel {
 		init(mainWindow.tasks);
 	}
 	public void flush(final Task task){
-		final TaskImagePanel this_ = this;
 		new CommonSwingWorker(new Runnable() {
 			public void run() {
-				Component[] oldcomps = this_.getComponents();
+				Component[] oldcomps = container.getComponents();
 				AJPanel p = null;
 				for(Component comp : oldcomps){
 					if(comp.getName() != null && comp.getName().startsWith(task.getId() + "|")){
@@ -144,15 +142,16 @@ public class TaskImagePanel extends AJPanel {
 		final TaskImagePanel this_ = this;
 		new CommonSwingWorker(new Runnable() {
 			public void run() {
-				Component[] oldcomps = this_.getComponents();
-				this_.removeAll();
+				Component[] oldcomps = container.getComponents();
+				container.removeAll();
 				if(tasks != null && tasks.size() > 0){
-					this_.scrollRectToVisible(new Rectangle(0, 0));
+					container.scrollRectToVisible(new Rectangle(0, 0));
 					List<Task> ptasks = new ArrayList<Task>();
 					for(int i = (page - 1) * PAGESIZE; i < page * PAGESIZE && i < tasks.size(); i ++){
 						ptasks.add(tasks.get(i));
 					}
-					this_.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((ptasks.size() / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
+					container.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((ptasks.size() / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
+					
 					for(int i = 0; i < ptasks.size(); i ++){
 						//判断AJPanel是否存在
 						//AJPanel p = null;
@@ -181,10 +180,10 @@ public class TaskImagePanel extends AJPanel {
 							p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 							p.addMouseListener(new MouseAdapter() {
 								public void mouseClicked(MouseEvent e) {
-									for(int i = 0; i < this_.getComponents().length; i ++){
+									for(int i = 0; i < container.getComponents().length; i ++){
 										//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
-										if(this_.getComponents()[i] instanceof AJPanel){
-											((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+										if(container.getComponents()[i] instanceof AJPanel){
+											((AJPanel)container.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 										}
 									}
 									AJPanel p = (AJPanel)e.getSource();
@@ -266,15 +265,34 @@ public class TaskImagePanel extends AJPanel {
 							p.add(l, BorderLayout.SOUTH);
 							p.add(bar, BorderLayout.NORTH);
 						}
-						this_.add(p, i);
-						this_.updateUI();
+						container.add(p, i);
+						container.updateUI();
 					}
 					int totalPage = tasks.size() / PAGESIZE + 1;
 					if(totalPage > 1){
+						if(imageTaskPager == null){
+							imageTaskPager = new AJPager(40 , mainWindow.infoTabbedPane.getY() + 20, (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 80), 40, new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									JButton btn = (JButton) e.getSource();
+									this_.page = Integer.parseInt(btn.getName());
+									this_.init();
+								}
+							});
+							JButton btn = new AJButton("顶部⇧");
+							btn.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									mainWindow.tablePane.getVerticalScrollBar().setValue(0);
+								}
+							});
+							imageTaskPager.setMaxPage(6);
+							imageTaskPager.setExt(new JComponent[]{btn});
+							imageTaskPager.setOpaque(false);
+							mainWindow.getLayeredPane().add(imageTaskPager, 10, 0);
+						}
 						imageTaskPager.setTotal(tasks.size());
 						imageTaskPager.change(totalPage, page);
-						this_.add(imageTaskPager);
-						this_.updateUI();
+						imageTaskPager.updateUI();
+						imageTaskPager.setVisible(true);
 					}
 				}
 				System.gc();

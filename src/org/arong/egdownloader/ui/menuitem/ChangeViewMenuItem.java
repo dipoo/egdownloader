@@ -11,6 +11,7 @@ import java.awt.event.AdjustmentListener;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
 import org.arong.egdownloader.ui.panel.TaskImagePanel;
@@ -28,6 +29,8 @@ public class ChangeViewMenuItem extends JMenuItem {
 		super(text);
 		//this.setIcon(IconManager.getIcon("stop"));
 		this.setForeground(new Color(0,0,85));
+		this.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X,
+                java.awt.Event.CTRL_MASK));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				TaskingTable table = (TaskingTable) window.runningTable;
@@ -39,6 +42,10 @@ public class ChangeViewMenuItem extends JMenuItem {
 					window.tablePane.getViewport().removeAll();
 					window.tablePane = new JScrollPane(table);
 					table.scrollRectToVisible(new Rectangle(0, 0));
+					//隐藏分页栏
+					if(window.taskImagePanel.imageTaskPager != null){
+						window.taskImagePanel.imageTaskPager.setVisible(false);
+					}
 				}else{
 					window.tablePane.removeAll();
 					window.tablePane = new JScrollPane();
