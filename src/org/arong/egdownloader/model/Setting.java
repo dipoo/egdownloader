@@ -461,12 +461,6 @@ public class Setting {
 		this.searchScriptPath2 = searchScriptPath2;
 	}
 	
-	public String getCurrentSearchScriptPath() {
-		return searchViewModel == 1 ? searchScriptPath2 : searchScriptPath;
-	}
-	public String getNoCurrentSearchScriptPath() {
-		return searchViewModel == 1 ? searchScriptPath : searchScriptPath2;
-	}
 	public String getCookieInfo2() {
 		return cookieInfo2;
 	}

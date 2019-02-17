@@ -89,7 +89,7 @@ public class SearchComicWindow extends JFrame {
 	private Font font = new Font("宋体", 0, 12); 
 	public String page = "1";
 	public SearchWindowPopMenu popMenu;
-	public int viewModel = 1;//1为图片浏览；2为表格浏览
+	public int viewModel = 2;//2为图片浏览；1为表格浏览
 	public int selectTaskIndex = 0;//操作的任务索引
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -461,7 +461,45 @@ public class SearchComicWindow extends JFrame {
 	}
 	
 	public SearchImagePanel[] picLabels = new SearchImagePanel[25];
-	public void showResult(final String totalPage, final Integer currentPage){
+	
+	//二次搜索刷新使用
+	public void updateTaskInfo(){
+		if(viewModel == 1){
+			searchTable.updateUI();
+		}else{
+			for(int i = 0; i < searchTasks.size(); i ++){
+				final SearchImagePanel coverLabel = picLabels[i];
+				coverLabel.setText(coverLabel.genText(searchTasks.get(i)));
+			}
+			
+		}
+	}
+	
+	public void showResult(String totalPage, Integer currentPage){
+		if(picturePane != null){mainWindow.searchComicWindow.getContentPane().remove(tablePane);tablePane = null;}
+		if(searchTable == null){
+			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
+					this.getHeight() - 210, searchTasks, this);
+		}
+		if(tablePane == null){
+			tablePane = new JScrollPane(searchTable);
+			mainWindow.searchComicWindow.getContentPane().add(tablePane);
+			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
+			tablePane.getViewport().setBackground(new Color(254,254,254));
+		}
+		
+		searchTable.setVisible(true);
+		searchTable.changeModel(searchTasks);
+		searchTable.updateUI();
+		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
+		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
+		if(totalPage != null && currentPage != null){
+			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
+			mainWindow.searchComicWindow.pager.setVisible(true);
+		}
+	}
+	
+	public void showResult2(final String totalPage, final Integer currentPage){
 		if(picLabels[0] == null){
 			for(int i = 0; i < 25; i ++){
 				SearchImagePanel coverLabel = new SearchImagePanel(i, mainWindow);
@@ -499,32 +537,8 @@ public class SearchComicWindow extends JFrame {
 		}
 		
 		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
-		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
+		jScrollBar.setValue(0);//滚动到最前
 		jScrollBar.setUnitIncrement(20);
-		if(totalPage != null && currentPage != null){
-			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
-			mainWindow.searchComicWindow.pager.setVisible(true);
-		}
-	}
-	
-	public void showResult2(String totalPage, Integer currentPage){
-		if(picturePane != null){mainWindow.searchComicWindow.getContentPane().remove(tablePane);tablePane = null;}
-		if(searchTable == null){
-			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
-					this.getHeight() - 210, searchTasks, this);
-		}
-		if(tablePane == null){
-			tablePane = new JScrollPane(searchTable);
-			mainWindow.searchComicWindow.getContentPane().add(tablePane);
-			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
-			tablePane.getViewport().setBackground(new Color(254,254,254));
-		}
-		
-		searchTable.setVisible(true);
-		searchTable.changeModel(searchTasks);
-		searchTable.updateUI();
-		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
-		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
 		if(totalPage != null && currentPage != null){
 			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
 			mainWindow.searchComicWindow.pager.setVisible(true);

@@ -71,9 +71,9 @@ public class TaskImagePanel extends AJPanel {
 		if(this.getComponents() != null){
 			this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((this.getComponents().length / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
 			this.scrollRectToVisible(new Rectangle(0, 0));
-			for(int i = 0; i < this.getComponents().length; i ++){
-				if(this.getComponents()[i] instanceof AJPanel){
-					AJPanel p = (AJPanel) this.getComponents()[i];
+			for(int i = 0; i < this.container.getComponents().length; i ++){
+				if(this.container.getComponents()[i] instanceof AJPanel){
+					AJPanel p = (AJPanel) this.container.getComponents()[i];
 					for(int j = 0; j < p.getComponents().length; j ++){
 						if(p.getComponents()[j].getName() != null && p.getComponents()[j].getName().startsWith("cover")){
 							
@@ -151,7 +151,9 @@ public class TaskImagePanel extends AJPanel {
 						ptasks.add(tasks.get(i));
 					}
 					container.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width - 20, ((ptasks.size() / (Toolkit.getDefaultToolkit().getScreenSize().width / mainWindow.setting.getCoverWidth())) + 8) * (mainWindow.setting.getCoverHeight() + 20)));
-					
+					if(imageTaskPager != null){
+						imageTaskPager.setVisible(false);
+					}
 					for(int i = 0; i < ptasks.size(); i ++){
 						//判断AJPanel是否存在
 						//AJPanel p = null;
@@ -172,7 +174,7 @@ public class TaskImagePanel extends AJPanel {
 							p = new AJPanel();
 							//name规则：taskID|list索引
 							p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
-							p.setToolTipText("<" + ((page - 1) * PAGESIZE + i) + ">" + ptasks.get(i).getDisplayName(mainWindow.setting));
+							p.setToolTipText(ptasks.get(i).getDisplayName(mainWindow.setting));
 							p.setLayout(new BorderLayout());
 							p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 							p.setBackground(Color.WHITE);
@@ -268,16 +270,17 @@ public class TaskImagePanel extends AJPanel {
 						container.add(p, i);
 						container.updateUI();
 					}
-					int totalPage = tasks.size() / PAGESIZE + 1;
+					int totalPage = tasks.size() % PAGESIZE == 0 ? tasks.size() / PAGESIZE : tasks.size() / PAGESIZE + 1;
 					if(totalPage > 1){
 						if(imageTaskPager == null){
-							imageTaskPager = new AJPager(40 , mainWindow.infoTabbedPane.getY() + 20, (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 80), 40, new ActionListener() {
+							imageTaskPager = new AJPager(40 , mainWindow.infoTabbedPane.getY() + 25, (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 80), 40, new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									JButton btn = (JButton) e.getSource();
 									this_.page = Integer.parseInt(btn.getName());
 									this_.init();
 								}
 							});
+							((FlowLayout)imageTaskPager.getLayout()).setAlignment(FlowLayout.RIGHT);
 							JButton btn = new AJButton("顶部⇧");
 							btn.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
