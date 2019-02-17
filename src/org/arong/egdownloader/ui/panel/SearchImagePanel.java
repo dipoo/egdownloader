@@ -87,14 +87,15 @@ public class SearchImagePanel extends JLabel {
 		flush(task, 0);
 	}
 	
+	public void flushTitle(){
+		
+	}
+	
 	public void flush(SearchTask task, final long delay){
 		this.setForeground(Color.WHITE);
 		boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
-		this.setText("<html><font color='#f2e986'>" + task.getRating() + "</font> " + 
-				(StringUtils.isNotBlank(task.getType()) ? 
-						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
-						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate().substring(2)) + " " + (StringUtils.isBlank(task.getFilenum()) ? "" : task.getFilenum() + "P") + "</html>");
+		this.setText(genText(task));
 		this.setToolTipText(task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : ""));
 		final SearchImagePanel this_ = this;
 		
@@ -167,5 +168,12 @@ public class SearchImagePanel extends JLabel {
 				this.setIcon(icon);
 			}
 		}
+	}
+	
+	public String genText(SearchTask task){
+		return "<html><small><font color='#f2e986'>" + task.getRating() + "分</font> " + 
+				(StringUtils.isNotBlank(task.getType()) ? 
+						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
+						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate().substring(2)) + (StringUtils.isBlank(task.getFilenum()) ? "" : " <font color='#f2e986'>" + task.getFilenum() + "P</font>") + "</small></html>";
 	}
 }

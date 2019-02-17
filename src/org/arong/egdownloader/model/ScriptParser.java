@@ -355,7 +355,7 @@ public class ScriptParser {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		param.put("https", setting.isHttps());
-		Object result = parseJsScript(param, getSearchScriptFile(first ? setting.getCurrentSearchScriptPath() : setting.getNoCurrentSearchScriptPath()));
+		Object result = parseJsScript(param, getSearchScriptFile(first ? setting.getSearchScriptPath() : setting.getSearchScriptPath2()));
 		return result == null ? null : result.toString().split("\\###");
 	}
 	

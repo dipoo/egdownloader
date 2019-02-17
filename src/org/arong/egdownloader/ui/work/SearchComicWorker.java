@@ -32,7 +32,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
-			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getSearchViewModel() == 2 ? mainWindow.setting.getCookieInfo() : mainWindow.setting.getCookieInfo2());
+			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo());
 			if(source == null){
 				Tracker.println(this.getClass(), this.url + ":搜索出错");
 				return null;
@@ -75,11 +75,11 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 									}
 									List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
 									if(searchTasks != null){
-										boolean p = false;
+										boolean p = false;int i = 0;
 										for(SearchTask searchTask : searchTasks){
 											for(SearchTask ost : mainWindow.searchComicWindow.searchTasks){
+												p = true;i ++;
 												if(ost.getUrl().equals(searchTask.getUrl())){
-													p = true;
 													if(StringUtils.isNotBlank(searchTask.getDate())){
 														ost.setDate(searchTask.getDate());
 													}
@@ -92,11 +92,12 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 													if(StringUtils.isNotBlank(searchTask.getUploader())){
 														ost.setUploader(searchTask.getUploader());
 													}
+													break;
 												}
 											}
 										}
 										if(p){
-											mainWindow.searchComicWindow.searchBtn.doClick();
+											mainWindow.searchComicWindow.updateTaskInfo();
 										}
 									}
 									

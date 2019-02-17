@@ -19,6 +19,7 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.util.FileUtil;
 
 public class TaskInfoPanel extends JScrollPane {
@@ -45,6 +46,15 @@ public class TaskInfoPanel extends JScrollPane {
 							Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + t.getSaveDir()));
 						} catch (Exception e1) {
 							JOptionPane.showMessageDialog(null, "打开文件夹失败");
+						}
+					}else if("searchUploader".equals(e.getDescription())){
+						//搜索上传者
+						if(StringUtils.isNotBlank(t.getUploader())){
+							if(mainWindow.searchComicWindow == null){
+								mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
+							}
+							mainWindow.searchComicWindow.doSearch("upload:" + t.getUploader());
+							mainWindow.searchComicWindow.setVisible(true);
 						}
 					}
 				}
