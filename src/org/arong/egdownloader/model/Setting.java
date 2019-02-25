@@ -20,7 +20,7 @@ public class Setting {
 	private boolean saveDirAsSubname = false;//以子名称作为保存目录
 	private boolean https = false;//是否使用https
 	private int viewModel = 1;//默认显示模式
-	private int searchViewModel = 2;//默认搜索显示模式
+	private int searchViewModel = 1;//默认搜索显示模式
 	private boolean showAsSubname = true;//以子名称展示
 	private int maxThread = 5;
 	private boolean debug = false;
