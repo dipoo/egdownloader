@@ -47,7 +47,7 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 		int success = 0;
 		String zipfilepath = null;
 		try{
-			w.nameLabel.setText(task.getName());
+			w.nameLabel.setText(task.getDisplayName());
 			int fileLength = task.getTotal();
 			
 			w.bar.setValue(0);
