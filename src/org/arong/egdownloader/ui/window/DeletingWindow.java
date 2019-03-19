@@ -32,28 +32,6 @@ public class DeletingWindow extends JDialog {
 		this.setLocationRelativeTo(this.mainWindow);
 		this.setBackground(Color.WHITE);
 		
-		//关闭监听，释放窗口资源，否则消耗大量CPU
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				DeletingWindow window = (DeletingWindow) e.getSource();
-				if(window != null){
-					window.mainWindow.setEnabled(true);
-					window.mainWindow.setVisible(true);
-					window.dispose();
-				}
-			}
-			//窗体由激活状态变成非激活状态
-			/*public void windowDeactivated(WindowEvent e) {
-				mainWindow.setVisible(true);
-				mainWindow.setEnabled(true);
-				DeletingWindow window = (DeletingWindow) e.getSource();
-				window.dispose();
-			}*/
-			/*public void windowActivated(WindowEvent e) {
-				mainWindow.setEnabled(false);
-			}*/
-		});
-		
 		dataLabel = new AJLabel("", Color.BLACK, 160, 10, 80, 30);
 		infoLabel = new AJLabel("", Color.BLACK, 10, 50, 380, 30);
 		ComponentUtil.addComponents(getContentPane(), dataLabel, infoLabel);

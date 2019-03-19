@@ -80,6 +80,7 @@ public final class ComponentConst {
 	public static String SCRIPT_COLLECT_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
 	public static String SCRIPT_DOWNLOAD_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/download.js";
 	public static String SCRIPT_SEARCH_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/search.js";
+	public static String SCRIPT_SEARCH2_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/search2.js";
 	public static String SCRIPT_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/version";
 	
 	public static Map<String, String> typeColorMap = new HashMap<String, String>();

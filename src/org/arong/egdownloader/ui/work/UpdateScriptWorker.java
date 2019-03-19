@@ -64,6 +64,11 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 				initWindow.textLabel.setText(Version.NAME + "-更新search.js");
 			}
 			FileUtil.storeStream(dir, "search.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH_URL));
+			//更新search2.js
+			if(initWindow != null){
+				initWindow.textLabel.setText(Version.NAME + "-更新search2.js");
+			}
+			FileUtil.storeStream(dir, "search2.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH2_URL));
 			//更新脚本解析器 
 			ScriptParser.clearFiles();
 			//保存版本号
