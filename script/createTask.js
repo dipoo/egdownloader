@@ -3,7 +3,7 @@ var mark = {
     name : ['<h1 id="gn">', '</h1><h1'],
     subname : ['</h1><h1 id="gj">', '</h1></div>'],
     uploader : ['://exhentai.org/uploader/', '</a></div><div id="gdd">', '">'],
-	type : ['png" alt="', '" class="ic'],//
+	type : ["document.location='https://exhentai.org/", 'div></div><div id="gdn">', '">', '</'],//
 	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
@@ -50,6 +50,7 @@ function parse(source, openhttps){
 		task.coverUrl = task.coverUrl.replace("https", "http");
 	}
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
+	task.type = interceptFromSource(task.type, mark.type[2], mark.type[3]);
 	task.total = parseInt(trim(interceptFromSource(source, mark.total[0], mark.total[1])));
 	if(source.indexOf(mark.size[1]) != -1){
 		task.size = trim(interceptFromSource(source, mark.size[0], mark.size[1]));

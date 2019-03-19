@@ -1,15 +1,15 @@
 var mark = {
     separator : [',', '###'],
-	page : ['Showing ', 'of ', '</p><table class="ptt'],
-	listSource : ['Thumbnails', '</td></tr></table></div></div>'],
-	intercept : ['<div class="id1"', "</div></div></div></div>"],
-	name : ['/">', '</a>', '<'],
-	url : ['id2"><a href="', '/">'],
-	coverUrl : ['/"><img src="', '" alt="'],
-	filenum : ['</div><div class="id42">', ' files</div><div class="id43 ir"'],
-	type : ['px" title="', '"></div><div class="id42">'],
-	btUrl : ['onclick="return popUp(', ", 610, 590)"],
-	rate_position: ['<div class="id43 ir" style="background-position:', '; opacity:'],
+	page : ['Showing ', 'of ', ' results</p><div id="dms">'],
+	listSource : ['Thumbnail', '</td></tr></table></div></div>'],
+	intercept : ['<tr><td class="gl1m glcat">', '</a></div></td></tr>'],
+	name : ['/">', '</a></div><div class="gl3t"'],
+	url : ['<a href="', '/">'],
+	coverUrl : ['px" src="', '" alt="'],
+	filenum : ['></div><div>', ' pages</div>'],
+	type : ["document.location='https://exhentai.org/", '/div><div onclick="popUp(', '">', '<'],
+	btUrl : ["return popUp('", "', 610, 590)"],
+	rate_position: ['<div class="ir" style="background-position:', '; opacity:'],
 	rate_mapping: {
 		"0px -1px": "5.0",
 		"0px -21px": "4.5",
@@ -46,6 +46,7 @@ function parse(source, openhttps){
 			}
 			task.filenum = interceptFromSource(source, mark.filenum[0], mark.filenum[1]);
 			task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
+			task.type = interceptFromSource(task.type, mark.type[2], mark.type[3]);
 			var btUrlTemp = interceptFromSource(source, mark.btUrl[0], mark.btUrl[1]);
 			if(btUrlTemp && btUrlTemp != ''){
 				task.btUrl = btUrlTemp.replace("'", '').replace("'", '').replace("&amp;", "&");
