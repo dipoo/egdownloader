@@ -56,7 +56,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				//下载封面线程
 				new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
 				
-				if(StringUtils.isNotBlank(mainWindow.setting.getCookieInfo2())){
+				/*if(StringUtils.isNotBlank(mainWindow.setting.getCookieInfo2())){
 					//二次搜索线程
 					new CommonSwingWorker(new Runnable() {
 						public void run() {
@@ -105,7 +105,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 							 } catch (Exception e) {}
 						}
 					}).execute();
-				}
+				}*/
 				
 				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());

@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -91,6 +93,8 @@ public class SearchComicWindow extends JFrame {
 	public SearchWindowPopMenu popMenu;
 	public int viewModel = 2;//2为图片浏览；1为表格浏览
 	public int selectTaskIndex = 0;//操作的任务索引
+	public int f_cats = 0;
+	public String f_sto = "";
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		viewModel = mainWindow.setting.getSearchViewModel();
@@ -185,19 +189,41 @@ public class SearchComicWindow extends JFrame {
 		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		optionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "条件过滤"));
 		optionPanel.setBounds(6, 55, ComponentConst.CLIENT_WIDTH - 23, 65);
-		JCheckBox c1 = new AJCheckBox("DOUJINSHI", Color.BLUE, font, true);
-		JCheckBox c2 = new AJCheckBox("MANGA", Color.BLUE, font, true);
-		JCheckBox c3 = new AJCheckBox("ARTISTCG", Color.BLUE, font, true);
-		JCheckBox c4 = new AJCheckBox("GAMECG", Color.BLUE, font, true);
-		JCheckBox c5 = new AJCheckBox("WESTERN", Color.BLUE, font, true);
-		JCheckBox c6 = new AJCheckBox("NONH", Color.BLUE, font, true);c6.setName("NON-H");
-		JCheckBox c7 = new AJCheckBox("IMAGESET", Color.BLUE, font, true);
-		JCheckBox c8 = new AJCheckBox("COSPLAY", Color.BLUE, font, true);
-		JCheckBox c9 = new AJCheckBox("ASIANPORN", Color.BLUE, font, true);
-		JCheckBox c10 = new AJCheckBox("MISC", Color.BLUE, font, true);
+		
+		ItemListener itemListener = new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox jcb = (JCheckBox) e.getItem();
+				try{
+					if (jcb.isSelected()) {// 判断是否被选择
+						if(f_cats == 0) f_cats = 1022;
+						f_cats -= Integer.parseInt(jcb.getName());
+					} else {
+						f_cats += Integer.parseInt(jcb.getName());
+					}
+				}catch(Exception e1){}
+
+			}
+		};
+		
+		JCheckBox c1 = new AJCheckBox("2", "Doujinshi", Color.BLUE, font, true, itemListener);
+		JCheckBox c2 = new AJCheckBox("4", "Manga", Color.BLUE, font, true, itemListener);
+		JCheckBox c3 = new AJCheckBox("8", "Artist CG", Color.BLUE, font, true, itemListener);
+		JCheckBox c4 = new AJCheckBox("16", "Game CG", Color.BLUE, font, true, itemListener);
+		JCheckBox c5 = new AJCheckBox("512", "Western", Color.BLUE, font, true, itemListener);
+		JCheckBox c6 = new AJCheckBox("256", "Non-H", Color.BLUE, font, true, itemListener);
+		JCheckBox c7 = new AJCheckBox("32", "Image Set", Color.BLUE, font, true, itemListener);
+		JCheckBox c8 = new AJCheckBox("64", "Cosplay", Color.BLUE, font, true, itemListener);
+		JCheckBox c9 = new AJCheckBox("128", "Asian Porn", Color.BLUE, font, true, itemListener);
+		JCheckBox c10 = new AJCheckBox("1", "Misc", Color.BLUE, font, true, itemListener);
 		JCheckBox c11 = new AJCheckBox("BT", Color.RED, font, false);//
 		c11.setToolTipText("是否可以下载BT文件");
 		c11.setName("sto");
+		c11.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox jcb = (JCheckBox) e.getItem();
+				f_sto = jcb.isSelected() ? "on" : "";
+			}
+		});
 		language = new JComboBox(new String[]{"全部", "中文", "日文", "英文", "韩文", "法文"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
@@ -318,9 +344,9 @@ public class SearchComicWindow extends JFrame {
 					int height = window.getHeight() - 210;
 					tablePane.setSize(window.getWidth() - 20, height);
 					
-					int hr = (int)(tablePane.getWidth() / 220);
+					int hr = (int)(tablePane.getWidth() / 260);
 					int zr = (int)(25 / hr) + 1;
-					picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 330));
+					picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
 				}
 				//设置分页面板大小
 				if(pager != null){
@@ -371,7 +397,9 @@ public class SearchComicWindow extends JFrame {
 			rightBtn.setEnabled(false);
 			
 			key = k;
-			String exurl = (mainWindow.setting.isHttps() ? "https" : "http") + "://exhentai.org/?advsearch=1&f_sh=on&f_apply=Apply+Filter&f_sname=on&f_stags=on&f_sh=on&f_srdd=2&page=" + (Integer.parseInt(page) - 1) + parseOption();
+			String exurl = (mainWindow.setting.isHttps() ? "https" : "http") + 
+					"://exhentai.org/?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
+					(Integer.parseInt(page) - 1) + "&f_cats=" + f_cats + "&f_sto=" + f_sto;
 			if(!keyText.equals("")){
 				//过滤key
 				try {
@@ -521,9 +549,9 @@ public class SearchComicWindow extends JFrame {
 			//picturePane.setBackground(Color.LIGHT_GRAY);
 			picturePane.setLayout(new FlowLayout(FlowLayout.CENTER));
 			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
-			int hr = (int)(tablePane.getWidth() / 220);
+			int hr = (int)(tablePane.getWidth() / 260);
 			int zr = (int)(25 / hr) + 1;
-			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 320));
+			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
 		}else{
 			picturePane.removeAll();
 		}

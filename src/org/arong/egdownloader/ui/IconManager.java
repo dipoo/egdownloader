@@ -262,12 +262,12 @@ public class IconManager {
 				tImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "t.png"));
 			}
 			return tImage;
-		}else if("artistcg".equals(name) || "artist cg sets".equals(name)){
+		}else if("artistcg".equals(name) || "artist cg sets".equals(name) || "artist cg".equals(name)){
 			if(artistcgImage == null){
 				artistcgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "ARTISTCG.png"));
 			}
 			return artistcgImage;
-		}else if("asianporn".equals(name)){
+		}else if("asianporn".equals(name) || "asian porn".equals(name)){
 			if(asianpornImage == null){
 				asianpornImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "ASIANPORN.png"));
 			}
@@ -282,12 +282,12 @@ public class IconManager {
 				doujinshiImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "DOUJINSHI.png"));
 			}
 			return doujinshiImage;
-		}else if("gamecg".equals(name)){
+		}else if("gamecg".equals(name) || "game cg".equals(name)){
 			if(gamecgImage == null){
 				gamecgImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "GAMECG.png"));
 			}
 			return gamecgImage;
-		}else if("imageset".equals(name) || "image sets".equals(name)){
+		}else if("imageset".equals(name) || "image sets".equals(name) || "image set".equals(name)){
 			if(imagesetImage == null){
 				imagesetImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "IMAGESET.png"));
 			}
