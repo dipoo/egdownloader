@@ -34,13 +34,15 @@ function parseJsonArray(array){
 	for(var i = 0; i < array.length; i ++){
 		s += "{";
 		for(var k in array[i]){
-			s += '"' + k + '":';
-			if(typeof array[i][k] == 'number'){
-				s += array[i][k] + ',';
-			}else if(typeof array[i][k] == 'boolean'){
-				s += array[i][k] + ',';
-			}else{
-				s += '"' + array[i][k] + '",';
+			if(array[i][k]){
+				s += '"' + k + '":';
+				if(typeof array[i][k] == 'number'){
+					s += array[i][k] + ',';
+				}else if(typeof array[i][k] == 'boolean'){
+					s += array[i][k] + ',';
+				}else{
+					s += '"' + array[i][k] + '",';
+				}
 			}
 		}
 		s = s.substr(0, s.length - 1);
@@ -70,7 +72,7 @@ function pageInfo(source){
 	if(count == null){
 		return null;
 	}
-	return count + mark.separator[0] + (parseInt(count) % 25 == 0 ? Math.round(parseInt(count) / 25) : Math.round(parseInt(count) / 25 + 1));
+	return count + mark.separator[0] + (parseInt(count) % 25 == 0 ? parseInt(count / 25) : parseInt(count / 25) + 1);
 }
     
 function parse(source, openhttps){
@@ -98,7 +100,7 @@ function parse(source, openhttps){
 			}else{
 				task.coverUrl = (openhttps ? "https" : "http") + "://exhentai.org/" + interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3] + task.name);
 			}
-			task.date = interceptFromSource(source, mark.date[0], mark.date[1]);
+			task.date = interceptFromSource(source, mark.date[0], mark.date[1]).replace("<s>", "").replace("</s>", "");
 			task.date = interceptFromSource(task.date, mark.date[2], mark.date[3]);
 			task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
 			task.type = interceptFromSource(task.type, mark.type[2], mark.type[3]);
@@ -107,6 +109,9 @@ function parse(source, openhttps){
 			var btUrlTemp = interceptFromSource(source, mark.btUrl[0], mark.btUrl[1]);
 			if(btUrlTemp && btUrlTemp != ''){
 				task.btUrl = btUrlTemp.replace("&amp;", "&");
+				if(task.url.indexOf(subFromSource(task.btUrl, "gid=").replace("&t=", "/")) == -1){
+					task.btUrl = null;
+				}
 			}
 			task.uploader = interceptFromSource(source, mark.uploader[0], mark.uploader[1]);
 			task.uploader = interceptFromSource(task.uploader, mark.uploader[2], mark.uploader[3]);
