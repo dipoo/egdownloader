@@ -100,6 +100,9 @@ function parse(source, openhttps){
 			}else{
 				task.coverUrl = (openhttps ? "https" : "http") + "://exhentai.org/" + interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3] + task.name);
 			}
+			if(task.coverUrl){
+				task.coverUrl = task.coverUrl.replace("250.jpg", "l.jpg");
+			}
 			task.date = interceptFromSource(source, mark.date[0], mark.date[1]).replace("<s>", "").replace("</s>", "");
 			task.date = interceptFromSource(task.date, mark.date[2], mark.date[3]);
 			task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
