@@ -6,22 +6,24 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.arong.egdownloader.spider.WebClient;
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
+import org.arong.egdownloader.ui.work.JarUpdateWorker;
 import org.arong.egdownloader.version.Version;
+import org.arong.util.FileUtil;
 import org.arong.util.JsonUtil;
 
 /**
@@ -41,7 +43,7 @@ public class AboutMenuWindow extends JDialog {
 	 * 加入参数mainWindow主要是使关于窗口始终在主窗口的中央弹出
 	 * @param mainWindow
 	 */
-	public AboutMenuWindow(final JFrame mainWindow) {
+	public AboutMenuWindow(final EgDownloaderWindow mainWindow) {
 		// 设置主窗口
 		this.setSize(340, 250);
 		this.setIconImage(IconManager.getIcon("user").getImage());
@@ -78,7 +80,8 @@ public class AboutMenuWindow extends JDialog {
 					if("checkVersion".equals(e.getDescription())){
 						//检查版本号
 						try {
-							String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, null);
+							String egVersion = "{\"version\":\"0.90\",\"url\":\"https://pan.baidu.com/s/19Z7eqOm41arJ9IJV-Ascog\",\"jarVersion\":\"2\",\"jarUrl\":\"https://raw.githubusercontent.com/dipoo/egdownloader/master/libs/beautyeye_lnf.jar\"}";//WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, null);
+							System.out.println(egVersion);
 							Map<String, String> version = JsonUtil.json2Map(egVersion);
 							if(! Version.VERSION.equals(version.get("version"))){
 								int r = JOptionPane.showConfirmDialog(this_, "最新版本号为：" + version.get("version") + "，是否前往下载？");
@@ -98,6 +101,27 @@ public class AboutMenuWindow extends JDialog {
 											
 										}
 									}
+								}
+							}else if(! Version.JARVERSION.equals(version.get("jarVersion")) && StringUtils.isNotBlank(version.get("jarUrl"))){
+								
+								String binPath = FileUtil.getAppPath(getClass());
+								if(binPath.endsWith("bin")){
+									binPath = binPath.substring(0, binPath.length() - 3);
+								}else{
+									String defaultSavePath = mainWindow.setting.getDefaultSaveDir();
+									FileUtil.ifNotExistsThenCreate(defaultSavePath);
+									File f = new File(defaultSavePath);
+									binPath = f.getAbsolutePath().replaceAll(defaultSavePath, "");
+								}
+								File oldjar = new File(binPath + File.pathSeparator + "jre" + File.pathSeparator
+										+ "lib" + File.pathSeparator + "ext" + File.pathSeparator + "egdownloader.jar");
+								if(oldjar.exists()){
+									int r = JOptionPane.showConfirmDialog(this_, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？");
+									if(r == JOptionPane.OK_OPTION){
+										new JarUpdateWorker(mainWindow, version, binPath).execute();
+									}
+								}else{
+									JOptionPane.showMessageDialog(this_, "当前已是最新版本");
 								}
 							}else{
 								JOptionPane.showMessageDialog(this_, "当前已是最新版本");
