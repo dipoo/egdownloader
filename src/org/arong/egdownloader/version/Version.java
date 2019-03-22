@@ -9,9 +9,11 @@ public final class Version {
 	public final static String NAME = "EG下载器";
 	// 程序版本号
 	public final static String VERSION = "0.90";
+	// jar版本号
+	public final static String JARVERSION = "1"; 
 	// 程序作者
 	public final static String AUTHOR = "dipoo";
 	// 程序最后修改时间
-	public final static String MODIFLIED = "2019-02-25";
+	public final static String MODIFLIED = "2019-03-22";
 	
 }
