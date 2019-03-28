@@ -18,6 +18,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.apache.commons.lang.StringUtils;
+import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
@@ -80,7 +81,7 @@ public class AboutMenuWindow extends JDialog {
 					if("checkVersion".equals(e.getDescription())){
 						//检查版本号
 						try {
-							String egVersion = "{\"version\":\"0.90\",\"url\":\"https://pan.baidu.com/s/19Z7eqOm41arJ9IJV-Ascog\",\"jarVersion\":\"2\",\"jarUrl\":\"https://raw.githubusercontent.com/dipoo/egdownloader/master/libs/beautyeye_lnf.jar\"}";//WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, null);
+							String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, null);
 							System.out.println(egVersion);
 							Map<String, String> version = JsonUtil.json2Map(egVersion);
 							if(! Version.VERSION.equals(version.get("version"))){
@@ -127,7 +128,7 @@ public class AboutMenuWindow extends JDialog {
 								JOptionPane.showMessageDialog(this_, "当前已是最新版本");
 							}
 						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(this_, "检查版本失败，请确定网络是否可用");
+							JOptionPane.showMessageDialog(this_, "检查版本失败," + e1.getMessage());
 						}
 					}
 				}
