@@ -38,6 +38,7 @@ public class HttpsUtils {
         private static HttpsURLConnection getHttpsConnection(String urlStr, Proxy proxy) throws IOException {
                 URL url = new URL(urlStr);
                 System.out.println(urlStr + ",proxy:" + proxy);
+                System.setProperty("https.protocols", "TLSv1");
                 HttpsURLConnection conn = null;
                 if(proxy != null){
                 	conn = (HttpsURLConnection) url.openConnection(proxy);

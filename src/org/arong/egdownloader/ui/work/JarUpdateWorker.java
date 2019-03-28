@@ -33,8 +33,8 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 		try {
 			//检测是否为支持jar更新的类型
 			
-			File oldjar = new File(binPath + File.pathSeparator + "jre" + File.pathSeparator
-					+ "lib" + File.pathSeparator + "ext" + File.pathSeparator + jarName);
+			File oldjar = new File(binPath + File.separator + "jre" + File.separator
+					+ "lib" + File.separator + "ext" + File.separator + jarName);
 			if(!oldjar.exists()){
 				JOptionPane.showMessageDialog(null, "当前模式不支持jar文件更新");
 				return null;
@@ -49,7 +49,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 				JOptionPane.showMessageDialog(null, "jar文件更新失败");
 			}else{
 				//备份
-				String bakPath = binPath + File.pathSeparator + "bak" + File.pathSeparator + Version.JARVERSION + File.pathSeparator;
+				String bakPath = binPath + File.separator + "bak" + File.separator + Version.JARVERSION + File.separator;
 				FileUtil.ifNotExistsThenCreate(bakPath);
 				org.arong.utils.FileUtil.copyFile(oldjar.getPath(), bakPath + jarName);
 				//保存
