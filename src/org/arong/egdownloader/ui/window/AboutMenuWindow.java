@@ -120,6 +120,7 @@ public class AboutMenuWindow extends JDialog {
 									int r = JOptionPane.showConfirmDialog(this_, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？");
 									if(r == JOptionPane.OK_OPTION){
 										new JarUpdateWorker(mainWindow, version, binPath).execute();
+										this_.dispose();
 									}
 								}else{
 									JOptionPane.showMessageDialog(this_, "当前已是最新版本");
