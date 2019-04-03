@@ -97,6 +97,9 @@ function parse(source, openhttps){
 				}
 			}else{
 				task.coverUrl = interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3]) + ".jpg";
+				if(! openhttps){
+					task.coverUrl = task.coverUrl.replace("https", "http");
+				}
 			}
 			if(task.coverUrl){
 				task.coverUrl = task.coverUrl.replace("250.jpg", "l.jpg");
