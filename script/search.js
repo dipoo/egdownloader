@@ -1,6 +1,6 @@
 var mark = {
     separator : [',', '###'],
-	page : ['Showing ', 'of ', ' results</p><div id="dms">'],
+	page : ['Showing', ' ', ' results</p><div id="dms">'],
 	listSource : ['Uploader</th></tr>', '</td></tr></table></div></div>'],
 	intercept : ['<tr><td class="gl1c glcat">', "pages</div></td></tr>"],
 	name : ['<div class="glink">', '</div><div><div class="gt"', '/">', '<'],
