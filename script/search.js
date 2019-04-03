@@ -3,9 +3,9 @@ var mark = {
 	page : ['Showing ', 'of ', ' results</p><div id="dms">'],
 	listSource : ['Uploader</th></tr>', '</td></tr></table></div></div>'],
 	intercept : ['<tr><td class="gl1c glcat">', "pages</div></td></tr>"],
-	name : ['<a href="https://exhentai.org/g/', '/a></div><div><div class="gt"', '/">', '<'],
-	url : ["open_gallery(this,event,", '"><div><a href="https://exhentai.org/g/', ",'", "')"],
-	coverUrl : ['px"><img src="', '" alt="', '~exhentai.org~', '~'],
+	name : ['<div class="glink">', '</div><div><div class="gt"', '/">', '<'],
+	url : [')"><a href="', '"><div class="glink">', ",'", "')"],
+	coverUrl : ['" src="', '" /></div>', 'data-src="', '.jpg" />'],
 	date : ['" id="posted_', '/div><div class="ir" style="background-position', '">', '<'],
 	type : ["document.location='https://exhentai.org/", '/div></td><td class="gl2c">', '">', '<'],
 	filenum : ['https://exhentai.org/uploader/', 'pages</div>', '</a></div><div>', ' '],
@@ -84,10 +84,8 @@ function parse(source, openhttps){
 		var i = 0;
 		while(source.indexOf(mark.intercept[0]) != -1){
 			var task = {};
-			var nameTemp = interceptFromSource(source, mark.name[0], mark.name[1]);
-			task.name = interceptFromSource(nameTemp, mark.name[2], mark.name[3]);
+			task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
 			task.url = interceptFromSource(source, mark.url[0], mark.url[1]);
-			task.url = interceptFromSource(task.url, mark.url[2], mark.url[3]);
 			if(! openhttps){
 				task.url = task.url.replace("https", "http");
 			}
@@ -98,7 +96,7 @@ function parse(source, openhttps){
 					task.coverUrl = task.coverUrl.replace("https", "http");
 				}
 			}else{
-				task.coverUrl = (openhttps ? "https" : "http") + "://exhentai.org/" + interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3] + task.name);
+				task.coverUrl = interceptFromSource(source, mark.coverUrl[2], mark.coverUrl[3]) + ".jpg";
 			}
 			if(task.coverUrl){
 				task.coverUrl = task.coverUrl.replace("250.jpg", "l.jpg");
