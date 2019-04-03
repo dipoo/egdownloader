@@ -142,6 +142,8 @@ public class ScriptParser {
 			task.setId(UUID.randomUUID().toString());
 		}
 		String source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+		//保存源文件
+		FileUtil.storeStr2file(source, "source/", "task.html");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		param.put("https", setting.isHttps());
@@ -325,6 +327,8 @@ public class ScriptParser {
 		String url = null;
 		String source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(sourceUrl), "UTF-8", setting.getCookieInfo());
 		try {
+			//保存源文件
+			FileUtil.storeStr2file(source, "source/", "download.html");
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			param.put("version", Version.VERSION);
