@@ -199,7 +199,7 @@ public class AddFormDialog extends JDialog {
 								initOrUpdateTagComboBox(setting);
 							}
 							//开始采集
-							Task task = new Task(setting.getRealUrlBySetting(url), saveDir);
+							Task task = new Task(url, saveDir);
 							task.setTag(tag);
 							task.setOriginal(original);
 							task.setSaveDirAsSubname(saveDirAsSubname);

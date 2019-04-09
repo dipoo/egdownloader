@@ -46,7 +46,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 		try{
 			Object[] streamAndLength =  null;
 			if(pic.getRealUrl().contains("exhentai.org")){
-				streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(setting.getRealUrlBySetting(pic.getRealUrl()), setting.getCookieInfo());
+				streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo());
 			}else{
 				streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
 			}

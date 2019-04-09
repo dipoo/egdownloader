@@ -141,12 +141,12 @@ public class ScriptParser {
 		if(task.getId() == null){
 			task.setId(UUID.randomUUID().toString());
 		}
-		String source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
+		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//保存源文件
 		FileUtil.storeStr2file(source, "source/", "task.html");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
-		param.put("https", setting.isHttps());
+		
 		try{
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
 			//获取名称
@@ -202,7 +202,7 @@ public class ScriptParser {
 	        	if(i == 0){
 	        		pictures.addAll(collectpictrues(source, setting));
 	        	}else{
-	        		source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()) + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
+	        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
 	        		pictures.addAll(collectpictrues(source, setting));
 	        	}
 	        	creatingWindow.bar.setValue(pictures.size());
@@ -247,7 +247,7 @@ public class ScriptParser {
 	private static List<Picture> collectpictrues(String source, Setting setting) throws ConnectTimeoutException, SocketTimeoutException, SpiderException, FileNotFoundException, ScriptException{
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
-		param.put("https", setting.isHttps());
+		
 		Object o = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
 		if(o == null){
 			Tracker.println(ScriptParser.class, setting.getCollectPictureScriptPath() + "脚本解析错误");
@@ -264,10 +264,10 @@ public class ScriptParser {
 	public static void rebuildTask(Task task, Setting setting) throws Exception{
 //		if("".equals(task.getSubname()) || "".equals(task.getType()) || "".equals(task.getCoverUrl()) 
 //				||"".equals(task.getSize()) || "".equals(task.getLanguage())){
-			String source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()), "UTF-8", setting.getCookieInfo());
+			String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
-			param.put("https", setting.isHttps());
+			
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
 			task.setName(t.getName());
 			//获取子名称
@@ -292,7 +292,7 @@ public class ScriptParser {
 		        	if(i == 0){
 		        		pictures.addAll(collectpictrues(source, setting));
 		        	}else{
-		        		source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(task.getUrl()) + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());
+		        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());
 		        		pictures.addAll(collectpictrues(source, setting));
 		        	}
 		        	i ++;
@@ -325,7 +325,7 @@ public class ScriptParser {
 	 */
 	public static String getdownloadUrl(Task task, String sourceUrl, Setting setting) throws Exception{
 		String url = null;
-		String source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(sourceUrl), "UTF-8", setting.getCookieInfo());
+		String source = WebClient.getRequestUseJavaWithCookie(sourceUrl, "UTF-8", setting.getCookieInfo());
 		try {
 			//保存源文件
 			FileUtil.storeStr2file(source, "source/", "download.html");
@@ -333,7 +333,7 @@ public class ScriptParser {
 			param.put("htmlSource", source);
 			param.put("version", Version.VERSION);
 			param.put("down_original", task.isOriginal());//是否下载原图
-			param.put("https", setting.isHttps());
+			
 			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -358,7 +358,7 @@ public class ScriptParser {
 	public static String[] search(String source, Setting setting, boolean first) throws ConnectTimeoutException, SocketTimeoutException, FileNotFoundException, ScriptException{
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
-		param.put("https", setting.isHttps());
+		
 		Object result = parseJsScript(param, getSearchScriptFile(first ? setting.getSearchScriptPath() : setting.getSearchScriptPath2()));
 		return result == null ? null : result.toString().split("\\###");
 	}
@@ -366,7 +366,7 @@ public class ScriptParser {
 	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
 		String source;
 		try {
-			source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(url), "UTF-8", setting.getCookieInfo());
+			source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", setting.getCookieInfo());
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			Object result = parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath()));
@@ -392,7 +392,7 @@ public class ScriptParser {
 					//展示第一张图片的真实下载地址
 					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
 					if(pics != null){
-						source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(pics.get(0).getUrl()), "UTF-8", setting.getCookieInfo());
+						source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), "UTF-8", setting.getCookieInfo());
 						param.put("htmlSource", source);
 						result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
 						if(result == null){
@@ -407,7 +407,7 @@ public class ScriptParser {
 				//展示第一张图片的真实下载地址
 				List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
 				if(pics != null){
-					source = WebClient.getRequestUseJavaWithCookie(setting.getRealUrlBySetting(pics.get(0).getUrl()), "UTF-8", setting.getCookieInfo());
+					source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), "UTF-8", setting.getCookieInfo());
 					param.put("htmlSource", source);
 					result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
 					if(result == null){
