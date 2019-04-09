@@ -173,10 +173,10 @@ public class EgDownloaderWindow extends JFrame {
 		
 		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
-		//this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
-		this.setResizable(false);
+		//this.setResizable(false);
 		this.setBackground(Color.WHITE);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

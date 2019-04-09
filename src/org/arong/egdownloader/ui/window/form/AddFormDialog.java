@@ -166,7 +166,8 @@ public class AddFormDialog extends JDialog {
 						}
 						
 						//重复性验证
-						if(! mainWindow.taskDbTemplate.exsits("url", url)){
+						if(! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("https://", "http://")) && 
+								! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("http://", "https://"))){
 							if(addTaskBtn.isEnabled()){
 								addTaskBtn.setEnabled(false);
 							}else{

@@ -67,7 +67,7 @@ public class TaskingTable extends JTable {
 			task.addPropertyChangeListener(new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
 					table.setRefresh(true);
-					if(mainWindow.viewModel == 2){
+					if(mainWindow.taskImagePanel != null){
 						mainWindow.taskImagePanel.flush(task); 
 					}
 				}
@@ -325,7 +325,7 @@ public class TaskingTable extends JTable {
 			task.addPropertyChangeListener(new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
 					table.setRefresh(true);
-					if(mainWindow.viewModel == 2){
+					if(mainWindow.taskImagePanel != null){
 						mainWindow.taskImagePanel.flush(task); 
 					}
 				}
@@ -349,7 +349,7 @@ public class TaskingTable extends JTable {
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				table.setRefresh(true);
-				if(mainWindow.viewModel == 2){
+				if(mainWindow.taskImagePanel != null){
 					mainWindow.taskImagePanel.flush(task); 
 				}
 			}
