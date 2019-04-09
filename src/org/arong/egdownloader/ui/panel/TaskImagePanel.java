@@ -309,6 +309,9 @@ public class TaskImagePanel extends AJPanel {
 			txtsb.append(task.getCurrent()).append("/");
 		} 
 		txtsb.append(task.getTotal()).append(" ");
+		if(task.getStatus() == TaskStatus.WAITING){
+			txtsb.append(TaskStatus.WAITING.getStatus()).append(" ");
+		}
 		/*String statusColor = "";
 		if(task.getStatus() == TaskStatus.UNSTARTED){
 			statusColor = "#5f392d";

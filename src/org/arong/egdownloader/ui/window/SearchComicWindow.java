@@ -28,6 +28,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -291,6 +292,13 @@ public class SearchComicWindow extends JFrame {
 				search(Integer.parseInt(btn.getName()) + "");
 			}
 		});
+		JButton btn = new AJButton("顶部⇧");
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tablePane.getVerticalScrollBar().setValue(0);
+			}
+		});
+		pager.setExt(new JComponent[]{btn});
 		pager.setVisible(false);
 		
 		

@@ -24,27 +24,33 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 	}
 	
 	protected Void doInBackground() throws Exception {
-		SearchTask task;
 		String localPath;
 		File cover;
 		if(tasks != null){
 			for(int i = 0; i < tasks.size(); i ++){
-				task = tasks.get(i);
+				final SearchTask task = tasks.get(i);
 				localPath = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
 				cover = new File(localPath);
 				if(cover == null || !cover.exists()){
-					try{
-						FileUtil.storeStream(ComponentConst.CACHE_PATH, FileUtil.filterDir(task.getUrl()),
-								WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
-					}catch(Exception e){
-						//最多下两次
-						try{
-							FileUtil.storeStream(ComponentConst.CACHE_PATH, FileUtil.filterDir(task.getUrl()),
-									WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
-						}catch(Exception e1){
-							
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {}
+					new CommonSwingWorker(new Runnable() {
+						public void run() {
+							try{
+								FileUtil.storeStream(ComponentConst.CACHE_PATH, FileUtil.filterDir(task.getUrl()),
+										WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+							}catch(Exception e){
+								//最多下两次
+								try{
+									FileUtil.storeStream(ComponentConst.CACHE_PATH, FileUtil.filterDir(task.getUrl()),
+											WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+								}catch(Exception e1){
+									
+								}
+							}
 						}
-					}
+					}).execute();
 				}
 			}
 		}

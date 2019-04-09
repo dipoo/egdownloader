@@ -309,7 +309,11 @@ public class WebClient {
 	 public static InputStream getStreamUseJavaWithCookie(final String urlString, final String cookie) throws Exception {
 		 return (InputStream) getStreamAndLengthUseJavaWithCookie(urlString, cookie)[0];
 	 }
-    public static Object[] getStreamAndLengthUseJavaWithCookie(final String urlString, final String cookie)
+	 public static Object[] getStreamAndLengthUseJavaWithCookie(final String urlString, final String cookie)
+	            throws Exception {
+		 return getStreamAndLengthUseJavaWithCookie(urlString, cookie, 20000);
+	 }
+    public static Object[] getStreamAndLengthUseJavaWithCookie(final String urlString, final String cookie, int timeout)
             throws Exception {
     	Object[] objects = new Object[2];
         String nURL = (urlString.startsWith("http://") || urlString
@@ -350,8 +354,8 @@ public class WebClient {
             urlConnection.setUseCaches(false);
             urlConnection.setInstanceFollowRedirects(false);
             urlConnection.setRequestMethod(method);
-            urlConnection.setConnectTimeout(20000);
-            urlConnection.setReadTimeout(20000);
+            urlConnection.setConnectTimeout(timeout);
+            urlConnection.setReadTimeout(timeout);
             //模拟http头文件
             urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36");
             urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
@@ -397,6 +401,9 @@ public class WebClient {
     public static String getRequestUseJava(final String urlString, final String encoding) throws Exception {
     	return getRequestUseJavaWithCookie(urlString, encoding, null);
     }
+    public static String getRequestUseJavaWithCookie(final String urlString, final String encoding, String cookie) throws Exception {
+    	return getRequestUseJavaWithCookie(urlString, encoding, cookie, 20000);
+    }
    
     /**
      * 向指定url发送请求并获得响应数据(使用原生JDK API)
@@ -406,7 +413,7 @@ public class WebClient {
      * @param parameter
      * @return
      */
-    public static String getRequestUseJavaWithCookie(final String urlString, final String encoding, String cookie)
+    public static String getRequestUseJavaWithCookie(final String urlString, final String encoding, String cookie, int timeout)
             throws Exception {
 
         String nURL = (urlString.startsWith("http://") || urlString
@@ -449,8 +456,8 @@ public class WebClient {
             urlConnection.setUseCaches(false);
             urlConnection.setInstanceFollowRedirects(false);
             urlConnection.setRequestMethod(method);
-            urlConnection.setConnectTimeout(20000);  
-            urlConnection.setReadTimeout(20000);
+            urlConnection.setConnectTimeout(timeout);  
+            urlConnection.setReadTimeout(timeout);
             //模拟http头文件
             urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
             urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
