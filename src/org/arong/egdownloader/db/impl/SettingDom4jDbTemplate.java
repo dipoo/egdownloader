@@ -165,11 +165,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("id", t.getId());
 		ele.addAttribute("defaultSaveDir", t.getDefaultSaveDir());
 		ele.addAttribute("cookieInfo", t.getCookieInfo());
-		ele.addAttribute("cookieInfo2", t.getCookieInfo2());
 		ele.addAttribute("saveAsName", t.isSaveAsName() + "");
 		ele.addAttribute("showAsSubname", t.isShowAsSubname() + "");
 		ele.addAttribute("autoDownload", t.isAutoDownload() + "");
-		ele.addAttribute("https", t.isHttps() + "");
 		ele.addAttribute("downloadOriginal", t.isDownloadOriginal() + "");
 		ele.addAttribute("saveDirAsSubname", t.isSaveDirAsSubname() + "");
 		ele.addAttribute("debug", t.isDebug() + "");
@@ -206,15 +204,12 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setId(ele.attributeValue("id") == null ? t.getId() : ele.attributeValue("id"));
 		t.setDefaultSaveDir(ele.attributeValue("defaultSaveDir") == null ? t.getDefaultSaveDir() : ele.attributeValue("defaultSaveDir"));
 		t.setCookieInfo(ele.attributeValue("cookieInfo") == null ? t.getCookieInfo() : ele.attributeValue("cookieInfo"));
-		t.setCookieInfo2(ele.attributeValue("cookieInfo2") == null ? t.getCookieInfo2() : ele.attributeValue("cookieInfo2"));
 		t.setSaveAsName("true".equals(ele.attributeValue("saveAsName")));
 		t.setAutoDownload("true".equals(ele.attributeValue("autoDownload")));
-		t.setHttps("true".equals(ele.attributeValue("https")));
 		t.setDownloadOriginal("true".equals(ele.attributeValue("downloadOriginal")));
 		t.setSaveDirAsSubname("true".equals(ele.attributeValue("saveDirAsSubname")));
 		t.setShowAsSubname(ele.attributeValue("showAsSubname") == null ? true : "true".equals(ele.attributeValue("showAsSubname")));
 		t.setDebug("true".equals(ele.attributeValue("debug")));
-		t.setGidPrefix(ele.attributeValue("gidPrefix") == null ? t.getGidPrefix() : ele.attributeValue("gidPrefix"));
 		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
 		t.setViewModel(ele.attributeValue("viewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("viewModel")));
 		t.setSearchViewModel(ele.attributeValue("searchViewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("searchViewModel")));

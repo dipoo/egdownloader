@@ -68,7 +68,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			if(task != null){
 				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
-				is =  WebClient.getStreamUseJavaWithCookie(setting.getRealUrlBySetting(task.getCoverUrl()), setting.getCookieInfo());
+				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
 				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				
 				//设置最后创建时间
