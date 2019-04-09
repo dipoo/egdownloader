@@ -274,7 +274,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		model.setCurrent(rs.getString("current") == null ? 0 : Integer.parseInt(rs.getString("current")));
 		model.setSize(rs.getString("size") == null ? "" : rs.getString("size"));
 		TaskStatus status = TaskStatus.parseTaskStatus(rs.getString("status"));
-		model.setStatus(status == null ? TaskStatus.UNSTARTED : status);
+		model.setStatus(status == null ? TaskStatus.UNSTARTED : (status == TaskStatus.WAITING ? TaskStatus.STOPED : status));
 		model.setStart(rs.getString("start") == null ? 1 : Integer.parseInt(rs.getString("start")));
 		model.setEnd(rs.getString("end") == null ? model.getTotal() : Integer.parseInt(rs.getString("end")));
 	}
