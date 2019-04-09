@@ -115,7 +115,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog countWindow;
 	public SearchComicWindow searchComicWindow;
 	
-	public JPopupMenu tablePopupMenu;
+	public MainPopupMenu tablePopupMenu;
 	public TaskingTable runningTable;
 	public JScrollPane tablePane;
 	public InfoTabbedPane infoTabbedPane;

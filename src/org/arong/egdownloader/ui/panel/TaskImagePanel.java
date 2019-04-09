@@ -194,7 +194,8 @@ public class TaskImagePanel extends AJPanel {
 									//同步任务表格的选中状态
 									mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
 									if(e.getButton() == MouseEvent.BUTTON3){
-										mainWindow.tablePopupMenu.show(p, e.getPoint().x, e.getPoint().y);
+										Task task = mainWindow.runningTable.getTasks().get(selectIndex);
+										mainWindow.tablePopupMenu.show(task, p, e.getPoint().x, e.getPoint().y);
 									}
 									//双击切换
 									if(e.getClickCount() == 2){

@@ -33,7 +33,7 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 				cover = new File(localPath);
 				if(cover == null || !cover.exists()){
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(300);
 					} catch (InterruptedException e) {}
 					new CommonSwingWorker(new Runnable() {
 						public void run() {

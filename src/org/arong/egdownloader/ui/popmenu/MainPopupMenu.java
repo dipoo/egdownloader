@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.popmenu;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -41,10 +42,12 @@ import org.arong.util.Tracker;
  *
  */
 public class MainPopupMenu extends AJPopupMenu{
+	AJMenuItem jumpPopupMenuItem;
+	AJMenuItem startPopupMenuItem;
 	public MainPopupMenu(final EgDownloaderWindow mainWindow){
 		Color menuItemColor = new Color(0,0,85);
 		//右键菜单：开始
-		AJMenuItem startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
+		startPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_START_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("start"),
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
@@ -75,6 +78,26 @@ public class MainPopupMenu extends AJPopupMenu{
 						table.stopTask(table.getTasks().get(index));
 					}
 		}));
+		//右键菜单：任务插队
+		jumpPopupMenuItem = new AJMenuItem(ComponentConst.POPUP_JUMP_MENU_TEXT, menuItemColor,
+				IconManager.getIcon("start"),
+				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						//如果正在重建，则不下载
+						if(table.isRebuild()){
+							Tracker.println(MainPopupMenu.class, "正在重建任务");
+							return;
+						}
+						int index = table.getSelectedRow();
+						//先移除任务
+						mainWindow.runningTable.waitingTasks.remove(table.getTasks().get(index)); //table.getTasks().get(index));
+						//再将任务放到第一位
+						mainWindow.runningTable.waitingTasks.add(0, table.getTasks().get(index));
+					}
+		}));
+		jumpPopupMenuItem.setVisible(false);
 		//右键菜单：删除new MenuItemActonListener(mainWindow, new DeleteTaskWork())
 		AJMenuItem deletePopupMenuItem = new AJMenuItem(ComponentConst.POPUP_DELETE_MENU_TEXT, menuItemColor,
 						IconManager.getIcon("delete"), new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
@@ -276,7 +299,18 @@ public class MainPopupMenu extends AJPopupMenu{
 		AJMenu moreMenu = new AJMenu(ComponentConst.POPUP_MORE_MENU_TEXT, "", editMenuItem, resetMenuItem, completedMenuItem, rebuildMenuItem, copyUrlPopupMenuItem,
 				checkResetMenuItem, downloadCoverMenuItem);
 		moreMenu.setForeground(menuItemColor);
-		this.add(startPopupMenuItem, stopPopupMenuItem, deletePopupMenuItem/*, detailPopupMenuItem*/, openPicPopupMenuItem, openFolderPopupMenuItem,
+		this.add(startPopupMenuItem, jumpPopupMenuItem, stopPopupMenuItem, deletePopupMenuItem/*, detailPopupMenuItem*/, openPicPopupMenuItem, openFolderPopupMenuItem,
 				 openWebPageMenuItem, changeReadedMenuItem, zipMenuItem, searchAuthorMenuItem, searchLocalAuthorMenuItem, moreMenu);
+	}
+	
+	public void show(Task selected, Component invoker, int x, int y){
+		if(selected.getStatus() == TaskStatus.WAITING){
+			jumpPopupMenuItem.setVisible(true);
+			startPopupMenuItem.setVisible(false);
+		}else{
+			jumpPopupMenuItem.setVisible(false);
+			startPopupMenuItem.setVisible(true);
+		}
+		this.show(invoker, x, y);
 	}
 }
