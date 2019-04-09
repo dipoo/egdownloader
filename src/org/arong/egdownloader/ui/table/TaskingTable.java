@@ -46,7 +46,7 @@ public class TaskingTable extends JTable {
 	private int runningNum = 0;
 	private boolean rebuild;
 	private int sort = 1;//0为名称排序，1为时间排序
-	private List<Task> waitingTasks;//排队等待的任务
+	public List<Task> waitingTasks;//排队等待的任务
 	public static int wordNum = 230;//名称列最多显示字数，会随着窗口大小变化而改变
 	public int currentRowIndex = -1;//用于封面显示
 	public int selectRowIndex = 0;
@@ -310,7 +310,8 @@ public class TaskingTable extends JTable {
 				else if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
-					table.getMainWindow().tablePopupMenu.show(table, e.getPoint().x, e.getPoint().y);
+					Task task = table.getTasks().get(rowIndex);
+					table.getMainWindow().tablePopupMenu.show(task, table, e.getPoint().x, e.getPoint().y);
 				}
 			}
 		});
