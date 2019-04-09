@@ -34,7 +34,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
-			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo());
+			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo(), 10 * 1000);
 			if(source == null){
 				Tracker.println(this.getClass(), this.url + ":搜索出错");
 				return null;
@@ -60,57 +60,6 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				//下载封面线程
 				new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
 				
-				/*if(StringUtils.isNotBlank(mainWindow.setting.getCookieInfo2())){
-					//二次搜索线程
-					new CommonSwingWorker(new Runnable() {
-						public void run() {
-							try {
-								String source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", mainWindow.setting.getCookieInfo2());
-								if(source == null){
-									return;
-								}
-								String[] result = ScriptParser.search(source, mainWindow.setting, false);
-								if(result != null){
-									String json = result[1];
-									if(result.length > 2){
-										for(int i = 2; i < result.length; i ++){
-											json += "###" + result[i];
-										}
-									}
-									List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
-									if(searchTasks != null){
-										boolean p = false;int i = 0;
-										for(SearchTask searchTask : searchTasks){
-											for(SearchTask ost : mainWindow.searchComicWindow.searchTasks){
-												p = true;i ++;
-												if(ost.getUrl().equals(searchTask.getUrl())){
-													if(StringUtils.isNotBlank(searchTask.getDate())){
-														ost.setDate(searchTask.getDate());
-													}
-													if(StringUtils.isNotBlank(searchTask.getRating())){
-														ost.setRating(searchTask.getRating());
-													}
-													if(StringUtils.isNotBlank(searchTask.getFilenum())){
-														ost.setFilenum(searchTask.getFilenum());
-													}
-													if(StringUtils.isNotBlank(searchTask.getUploader())){
-														ost.setUploader(searchTask.getUploader());
-													}
-													break;
-												}
-											}
-										}
-										if(p){
-											mainWindow.searchComicWindow.updateTaskInfo();
-										}
-									}
-									
-								}
-							 } catch (Exception e) {}
-						}
-					}).execute();
-				}*/
-				
 				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());
 					searchComicWindow.keyPage.put(searchComicWindow.key, searchComicWindow.totalLabel.getText());
@@ -128,11 +77,10 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				searchComicWindow.hideLoading();
 				return null;
 			}
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
+		}catch (Exception e) {
 			searchComicWindow.key = " ";
 			searchComicWindow.totalLabel.setText(e.getMessage());
+			e.printStackTrace();
 		} finally{
 			searchComicWindow.hideLoading();
 			searchComicWindow.leftBtn.setEnabled(true);
