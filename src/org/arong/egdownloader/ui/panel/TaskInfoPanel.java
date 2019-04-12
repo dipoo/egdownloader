@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -53,7 +54,11 @@ public class TaskInfoPanel extends JScrollPane {
 							if(mainWindow.searchComicWindow == null){
 								mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
 							}
-							mainWindow.searchComicWindow.doSearch("upload:" + t.getUploader());
+							try {
+								mainWindow.searchComicWindow.doSearch("uploader:" + URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8"));
+							} catch (UnsupportedEncodingException e1) {
+								e1.printStackTrace();
+							}
 							mainWindow.searchComicWindow.setVisible(true);
 						}
 					}
