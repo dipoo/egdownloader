@@ -95,7 +95,7 @@ public class AboutMenuWindow extends JDialog {
 			System.out.println(egVersion);
 			Map<String, String> version = JsonUtil.json2Map(egVersion);
 			if(! Version.VERSION.equals(version.get("version"))){
-				int r = JOptionPane.showConfirmDialog(this, "最新版本号为：" + version.get("version") + "，是否前往下载？");
+				int r = JOptionPane.showConfirmDialog(null, "最新版本号为：" + version.get("version") + "，是否前往下载？");
 				if(r == JOptionPane.OK_OPTION){
 					try {
 						Desktop.getDesktop().browse(new URI(version.get("url")));
@@ -127,7 +127,7 @@ public class AboutMenuWindow extends JDialog {
 				File oldjar = new File(binPath + File.separator + "jre" + File.separator
 						+ "lib" + File.separator + "ext" + File.separator + "egdownloader.jar");
 				if(oldjar.exists()){
-					int r = JOptionPane.showConfirmDialog(this, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？");
+					int r = JOptionPane.showConfirmDialog(null, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？");
 					if(r == JOptionPane.OK_OPTION){
 						new JarUpdateWorker(mainWindow, version, binPath).execute();
 						this.dispose();

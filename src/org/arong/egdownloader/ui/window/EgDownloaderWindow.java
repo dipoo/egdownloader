@@ -174,7 +174,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
-		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
 		//this.setResizable(false);
 		this.setBackground(Color.WHITE);
@@ -483,6 +483,9 @@ public class EgDownloaderWindow extends JFrame {
 				}*/
 				if(infoTabbedPane != null){
 					infoTabbedPane.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
+					if(taskImagePanel != null && taskImagePanel.imageTaskPager != null){
+						taskImagePanel.imageTaskPager.setBounds(40 , mainWindow.infoTabbedPane.getY() + 25, (int)(mainWindow.taskInfoPanel.getWidth() - 80), 40);
+					}
 				}
 				if(consolePanel != null){
 					consolePanel.setBounds(5, window.getHeight() - 240, window.getWidth() - 20, 200);
