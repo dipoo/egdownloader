@@ -274,7 +274,7 @@ public class TaskImagePanel extends AJPanel {
 					int totalPage = tasks.size() % PAGESIZE == 0 ? tasks.size() / PAGESIZE : tasks.size() / PAGESIZE + 1;
 					if(totalPage > 1){
 						if(imageTaskPager == null){
-							imageTaskPager = new AJPager(40 , mainWindow.infoTabbedPane.getY() + 25, (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 80), 40, new ActionListener() {
+							imageTaskPager = new AJPager(40 , mainWindow.infoTabbedPane.getY() + 25, (int)(mainWindow.taskInfoPanel.getWidth() - 80), 40, new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									JButton btn = (JButton) e.getSource();
 									this_.page = Integer.parseInt(btn.getName());
