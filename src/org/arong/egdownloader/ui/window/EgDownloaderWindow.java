@@ -34,7 +34,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
@@ -168,12 +167,12 @@ public class EgDownloaderWindow extends JFrame {
 		//加载任务列表
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口
-		this.wtitle = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
+		this.wtitle = Version.NAME + "v" + Version.VERSION + "." + Version.JARVERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
 		this.setTitle(this.wtitle);
 		
 		this.setIconImage(IconManager.getIcon("download").getImage());
 		this.getContentPane().setLayout(null);
-		this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height - 50);
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//this.setMaximumSize(new Dimension(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT));
 		//this.setResizable(false);
