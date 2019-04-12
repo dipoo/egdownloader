@@ -55,6 +55,7 @@ public class MenuMouseListener implements MouseListener {
 				// 设置关于窗口置于最顶层
 				mainWindow.aboutWindow.setVisible(true);
 				mainWindow.aboutWindow.toFront();
+				((AboutMenuWindow)mainWindow.aboutWindow).printSystemProperties();
 			}
 		}
 

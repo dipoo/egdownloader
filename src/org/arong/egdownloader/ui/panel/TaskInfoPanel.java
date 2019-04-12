@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -25,12 +24,10 @@ import org.arong.util.FileUtil;
 
 public class TaskInfoPanel extends JScrollPane {
 	
-	private EgDownloaderWindow mainWindow;
 	private AJTextPane textPane;
 	private Task t;
 	
 	public TaskInfoPanel(final EgDownloaderWindow mainWindow) {
-		this.mainWindow = mainWindow;
 		textPane = new AJTextPane(null,
 				Color.BLUE);
 		textPane.setBorder(null);
