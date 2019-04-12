@@ -38,6 +38,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.HyperlinkEvent;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
@@ -502,6 +503,19 @@ public class EgDownloaderWindow extends JFrame {
 		});
 		//开启网络下载速度监听
 		setupNetSpeedtimer(mainWindow);
+		
+		if(! setting.isDebug()){
+			//检测新版本
+			new Thread(new Runnable() {
+				public void run() {
+					if (aboutWindow == null) {
+						aboutWindow = new AboutMenuWindow(mainWindow);
+					}
+					aboutWindow.setVisible(false);
+					((AboutMenuWindow)aboutWindow).aboutTextPane.fireHyperlinkUpdate(new HyperlinkEvent(aboutWindow, HyperlinkEvent.EventType.ACTIVATED, null, "checkVersion"));
+				}
+			}).start();
+		}
 	}
 	
 	protected void processWindowEvent(WindowEvent e) {
