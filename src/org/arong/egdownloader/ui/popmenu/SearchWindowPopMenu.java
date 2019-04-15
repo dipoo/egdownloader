@@ -25,7 +25,7 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 
 public class SearchWindowPopMenu extends JPopupMenu {
 	public EgDownloaderWindow mainWindow;
@@ -154,7 +154,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
 						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-						String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
+						String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
 						File coverFile = new File(path);
 						if(coverFile.exists()){
 							coverFile.delete();

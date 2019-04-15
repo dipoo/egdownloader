@@ -15,7 +15,7 @@ import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 图片表格单元格渲染器
  * @author 阿荣
@@ -53,7 +53,7 @@ public class PictureTableCellRenderer extends DefaultTableCellRenderer {
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(80);
 			tc.setMaxWidth(120);
-			val = FileUtil.showSizeStr(Long.parseLong(val));
+			val = FileUtil2.showSizeStr(Long.parseLong(val));
 		}else if(column == 4){//分别率
 			TableColumn tc = table.getColumnModel().getColumn(column);
 			tc.setPreferredWidth(80);

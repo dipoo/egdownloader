@@ -16,7 +16,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 搜索结果封面窗口
  * @author dipoo
@@ -82,7 +82,7 @@ public class SearchCoverWindow extends JWindow {
 	 */
 	public void showCover(SearchTask task, Point p){
 		//检测封面是否已下载http://exhentai.org/g/794884/2278359e3a
-		String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
+		String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
 			this.setSize(20, 20);

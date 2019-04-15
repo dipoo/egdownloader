@@ -19,7 +19,7 @@ import org.arong.egdownloader.spider.WebClientException;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.SimpleImageInfo;
 import org.arong.util.Tracker;
 /**
@@ -78,7 +78,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 			}else if(totalLength - 1024 * 10 > size){
 				//误差在10K以上则不算下载成功
 				pic.setRealUrl(null);
-				Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(" + FileUtil.showSizeStr((long)size) + "):下载不完整(" + FileUtil.showSizeStr((long)totalLength) + ")");
+				Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(" + FileUtil2.showSizeStr((long)size) + "):下载不完整(" + FileUtil2.showSizeStr((long)totalLength) + ")");
 			}
 			pic.setSize(size);//设置图片大小
 			pic.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//下载完成时间
@@ -99,7 +99,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
+			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 			
 			if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
 				PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * @author 阿荣
  * @since 2014-05-26
  */
-public final class FileUtil {
+public final class FileUtil2 {
 	/** 当前下载的字节数:用于storeStream方法的下载速度计算 */
 	public static Long byteLength = 0L;
 	/** 上次下载的字节数:用于storeStream方法的下载速度计算 */
@@ -57,7 +57,7 @@ public final class FileUtil {
 			return 0;
 		}
     	File dir = new File(path);
-    	FileUtil.ifNotExistsThenCreate(dir);
+    	FileUtil2.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
     	BufferedOutputStream bos = null;
     	int size = 0;
@@ -105,7 +105,7 @@ public final class FileUtil {
 			return;
 		}
 		File dir = new File(path);
-    	FileUtil.ifNotExistsThenCreate(dir);
+    	FileUtil2.ifNotExistsThenCreate(dir);
     	FileWriter fw = new FileWriter(path + File.separator + name);
     	fw.write(str);
     	if(fw != null){
@@ -169,7 +169,7 @@ public final class FileUtil {
 			}
 			
 		}catch(Exception e){
-			Tracker.println(FileUtil.class, e.getMessage());
+			Tracker.println(FileUtil2.class, e.getMessage());
 		}
 		return null;
 	}

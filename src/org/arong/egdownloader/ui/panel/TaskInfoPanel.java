@@ -20,7 +20,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 
 public class TaskInfoPanel extends JScrollPane {
 	
@@ -91,8 +91,8 @@ public class TaskInfoPanel extends JScrollPane {
 						.replace("@t_createTime", t.getCreateTime() == null ? "" : t.getCreateTime())
 						.replace("@t_completedTime", t.getCompletedTime() == null ? "" : t.getCompletedTime())
 						.replace("@t_current", t.getCurrent() + "")
-						.replace("@t_ocurrentSize", FileUtil.showSizeStr(size))
-						.replace("@t_onepsize", t.getCurrent() == 0 ? "0B" : FileUtil.showSizeStr(size / t.getCurrent()))
+						.replace("@t_ocurrentSize", FileUtil2.showSizeStr(size))
+						.replace("@t_onepsize", t.getCurrent() == 0 ? "0B" : FileUtil2.showSizeStr(size / t.getCurrent()))
 						.replace("@t_ocurrentrate", getSchedule(t.getCurrent(), t.getTotal()))
 						.replace("@t_start", t.getStart() + "")
 						.replace("@t_end", t.getEnd() + "")

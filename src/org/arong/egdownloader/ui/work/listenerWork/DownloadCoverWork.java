@@ -17,7 +17,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 下载漫画封面（先检测是否存在，不存在才去下载）
  * @author 阿荣
@@ -43,7 +43,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 						
 						//下载封面
 						is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
-						int size = FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+						int size = FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 						if(size == 0){
 							JOptionPane.showMessageDialog(mainWindow, "下载失败，地址错误或者地址不可访问");
 						}else{

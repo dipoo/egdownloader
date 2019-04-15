@@ -13,7 +13,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DeletingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.Tracker;
 /**
  * 删除任务线程类
@@ -70,7 +70,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					for(int i = 0; i < tasks.size(); i ++){
 						file = new File(ComponentConst.getSavePathPreffix() + tasks.get(i).getSaveDir());
 						if(file.exists()){
-							FileUtil.deleteFile(file);
+							FileUtil2.deleteFile(file);
 						}
 					}
 				}

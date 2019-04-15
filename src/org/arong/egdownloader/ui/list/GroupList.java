@@ -28,7 +28,7 @@ import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.Tracker;
 /**
  * 任务组列表
@@ -136,7 +136,7 @@ public class GroupList extends JList {
 						}
 						File file = new File(ComponentConst.ROOT_DATA_PATH + "/" + name);
 						if(file.exists()){
-							FileUtil.deleteFile(file);
+							FileUtil2.deleteFile(file);
 						}
 						File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
 						if(!dataFile.exists()){

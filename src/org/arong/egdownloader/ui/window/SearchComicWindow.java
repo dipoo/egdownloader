@@ -52,7 +52,7 @@ import org.arong.egdownloader.ui.swing.AJPager;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.work.SearchComicWorker;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 
 import com.sun.awt.AWTUtilities;
 
@@ -377,7 +377,7 @@ public class SearchComicWindow extends JFrame {
 		});
 		
 		//检测是否存在缓存目录,不存在则创建
-		FileUtil.ifNotExistsThenCreate(ComponentConst.CACHE_PATH);
+		FileUtil2.ifNotExistsThenCreate(ComponentConst.CACHE_PATH);
 		
 	}
 	

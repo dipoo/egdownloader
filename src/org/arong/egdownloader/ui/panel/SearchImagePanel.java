@@ -17,7 +17,7 @@ import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 
 public class SearchImagePanel extends JLabel {
 	private EgDownloaderWindow mainWindow;
@@ -67,7 +67,7 @@ public class SearchImagePanel extends JLabel {
 				JLabel l = (JLabel) e.getSource();
 				l.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
 				l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				if(l.getIcon().getIconWidth() == DEFAULTWIDTH && new File(ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1).getUrl())).exists()){
+				if(l.getIcon().getIconWidth() == DEFAULTWIDTH && new File(ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1).getUrl())).exists()){
 					flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1));
 				}
 			}
@@ -99,7 +99,7 @@ public class SearchImagePanel extends JLabel {
 		this.setToolTipText(task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : ""));
 		final SearchImagePanel this_ = this;
 		
-		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil.filterDir(task.getUrl());
+		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
 			this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);

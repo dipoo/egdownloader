@@ -24,7 +24,7 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.JarUpdateWorker;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.JsonUtil;
 
 /**
@@ -115,12 +115,12 @@ public class AboutMenuWindow extends JDialog {
 				}
 			}else if(! Version.JARVERSION.equals(version.get("jarVersion")) && StringUtils.isNotBlank(version.get("jarUrl"))){
 				
-				String binPath = FileUtil.getAppPath(getClass());
+				String binPath = FileUtil2.getAppPath(getClass());
 				if(binPath.endsWith("bin")){
 					binPath = binPath.substring(0, binPath.length() - 3);
 				}else{
 					String defaultSavePath = mainWindow.setting.getDefaultSaveDir();
-					FileUtil.ifNotExistsThenCreate(defaultSavePath);
+					FileUtil2.ifNotExistsThenCreate(defaultSavePath);
 					File f = new File(defaultSavePath);
 					binPath = f.getAbsolutePath().replaceAll(defaultSavePath, "");
 				}

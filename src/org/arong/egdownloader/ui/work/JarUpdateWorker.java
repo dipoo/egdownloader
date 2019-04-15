@@ -10,7 +10,7 @@ import javax.swing.SwingWorker;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * Jar包更新任务线程类
  * @author dipoo
@@ -45,18 +45,18 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 			Object[] o = WebClient.getStreamAndLengthUseJavaWithCookie(url, null);
 			is = (InputStream) o[0];
 			int totalLength = (Integer) o[1];
-			System.out.println("jar文件大小：" + FileUtil.showSizeStr((long)totalLength));
+			System.out.println("jar文件大小：" + FileUtil2.showSizeStr((long)totalLength));
 			if(is == null){
 				JOptionPane.showMessageDialog(null, "jar文件更新失败");
 			}else{
 				//备份
 				String bakPath = binPath + File.separator + "bak" + File.separator + Version.JARVERSION + File.separator;
-				FileUtil.ifNotExistsThenCreate(bakPath);
+				FileUtil2.ifNotExistsThenCreate(bakPath);
 				org.arong.utils.FileUtil.copyFile(oldjar.getPath(), bakPath + jarName);
 				//保存
-				int fsize = FileUtil.storeStream(oldjar.getParent(), jarName, is);
+				int fsize = FileUtil2.storeStream(oldjar.getParent(), jarName, is);
 				if(fsize != totalLength){
-					JOptionPane.showMessageDialog(null, "更新失败，jar文件下载不完整(" + FileUtil.showSizeStr((long)fsize) + ")，请重试");
+					JOptionPane.showMessageDialog(null, "更新失败，jar文件下载不完整(" + FileUtil2.showSizeStr((long)fsize) + ")，请重试");
 				}else{
 					JOptionPane.showMessageDialog(null, "jar文件更新成功，重启后生效。");
 				}

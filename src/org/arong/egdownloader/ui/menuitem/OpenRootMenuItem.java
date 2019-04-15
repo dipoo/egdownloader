@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.Tracker;
 /**
  * 打开根目录
@@ -28,12 +28,12 @@ public class OpenRootMenuItem extends JMenuItem {
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					String binPath = FileUtil.getAppPath(getClass());
+					String binPath = FileUtil2.getAppPath(getClass());
 					if(binPath.endsWith("bin")){
 						binPath = binPath.substring(0, binPath.length() - 3);
 					}else{
 						String defaultSavePath = window.setting.getDefaultSaveDir();
-						FileUtil.ifNotExistsThenCreate(defaultSavePath);
+						FileUtil2.ifNotExistsThenCreate(defaultSavePath);
 						File f = new File(defaultSavePath);
 						binPath = f.getAbsolutePath().replaceAll(defaultSavePath, "");
 					}

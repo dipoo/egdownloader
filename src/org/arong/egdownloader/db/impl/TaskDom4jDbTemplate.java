@@ -18,7 +18,7 @@ import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.util.Dom4jUtil;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -47,7 +47,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		try {
 			dom = Dom4jUtil.getDOM(ComponentConst.TASK_XML_DATA_PATH);
 		} catch (DocumentException e) {
-			FileUtil.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
+			FileUtil2.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
 			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><tasks></tasks>";
 			int length = 0; //每一次读取的长度
 			char[] buffer = new char[2048]; //设缓冲最大值为2048字符
