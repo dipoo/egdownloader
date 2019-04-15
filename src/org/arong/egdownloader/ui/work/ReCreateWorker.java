@@ -18,7 +18,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 重新新建任务线程类
  * @author 阿荣
@@ -52,7 +52,7 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 				if(task.getCoverUrl() == null){
 					//下载封面
 					is =  WebClient.getStreamUseJava(task.getCoverUrl());
-					FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+					FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				}
 				
 				//保存到数据库

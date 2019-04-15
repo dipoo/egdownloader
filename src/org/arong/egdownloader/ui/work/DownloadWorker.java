@@ -28,7 +28,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.SimpleImageInfo;
 import org.arong.util.Tracker;
 /**
@@ -131,7 +131,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}else if(totalLength - 1024 * 10 > size){
 							//误差在10K以上则不算下载成功
 							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(" + FileUtil.showSizeStr((long)size) + "):下载不完整(" + FileUtil.showSizeStr((long)totalLength) + ")");
+							Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(" + FileUtil2.showSizeStr((long)size) + "):下载不完整(" + FileUtil2.showSizeStr((long)totalLength) + ")");
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
@@ -159,7 +159,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						
-						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
+						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
 							//刷新信息面板
 							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){

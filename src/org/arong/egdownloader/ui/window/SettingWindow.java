@@ -40,7 +40,7 @@ import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.UpdateScriptWorker;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 配置窗口
  * @author 阿荣
@@ -177,7 +177,7 @@ public class SettingWindow extends JFrame{
 					try {
 						String path = ComponentConst.getSavePathPreffix() + saveDirField.getText();
 						File f = new File(path);
-						FileUtil.ifNotExistsThenCreate(f);
+						FileUtil2.ifNotExistsThenCreate(f);
 						Desktop.getDesktop().open(f);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -260,7 +260,7 @@ public class SettingWindow extends JFrame{
 					try {
 						String path = "script";
 						File f = new File(path);
-						FileUtil.ifNotExistsThenCreate(f);
+						FileUtil2.ifNotExistsThenCreate(f);
 						Desktop.getDesktop().open(f);
 					} catch (Exception e1) {
 						e1.printStackTrace();

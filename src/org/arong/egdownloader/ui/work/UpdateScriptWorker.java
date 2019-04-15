@@ -14,7 +14,7 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.egdownloader.ui.window.SettingWindow;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 更新脚本线程类
  * @author dipoo
@@ -32,7 +32,7 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		String dir = "script/";
-		FileUtil.ifNotExistsThenCreate(dir);
+		FileUtil2.ifNotExistsThenCreate(dir);
 		if(window instanceof EgDownloaderWindow){
 			mainWindow = (EgDownloaderWindow)window;
 			SettingWindow settingWindow = (SettingWindow) mainWindow.settingWindow;
@@ -48,31 +48,31 @@ public class UpdateScriptWorker extends SwingWorker<Void, Void>{
 			if(initWindow != null){
 				initWindow.textLabel.setText(Version.NAME + "-更新createTask.js");
 			}
-			FileUtil.storeStream(dir, "createTask.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_CREATE_URL));
+			FileUtil2.storeStream(dir, "createTask.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_CREATE_URL));
 			//更新collectPicture.js
 			if(initWindow != null){
 				initWindow.textLabel.setText(Version.NAME + "-更新collectPicture.js");
 			}
-			FileUtil.storeStream(dir, "collectPicture.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_COLLECT_URL));
+			FileUtil2.storeStream(dir, "collectPicture.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_COLLECT_URL));
 			//更新download.js
 			if(initWindow != null){
 				initWindow.textLabel.setText(Version.NAME + "-更新download.js");
 			}
-			FileUtil.storeStream(dir, "download.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_DOWNLOAD_URL));
+			FileUtil2.storeStream(dir, "download.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_DOWNLOAD_URL));
 			//更新search.js
 			if(initWindow != null){
 				initWindow.textLabel.setText(Version.NAME + "-更新search.js");
 			}
-			FileUtil.storeStream(dir, "search.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH_URL));
+			FileUtil2.storeStream(dir, "search.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH_URL));
 			//更新search2.js
-			if(initWindow != null){
+			/*if(initWindow != null){
 				initWindow.textLabel.setText(Version.NAME + "-更新search2.js");
 			}
-			FileUtil.storeStream(dir, "search2.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH2_URL));
+			FileUtil2.storeStream(dir, "search2.js", WebClient.getStreamUseJava(ComponentConst.SCRIPT_SEARCH2_URL));*/
 			//更新脚本解析器 
 			ScriptParser.clearFiles();
 			//保存版本号
-			FileUtil.storeStr2file(ComponentConst.remoteScriptVersion, "script/", "version");
+			FileUtil2.storeStr2file(ComponentConst.remoteScriptVersion, "script/", "version");
 			ComponentConst.localScriptVersion = ComponentConst.remoteScriptVersion;
 			ComponentConst.scriptChange = false;
 			if(initWindow != null){

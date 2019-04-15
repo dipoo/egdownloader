@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.DateUtil;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.utils.StringUtil;
 
 /**
@@ -31,11 +31,11 @@ public class SwingPrintStream extends PrintStream {
 	}
 	static BufferedWriter logfw = null;
 	static{
-		String binPath = FileUtil.getAppPath(SwingPrintStream.class);
+		String binPath = FileUtil2.getProjectPath();
 		if(binPath.endsWith("bin")){
 			binPath = binPath.substring(0, binPath.length() - 3);
 		}else{
-			FileUtil.ifNotExistsThenCreate("");
+			FileUtil2.ifNotExistsThenCreate("");
 			File f = new File("");
 			binPath = f.getAbsolutePath();
 		}
@@ -44,7 +44,7 @@ public class SwingPrintStream extends PrintStream {
 		try {
 			//大于20M则另存为
 			if(logfile.exists() && logfile.length() > 1024 * 1024 * 20){
-				logfile.renameTo(new File(FileUtil.getProjectPath() + File.separator + "console.log." + sdf2.format(new Date())));
+				logfile.renameTo(new File(FileUtil2.getProjectPath() + File.separator + "console.log." + sdf2.format(new Date())));
 			}
 			logfw = new BufferedWriter(new FileWriter(logfile, true), 4096);
 		} catch (IOException e) {

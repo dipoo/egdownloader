@@ -82,7 +82,7 @@ import org.arong.egdownloader.ui.work.listenerWork.DeleteTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 
 /**
  * 主线程类
@@ -139,14 +139,14 @@ public class EgDownloaderWindow extends JFrame {
 		TimerTask timerTask = new TimerTask() {
 			public void run() {
 				//当前一秒内的流量
-				Long length = FileUtil.byteLength - FileUtil.oldByteLength;
+				Long length = FileUtil2.byteLength - FileUtil2.oldByteLength;
 				//显示到标题栏
-				mainWindow.setTitle(mainWindow.wtitle + " (" + FileUtil.showSizeStr(length) + "/S)");
-				if(FileUtil.byteLength > 999900000){
-					FileUtil.byteLength = 0L;
-					FileUtil.oldByteLength = 0L;
+				mainWindow.setTitle(mainWindow.wtitle + " (" + FileUtil2.showSizeStr(length) + "/S)");
+				if(FileUtil2.byteLength > 999900000){
+					FileUtil2.byteLength = 0L;
+					FileUtil2.oldByteLength = 0L;
 				}else{
-					FileUtil.oldByteLength = FileUtil.byteLength;
+					FileUtil2.oldByteLength = FileUtil2.byteLength;
 				}
 			}
 		};

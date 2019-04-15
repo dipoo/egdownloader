@@ -45,7 +45,7 @@ import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 public class SearchTagWindow extends JDialog {
@@ -79,7 +79,7 @@ public class SearchTagWindow extends JDialog {
 			tags.load(new FileReader(ComponentConst.TAG_FILE_PATH));
 		} catch (FileNotFoundException e1) {
 			try {
-				FileUtil.storeStr2file("", ComponentConst.ROOT_DATA_PATH, ComponentConst.TAG_FILE_NAME);
+				FileUtil2.storeStr2file("", ComponentConst.ROOT_DATA_PATH, ComponentConst.TAG_FILE_NAME);
 			} catch (IOException e2) {
 				e2.printStackTrace();
 			}

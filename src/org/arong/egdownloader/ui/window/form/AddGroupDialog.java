@@ -29,7 +29,7 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 新建任务窗口
  * @author dipoo
@@ -56,10 +56,10 @@ public class AddGroupDialog extends JDialog {
 				//验证名称
 				if("".equals(groupName)){
 					JOptionPane.showMessageDialog(null, "名称不能为空");
-				}else if(! FileUtil.dirValidate(groupName)){
+				}else if(! FileUtil2.dirValidate(groupName)){
 					JOptionPane.showMessageDialog(null, "名称不能包含? | * . < > : / \\等特殊字符");
 				}else{
-					FileUtil.ifNotExistsThenCreate(ComponentConst.ROOT_DATA_PATH);
+					FileUtil2.ifNotExistsThenCreate(ComponentConst.ROOT_DATA_PATH);
 					File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
 					for(File file : dataFile.listFiles()){
 						if(file.getName().equals(groupName)){
@@ -77,7 +77,7 @@ public class AddGroupDialog extends JDialog {
 					ComponentConst.changeDataPath(groupName);
 					ComponentConst.changeDataXmlPath();
 					if(mainWindow != null){
-						FileUtil.ifNotExistsThenCreate(ComponentConst.getXmlDirPath());
+						FileUtil2.ifNotExistsThenCreate(ComponentConst.getXmlDirPath());
 						/**
 						 * 更新dom
 						 */

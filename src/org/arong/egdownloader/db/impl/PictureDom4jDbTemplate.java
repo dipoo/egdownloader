@@ -14,7 +14,7 @@ import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.util.Dom4jUtil;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -43,7 +43,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		try {
 			dom = Dom4jUtil.getDOM(ComponentConst.PICTURE_XML_DATA_PATH);
 		} catch (DocumentException e) {
-			FileUtil.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
+			FileUtil2.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
 			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><pictures></pictures>";
 			int length = 0; //每一次读取的长度
 			char[] buffer = new char[2048]; //设缓冲最大值为2048字符

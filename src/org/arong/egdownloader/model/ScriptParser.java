@@ -25,7 +25,7 @@ import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.JsonUtil;
 import org.arong.util.Tracker;
 
@@ -143,7 +143,7 @@ public class ScriptParser {
 		}
 		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//保存源文件
-		FileUtil.storeStr2file(source, "source/", "task.html");
+		FileUtil2.storeStr2file(source, "source/", "task.html");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		
@@ -232,10 +232,10 @@ public class ScriptParser {
 	private static String genSaveDir(Task task){
 		String s = null;
 		if(task.isSaveDirAsSubname() && StringUtils.isNotBlank(task.getSubname())){
-			s = FileUtil.filterDir(task.getSubname());
+			s = FileUtil2.filterDir(task.getSubname());
 		}
 		if(StringUtils.isBlank(s)){
-			s = FileUtil.filterDir(task.getName());
+			s = FileUtil2.filterDir(task.getName());
 		}
 		return task.getSaveDir() + "/" + s;
 	} 
@@ -328,7 +328,7 @@ public class ScriptParser {
 		String source = WebClient.getRequestUseJavaWithCookie(sourceUrl, "UTF-8", setting.getCookieInfo());
 		try {
 			//保存源文件
-			FileUtil.storeStr2file(source, "source/", "download.html");
+			FileUtil2.storeStr2file(source, "source/", "download.html");
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			param.put("version", Version.VERSION);

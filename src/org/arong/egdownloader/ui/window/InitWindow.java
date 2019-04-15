@@ -42,7 +42,7 @@ import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.UpdateScriptWorker;
 import org.arong.egdownloader.version.Version;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 程序初始化窗口
  * @author 阿荣
@@ -176,7 +176,7 @@ public class InitWindow extends JWindow {
 				try {
 					scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
 					//V.2015.03.26
-					String currentVersion = FileUtil.getTextFromReader(new FileReader("script/version"));
+					String currentVersion = FileUtil2.getTextFromReader(new FileReader("script/version"));
 	
 					//版本返回信息需要以V.2字符串开头，否则可能获取的数据不正确，不做更新操作
 					if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){

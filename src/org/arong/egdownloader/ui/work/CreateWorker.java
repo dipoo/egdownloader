@@ -17,7 +17,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 import org.arong.util.Tracker;
 /**
  * 新建任务线程类
@@ -69,7 +69,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
 				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
-				FileUtil.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+				FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				
 				//设置最后创建时间
 				setting.setLastCreateTime(task.getCreateTime());

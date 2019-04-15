@@ -20,7 +20,7 @@ import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.egdownloader.ui.work.ReCreateWorker;
-import org.arong.util.FileUtil;
+import org.arong.util.FileUtil2;
 /**
  * 任务模型
  * @author 阿荣
@@ -91,7 +91,7 @@ public class Task {
 			return 0;
 		}
     	File dir = new File(path);
-    	FileUtil.ifNotExistsThenCreate(dir);
+    	FileUtil2.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
     	BufferedOutputStream bos = null;
     	int size = 0;
@@ -104,7 +104,7 @@ public class Task {
 			while ((len = bis.read(buff)) != -1) {
 				size += len;
 				byteLength += len;
-				FileUtil.byteLength += len; 
+				FileUtil2.byteLength += len; 
 				bos.write(buff, 0, len);
 			}
 			bos.flush();
@@ -411,7 +411,7 @@ public class Task {
 				public void run() {
 					//当前一秒内的流量
 					Long length = byteLength - oldByteLength;
-					setDownSpeed(FileUtil.showSizeStr(length) + "/S");
+					setDownSpeed(FileUtil2.showSizeStr(length) + "/S");
 					if(byteLength > 999900000){
 						byteLength = 0L;
 						oldByteLength = 0L;
@@ -490,8 +490,8 @@ public class Task {
 	
 	public String getRealSaveDirName(){
 		if(saveDirAsSubname && subname != null){
-			return FileUtil.filterDir(StringUtils.isNotBlank(subname.trim()) ? subname.trim() : name);
+			return FileUtil2.filterDir(StringUtils.isNotBlank(subname.trim()) ? subname.trim() : name);
 		}
-		return FileUtil.filterDir(name);
+		return FileUtil2.filterDir(name);
 	}
 }
