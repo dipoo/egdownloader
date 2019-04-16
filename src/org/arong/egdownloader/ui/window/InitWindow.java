@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -23,6 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
@@ -43,6 +46,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.UpdateScriptWorker;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil2;
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 /**
  * 程序初始化窗口
  * @author 阿荣
@@ -118,6 +122,32 @@ public class InitWindow extends JWindow {
 			}else{
 				setting = settings.get(0);
 			}
+			
+			if("BeautyEye".equals(setting.getSkin())){
+				//皮肤
+				try {
+					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
+					BeautyEyeLNFHelper.launchBeautyEyeLNF();
+					UIManager.put("RootPane.setupButtonVisible", false);
+				} catch (Exception e) {
+				}
+			}else{
+				try {
+					LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
+					for(LookAndFeelInfo info : infos){
+						if(info.getName().equals(setting.getSkin())){
+							try {
+								UIManager.setLookAndFeel(info.getClassName());
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+				} catch (Exception e) {
+				}
+			}
+			new JFileChooser();
+			
 			textLabel.setForeground(Color.WHITE);
 			textLabel.setText("读取任务列表");
 			taskDbTemplate = new TaskSqliteDbTemplate();//TaskDom4jDbTemplate();

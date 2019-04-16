@@ -18,7 +18,7 @@ import org.arong.egdownloader.ui.panel.TaskImagePanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 /**
- * 暂停所有任务
+ * 切换视图
  * @author dipoo
  * @since 2014-12-07
  */
