@@ -13,7 +13,6 @@ import javax.swing.UIManager;
 import org.arong.egdownloader.ui.window.GroupWindow;
 import org.arong.egdownloader.ui.window.InitWindow;
 import org.arong.egdownloader.version.Version;
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 
 /**
@@ -52,14 +51,6 @@ public class Main {
 		for (int i = 0; i < FontConst.DEFAULT_FONT.length; i++)
 			UIManager.put(FontConst.DEFAULT_FONT[i], new Font("微软雅黑",
 					Font.BOLD, 12));
-		try {
-			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
-			BeautyEyeLNFHelper.launchBeautyEyeLNF();
-			UIManager.put("RootPane.setupButtonVisible", false);
-		} catch (Exception e) {
-
-		}
-
 		File dataFile = new File(ComponentConst.ROOT_DATA_PATH);
 		if (!dataFile.exists()) {
 			dataFile.mkdirs();
@@ -78,7 +69,7 @@ public class Main {
 				new InitWindow();
 			}
 		}
-
+		
 		// 异步执行
 		/*
 		 * SwingUtilities.invokeLater(new Runnable() { public void run() { new

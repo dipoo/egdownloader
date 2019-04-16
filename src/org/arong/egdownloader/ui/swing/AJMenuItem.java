@@ -35,6 +35,19 @@ public class AJMenuItem extends JMenuItem implements ActionListener{
 		}	
 	}
 	
+	public AJMenuItem(String text, String name, String icon, ActionListener listener){
+		this.setText(text);
+		this.setName(name);
+		this.setCursor(CursorManager.getPointerCursor());
+		if(icon != null && !"".equals(icon)){
+			URL url = getClass().getResource(ComponentConst.ICON_PATH + icon);
+			if(url != null){
+				this.setIcon(new ImageIcon(url));
+			}
+		}	
+		this.addActionListener(listener);
+	}
+	
 	public AJMenuItem(String text, String name, Component... components){
 		super(text);
 		this.setName(name);

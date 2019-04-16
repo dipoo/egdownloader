@@ -67,6 +67,8 @@ public class Setting {
 	private int coverWidth = 150;
 	private int coverHeight = 216;
 	
+	private String skin = "BeautyEye";//皮肤
+	
 	
 	public String getPageParam() {
 		return pageParam;
@@ -283,6 +285,13 @@ public class Setting {
 	}
 	public void setShowAsSubname(boolean showAsSubname) {
 		this.showAsSubname = showAsSubname;
+	}
+	
+	public String getSkin() {
+		return skin;
+	}
+	public void setSkin(String skin) {
+		this.skin = skin;
 	}
 	
 }

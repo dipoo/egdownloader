@@ -225,6 +225,7 @@ public class AddFormDialog extends JDialog {
 		
 		ComponentUtil.addComponents(this.getContentPane(), addTaskBtn, urlLabel, urlField, tagLabel, tagField,
 				 saveDirLabel, saveDirField, chooserBtn, tipLabel, originalCheckBox, saveDirAsSubnameBox);
+		mainWindow.setEnabled(false);
 	}
 	public void emptyField(){
 		urlField.setText("");

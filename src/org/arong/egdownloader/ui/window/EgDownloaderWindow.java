@@ -38,8 +38,12 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.HyperlinkEvent;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
@@ -74,6 +78,7 @@ import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJMenu;
 import org.arong.egdownloader.ui.swing.AJMenuBar;
+import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
@@ -83,6 +88,7 @@ import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil2;
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 /**
  * 主线程类
@@ -193,7 +199,6 @@ public class EgDownloaderWindow extends JFrame {
 				new IListenerTask() {
 			public void doWork(Window mainWindow, MouseEvent e) {
 				EgDownloaderWindow this_ = (EgDownloaderWindow) mainWindow;
-				this_.setEnabled(false);
 				if(this_.creatingWindow != null && this_.creatingWindow.isVisible()){
 					this_.creatingWindow.setVisible(true);
 					this_.creatingWindow.toFront();
@@ -304,6 +309,41 @@ public class EgDownloaderWindow extends JFrame {
 		sizeMenu.add(new ChangeViewSizeMenuItem("中√", this, 2));
 		sizeMenu.add(new ChangeViewSizeMenuItem("小", this, 3));
 		operaMenu.add(sizeMenu);
+		
+		JMenu skinMenu = new AJMenu("切换皮肤", "", IconManager.getIcon("task"));
+		skinMenu.add(new AJMenuItem("BeautyEye", null, IconManager.getIcon(""), new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
+					BeautyEyeLNFHelper.launchBeautyEyeLNF();
+					UIManager.put("RootPane.setupButtonVisible", false);
+				} catch (Exception e1) {
+				}
+			}
+		}));
+		
+		LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
+		for(LookAndFeelInfo info : infos){
+			skinMenu.add(new AJMenuItem(info.getName(), info.getClassName(), null,
+					new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							AJMenuItem item = (AJMenuItem)e.getSource();
+							String skinclass = item.getName();
+							if(StringUtils.isNotBlank(skinclass)){
+								try {
+									UIManager.setLookAndFeel(skinclass);
+									SwingUtilities.updateComponentTreeUI(mainWindow);
+									mainWindow.setting.setSkin(item.getText());
+								} catch (Exception e1) {
+									e1.printStackTrace();
+									System.out.println("皮肤切换失败：" + e1.getMessage());
+								}
+							}
+						}
+					}));
+		}
+		operaMenu.add(skinMenu);
+		
 		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));
 		operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
