@@ -60,34 +60,31 @@ public class SimpleSearchWindow extends JDialog {
 		keyTextField = new AJTextField("", "", 70, 50, 430, 30);
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				String key = keyTextField.getText();
-				if(key == null || "".equals(key.trim())){
+				String key_ = keyTextField.getText();
+				if(key_ == null || "".equals(key_.trim())){
 					JOptionPane.showMessageDialog(this_, "请输入关键字！");
 					return;
 				}
+				String[] keys = key_.trim().split("\\|\\|");
 				TaskingTable table = (TaskingTable)mainWindow.runningTable;
 				List<Task> allTasks = table.getTasks();
 				int j = 0;
 				List<Integer> indexs = new ArrayList<Integer>();
 				for(int i = 0; i < allTasks.size(); i++){
-					j ++;
-					if(allTasks.get(i).getName().toLowerCase().contains(key.toLowerCase())){
-						allTasks.add(0, allTasks.remove(i));
-						indexs.add(i);
-					}else if(allTasks.get(i).getSubname().contains(key.toLowerCase())){
-						allTasks.add(0, allTasks.remove(i));
-						indexs.add(i);
-					}else{
-						j --;
-						continue;
+					for(String key : keys){
+						j ++;
+						if(allTasks.get(i).getName().toLowerCase().contains(key.toLowerCase())){
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
+							break;
+						}else if(allTasks.get(i).getSubname().contains(key.toLowerCase())){
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
+							break;
+						}else{
+							j --;
+						}
 					}
-					//定位到第一条任务处
-					/*if(j == 1){
-						//使之选中
-						table.setRowSelectionInterval(i, i);
-						//定位
-						table.scrollRectToVisible(table.getCellRect(i, 0, true));
-					}*/
 				}
 				if(j > 0){
 					if(mainWindow.viewModel == 1){
@@ -99,7 +96,7 @@ public class SimpleSearchWindow extends JDialog {
 						mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));
 					}
 				}
-				Tracker.println("[" + key + "]搜索完毕,结果【" + j + "】条。");
+				Tracker.println("[" + key_ + "]搜索完毕,结果【" + j + "】条。");
 			}
 		}, 510, 50, 60, 30);
 		ComponentUtil.addComponents(this.getContentPane(), descLabel, keyLabel, keyTextField, searchBtn);

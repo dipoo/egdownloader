@@ -196,8 +196,8 @@ public class MainPopupMenu extends AJPopupMenu{
 							mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
 						}
 						SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
-						if(task.getAuthor() != null){
-							ssw.keyTextField.setText(task.getAuthor());
+						if(task.getAuthor() != null || task.getSubAuthor() != null){
+							ssw.keyTextField.setText(task.getAuthor() + "||" + task.getSubAuthor());
 							ssw.searchBtn.doClick();
 						}
 					}

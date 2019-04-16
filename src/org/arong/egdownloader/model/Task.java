@@ -145,6 +145,17 @@ public class Task {
 	public String getAuthor() {
 		return author;
 	}
+	public String getSubAuthor() {
+		String subAuthor = null;
+		if(subname != null){
+			if(subname.indexOf("[") != -1 && subname.indexOf("]") != -1 && subname.indexOf("[") < subname.indexOf("]")){
+				subAuthor = subname.substring(subname.indexOf("[") + 1, subname.indexOf("]"));
+			}else if(subname.indexOf("【") != -1 && subname.indexOf("】") != -1 && subname.indexOf("【") < subname.indexOf("】")){
+				subAuthor = subname.substring(subname.indexOf("【") + 1, subname.indexOf("】"));
+			}
+		}
+		return subAuthor;
+	}
 	
 	public Task(){}
 	
