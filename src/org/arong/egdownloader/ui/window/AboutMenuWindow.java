@@ -100,7 +100,7 @@ public class AboutMenuWindow extends JDialog {
 		new CommonSwingWorker(new Runnable() {
 			public void run() {
 				try {
-					String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, null);
+					String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, "UTF-8");
 					System.out.println(egVersion);
 					Map<String, String> version = JsonUtil.json2Map(egVersion);
 					if(! Version.VERSION.equals(version.get("version"))){
