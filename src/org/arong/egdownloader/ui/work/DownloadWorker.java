@@ -93,8 +93,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						if(is == null){
+							Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-" + pic.getRealUrl() + ":图片流无效");
 							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":图片流无效");
 							exceptionNum ++;
 							continue;
 						}
@@ -122,7 +122,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
-						}else if(size < 1010){
+						}else if(size < 1010 || pic.getRealUrl().contains("509.gif")){
 							pic.setRealUrl(null);
 							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":509");
 							delete(existNameFs);
