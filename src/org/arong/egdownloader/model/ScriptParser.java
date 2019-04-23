@@ -149,6 +149,7 @@ public class ScriptParser {
 		
 		try{
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			
 			//获取名称
 			task.setName(t.getName());
 			//获取子名称
@@ -177,18 +178,13 @@ public class ScriptParser {
 	        Tracker.println(ScriptParser.class, task.getTotal() + "");
 	        Tracker.println(ScriptParser.class, task.getSize());
 	        Tracker.println(ScriptParser.class, task.getCoverUrl());
-			creatingWindow.nameLabel.setText(creatingWindow.nameLabel.getText() + task.getName());
-			creatingWindow.subnameLabel.setText(creatingWindow.subnameLabel.getText() + task.getSubname());
-			creatingWindow.totalLabel.setText(creatingWindow.totalLabel.getText() + task.getTotal());
-			creatingWindow.sizeLabel.setText(creatingWindow.sizeLabel.getText() + task.getSize());
-			creatingWindow.languageLabel.setText(creatingWindow.languageLabel.getText() + task.getLanguage());
-			creatingWindow.nameLabel.setVisible(true);
-			creatingWindow.subnameLabel.setVisible(true);
-			creatingWindow.totalLabel.setVisible(true);
-			creatingWindow.sizeLabel.setVisible(true);
-			creatingWindow.languageLabel.setVisible(true);
-			creatingWindow.bar.setMaximum(task.getTotal());
+			creatingWindow.showInfo(task);
 			task.setSaveDir(genSaveDir(task));
+			
+			if(StringUtils.isBlank(t.getName()) || StringUtils.isBlank(t.getCoverUrl()) || t.getTotal() == 0){
+				throw new RuntimeException("任务信息采集不完整：名称、封面、数目不能为空");
+			}
+			
 		}catch(Exception e){
 			Tracker.println(ScriptParser.class, setting.getCreateTaskScriptPath() + "脚本解析错误:" + e.getMessage());
 			throw e;

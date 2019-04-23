@@ -144,6 +144,7 @@ public class AddFormDialog extends JDialog {
 		
 		addTaskBtn = new AJButton("新建", IconManager.getIcon("add"), new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window addFormDialog, MouseEvent event) {
+				addTaskBtn.setEnabled(false);
 				AddFormDialog this_ = (AddFormDialog)addFormDialog;
 				String url = this_.urlField.getText().trim();
 				String saveDir = this_.saveDirField.getText().trim();
@@ -152,8 +153,10 @@ public class AddFormDialog extends JDialog {
 				boolean saveDirAsSubname = this_.saveDirAsSubnameBox.isSelected();
 				if("".equals(url)){
 					JOptionPane.showMessageDialog(this_, "请填写下载地址");
+					addTaskBtn.setEnabled(true);
 				}else if("".equals(saveDir)){
 					JOptionPane.showMessageDialog(this_, "请选择保存路径");
+					addTaskBtn.setEnabled(true);
 				}else{
 					if("".equals(tag)){
 						tag = "一般";
@@ -168,11 +171,7 @@ public class AddFormDialog extends JDialog {
 						//重复性验证
 						if(! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("https://", "http://")) && 
 								! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("http://", "https://"))){
-							if(addTaskBtn.isEnabled()){
-								addTaskBtn.setEnabled(false);
-							}else{
-								return;
-							}
+							
 							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
 								((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
 							}
@@ -208,9 +207,11 @@ public class AddFormDialog extends JDialog {
 							addTaskBtn.setEnabled(true);
 						}else{
 							JOptionPane.showMessageDialog(this_, "此下载地址已存在");
+							addTaskBtn.setEnabled(true);
 						}
 					}else{
 						JOptionPane.showMessageDialog(this_, "下载地址不合法");
+						addTaskBtn.setEnabled(true);
 					}
 				}
 			}

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
+import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJProgressBar;
@@ -28,11 +29,12 @@ public class CreatingWindow extends JDialog {
 	public JLabel subnameLabel;
 	public JLabel sizeLabel;
 	public JLabel languageLabel;
+	public JLabel typeLabel;
 	
 	public CreatingWindow(JFrame window){
 		this.mainWindow = window;
 		this.setTitle("任务创建中");
-		this.setSize(400, 150);
+		this.setSize(540, 150);
 		this.setLayout(null);
 		this.setResizable(false);
 		this.setLocationRelativeTo(this.mainWindow);
@@ -58,9 +60,9 @@ public class CreatingWindow extends JDialog {
 			}
 		});
 		
-		nameLabel = new AJLabel("名称：", Color.BLACK, 10, 5, 380, 20);
+		nameLabel = new AJLabel("名称：", Color.BLACK, 10, 5, 520, 20);
 		nameLabel.setVisible(false);
-		subnameLabel = new AJLabel("子标题：", Color.BLACK, 10, 25, 380, 20);
+		subnameLabel = new AJLabel("子标题：", Color.BLACK, 10, 25, 520, 20);
 		subnameLabel.setVisible(false);
 		totalLabel = new AJLabel("数目：", Color.BLACK, 10, 45, 100, 20);
 		totalLabel.setVisible(false);
@@ -68,10 +70,12 @@ public class CreatingWindow extends JDialog {
 		sizeLabel.setVisible(false);
 		languageLabel = new AJLabel("语言：", Color.BLACK, 250, 45, 120, 20);
 		languageLabel.setVisible(false);
-		bar = new AJProgressBar(40, 75, 310, 20, 0, 100);
+		typeLabel = new AJLabel("类别：", Color.BLACK, 380, 45, 120, 20);
+		typeLabel.setVisible(false);
+		bar = new AJProgressBar(40, 75, 450, 20, 0, 100);
 		bar.setStringPainted(true);
 		ComponentUtil.addComponents(getContentPane(), nameLabel, subnameLabel,
-				totalLabel, sizeLabel, languageLabel, bar);
+				totalLabel, sizeLabel, languageLabel, typeLabel, bar);
 	}
 	
 	@Override
@@ -90,12 +94,30 @@ public class CreatingWindow extends JDialog {
 		totalLabel.setText("数目：");
 		sizeLabel.setText("大小：");
 		languageLabel.setText("语言：");
+		typeLabel.setText("类别：");
 		nameLabel.setVisible(false);
 		subnameLabel.setVisible(false);
 		totalLabel.setVisible(false);
 		sizeLabel.setVisible(false);
 		languageLabel.setVisible(false);
+		typeLabel.setVisible(false);
 		bar.setValue(0);
+	}
+	
+	public void showInfo(Task task){
+		nameLabel.setText(nameLabel.getText() + task.getName());
+		subnameLabel.setText(subnameLabel.getText() + task.getSubname());
+		totalLabel.setText(totalLabel.getText() + task.getTotal());
+		sizeLabel.setText(sizeLabel.getText() + task.getSize());
+		languageLabel.setText(languageLabel.getText() + task.getLanguage());
+		typeLabel.setText(typeLabel.getText() + task.getType());
+		nameLabel.setVisible(true);
+		subnameLabel.setVisible(true);
+		totalLabel.setVisible(true);
+		sizeLabel.setVisible(true);
+		languageLabel.setVisible(true);
+		typeLabel.setVisible(true);
+		bar.setMaximum(task.getTotal());
 	}
 
 	public void dispose() {
