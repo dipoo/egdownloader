@@ -202,7 +202,7 @@ public class ScriptParser {
 	        	if(i == 0){
 	        		pictures.addAll(collectpictrues(source, setting));
 	        	}else{
-	        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, setting.getCookieInfo());
+	        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());
 	        		pictures.addAll(collectpictrues(source, setting));
 	        	}
 	        	creatingWindow.bar.setValue(pictures.size());
