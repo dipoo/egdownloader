@@ -51,6 +51,9 @@ public class DownloadCoverWork implements IMenuListenerTask {
 								mainWindow.coverWindow2.dispose();
 							}
 							JOptionPane.showMessageDialog(mainWindow, "下载成功");
+							if(mainWindow.taskImagePanel != null){
+								mainWindow.taskImagePanel.flush(task); 
+							}
 						}
 					} catch (SocketTimeoutException e){
 						JOptionPane.showMessageDialog(mainWindow, "读取文件超时，请检查网络后重试");
