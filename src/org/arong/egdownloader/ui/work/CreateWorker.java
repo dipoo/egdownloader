@@ -68,8 +68,14 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			if(task != null){
 				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
-				is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
-				FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+				try{
+					is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
+					FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+				} catch (SocketTimeoutException e){
+					JOptionPane.showMessageDialog(null, "读取封面文件超时，请检查网络后重试");
+				} catch (ConnectTimeoutException e){
+					JOptionPane.showMessageDialog(null, "封面地址连接超时，请检查网络后重试");
+				} 
 				
 				//设置最后创建时间
 				setting.setLastCreateTime(task.getCreateTime());
@@ -115,11 +121,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");
 			}
-		} catch (SocketTimeoutException e){
-			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
-		} catch (ConnectTimeoutException e){
-			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
-		} catch (Exception e) {
+		}catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			e.printStackTrace();
 		}finally{
