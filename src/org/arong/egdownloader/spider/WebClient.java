@@ -440,7 +440,7 @@ public class WebClient {
             		//格式如下：  
             		//"Proxy-Authorization"= "Basic Base64.encode(user:password)"  
             		String headerKey = "Proxy-Authorization";  
-            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username+":"+Proxy.pwd).getBytes());
+            		String headerValue = "Basic " + Base64.encodeBase64((Proxy.username + ":" + Proxy.pwd).getBytes());
             		urlConnection.setRequestProperty(headerKey, headerValue);
             	}
             }else{

@@ -131,7 +131,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}else if(totalLength - 1024 * 10 > size){
 							//误差在10K以上则不算下载成功
 							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(" + FileUtil2.showSizeStr((long)size) + "):下载不完整(" + FileUtil2.showSizeStr((long)totalLength) + ")");
+							Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(已下载" + FileUtil2.showSizeStr((long)size) + "):下载不完整(原图大小" + FileUtil2.showSizeStr((long)totalLength) + ")");
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;

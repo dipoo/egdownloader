@@ -107,7 +107,7 @@ public class SettingWindow extends JFrame{
 		public JLabel proxyTypeLabel;
 		public ButtonGroup proxyTypeButtonGroup;
 		public JRadioButton httpRadioButton;
-//		public JRadioButton socksRadioButton;
+		public JRadioButton socksRadioButton;
 		public JLabel proxyIpLabel;
 		public JTextField proxyIpField;
 		public JLabel proxyPortLabel;
@@ -325,12 +325,12 @@ public class SettingWindow extends JFrame{
 			proxyButtonGroup.add(yesRadioButton);
 			proxyTypeButtonGroup = new ButtonGroup();
 			proxyTypeLabel = new AJLabel("代理方式：", labelColor, 25, 70, 100, 30);
-			httpRadioButton = new JRadioButton("HTTP", "http".equals(setting.getProxyType()));
-			httpRadioButton.setBounds(125, 70, 80, 30);
+			httpRadioButton = new JRadioButton("HTTP(S)", "http".equals(setting.getProxyType()));
+			httpRadioButton.setBounds(125, 70, 100, 30);
 			proxyTypeButtonGroup.add(httpRadioButton);
-			/*socksRadioButton = new JRadioButton("SOCKS", "socks".equals(setting.getProxyType()));
+			socksRadioButton = new JRadioButton("SOCKS", "socks".equals(setting.getProxyType()));
 			socksRadioButton.setBounds(230, 70, 80, 30);
-			proxyTypeButtonGroup.add(socksRadioButton);*/
+			proxyTypeButtonGroup.add(socksRadioButton);
 			proxyIpLabel = new AJLabel("服务器：", labelColor, 25, 110, 100, 30);
 			proxyIpField = new AJTextField(setting.getProxyIp(), "", 125, 110, 200, 30);
 			proxyPortLabel = new AJLabel("端口：", labelColor, 350, 110, 100, 30);
@@ -357,7 +357,7 @@ public class SettingWindow extends JFrame{
 			//proxyTipLabel =  new AJLabel("提示：测试前请先保存当前配置", Color.BLUE, 200, 230, 300, 30);
 			
 			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyTypeLabel, proxyIpLabel, httpRadioButton,
-					/*socksRadioButton,*/ proxyIpField, proxyPortLabel, proxyPortField,
+					socksRadioButton, proxyIpField, proxyPortLabel, proxyPortField,
 					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn/*, proxyTipLabel*/);
 			
 			settingTabPanel.add("基本配置", basicPanel);
@@ -435,9 +435,9 @@ public class SettingWindow extends JFrame{
 					else if(index == 2){
 						boolean useProxy = settingWindow.yesRadioButton.isSelected() ? true : false;
 						String proxyType = "http";
-						/*if(socksRadioButton.isSelected()){
+						if(socksRadioButton.isSelected()){
 							proxyType = "socks";
-						}*/
+						}
 						String proxyIp = settingWindow.proxyIpField.getText();
 						String proxyPort = settingWindow.proxyPortField.getText();
 						String proxyUsername = settingWindow.proxyUsernameField.getText();
