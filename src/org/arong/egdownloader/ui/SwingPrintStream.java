@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.arong.egdownloader.ui.panel.ConsolePanel;
-import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
 import org.arong.utils.StringUtil;
 
@@ -43,8 +42,8 @@ public class SwingPrintStream extends PrintStream {
 		File logfile = new File(binPath + File.separator + "console.log");
 		try {
 			//大于20M则另存为
-			if(logfile.exists() && logfile.length() > 1024 * 1024 * 20){
-				logfile.renameTo(new File(FileUtil2.getProjectPath() + File.separator + "console.log." + sdf2.format(new Date())));
+			if(logfile.exists() && logfile.length() > 1024 * 1/*1024 * 20*/){
+				logfile.renameTo(new File(binPath + File.separator + "console.log." + sdf2.format(new Date())));
 			}
 			logfw = new BufferedWriter(new FileWriter(logfile, true), 4096);
 		} catch (IOException e) {
@@ -65,10 +64,10 @@ public class SwingPrintStream extends PrintStream {
 		filter(consolePanel);
 		String message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			//consolePanel.insert("--" + message + "\n", 0);//consolePanel.append(message);
-			message = (message.length() > 8 && !":".equals(message.substring(2, 3)) ? sdf.format(new Date()) : sdf2.format(new Date())) + " " + message + "\n";
+			String logInfo = sdf.format(new Date()) + " " + message + "\n";
+			consolePanel.realtext = consolePanel.realtext + "<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>" + sdf.format(new Date()) + "</font> " + message + "</b><br/>";
 			try {
-				consolePanel.setText(consolePanel.getTextPane().getText() + message);
+				consolePanel.showLog();
 				if(!consolePanel.locked){
 					// 让光标置于最下方
 					//consolePanel.paintImmediately(consolePanel.getBounds());
@@ -77,10 +76,10 @@ public class SwingPrintStream extends PrintStream {
 				}
 			
 				//写日志
-				logfw.append(message);
+				logfw.append(logInfo);
 				logfw.flush();
 			} catch (IOException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 	}
@@ -92,7 +91,8 @@ public class SwingPrintStream extends PrintStream {
 	private void filter(ConsolePanel consolePanel){
 		String text = consolePanel.getTextPane().getText();
 		if(text.length() > 200000){
-			consolePanel.setText("");
+			consolePanel.realtext = "";
+			consolePanel.showLog();
 		}
 	}
 

@@ -23,7 +23,8 @@ public class ClearConsoleMenuItem extends JMenuItem {
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				mainWindow.consolePanel.setText("");
+				mainWindow.consolePanel.realtext = "";
+				mainWindow.consolePanel.showLog();
 			}
 		});
 	}
