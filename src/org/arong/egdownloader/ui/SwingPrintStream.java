@@ -41,9 +41,10 @@ public class SwingPrintStream extends PrintStream {
 		//获取日志文件
 		File logfile = new File(binPath + File.separator + "console.log");
 		try {
-			//大于20M则另存为
-			if(logfile.exists() && logfile.length() > 1024 * 1/*1024 * 20*/){
+			//大于5M则另存为
+			if(logfile.exists() && logfile.length() > 1024 * 1024 * 5){
 				logfile.renameTo(new File(binPath + File.separator + "console.log." + sdf2.format(new Date())));
+				logfile.delete();
 			}
 			logfw = new BufferedWriter(new FileWriter(logfile, true), 4096);
 		} catch (IOException e) {

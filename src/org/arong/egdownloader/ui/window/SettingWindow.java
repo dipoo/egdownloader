@@ -276,6 +276,7 @@ public class SettingWindow extends JFrame{
 					String createScriptPath = settingWindow.createJsField.getText();
 					String collectScriptPath = settingWindow.collectJsField.getText();
 					String downloadScriptPath = settingWindow.downloadJsField.getText();
+					String searchScriptPath = settingWindow.searchJsField.getText();
 					
 					if("".equals(createScriptPath.trim()) || "".equals(collectScriptPath.trim())
 							|| "".equals(downloadScriptPath.trim())){
@@ -283,7 +284,7 @@ public class SettingWindow extends JFrame{
 						return;
 					}else{
 						if(testScriptWindow == null){
-							testScriptWindow = new TestScriptWindow(createScriptPath, collectScriptPath, downloadScriptPath, setting);
+							testScriptWindow = new TestScriptWindow(createScriptPath, collectScriptPath, downloadScriptPath, searchScriptPath, setting);
 						}
 						testScriptWindow.setVisible(true);
 					}

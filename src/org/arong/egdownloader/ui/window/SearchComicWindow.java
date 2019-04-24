@@ -405,7 +405,7 @@ public class SearchComicWindow extends JFrame {
 			rightBtn.setEnabled(false);
 			
 			key = k;
-			String exurl = "http://exhentai.org/?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
+			String exurl = "https://exhentai.org/?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
 					(Integer.parseInt(page) - 1) + "&f_cats=" + f_cats + "&f_sto=" + f_sto;
 			if(!keyText.equals("")){
 				//过滤key

@@ -78,6 +78,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						
 						if(StringUtils.isBlank(pic.getRealUrl())){
 							exceptionNum ++;
+							System.out.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + ":获取图片下载地址为空</font>");
 							continue;
 						}
 						if(this.isCancelled())//是否暂停
