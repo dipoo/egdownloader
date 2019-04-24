@@ -359,70 +359,105 @@ public class ScriptParser {
 		return result == null ? null : result.toString().split("\\###");
 	}
 	
-	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download){
-		String source;
+	public static void testScript(String url, JTextArea resultArea, Setting setting, boolean create, boolean collect, boolean download, boolean search){
+		String source;Object result = null;
 		try {
 			source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", setting.getCookieInfo());
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("htmlSource", source);
-			Object result = parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath()));
-			if(result == null){
-				resultArea.setText(setting.getCreateTaskScriptPath() + "脚本解析出错\r\n");
+			if(source == null){
+				resultArea.setText(url + ":访问出错");
 				return;
-			}
-			Task t = JsonUtil.json2bean(Task.class, result.toString());
-			t.setUrl(url);
-			if(create){
-				//展示任务信息
-				resultArea.setText("---任务---\r\n" + t.getScriptMember());
-			}
-			if(collect){
-				result = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
+			}else{
+				//保存源文件
+				FileUtil2.storeStr2file(source, "source/", "task.html");
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("htmlSource", source);
+				result = parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath()));
 				if(result == null){
-					resultArea.setText(setting.getCollectPictureScriptPath() + "脚本解析出错\r\n");
+					resultArea.setText(setting.getCreateTaskScriptPath() + "脚本解析出错\r\n");
 					return;
 				}
-				//展示图片信息
-				resultArea.setText(resultArea.getText() + "\r\n---图片列表---\r\n" + result.toString());
-				if(download){
-					//展示第一张图片的真实下载地址
-					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
-					if(pics != null){
-						source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), "UTF-8", setting.getCookieInfo());
-						param.put("htmlSource", source);
-						result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
-						if(result == null){
-							resultArea.setText(setting.getDownloadScriptPath() + "脚本解析出错\r\n");
-							return;
-						}
-						resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
-					}
+				Task t = JsonUtil.json2bean(Task.class, result.toString());
+				t.setUrl(url);
+				if(create){
+					//展示任务信息
+					resultArea.setText("---任务---\r\n" + t.getScriptMember());
 				}
-			}else if(download){
-				Object o = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
-				//展示第一张图片的真实下载地址
-				List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
-				if(pics != null){
-					source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), "UTF-8", setting.getCookieInfo());
-					param.put("htmlSource", source);
-					result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
+				if(collect){
+					result = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
 					if(result == null){
-						resultArea.setText(setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+						resultArea.append(setting.getCollectPictureScriptPath() + "脚本解析出错\r\n");
 						return;
 					}
-					resultArea.setText(resultArea.getText() + "\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
+					//展示图片信息
+					resultArea.append("\r\n---图片列表---\r\n" + result.toString());
+					if(download){
+						//展示第一张图片的真实下载地址
+						List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, result.toString());
+						if(pics != null){
+							source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), "UTF-8", setting.getCookieInfo());
+							if(source == null){
+								resultArea.setText(pics.get(0).getUrl() + ":访问出错");
+							}else{
+								//保存源文件
+								FileUtil2.storeStr2file(source, "source/", "download.html");
+								param.put("htmlSource", source);
+								result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
+								if(result == null){
+									resultArea.append(setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+									return;
+								}
+								resultArea.append("\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
+							}
+						}
+					}
+				}else if(download){
+					Object o = parseJsScript(param, getCollectScriptFile(setting.getCollectPictureScriptPath()));
+					//展示第一张图片的真实下载地址
+					List<Picture> pics = JsonUtil.jsonArray2beanList(Picture.class, o.toString());
+					if(pics != null){
+						source = WebClient.getRequestUseJavaWithCookie(pics.get(0).getUrl(), "UTF-8", setting.getCookieInfo());
+						if(source == null){
+							resultArea.setText(pics.get(0).getUrl() + ":访问出错");
+						}else{
+							//保存源文件
+							FileUtil2.storeStr2file(source, "source/", "download.html");
+							param.put("htmlSource", source);
+							result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
+							if(result == null){
+								resultArea.append(setting.getDownloadScriptPath() + "脚本解析出错\r\n");
+								return;
+							}
+							resultArea.append("\r\n---第一张图片的真实下载地址---\r\n" + result.toString());
+						}
+					}
+				}
+			}
+			
+			if(search){
+				source = WebClient.getRequestUseJavaWithCookie("https://exhentai.org/", "UTF-8", setting.getCookieInfo());
+				if(source == null){
+					resultArea.append("https://exhentai.org/:访问出错");
+				}else{
+					//保存源文件
+					FileUtil2.storeStr2file(source, "source/", "search.html");
+					result = search(source, setting);
+					if(result == null){
+						resultArea.append(setting.getSearchScriptPath() + "脚本解析出错\r\n");
+						return;
+					}
+					resultArea.append("\r\n---首页漫画列表---\r\n" + ((String[])result)[1]);
 				}
 			}
 		} catch (ConnectTimeoutException e) {
-			resultArea.setText(resultArea.getText() + "\r\n======异常======" + "网络连接超时");
+			resultArea.append("\r\n======异常======" + "网络连接超时");
 		} catch (SocketTimeoutException e) {
-			resultArea.setText(resultArea.getText() + "\r\n======异常======" + "网络连接超时");
+			resultArea.append("\r\n======异常======" + "网络连接超时");
 		} catch (FileNotFoundException e) {
-			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+			resultArea.append("\r\n======异常======" + e.getMessage());
 		} catch (ScriptException e) {
-			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+			resultArea.append("\r\n======异常======" + e.getMessage());
 		} catch (Exception e) {
-			resultArea.setText(resultArea.getText() + "\r\n======异常======" + e.getMessage());
+			resultArea.append("\r\n======异常======" + e.getMessage());
 		}
 	}
 	
