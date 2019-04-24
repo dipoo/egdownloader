@@ -28,16 +28,11 @@ public class AJTextPane extends JTextPane {
 
 	private static final long serialVersionUID = 5006884186865600388L;
 	public AJTextPane(){
-		super();
-	}
-	public AJTextPane(String text, Color color) {
 		EditorKit editorKit = new HTMLEditorKit();
-		this.setForeground(color);
 		Border border = new EmptyBorder(10, 20, 20, 10);
 		this.setBorder(border);
 		this.setEditable(false);
 		this.setEditorKit(editorKit);
-		this.setText(text);
 		//点击超链接打开浏览器事件
 		this.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -62,5 +57,11 @@ public class AJTextPane extends JTextPane {
 				}
 			}
 		});
+	}
+	public AJTextPane(String text, Color color) {
+		this();
+		if(color != null)
+			this.setForeground(color);
+		this.setText(text);
 	}
 }
