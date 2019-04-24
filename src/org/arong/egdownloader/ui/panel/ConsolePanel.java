@@ -14,6 +14,7 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLEditorKit;
 
 import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenLogMenuItem;
@@ -26,14 +27,18 @@ public class ConsolePanel extends JScrollPane {
 	private JTextPane textPane;
 	public JPopupMenu consolePopupMenu;
 	public boolean locked;//是否锁屏
+	public String realtext = "";
 	
 	public ConsolePanel(final EgDownloaderWindow mainWindow) {
 		this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		this.setBorder(null);
+		this.setAutoscrolls(false);
 		textPane = new JTextPane();
 		textPane.setBorder(null);
 		textPane.setEditable(true);
 		textPane.setAutoscrolls(true);
-		this.setBorder(null);
+		textPane.setEditorKit(new HTMLEditorKit());
+		
 		this.setViewportView(textPane);
 		
 		final JMenuItem clearItemPopup = new ClearConsoleMenuItem("清空控制台", mainWindow);
@@ -69,8 +74,7 @@ public class ConsolePanel extends JScrollPane {
 	public JTextPane getTextPane() {
 		return textPane;
 	}
-	public void setText(String string) {
-		textPane.setText(string);
-		//this.updateUI();
+	public void showLog() {
+		textPane.setText(realtext);
 	}
 }

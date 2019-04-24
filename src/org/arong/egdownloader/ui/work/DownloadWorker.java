@@ -17,6 +17,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
@@ -75,7 +76,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							//pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
 						}
 						
-						if(pic.getRealUrl() == null){
+						if(StringUtils.isBlank(pic.getRealUrl())){
 							exceptionNum ++;
 							continue;
 						}
@@ -83,7 +84,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null; 
 						Object[] streamAndLength =  null;
 						if(pic.getRealUrl().contains("exhentai.org")){
-							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo());
+							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo(), 10 * 1000);
 						}else{
 							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
 						}
@@ -159,7 +160,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						
-						Tracker.println(DownloadWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
+						Tracker.println(DownloadWorker.class ,"<font color='green'>" + task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成</font>");
 						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
 							//刷新信息面板
 							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){

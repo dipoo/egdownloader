@@ -638,7 +638,8 @@ public class EgDownloaderWindow extends JFrame {
 			this.emptyPanel.setVisible(false);
 			this.runningTable.changeModel(this);
 		}
-		this.consolePanel.setText("");//清空控制台
+		this.consolePanel.realtext = "";
+		this.consolePanel.showLog();
 		//开启网络下载速度监听
 		netSpeedtimer.cancel();
 		setupNetSpeedtimer(this);
