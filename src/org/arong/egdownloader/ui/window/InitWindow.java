@@ -1,31 +1,19 @@
 package org.arong.egdownloader.ui.window;
 
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
@@ -57,9 +45,6 @@ public class InitWindow extends JWindow {
 	private static final long serialVersionUID = -7316667195338580556L;
 	
 	public JLabel textLabel;
-	
-	public TrayIcon tray;//系统托盘
-	public JPopupMenu trayMenu;
 	
 	public DbTemplate<Setting> settingDbTemplate;
 	
@@ -131,22 +116,7 @@ public class InitWindow extends JWindow {
 					UIManager.put("RootPane.setupButtonVisible", false);
 				} catch (Exception e) {
 				}
-			}else{
-				try {
-					LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
-					for(LookAndFeelInfo info : infos){
-						if(info.getName().equals(setting.getSkin())){
-							try {
-								UIManager.setLookAndFeel(info.getClassName());
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-				} catch (Exception e) {
-				}
 			}
-			new JFileChooser();
 			
 			textLabel.setForeground(Color.WHITE);
 			textLabel.setText("读取任务列表");
@@ -230,50 +200,6 @@ public class InitWindow extends JWindow {
 				startMain();
 			}
 			
-			//系统托盘
-			if (SystemTray.isSupported()) {// 判断系统是否托盘
-			    tray = new TrayIcon(IconManager.getIcon("download").getImage());// 创建一个托盘图标对象
-			    tray.setImageAutoSize(true);
-			    tray.setToolTip(Version.NAME);
-			    trayMenu = new JPopupMenu();// 创建弹出菜单
-			    final JMenuItem item = new JMenuItem("退出");// 创建一个菜单项
-			    trayMenu.add(item);// 将菜单项添加到菜单列表
-			    item.addMouseListener(new MouseAdapter() {
-			    	public void mouseExited(MouseEvent e) {
-			    		trayMenu.setVisible(false);
-					}
-				});
-			    item.addActionListener(new ActionListener() {
-				    public void actionPerformed(ActionEvent e) {
-						//保存数据
-				    	ComponentConst.mainWindow.saveTaskGroupData();
-						System.exit(0);
-				    }
-			    });
-			    tray.addMouseListener(new MouseAdapter() {
-			    	public void mouseReleased(MouseEvent e) {
-			    		//弹出菜单
-						if(e.isPopupTrigger()){
-							trayMenu.setLocation(e.getX(), e.getY() - trayMenu.getComponentCount() * 30);
-							trayMenu.setInvoker(trayMenu);
-							trayMenu.setVisible(true);
-						}
-					}
-					public void mouseClicked(MouseEvent e) {
-						if(e.getClickCount()== 2){//鼠标双击图标
-							ComponentConst.mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);//设置状态为正常  
-							ComponentConst.mainWindow.setEnabled(true);
-							ComponentConst.mainWindow.setVisible(true);
-						}
-					}
-				});
-			    SystemTray st = SystemTray.getSystemTray();// 获取系统托盘
-			    try {
-			    	st.add(tray);// 将托盘图表添加到系统托盘
-				} catch (AWTException e1) {
-	//						e1.printStackTrace();
-				}
-			}
 		}catch(Exception e){
 			JOptionPane.showMessageDialog(null, "运行报错：" + e.getMessage());
 			JOptionPane.showMessageDialog(null, "自动退出");

@@ -174,6 +174,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("maxThread", t.getMaxThread() + "");
 		ele.addAttribute("viewModel", t.getViewModel() + "");
 		ele.addAttribute("searchViewModel", t.getSearchViewModel() + "");
+		ele.addAttribute("skin", t.getSkin());
 		
 		ele.addAttribute("loginUrl", t.getLoginUrl());
 		ele.addAttribute("tags", t.getTags());
@@ -217,7 +218,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
 		}
-		
+		t.setSkin(ele.attributeValue("skin") == null ? t.getSkin() : ele.attributeValue("skin"));
 		t.setTaskHistoryCount(ele.attributeValue("taskHostoryCount") == null ? 0 : Integer.parseInt(ele.attributeValue("taskHostoryCount")));
 		t.setPictureHistoryCount(ele.attributeValue("pictureHostoryCount") == null ? 0 : Integer.parseInt(ele.attributeValue("pictureHostoryCount")));
 		t.setLastCreateTime(ele.attributeValue("lastCreateTime"));
