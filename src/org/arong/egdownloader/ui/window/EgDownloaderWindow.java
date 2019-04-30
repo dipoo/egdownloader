@@ -1,5 +1,6 @@
 ﻿package org.arong.egdownloader.ui.window;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -7,7 +8,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +37,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
@@ -102,6 +106,9 @@ public class EgDownloaderWindow extends JFrame {
 	
 	public String wtitle;//窗口标题
 	JWindow minTips;
+	
+	public TrayIcon tray;//系统托盘
+	public JPopupMenu trayMenu;
 	
 	JMenuBar jMenuBar;// 菜单栏
 	public InitWindow initWindow;
@@ -311,37 +318,16 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(sizeMenu);
 		
 		JMenu skinMenu = new AJMenu("切换皮肤", "", IconManager.getIcon("task"));
-		skinMenu.add(new AJMenuItem("BeautyEye", null, IconManager.getIcon(""), new ActionListener() {
+		ActionListener skinListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
-					BeautyEyeLNFHelper.launchBeautyEyeLNF();
-					UIManager.put("RootPane.setupButtonVisible", false);
-				} catch (Exception e1) {
-				}
+				AJMenuItem item = (AJMenuItem) e.getSource();
+				mainWindow.setting.setSkin(item.getText().replace("√", ""));
+				System.out.println("皮肤切换成功，重启后生效。");
 			}
-		}));
+		};
+		skinMenu.add(new AJMenuItem("BeautyEye".equals(setting.getSkin()) ? "默认皮肤" : "默认皮肤√", null, IconManager.getIcon(""), skinListener));
+		skinMenu.add(new AJMenuItem("BeautyEye".equals(setting.getSkin()) ? "BeautyEye√" : "BeautyEye", null, IconManager.getIcon(""), skinListener));
 		
-		LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
-		for(LookAndFeelInfo info : infos){
-			skinMenu.add(new AJMenuItem(info.getName(), info.getClassName(), null,
-					new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							AJMenuItem item = (AJMenuItem)e.getSource();
-							String skinclass = item.getName();
-							if(StringUtils.isNotBlank(skinclass)){
-								try {
-									UIManager.setLookAndFeel(skinclass);
-									SwingUtilities.updateComponentTreeUI(mainWindow);
-									mainWindow.setting.setSkin(item.getText());
-								} catch (Exception e1) {
-									e1.printStackTrace();
-									System.out.println("皮肤切换失败：" + e1.getMessage());
-								}
-							}
-						}
-					}));
-		}
 		operaMenu.add(skinMenu);
 		
 		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));
@@ -457,6 +443,51 @@ public class EgDownloaderWindow extends JFrame {
 			emptyPanel.setVisible(false);
 		}
 		
+		//系统托盘
+		if (SystemTray.isSupported()) {// 判断系统是否托盘
+		    tray = new TrayIcon(IconManager.getIcon("download").getImage());// 创建一个托盘图标对象
+		    tray.setImageAutoSize(true);
+		    tray.setToolTip(Version.NAME);
+		    trayMenu = new JPopupMenu();// 创建弹出菜单
+		    final JMenuItem item = new JMenuItem("退出");// 创建一个菜单项
+		    trayMenu.add(item);// 将菜单项添加到菜单列表
+		    item.addMouseListener(new MouseAdapter() {
+		    	public void mouseExited(MouseEvent e) {
+		    		trayMenu.setVisible(false);
+				}
+			});
+		    item.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+					//保存数据
+			    	ComponentConst.mainWindow.saveTaskGroupData();
+					System.exit(0);
+			    }
+		    });
+		    tray.addMouseListener(new MouseAdapter() {
+		    	public void mouseReleased(MouseEvent e) {
+		    		//弹出菜单
+					if(e.isPopupTrigger()){
+						trayMenu.setLocation(e.getX(), e.getY() - trayMenu.getComponentCount() * 30);
+						trayMenu.setInvoker(trayMenu);
+						trayMenu.setVisible(true);
+					}
+				}
+				public void mouseClicked(MouseEvent e) {
+					if(e.getClickCount()== 2){//鼠标双击图标
+						ComponentConst.mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);//设置状态为正常  
+						ComponentConst.mainWindow.setEnabled(true);
+						ComponentConst.mainWindow.setVisible(true);
+					}
+				}
+			});
+		    SystemTray st = SystemTray.getSystemTray();// 获取系统托盘
+		    try {
+		    	st.add(tray);// 将托盘图表添加到系统托盘
+			} catch (AWTException e1) {
+//						e1.printStackTrace();
+			}
+		}
+		
 		//聚焦监听
 		this.addWindowFocusListener(new WindowAdapter() {
 			public void windowGainedFocus(WindowEvent e) {
@@ -484,9 +515,8 @@ public class EgDownloaderWindow extends JFrame {
 			}
 
 			public void windowLostFocus(WindowEvent e) {
-				EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
-				if(window.initWindow.trayMenu != null){
-					window.initWindow.trayMenu.setVisible(false);
+				if(trayMenu != null){
+					trayMenu.setVisible(false);
 				}
 				/*EgDownloaderWindow window = (EgDownloaderWindow) e.getSource();
 				window.consolePane.setVisible(false);*/
@@ -573,7 +603,7 @@ public class EgDownloaderWindow extends JFrame {
 		}
 		//最小化，隐藏到托盘
 		else if(e.getID() == WindowEvent.WINDOW_ICONIFIED){
-			if(initWindow.tray != null){
+			if(tray != null){
 				if(minTips == null){
 					minTips = new JWindow();
 					minTips.setSize(150, 30);
