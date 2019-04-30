@@ -60,24 +60,25 @@ public class SwingPrintStream extends PrintStream {
 		this.consolePanel = consolePanel;
 	}
 
+	String message = null;
 	// 重写write方法，这是什么模式？装饰？代理？
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
-		String message = new String(buf, off, len);
+		message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			String logInfo = sdf.format(new Date()) + " " + message + "\n";
-			consolePanel.realtext = consolePanel.realtext + "<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>" + sdf.format(new Date()) + "</font> " + message + "</b><br/>";
+			consolePanel.realtext.append("<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>")
+			.append(sdf.format(new Date())).append("</font> ").append(message).append("</b><br/>");
 			try {
 				consolePanel.showLog();
 				if(!consolePanel.locked){
 					// 让光标置于最下方
-					//consolePanel.paintImmediately(consolePanel.getBounds());
+					consolePanel.paintImmediately(consolePanel.getBounds());
 					consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
 					consolePanel.updateUI();
 				}
 			
 				//写日志
-				logfw.append(logInfo);
+				logfw.append(sdf.format(new Date()) + " " + message + "\n");
 				logfw.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -90,9 +91,8 @@ public class SwingPrintStream extends PrintStream {
 	 * @param consolePanel
 	 */
 	private void filter(ConsolePanel consolePanel){
-		String text = consolePanel.getTextPane().getText();
-		if(text.length() > 200000){
-			consolePanel.realtext = "";
+		if(consolePanel.getTextPane().getText().length() > 200000){
+			consolePanel.realtext = new StringBuffer();
 			consolePanel.showLog();
 		}
 	}

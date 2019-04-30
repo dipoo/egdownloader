@@ -27,7 +27,7 @@ public class ConsolePanel extends JScrollPane {
 	private JTextPane textPane;
 	public JPopupMenu consolePopupMenu;
 	public boolean locked;//是否锁屏
-	public String realtext = "";
+	public StringBuffer realtext = new StringBuffer();
 	
 	public ConsolePanel(final EgDownloaderWindow mainWindow) {
 		this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -75,6 +75,6 @@ public class ConsolePanel extends JScrollPane {
 		return textPane;
 	}
 	public void showLog() {
-		textPane.setText(realtext);
+		textPane.setText(realtext.toString());
 	}
 }
