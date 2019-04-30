@@ -42,12 +42,13 @@ public class GroupList extends JList {
 	private JPopupMenu popupMenu;
 	private JMenuItem deleteMenu = new AJMenuItem("删除", new Color(0,0,85), IconManager.getIcon("delete"), null);
 	
+	
+	@SuppressWarnings("unchecked")
 	public GroupList(List<File> groups, final GroupWindow window, final EgDownloaderWindow mainWindow){
 		this.setModel(new GroupListModel(groups));
 		//this.setCellRenderer(new GroupListCellReader());
 		this.setCursor(CursorManager.getPointerCursor());
 		this.setForeground(Color.BLUE);
-		
 		this.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent arg0) {}
 			public void mousePressed(MouseEvent arg0) {}
