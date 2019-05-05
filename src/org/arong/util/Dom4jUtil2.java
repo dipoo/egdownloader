@@ -15,9 +15,9 @@ import org.dom4j.io.XMLWriter;
  * @author 阿荣
  * @since 2014-05-29
  */
-public final class Dom4jUtil {
+public final class Dom4jUtil2 {
 	public static boolean locked;
-	public Dom4jUtil(){}
+	public Dom4jUtil2(){}
 
     public static Document getDOM(File file) throws Exception{
         return new SAXReader().read(file);
@@ -40,7 +40,7 @@ public final class Dom4jUtil {
     }
     
     public static void writeDOM2XML(String file_path, Document doc) throws Exception{
-    	FileUtil2.ifNotExistsThenCreate(file_path.substring(0, file_path.lastIndexOf("/")));
+    	FileUtil2.ifNotExistsThenCreate("data");
         writeDOM2XML(new File(file_path), doc);
     }
 

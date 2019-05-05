@@ -12,7 +12,7 @@ import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.util.CodeUtil;
-import org.arong.util.Dom4jUtil;
+import org.arong.util.Dom4jUtil2;
 import org.arong.util.FileUtil2;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -34,7 +34,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 	}
 	public static void updateDom(){
 		try {
-			dom = Dom4jUtil.getDOM(ComponentConst.SETTING_XML_DATA_PATH);
+			dom = Dom4jUtil2.getDOM(ComponentConst.SETTING_XML_DATA_PATH);
 		} catch (DocumentException e) {
 			FileUtil2.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
 			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><settings></settings>";
@@ -50,7 +50,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 					bw.write(buffer, 0, length);
 				}
 				bw.flush();
-				dom = Dom4jUtil.getDOM(ComponentConst.SETTING_XML_DATA_PATH);
+				dom = Dom4jUtil2.getDOM(ComponentConst.SETTING_XML_DATA_PATH);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (Exception e1) {
@@ -81,9 +81,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		}
 		locked = true;
 		Element ele = setting2Element(t);
-		Dom4jUtil.appendElement(dom.getRootElement(), ele);
+		Dom4jUtil2.appendElement(dom.getRootElement(), ele);
 		try {
-			Dom4jUtil.writeDOM2XML(ComponentConst.SETTING_XML_DATA_PATH, dom);
+			Dom4jUtil2.writeDOM2XML(ComponentConst.SETTING_XML_DATA_PATH, dom);
 			locked = false;
 		} catch (Exception e) {
 			locked = false;
@@ -106,12 +106,13 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		Node node = dom.selectSingleNode("/settings/setting[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.appendElement(dom.getRootElement(), setting2Element(t));
-				Dom4jUtil.writeDOM2XML(ComponentConst.SETTING_XML_DATA_PATH, dom);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.appendElement(dom.getRootElement(), setting2Element(t));
+				Dom4jUtil2.writeDOM2XML(ComponentConst.SETTING_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
+				e.printStackTrace();
 				locked = false;
 				return false;
 			}
