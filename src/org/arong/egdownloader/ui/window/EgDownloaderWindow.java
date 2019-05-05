@@ -42,12 +42,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.HyperlinkEvent;
 
-import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
@@ -92,7 +88,6 @@ import org.arong.egdownloader.ui.work.listenerWork.StartTaskWork;
 import org.arong.egdownloader.ui.work.listenerWork.StopTaskWork;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil2;
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
 /**
  * 主线程类
@@ -405,15 +400,6 @@ public class EgDownloaderWindow extends JFrame {
 		 * 控制台
 		 */
 		consolePanel = new ConsolePanel(this);
-		/*consolePanel.setEditable(false);
-		consolePanel.setAutoscrolls(true);
-		consolePanel.setBorder(null);
-		consolePanel.setFont(new Font("宋体", Font.BOLD, 13));
-		consolePanel.setForeground(new Color(63,127,95));*///
-		//consolePanel.setLocation(0, 20);
-		//consolePanel.setBackground(Color.GRAY);
-		/*TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(219,219,219)), "控制台");
-		consolePanel.setBorder(border);*/
 		consolePanel.setBounds(5, 5, ComponentConst.CLIENT_WIDTH - 20, 200);
 		
 		try {
@@ -429,12 +415,7 @@ public class EgDownloaderWindow extends JFrame {
 		infoTabbedPane.add("控制台", consolePanel);
 		infoTabbedPane.add("任务信息", taskInfoPanel);
 		infoTabbedPane.add("图片列表", new PicturesInfoPanel(this));
-		/*infoTabbedPane.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(infoTabbedPane.getToolkit());
-			}
-			
-		});*/
+		
 		// 添加各个子组件
 		ComponentUtil.addComponents(getContentPane(), infoTabbedPane, jMenuBar, tablePane, tablePopupMenu, emptyPanel);
 		if(tasks == null || tasks.size() == 0){

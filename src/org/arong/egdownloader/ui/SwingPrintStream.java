@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 import org.arong.utils.StringUtil;
 
 /**
@@ -61,11 +62,11 @@ public class SwingPrintStream extends PrintStream {
 	}
 
 	// 重写write方法，这是什么模式？装饰？代理？
+	String message = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
-		String message = new String(buf, off, len);
+		message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			String logInfo = sdf.format(new Date()) + " " + message + "\n";
 			consolePanel.realtext = consolePanel.realtext + "<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>" + sdf.format(new Date()) + "</font> " + message + "</b><br/>";
 			try {
 				consolePanel.showLog();
@@ -73,11 +74,11 @@ public class SwingPrintStream extends PrintStream {
 					// 让光标置于最下方
 					//consolePanel.paintImmediately(consolePanel.getBounds());
 					consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
-					consolePanel.updateUI();
+					//consolePanel.updateUI();
 				}
 			
 				//写日志
-				logfw.append(logInfo);
+				logfw.append(HtmlUtils.Html2Text(sdf.format(new Date()) + " " + message) + "\n");
 				logfw.flush();
 			} catch (IOException e) {
 				e.printStackTrace();

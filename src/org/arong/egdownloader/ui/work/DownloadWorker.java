@@ -95,7 +95,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						if(is == null){
-							Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-" + pic.getRealUrl() + ":图片流无效");
+							Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "-" + pic.getRealUrl() + ":图片流无效</font>");
 							pic.setRealUrl(null);
 							exceptionNum ++;
 							continue;
@@ -133,7 +133,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}else if(totalLength - 1024 * 10 > size){
 							//误差在10K以上则不算下载成功
 							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName()+ "(已下载" + FileUtil2.showSizeStr((long)size) + "):下载不完整(原图大小" + FileUtil2.showSizeStr((long)totalLength) + ")");
+							Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName()+ "(已下载" + FileUtil2.showSizeStr((long)size) + "):下载不完整(原图大小" + FileUtil2.showSizeStr((long)totalLength) + ")</font>");
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
@@ -161,7 +161,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						
-						Tracker.println(DownloadWorker.class ,"<font color='green'>" + task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成</font>");
+						Tracker.println(DownloadWorker.class, "<font color='green'>" + task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成</font>");
 						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
 							//刷新信息面板
 							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
@@ -183,7 +183,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (SocketTimeoutException e){
 						exceptionNum ++;
 						//碰到异常
-						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试");
+						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试</font>");
 						//删除已经下载的文件
 						delete(existNameFs);
 						//继续下一个
@@ -191,7 +191,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (ConnectTimeoutException e){
 						exceptionNum ++;
 						//碰到异常
-						Tracker.println(task.getDisplayName() + ":" + pic.getName() + "-连接超时，滞后重试");
+						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "-连接超时，滞后重试</font>");
 						//继续下一个
 						continue;
 					}catch (WebClientException e) {
@@ -206,7 +206,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						exceptionNum ++;
 						//碰到异常
 						e.printStackTrace();
-						Tracker.println(task.getDisplayName() + ":" + pic.getName() + ">>>" + e.getLocalizedMessage());
+						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + ">>>" + e.getLocalizedMessage() + "</font>");
 						//继续下一个
 						continue;
 					}
@@ -219,7 +219,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				//是否达到下载区间要求,达到则暂停
 				if(success == requireNum){
-					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + "】:完成配置区间下载。");
+					Tracker.println(DownloadWorker.class, "<font color='green'>【" + task.getDisplayName() + "】:完成配置区间下载。</font>");
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -228,7 +228,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				}
 				if(exceptionNum >= requireNum){
-					Tracker.println(DownloadWorker.class, "【" + task.getDisplayName() + "】:配额不足或者下载异常，停止下载。");
+					Tracker.println(DownloadWorker.class, "<font color='red'>【" + task.getDisplayName() + "】:配额不足或者下载异常，停止下载。</font>");
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
