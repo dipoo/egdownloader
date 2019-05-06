@@ -54,7 +54,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		exceptionNum = 0;
 		//设置任务状态为下载中
 		//task.setStatus(TaskStatus.STARTED);
-		Tracker.println(getClass(), task.getDisplayName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载");
+		Tracker.println(getClass(), "<font color='#e60'>" + task.getDisplayName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载</font>");
 		List<Picture> pics = task.getPictures();
 		
 		Picture pic;
