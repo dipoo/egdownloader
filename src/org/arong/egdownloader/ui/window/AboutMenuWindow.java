@@ -134,7 +134,7 @@ public class AboutMenuWindow extends JDialog {
 						File oldjar = new File(binPath + File.separator + "jre" + File.separator
 								+ "lib" + File.separator + "ext" + File.separator + "egdownloader.jar");
 						if(oldjar.exists()){
-							int r = JOptionPane.showConfirmDialog(null, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？");
+							int r = JOptionPane.showConfirmDialog(null, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？" + (StringUtils.isNotBlank(version.get("changelog")) ? "\n" + version.get("changelog") : ""));
 							if(r == JOptionPane.OK_OPTION){
 								new JarUpdateWorker(mainWindow, version, binPath).execute();
 								this_.dispose();

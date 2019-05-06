@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
@@ -69,23 +70,43 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			}else{
 				window.creatingWindow.dispose();
 				JOptionPane.showMessageDialog(null, "重建任务异常");
+				window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
+				//开始任务等待列表中的第一个任务
+				window.runningTable.startWaitingTask();
+				task.setStatus(TaskStatus.UNCREATED);
 			}
 		} catch (SocketTimeoutException e){
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
+			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
+			task.setStatus(TaskStatus.UNCREATED);
+			//开始任务等待列表中的第一个任务
+			window.runningTable.startWaitingTask();
 		} catch (ConnectTimeoutException e){
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
+			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
+			task.setStatus(TaskStatus.UNCREATED);
+			//开始任务等待列表中的第一个任务
+			window.runningTable.startWaitingTask();
 		} catch (SpiderException e) {
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, e.getMessage());
+			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
+			task.setStatus(TaskStatus.UNCREATED);
+			//开始任务等待列表中的第一个任务
+			window.runningTable.startWaitingTask();
 		} catch (WebClientException e) {
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, e.getMessage());
+			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
+			task.setStatus(TaskStatus.UNCREATED);
+			//开始任务等待列表中的第一个任务
+			window.runningTable.startWaitingTask();
 		} finally{
 			if(is != null){
 				is.close();

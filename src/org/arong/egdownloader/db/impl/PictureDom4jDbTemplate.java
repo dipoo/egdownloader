@@ -13,7 +13,7 @@ import java.util.List;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.ui.ComponentConst;
-import org.arong.util.Dom4jUtil;
+import org.arong.util.Dom4jUtil2;
 import org.arong.util.FileUtil2;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -41,7 +41,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 	
 	public static void updateDom(){
 		try {
-			dom = Dom4jUtil.getDOM(ComponentConst.PICTURE_XML_DATA_PATH);
+			dom = Dom4jUtil2.getDOM(ComponentConst.PICTURE_XML_DATA_PATH);
 		} catch (DocumentException e) {
 			FileUtil2.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
 			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><pictures></pictures>";
@@ -57,7 +57,7 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 					bw.write(buffer, 0, length);
 				}
 				bw.flush();
-				dom = Dom4jUtil.getDOM(ComponentConst.PICTURE_XML_DATA_PATH);
+				dom = Dom4jUtil2.getDOM(ComponentConst.PICTURE_XML_DATA_PATH);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (Exception e1) {
@@ -92,9 +92,9 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		}
 		locked = true;
 		Element ele = picture2Element(t);
-		Dom4jUtil.appendElement(dom.getRootElement(), ele);
+		Dom4jUtil2.appendElement(dom.getRootElement(), ele);
 		try {
-			Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+			Dom4jUtil2.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
 			locked = false;
 		} catch (Exception e) {
 			locked = false;
@@ -113,10 +113,10 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		locked = true;
 		for (Picture t : pics) {
 			Element ele = picture2Element(t);
-			Dom4jUtil.appendElement(dom.getRootElement(), ele);
+			Dom4jUtil2.appendElement(dom.getRootElement(), ele);
 		}
 		try {
-			Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+			Dom4jUtil2.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
 			locked = false;
 		} catch (Exception e) {
 			locked = false;
@@ -136,9 +136,9 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		Node node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.appendElement(dom.getRootElement(), picture2Element(t));
-				Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.appendElement(dom.getRootElement(), picture2Element(t));
+				Dom4jUtil2.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
@@ -163,14 +163,14 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		for (Picture t : pics) {
 			node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
 			if(node != null){
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.appendElement(dom.getRootElement(), picture2Element(t));
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.appendElement(dom.getRootElement(), picture2Element(t));
 				update = true;
 			}
 		}
 		if(update){
 			try {
-				Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+				Dom4jUtil2.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
@@ -193,8 +193,8 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		Node node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
@@ -219,13 +219,13 @@ public class PictureDom4jDbTemplate implements DbTemplate<Picture> {
 		for (Picture t : pics) {
 			node = dom.selectSingleNode("/pictures/picture[@id='" + t.getId() + "']");
 			if(node != null){
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
 				delete = true;
 			}
 		}
 		if(delete){
 			try {
-				Dom4jUtil.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
+				Dom4jUtil2.writeDOM2XML(ComponentConst.PICTURE_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {

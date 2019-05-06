@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 import org.arong.utils.StringUtil;
 
 /**
@@ -60,8 +61,8 @@ public class SwingPrintStream extends PrintStream {
 		this.consolePanel = consolePanel;
 	}
 
-	String message = null;
 	// 重写write方法，这是什么模式？装饰？代理？
+	String message = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
 		message = new String(buf, off, len);
@@ -78,7 +79,7 @@ public class SwingPrintStream extends PrintStream {
 				}
 			
 				//写日志
-				logfw.append(sdf.format(new Date()) + " " + message + "\n");
+				logfw.append(sdf.format(new Date()) + " " + HtmlUtils.Html2Text(message) + "\n");
 				logfw.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -91,7 +92,7 @@ public class SwingPrintStream extends PrintStream {
 	 * @param consolePanel
 	 */
 	private void filter(ConsolePanel consolePanel){
-		if(consolePanel.getTextPane().getText().length() > 200000){
+		if(consolePanel.getTextPane().getText().length() > 50000){
 			consolePanel.realtext = new StringBuffer();
 			consolePanel.showLog();
 		}

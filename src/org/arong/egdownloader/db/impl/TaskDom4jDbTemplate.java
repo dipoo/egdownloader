@@ -17,7 +17,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
-import org.arong.util.Dom4jUtil;
+import org.arong.util.Dom4jUtil2;
 import org.arong.util.FileUtil2;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -45,7 +45,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 	
 	public static void updateDom(){
 		try {
-			dom = Dom4jUtil.getDOM(ComponentConst.TASK_XML_DATA_PATH);
+			dom = Dom4jUtil2.getDOM(ComponentConst.TASK_XML_DATA_PATH);
 		} catch (DocumentException e) {
 			FileUtil2.ifNotExistsThenCreate(ComponentConst.DATA_PATH);
 			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><tasks></tasks>";
@@ -61,7 +61,7 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 					bw.write(buffer, 0, length);
 				}
 				bw.flush();
-				dom = Dom4jUtil.getDOM(ComponentConst.TASK_XML_DATA_PATH);
+				dom = Dom4jUtil2.getDOM(ComponentConst.TASK_XML_DATA_PATH);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (Exception e1) {
@@ -96,9 +96,9 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		}
 		locked = true;
 		Element ele = task2Element(t);
-		Dom4jUtil.appendElement(dom.getRootElement(), ele);
+		Dom4jUtil2.appendElement(dom.getRootElement(), ele);
 		try {
-			Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+			Dom4jUtil2.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
 			locked = false;
 		} catch (Exception e) {
 			locked = false;
@@ -117,11 +117,11 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		locked = true;
 		for (Task t : tasks) {
 			Element ele = task2Element(t);
-			Dom4jUtil.appendElement(dom.getRootElement(), ele);
+			Dom4jUtil2.appendElement(dom.getRootElement(), ele);
 		}
 		
 		try {
-			Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+			Dom4jUtil2.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
 			locked = false;
 		} catch (Exception e) {
 			locked = false;
@@ -141,9 +141,9 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		Node node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.appendElement(dom.getRootElement(), task2Element(t));
-				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.appendElement(dom.getRootElement(), task2Element(t));
+				Dom4jUtil2.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
@@ -168,14 +168,14 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		for (Task t : tasks) {
 			node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
 			if(node != null){
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.appendElement(dom.getRootElement(), task2Element(t));
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.appendElement(dom.getRootElement(), task2Element(t));
 				update = true;
 			}
 		}
 		if(update){
 			try {
-				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				Dom4jUtil2.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
@@ -195,8 +195,8 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		Node node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
 		if(node != null){
 			try {
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
-				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
@@ -221,13 +221,13 @@ public class TaskDom4jDbTemplate implements DbTemplate<Task> {
 		for (Task t : tasks) {
 			node = dom.selectSingleNode("/tasks/task[@id='" + t.getId() + "']");
 			if(node != null){
-				Dom4jUtil.deleteElement(dom.getRootElement(), (Element)node);
+				Dom4jUtil2.deleteElement(dom.getRootElement(), (Element)node);
 				delete = true;
 			}
 		}
 		if(delete){
 			try {
-				Dom4jUtil.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
+				Dom4jUtil2.writeDOM2XML(ComponentConst.TASK_XML_DATA_PATH, dom);
 				locked = false;
 				return true;
 			} catch (Exception e) {
