@@ -7,13 +7,31 @@ var mark = {
 	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
-	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;']
+	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;'],
+	tagsources:['<div id="taglist">', '</div><div id="tagmenu_act"'],
+	tags:['https://exhentai.org/tag/', '" class="', 'toggle_tagmenu']
 };
-
+function parseTags(source){
+	var tagsources = interceptFromSource(source, mark.tagsources[0], mark.tagsources[1]);
+	if(tagsources){
+		var tags = '';
+		while(tagsources.indexOf(mark.tags[0]) != -1){
+			var tag = interceptFromSource(tagsources, mark.tags[0], mark.tags[1]);
+			if(!tag) break;
+			tags += tag + ";";
+			tagsources = subFromSource(tagsources, mark.tags[2]);
+		}
+		return tags;
+	}
+	return null;
+}
 function interceptFromSource(source, prefix, suffix){
 	var s = source;
 	s = s.substr(s.indexOf(prefix) + prefix.length, s.length);
     return s.substring(0, s.indexOf(suffix));
+}
+function subFromSource(source, prefix){
+	return source.substr(source.indexOf(prefix) + prefix.length, source.length);
 }
 
 function trim(s){
@@ -65,6 +83,7 @@ function parse(source, openhttps){
 	if(task.language.indexOf(mark.language[3]) > 0){
 		task.language = task.language.substr(0, task.language.indexOf(mark.language[3]));
 	}
+	task.tags = parseTags(source);
 	return parseJson(task);
 }
 var openhttps = ("undefined" != typeof version && "undefined" != typeof https && https);
