@@ -71,6 +71,7 @@ import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.egdownloader.ui.panel.InfoTabbedPane;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
+import org.arong.egdownloader.ui.panel.TaskAttributePanel;
 import org.arong.egdownloader.ui.panel.TaskImagePanel;
 import org.arong.egdownloader.ui.panel.TaskInfoPanel;
 import org.arong.egdownloader.ui.popmenu.MainPopupMenu;
@@ -414,6 +415,7 @@ public class EgDownloaderWindow extends JFrame {
 		
 		infoTabbedPane.add("控制台", consolePanel);
 		infoTabbedPane.add("任务信息", taskInfoPanel);
+		infoTabbedPane.add("标签组", new TaskAttributePanel(this));
 		infoTabbedPane.add("图片列表", new PicturesInfoPanel(this));
 
 		// 添加各个子组件

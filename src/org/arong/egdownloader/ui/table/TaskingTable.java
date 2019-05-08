@@ -26,6 +26,7 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
+import org.arong.egdownloader.ui.panel.TaskAttributePanel;
 import org.arong.egdownloader.ui.window.CoverWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
@@ -256,7 +257,10 @@ public class TaskingTable extends JTable {
 				if(window.infoTabbedPane.getSelectedIndex() == 1){
 					window.taskInfoPanel.parseTask(window.tasks.get(rowIndex), rowIndex);
 				}else if(window.infoTabbedPane.getSelectedIndex() == 2){
-					PicturesInfoPanel infoPanel = (PicturesInfoPanel) window.infoTabbedPane.getComponent(2);
+					TaskAttributePanel panel = (TaskAttributePanel) mainWindow.infoTabbedPane.getComponent(2);
+					panel.parseTaskAttribute(window.tasks.get(rowIndex));
+				}else if(window.infoTabbedPane.getSelectedIndex() == 3){
+					PicturesInfoPanel infoPanel = (PicturesInfoPanel) window.infoTabbedPane.getComponent(3);
 					infoPanel.showPictures(window.tasks.get(rowIndex));
 				}
 				

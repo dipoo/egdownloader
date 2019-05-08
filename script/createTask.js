@@ -8,23 +8,10 @@ var mark = {
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
 	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;'],
-	tagsources:['<div id="taglist">', '</div><div id="tagmenu_act"'],
+	tagsource:['<div id="taglist">', '</div><div id="tagmenu_act"'],
 	tags:['https://exhentai.org/tag/', '" class="', 'toggle_tagmenu']
 };
-function parseTags(source){
-	var tagsources = interceptFromSource(source, mark.tagsources[0], mark.tagsources[1]);
-	if(tagsources){
-		var tags = '';
-		while(tagsources.indexOf(mark.tags[0]) != -1){
-			var tag = interceptFromSource(tagsources, mark.tags[0], mark.tags[1]);
-			if(!tag) break;
-			tags += tag + ";";
-			tagsources = subFromSource(tagsources, mark.tags[2]);
-		}
-		return tags;
-	}
-	return null;
-}
+
 function interceptFromSource(source, prefix, suffix){
 	var s = source;
 	s = s.substr(s.indexOf(prefix) + prefix.length, s.length);
@@ -85,6 +72,20 @@ function parse(source, openhttps){
 	}
 	task.tags = parseTags(source);
 	return parseJson(task);
+}
+function parseTags(source){
+	var tagsources = interceptFromSource(source, mark.tagsource[0], mark.tagsource[1]);
+	if(tagsources){
+		var tags = '';
+		while(tagsources.indexOf(mark.tags[0]) != -1){
+			var tag = interceptFromSource(tagsources, mark.tags[0], mark.tags[1]);
+			if(!tag) break;
+			tags += tag + ";";
+			tagsources = subFromSource(tagsources, mark.tags[2]);
+		}
+		return tags;
+	}
+	return '';
 }
 var openhttps = ("undefined" != typeof version && "undefined" != typeof https && https);
 parse(htmlSource, openhttps);

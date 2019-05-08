@@ -40,6 +40,7 @@ public class Task {
 	private String language;//漫画语言
 	private String type;//分类
 	private String tag;//标签
+	private String tags;
 	private boolean readed;//已读
 	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String completedTime;//完成时间
@@ -389,7 +390,8 @@ public class Task {
 		return "[url=" + url + ", name=" + name
 				+ ", subname=" + subname + ", type=" + type
 				+ ", total=" + total + ", size=" + size
-				+ ", language=" + language + ", coverUrl=" + coverUrl + "]";
+				+ ", language=" + language + ", coverUrl=" + coverUrl
+				+ ", postedTime=" + postedTime + ", tags=" + tags + "]";
 	}
 
 	public void setCreateWorker(CreateWorker createWorker) {
@@ -504,5 +506,11 @@ public class Task {
 			return FileUtil2.filterDir(StringUtils.isNotBlank(subname.trim()) ? subname.trim() : name);
 		}
 		return FileUtil2.filterDir(name);
+	}
+	public String getTags() {
+		return tags;
+	}
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 }

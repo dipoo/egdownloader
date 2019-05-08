@@ -130,6 +130,15 @@ public class ScriptParser {
         return null;
 	}*/
 	
+	public static Task getTaskByUrl(String url, Setting setting) throws Exception{
+		String source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", setting.getCookieInfo());
+		//保存源文件
+		FileUtil2.storeStr2file(source, "source/", "task.html");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("htmlSource", source);
+		return JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+	}
+	
 	/**
 	 * 创建任务
 	 * @throws IOException 
@@ -165,6 +174,7 @@ public class ScriptParser {
 	        //获取数目及大小
 	        task.setTotal(t.getTotal());
 	        task.setSize(t.getSize());
+	        task.setTags(t.getTags());
 	        //设置下载结束索引
 	        task.setEnd(task.getTotal());
 	        //获取漫画语言
