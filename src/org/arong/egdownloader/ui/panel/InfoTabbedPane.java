@@ -18,7 +18,7 @@ public class InfoTabbedPane extends JTabbedPane {
 					if(this_.getSelectedIndex() == 1){
 						mainWindow.taskInfoPanel.parseTask(t, index);
 					}else if(this_.getSelectedIndex() == 2){
-						TaskAttributePanel p = (TaskAttributePanel) this_.getComponent(2);
+						TaskTagsPanel p = (TaskTagsPanel) this_.getComponent(2);
 						p.parseTaskAttribute(t);
 					}
 					else if(this_.getSelectedIndex() == 3){

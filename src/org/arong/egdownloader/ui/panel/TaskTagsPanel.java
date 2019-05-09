@@ -19,13 +19,13 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 
-public class TaskAttributePanel extends JScrollPane {
+public class TaskTagsPanel extends JScrollPane {
 	
 	public final static String MISC = "misc";
 	
 	private AJTextPane textPane;
 	
-	public TaskAttributePanel(final EgDownloaderWindow mainWindow) {
+	public TaskTagsPanel(final EgDownloaderWindow mainWindow) {
 		textPane = new AJTextPane(null,
 				Color.BLUE);
 		textPane.setBorder(null);
