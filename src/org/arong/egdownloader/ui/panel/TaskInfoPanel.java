@@ -100,7 +100,6 @@ public class TaskInfoPanel extends JScrollPane {
 						.replace("@t_original", t.isOriginal() ? "是" : "否")
 						.replace("@t_saveDirAsSubname", t.isSaveDirAsSubname() ? "是" : "否")
 						.replace("@t_tag", StringUtils.isBlank(t.getTag()) ? "一般" : t.getTag())
-						.replace("@t_otags", StringUtils.isBlank(t.getTags()) ? "" : t.getTags())
 						.replace("@t_groupname", StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname())
 						.replace("@t_saveDir", t.getSaveDir());
 				textPane.setText(text);

@@ -197,7 +197,11 @@ public class MainPopupMenu extends AJPopupMenu{
 						}
 						SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 						if(task.getAuthor() != null || task.getSubAuthor() != null){
-							ssw.keyTextField.setText(task.getAuthor() + "||" + task.getSubAuthor());
+							if(task.getAuthor().contains("(") && task.getAuthor().contains(")") && task.getAuthor().indexOf("(") < task.getAuthor().indexOf(")")){
+								ssw.keyTextField.setText(task.getAuthor().substring(task.getAuthor().indexOf("(") + 1, task.getAuthor().indexOf(")")));
+							}else{
+								ssw.keyTextField.setText(task.getAuthor() + "||" + task.getSubAuthor());
+							}
 							ssw.searchBtn.doClick();
 						}
 					}

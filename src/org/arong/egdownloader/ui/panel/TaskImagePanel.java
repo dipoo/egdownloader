@@ -33,8 +33,11 @@ import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
 import org.arong.egdownloader.ui.swing.AJPanel;
+import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
+import org.arong.egdownloader.ui.work.ReCreateWorker;
+import org.arong.util.Tracker;
 /**
  * 任务的图片模式展示面板
  * @author Administrator
@@ -199,6 +202,27 @@ public class TaskImagePanel extends AJPanel {
 									}
 									//双击切换
 									if(e.getClickCount() == 2){
+										//任务开始或暂停
+										if(mainWindow.runningTable.rebuild){
+											Tracker.println(TaskingTable.class, "正在重建任务");
+											return;
+										}
+										Task task = mainWindow.runningTable.getTasks().get(selectIndex);
+										//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
+										if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
+											mainWindow.runningTable.startTask(task);
+										}
+										//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
+										else if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
+											mainWindow.runningTable.stopTask(task);
+										}
+										//如果状态为未创建，则开启创建线程
+										else if(task.getStatus() == TaskStatus.UNCREATED){
+											Tracker.println(getClass(), task.getName() + ":重新采集");
+											task.setReCreateWorker(new ReCreateWorker(task, mainWindow));
+											task.getReCreateWorker().execute();
+										}
+										
 										mainWindow.infoTabbedPane.setSelectedIndex(1);
 									}else{
 										//切换信息面板tab

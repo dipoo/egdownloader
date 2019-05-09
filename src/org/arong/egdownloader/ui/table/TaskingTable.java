@@ -45,7 +45,7 @@ public class TaskingTable extends JTable {
 	private TaskList<Task> hiddentasks;
 	public EgDownloaderWindow mainWindow;
 	private int runningNum = 0;
-	private boolean rebuild;
+	public boolean rebuild;
 	private int sort = 1;//0为名称排序，1为时间排序
 	public List<Task> waitingTasks;//排队等待的任务
 	public static int wordNum = 230;//名称列最多显示字数，会随着窗口大小变化而改变

@@ -1,12 +1,15 @@
 package org.arong.egdownloader.ui.panel;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -14,16 +17,28 @@ import javax.swing.event.HyperlinkListener;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.IconManager;
+import org.arong.egdownloader.ui.listener.MenuItemActonListener;
+import org.arong.egdownloader.ui.swing.AJButton;
+import org.arong.egdownloader.ui.swing.AJLabel;
+import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
+import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
+import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 public class TaskTagsPanel extends JScrollPane {
 	
 	public final static String MISC = "misc";
 	
 	private AJTextPane textPane;
+	public JPanel confirmPanel;
+	public AJLabel selectTextLabel;
 	
 	public TaskTagsPanel(final EgDownloaderWindow mainWindow) {
 		textPane = new AJTextPane(null,
@@ -31,7 +46,7 @@ public class TaskTagsPanel extends JScrollPane {
 		textPane.setBorder(null);
 		this.setViewportView(textPane);
 		this.setBorder(null);
-		
+		initConfirmPanel(mainWindow);
 		textPane.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -63,21 +78,67 @@ public class TaskTagsPanel extends JScrollPane {
 							}
 						}).execute();
 					}else if(e.getDescription().startsWith("search|")){
-						if(mainWindow.searchComicWindow == null){
-							mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
+						//获取关键字
+						String key = e.getDescription().replaceAll("search\\|", "");
+						if(confirmPanel == null){
+							initConfirmPanel(mainWindow);
 						}
-						mainWindow.searchComicWindow.doSearch(e.getDescription().replaceAll("search\\|", ""));
-						mainWindow.searchComicWindow.setVisible(true);
+						selectTextLabel.setText("请选择[" + key + "]标签的操作");
+						confirmPanel.setName(key);
+						setViewportView(confirmPanel);
 					}
 				}
 			}
 		});
 	}
 	
+	public void initConfirmPanel(final EgDownloaderWindow mainWindow){
+		confirmPanel = new JPanel();
+		confirmPanel.setBounds(100, 20, 120, 40);
+		confirmPanel.setLayout(null);
+		selectTextLabel = new AJLabel("", Color.BLUE);
+		selectTextLabel.setBounds(20, 10, 500, 30);
+		AJButton b1 = new AJButton("本地搜索");
+		b1.setBounds(20, 50, 90, 30);
+		b1.setUI(AJButton.blueBtnUi);
+		AJButton b2 = new AJButton("在线搜索");
+		b2.setBounds(120, 50, 90, 30);
+		b2.setUI(AJButton.blueBtnUi);
+		AJButton b3 = new AJButton("返回");
+		b3.setBounds(220, 50, 60, 30);
+		b1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setViewportView(textPane);
+				if(mainWindow.simpleSearchWindow == null){
+					mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
+				}
+				SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
+				ssw.keyTextField.setText("tags:" + confirmPanel.getName().replaceAll("\"", "").replaceAll("\\$", ""));
+				ssw.searchBtn.doClick();
+			}
+		});
+		b2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setViewportView(textPane);
+				if(mainWindow.searchComicWindow == null){
+					mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
+				}
+				mainWindow.searchComicWindow.doSearch(confirmPanel.getName());
+				mainWindow.searchComicWindow.setVisible(true);
+			}
+		});
+		b3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setViewportView(textPane);
+			}
+		});
+		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, b3);
+	}
+	
 	public void parseTaskAttribute(Task t){
 		textPane.setText("");
 		if(t != null && StringUtils.isNotBlank(t.getTags())){
-			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:12px;margin-left:20px;'><a href='refresh' style='font-size:10px;'>更新</a><br/>");
+			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:12px;margin-left:20px;'><a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a><br/>");
 			//解析属性组
 			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
 			String[] attrs = t.getTags().split(";");
@@ -85,7 +146,7 @@ public class TaskTagsPanel extends JScrollPane {
 				String[] arr = attr.split(":");
 				if(arr.length == 1){
 					if(groups.containsKey(MISC)){
-						groups.get(MISC).add(arr[1]);
+						groups.get(MISC).add(arr[0]);
 					}else{
 						List<String> list = new ArrayList<String>();
 						list.add(arr[0]);
@@ -101,21 +162,29 @@ public class TaskTagsPanel extends JScrollPane {
 					}
 				}
 			}
+			int i = 0;
 			for(String group : groups.keySet()){
+				i ++;
 				sb.append("<span style='font-weight:bold;color:#D2691E'>").append(group).append("</span>：");
 				for(String attr : groups.get(group)){
-					sb.append("<a style='text-decoration:underline' href='search|");
+					sb.append("<a style='text-decoration:none' href='search|");
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}
-					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>").append(attr.replaceAll("\\+", " ")).append("</a>&nbsp;&nbsp;");
+					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
 				}
-				sb.append("<br/>");
+				if(groups.keySet().size() > 7){
+					if(i % 2 == 0){
+						sb.append("<br/>");
+					}
+				}else{
+					sb.append("<br/>");
+				}
 			}
 			sb.append("</div>");
 			textPane.setText(sb.toString());
 		}else{
-			textPane.setText("<h3>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='font-size:10px;'>更新</a></h3>");
+			textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'>[更新]</a></div>");
 		}
 	}
 }
