@@ -13,7 +13,6 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
@@ -40,7 +39,7 @@ public class GroupList extends JList {
 	private static final long serialVersionUID = -7702879865264332528L;
 	
 	private JPopupMenu popupMenu;
-	private JMenuItem deleteMenu = new AJMenuItem("删除", new Color(0,0,85), IconManager.getIcon("delete"), null);
+	private JMenuItem deleteMenu = new AJMenuItem("删除", new Color(0, 0, 85), IconManager.getIcon("delete"), null);
 	
 	
 	@SuppressWarnings("unchecked")
@@ -90,11 +89,7 @@ public class GroupList extends JList {
 							TaskDom4jDbTemplate.updateDom();
 							PictureDom4jDbTemplate.updateDom();
 						}
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								new InitWindow();
-							}
-						});
+						new InitWindow().toFront();
 					}
 				}//右键
 				else if(me.getButton() == MouseEvent.BUTTON3){
@@ -154,11 +149,7 @@ public class GroupList extends JList {
 							SettingDom4jDbTemplate.updateDom();
 							TaskDom4jDbTemplate.updateDom();
 							PictureDom4jDbTemplate.updateDom();
-							SwingUtilities.invokeLater(new Runnable() {
-								public void run() {
-									new InitWindow();
-								}
-							});
+							new InitWindow();
 						}else{
 							File[] files = dataFile.listFiles();
 							List<File> groups = new ArrayList<File>();
@@ -183,11 +174,7 @@ public class GroupList extends JList {
 								SettingDom4jDbTemplate.updateDom();
 								TaskDom4jDbTemplate.updateDom();
 								PictureDom4jDbTemplate.updateDom();
-								SwingUtilities.invokeLater(new Runnable() {
-									public void run() {
-										new InitWindow();
-									}
-								});
+								new InitWindow();
 							}
 						}
 						

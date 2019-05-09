@@ -35,6 +35,10 @@ public final class ComponentConst {
 	
 	public static String ROOT_DATA_PATH = "data";//数据根目录
 	
+	public static String DB_DATA_FILE_PATH = "data/data.db";//数据文件路径
+	
+	public static String DB_DATA_FILE_PATH_BAK = "data/data.db_bak";//数据文件备份路径
+	
 	public static String DATA_PATH = "data";//数据目录
 	
 	public static String CACHE_PATH = "cache";//缓存目录

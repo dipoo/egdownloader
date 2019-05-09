@@ -90,11 +90,7 @@ public class AddGroupDialog extends JDialog {
 						window.dispose();
 					}
 					addGroupDialog.dispose();
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							new InitWindow();
-						}
-					});
+					new InitWindow();
 				}
 			}
 		}), 220, 20, 60, 30);

@@ -34,6 +34,7 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.UpdateScriptWorker;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil2;
+import org.arong.utils.FileUtil;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 /**
  * 程序初始化窗口
@@ -67,7 +68,6 @@ public class InitWindow extends JWindow {
 			
 			final ImageIcon icon = IconManager.getIcon("init");
 			this.setSize(icon.getIconWidth(), icon.getIconHeight());
-	//		this.getContentPane().setBackground(Color.decode("333"));
 			this.setLocationRelativeTo(null);
 			this.getContentPane().setLayout(null);
 			JPanel backPanel = new JPanel() {
@@ -83,9 +83,9 @@ public class InitWindow extends JWindow {
 			backPanel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
 			JLabel v = new AJLabel(Version.NAME + "v" + Version.VERSION + "." + Version.JARVERSION, Color.WHITE, 0, 10, icon.getIconWidth(), 30);
 			v.setHorizontalAlignment(JLabel.CENTER);
-			v.setFont(FontConst.Songti_BOLD_12);
-			textLabel = new AJLabel("程序初始化",Color.WHITE,0,100,icon.getIconWidth(),30);
-			textLabel.setFont(FontConst.Songti_BOLD_12);
+			v.setFont(FontConst.Songti_BOLD_13);
+			textLabel = new AJLabel("程序初始化",Color.WHITE, 0, 100, icon.getIconWidth(), 30);
+			textLabel.setFont(FontConst.Songti_BOLD_13);
 			textLabel.setHorizontalAlignment(JLabel.CENTER);
 			backPanel.add(v);
 			backPanel.add(textLabel);
@@ -144,6 +144,8 @@ public class InitWindow extends JWindow {
 				if(setting.getPictureHistoryCount() == 0){
 					setting.setPictureHistoryCount(p_historyCount);
 				}
+				textLabel.setText("数据文件备份");
+				FileUtil.copyFile(ComponentConst.DB_DATA_FILE_PATH, ComponentConst.DB_DATA_FILE_PATH_BAK);
 			}else{
 				//检测是否存在task.xml
 				tasks = (TaskList<Task>)new TaskDom4jDbTemplate().query();
