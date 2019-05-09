@@ -33,6 +33,7 @@ public class SearchComicMenuItem extends JMenuItem {
 				}
 				SearchComicWindow scw = (SearchComicWindow) mainWindow.searchComicWindow;
 				scw.setVisible(true);
+				mainWindow.settingWindow.toFront();
 			}
 		});
 		

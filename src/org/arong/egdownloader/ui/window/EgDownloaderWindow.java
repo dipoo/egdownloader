@@ -432,34 +432,59 @@ public class EgDownloaderWindow extends JFrame {
 		    tray.setImageAutoSize(true);
 		    tray.setToolTip(Version.NAME);
 		    trayMenu = new JPopupMenu();// 创建弹出菜单
-		    final JMenuItem item = new JMenuItem("退出");// 创建一个菜单项
-		    trayMenu.add(item);// 将菜单项添加到菜单列表
-		    item.addMouseListener(new MouseAdapter() {
+		    trayMenu.addMouseListener(new MouseAdapter() {
 		    	public void mouseExited(MouseEvent e) {
 		    		trayMenu.setVisible(false);
 				}
 			});
-		    item.addActionListener(new ActionListener() {
+		    final JMenuItem searchItem = new JMenuItem("搜索");
+		    final JMenuItem settingItem = new JMenuItem("设置");
+		    final JMenuItem exitItem = new JMenuItem("退出");
+		    ComponentUtil.addComponents(trayMenu, searchItem, settingItem, exitItem);
+		    exitItem.addActionListener(new ActionListener() {
 			    public void actionPerformed(ActionEvent e) {
 					//保存数据
 			    	ComponentConst.mainWindow.saveTaskGroupData();
 					System.exit(0);
 			    }
 		    });
+		    settingItem.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	if (mainWindow.settingWindow == null) {
+						SettingWindow settingWindow = new SettingWindow(mainWindow);
+						mainWindow.settingWindow = settingWindow;
+					}
+					mainWindow.settingWindow.setLocationRelativeTo(mainWindow);
+					// 设置关于窗口置于最顶层
+					mainWindow.settingWindow.setVisible(true);
+					mainWindow.settingWindow.toFront();
+			    }
+		    });
+		    searchItem.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	if(mainWindow.searchComicWindow == null){
+						mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
+					}
+					SearchComicWindow scw = (SearchComicWindow) mainWindow.searchComicWindow;
+					scw.setVisible(true);
+					mainWindow.settingWindow.toFront();
+			    }
+		    });
 		    tray.addMouseListener(new MouseAdapter() {
 		    	public void mouseReleased(MouseEvent e) {
 		    		//弹出菜单
 					if(e.isPopupTrigger()){
-						trayMenu.setLocation(e.getX(), e.getY() - trayMenu.getComponentCount() * 30);
+						trayMenu.setLocation(e.getX() - 5, e.getY() - trayMenu.getComponentCount() * 21);
 						trayMenu.setInvoker(trayMenu);
 						trayMenu.setVisible(true);
 					}
 				}
 				public void mouseClicked(MouseEvent e) {
 					if(e.getClickCount()== 2){//鼠标双击图标
-						ComponentConst.mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);//设置状态为正常  
-						ComponentConst.mainWindow.setEnabled(true);
-						ComponentConst.mainWindow.setVisible(true);
+						mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);//设置状态为正常  
+						mainWindow.setEnabled(true);
+						mainWindow.setVisible(true);
+						mainWindow.toFront();
 					}
 				}
 			});
