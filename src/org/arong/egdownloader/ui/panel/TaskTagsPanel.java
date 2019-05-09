@@ -3,7 +3,11 @@ package org.arong.egdownloader.ui.panel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,20 +21,16 @@ import javax.swing.event.HyperlinkListener;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
-import org.arong.egdownloader.ui.IconManager;
-import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
-import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
-import org.arong.egdownloader.ui.work.listenerWork.ShowEditWork;
-import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
+import org.arong.util.FileUtil2;
+import org.arong.util.JsonUtil;
 
 public class TaskTagsPanel extends JScrollPane {
 	
@@ -39,6 +39,27 @@ public class TaskTagsPanel extends JScrollPane {
 	private AJTextPane textPane;
 	public JPanel confirmPanel;
 	public AJLabel selectTextLabel;
+	
+	public static Map<String, String> tagscnMap = null;
+	
+	static{
+		try {
+			String text = FileUtil2.getTextFromReader(new FileReader("script/ehtags-cn.json"));
+			if(StringUtils.isNotBlank(text)){
+				List<Map<String, String>> list = JsonUtil.jsonArray2MapList(text.trim());
+				if(list != null && list.size() > 0){
+					tagscnMap = new HashMap<String, String>();
+					for(Map<String, String> m : list){
+						tagscnMap.put(m.get("k"), m.get("v"));
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public TaskTagsPanel(final EgDownloaderWindow mainWindow) {
 		textPane = new AJTextPane(null,
@@ -61,7 +82,7 @@ public class TaskTagsPanel extends JScrollPane {
 									if(t != null && StringUtils.isNotBlank(t.getTags())){
 										currentTask.setTags(t.getTags());
 										if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
-											parseTaskAttribute(currentTask);
+											parseTaskAttribute(currentTask, false);
 										}
 										mainWindow.taskDbTemplate.update(currentTask);
 										System.out.println("<font style='color:green'>成功更新任务[" + currentTask.getDisplayName() + "]的标签组信息</font>");
@@ -86,6 +107,14 @@ public class TaskTagsPanel extends JScrollPane {
 						selectTextLabel.setText("请选择[" + key + "]标签的操作");
 						confirmPanel.setName(key);
 						setViewportView(confirmPanel);
+					}else if(e.getDescription().startsWith("trans_")){
+						int index = mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex;
+						Task currentTask = mainWindow.tasks.get(index);
+						if(e.getDescription().contains("yes")){
+							parseTaskAttribute(currentTask, true);
+						}else{
+							parseTaskAttribute(currentTask, false);
+						}
 					}
 				}
 			}
@@ -135,10 +164,11 @@ public class TaskTagsPanel extends JScrollPane {
 		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, b3);
 	}
 	
-	public void parseTaskAttribute(Task t){
+	public void parseTaskAttribute(Task t, boolean trans){
+		trans = trans && tagscnMap != null;
 		textPane.setText("");
 		if(t != null && StringUtils.isNotBlank(t.getTags())){
-			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:12px;margin-left:20px;'><a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a><br/>");
+			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:11px;margin-left:20px;'><a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a><a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "还原" : "翻译") + "]</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/scooderic/exhentai-tags-chinese-translation/'>https://github.com/scooderic/exhentai-tags-chinese-translation/</a></font>" : "") + "<br/>");
 			//解析属性组
 			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
 			String[] attrs = t.getTags().split(";");
@@ -171,9 +201,9 @@ public class TaskTagsPanel extends JScrollPane {
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}
-					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
+					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(trans ? (tagscnMap.containsKey(attr.replaceAll("\\+", " ")) ? tagscnMap.get(attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
 				}
-				if(groups.keySet().size() > 7){
+				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){
 						sb.append("<br/>");
 					}
