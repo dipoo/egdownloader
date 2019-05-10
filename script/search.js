@@ -3,7 +3,7 @@ var mark = {
 	page : ['Showing', ' ', ' results</p><div id="dms">'],
 	listSource : ['Uploader</th></tr>', '</td></tr></table></div></div>'],
 	intercept : ['<tr><td class="gl1c glcat">', "pages</div></td></tr>"],
-	name : ['<div class="glink">', '</div><div><div class="gt"', '/">', '<'],
+	name : ['<div class="glink">', '</div><div><div class="gt"', '</div><div>&nbsp;</div></a>'],
 	url : [')"><a href="', '"><div class="glink">', ",'", "')"],
 	coverUrl : ['" src="', '" /></div>', 'data-src="', '.jpg" />'],
 	date : ['" id="posted_', '/div><div class="ir" style="background-position', '">', '<'],
@@ -85,6 +85,10 @@ function parse(source, openhttps){
 		while(source.indexOf(mark.intercept[0]) != -1){
 			var task = {};
 			task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
+			if(task.name.indexOf(mark.name[2]) != -1){
+				task.name = interceptFromSource(source, mark.name[0], mark.name[2]);
+			}
+			
 			task.url = interceptFromSource(source, mark.url[0], mark.url[1]);
 			if(! openhttps){
 				task.url = task.url.replace("https", "http");

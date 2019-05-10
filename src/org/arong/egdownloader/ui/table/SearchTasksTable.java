@@ -62,7 +62,7 @@ public class SearchTasksTable extends JTable {
 //		this.setOpaque(false);//设为透明
 		TableModel tableModel = new SearchTaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
-		this.setRowHeight(20);
+		this.setRowHeight(21);
 //		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 //		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, new TableCellRenderer() {
@@ -99,7 +99,7 @@ public class SearchTasksTable extends JTable {
 					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel("<html>" + (contains ? "<font color=\"red\">【已存在】</font>" : "") + value.toString() + "</html>", c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel("<html>" + (contains ? "<font color='red'>[已存在]</font>" : "") + value.toString() + "</html>", c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));

@@ -95,7 +95,6 @@ public class TaskingTable extends JTable {
 //		this.setOpaque(false);//设为透明
 		TableModel tableModel = new TaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
-		//this.setRowHeight(20);
 		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, renderer);//设置渲染器

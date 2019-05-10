@@ -75,9 +75,11 @@ public class SimpleSearchWindow extends JDialog {
 					for(int i = 0; i < allTasks.size(); i++){
 						j ++;
 						if(allTasks.get(i).getTags() != null && allTasks.get(i).getTags().toLowerCase().contains(key.toLowerCase() + ";")){
+							allTasks.get(i).setSearched(true);//标识为已被搜索
 							allTasks.add(0, allTasks.remove(i));
 							indexs.add(i);
 						}else{
+							allTasks.get(i).setSearched(false);
 							j --;
 						}
 					}
@@ -102,14 +104,17 @@ public class SimpleSearchWindow extends JDialog {
 						for(String key : keys){
 							j ++;
 							if(allTasks.get(i).getName().toLowerCase().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
 								allTasks.add(0, allTasks.remove(i));
 								indexs.add(i);
 								break;
 							}else if(allTasks.get(i).getSubname().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
 								allTasks.add(0, allTasks.remove(i));
 								indexs.add(i);
 								break;
 							}else{
+								allTasks.get(i).setSearched(false);
 								j --;
 							}
 						}

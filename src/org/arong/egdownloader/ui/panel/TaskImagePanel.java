@@ -52,8 +52,8 @@ public class TaskImagePanel extends AJPanel {
 	private FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 	public AJPager imageTaskPager;
 	public JPanel container;
-	private static Color progressBarBorder = new Color(47,110,178);
-	private static Color progressBarBorder2 = new Color(65,145,65);//已完成颜色
+	private static Color progressBarBorder = new Color(47, 110, 178);
+	private static Color progressBarBorder2 = new Color(65, 145, 65);//已完成颜色
 	public TaskImagePanel(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setLayout(new BorderLayout());
@@ -177,8 +177,8 @@ public class TaskImagePanel extends AJPanel {
 								if(p != null){
 									//name规则：taskID|list索引
 									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
-									/*AJLabel l2 = (AJLabel)p.getComponent(1);
-									l2.setText(getTaskInfo(ptasks.get(i)));*/
+									JProgressBar bar = (JProgressBar)p.getComponent(1);
+									bar.setString(getTaskInfo(ptasks.get(i)));
 								}else{
 									//p = new AJPanel();
 									p = new AJPanel();
@@ -189,17 +189,17 @@ public class TaskImagePanel extends AJPanel {
 									p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 									p.setBackground(Color.WHITE);
 									p.setForeground(Color.WHITE);
-									p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+									p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 									p.addMouseListener(new MouseAdapter() {
 										public void mouseClicked(MouseEvent e) {
 											for(int i = 0; i < container.getComponents().length; i ++){
 												//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
 												if(container.getComponents()[i] instanceof AJPanel){
-													((AJPanel)container.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+													((AJPanel)container.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 												}
 											}
 											AJPanel p = (AJPanel)e.getSource();
-											p.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 1));
+											p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 											selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
 											//同步任务表格的选中状态
 											mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
@@ -247,14 +247,14 @@ public class TaskImagePanel extends AJPanel {
 										public void mouseEntered(MouseEvent e) {
 											AJPanel p = (AJPanel)e.getSource();
 											//p.setBackground(Color.ORANGE);
-											p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
+											p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
 										}
 
 										public void mouseExited(MouseEvent e) {
 											AJPanel p = (AJPanel)e.getSource();
 											if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
 												//p.setBackground(Color.WHITE);
-												p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+												p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 											}
 										}
 									});
@@ -342,6 +342,9 @@ public class TaskImagePanel extends AJPanel {
 	
 	private String getTaskInfo(Task task){
 		StringBuffer txtsb = new StringBuffer("");
+		if(task.isSearched()){
+			txtsb.append("[搜] ");
+		}
 		if(task.getStatus() != TaskStatus.COMPLETED && task.getCurrent() > 0){
 			txtsb.append(task.getCurrent()).append("/");
 		} 

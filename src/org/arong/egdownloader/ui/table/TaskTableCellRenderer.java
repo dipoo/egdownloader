@@ -75,7 +75,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else if(column == 1){//第二列：名称
 			tc.setPreferredWidth(480);
 			tc.setMaxWidth(1200);
-			String preffix = "<html><font color=\"#248FB7\">" + ("一般".equals(task.getTag().trim()) ? "" : "[<i>" + task.getTag() + "</i> ]") + "[" + task.getShortCreatetime() + "]</font>";
+			String preffix = "<html><font color='#248FB7'>[" + task.getShortCreatetime() + "]</font>" + (task.isSearched() ? "<font color='red'><b>[搜]</b></font>" : "") + ("一般".equals(task.getTag().trim()) ? "" : "<font color='#248FB7'>[<i>" + task.getTag() + "</i>]</font>");
 			String suffix = (StringUtils.isNotBlank(task.getPostedTime()) ? "<font color=\"#248FB7\">[" + task.getPostedTime() + "]</font>" : "") + "</html>";
 			if(setting.isShowAsSubname() && task.getSubname() !=null && !"".equals(task.getSubname().trim()) && !"null".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
