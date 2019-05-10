@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.EditorKit;
 import javax.swing.text.StyledEditorKit;
@@ -79,50 +80,54 @@ public class TestProxyWindow extends JDialog{
 		final JButton testBtn = new AJButton("执行测试", "", "", new OperaBtnMouseListener(this, MouseAction.CLICK, new IListenerTask() {
 			public void doWork(Window window, MouseEvent e) {
 				final JButton source = (JButton) e.getSource();
-				new CommonSwingWorker(new Runnable() {
+				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						source.setEnabled(false);
-						long t = System.currentTimeMillis();
-						String url = urlField.getText();
-						if("".equals(url)){
-							JOptionPane.showMessageDialog(null, "地址不能为空");
-							return;
-						}
-						String result = null;
-						try{
-							result = WebClient.getRequestUseJavaWithCookie(url, rb1.isSelected() ? rb1.getText() : rb2.getText(), null, 10 * 1000); 
-							if(StringUtils.isNotBlank(result)){
-								boolean html = true;String source = "";
-								if(result.toLowerCase().contains("<body>")){
-									source = Spider.getTextFromSource(result.toLowerCase(), "<body>", "</body>");
-									source = filterImg(source);
-								}else if(result.toLowerCase().contains("<body")){
-									source = Spider.getTextFromSource(result.toLowerCase(), "<body", "</body>");
-									source = Spider.substring(source, ">");
-									source = filterImg(source);
-								}else{
-									html = false;
+						new CommonSwingWorker(new Runnable() {
+							public void run() {
+								source.setEnabled(false);
+								long t = System.currentTimeMillis();
+								String url = urlField.getText();
+								if("".equals(url)){
+									JOptionPane.showMessageDialog(null, "地址不能为空");
+									return;
 								}
-								
-								if(html){
-									resultArea.setEditorKit(editorKit);
-								}else{
-									resultArea.setEditorKit(noeditorKit);
+								String result = null;
+								try{
+									result = WebClient.getRequestUseJavaWithCookie(url, rb1.isSelected() ? rb1.getText() : rb2.getText(), null, 10 * 1000); 
+									if(StringUtils.isNotBlank(result)){
+										boolean html = true;String source = "";
+										if(result.toLowerCase().contains("<body>")){
+											source = Spider.getTextFromSource(result.toLowerCase(), "<body>", "</body>");
+											source = filterImg(source);
+										}else if(result.toLowerCase().contains("<body")){
+											source = Spider.getTextFromSource(result.toLowerCase(), "<body", "</body>");
+											source = Spider.substring(source, ">");
+											source = filterImg(source);
+										}else{
+											html = false;
+										}
+										
+										if(html){
+											resultArea.setEditorKit(editorKit);
+										}else{
+											resultArea.setEditorKit(noeditorKit);
+										}
+										resultArea.setText(source);
+									}else{
+										resultArea.setText("[空]");
+									}
+								}catch(Exception e1){
+									e1.printStackTrace();
+									resultArea.setText(e1.getMessage());
+								}finally{
+									spendtime.setText("耗时：" + (System.currentTimeMillis() - t) + "ms");
+									source.setEnabled(true);
+									resultArea.select(resultArea.getDocument().getLength(), resultArea.getDocument().getLength());
 								}
-								resultArea.setText(source);
-							}else{
-								resultArea.setText("[空]");
 							}
-						}catch(Exception e1){
-							e1.printStackTrace();
-							resultArea.setText(e1.getMessage());
-						}finally{
-							spendtime.setText("耗时：" + (System.currentTimeMillis() - t) + "ms");
-							source.setEnabled(true);
-							resultArea.select(resultArea.getDocument().getLength(), resultArea.getDocument().getLength());
-						}
+						}).execute();
 					}
-				}).execute();
+				});
 			}
 		}), 515, 15, 60, 30);
 		

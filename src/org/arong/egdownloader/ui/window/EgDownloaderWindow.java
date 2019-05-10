@@ -68,6 +68,7 @@ import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
 import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
+import org.arong.egdownloader.ui.menuitem.UpdateAllNullTagsMenuItem;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.egdownloader.ui.panel.InfoTabbedPane;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
@@ -306,6 +307,7 @@ public class EgDownloaderWindow extends JFrame {
 		taskMenu.add(new StopAllTaskMenuItem("暂停所有任务", this));
 		taskMenu.add(new ResetMenuItem("重置所有任务", this));
 		taskMenu.add(new ReBuildAllTaskMenuItem("重建所有任务", this));
+		taskMenu.add(new UpdateAllNullTagsMenuItem("更新未包含标签组任务", this));
 		operaMenu.add(taskMenu);
 		JMenu sizeMenu = new AJMenu("视图封面", "", IconManager.getIcon("task"));
 		sizeMenu.add(new ChangeViewSizeMenuItem("大", this, 1));

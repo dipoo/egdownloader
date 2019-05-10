@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.work;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.arong.egdownloader.model.SearchTask;
@@ -35,22 +36,26 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 					try {
 						Thread.sleep(300);
 					} catch (InterruptedException e) {}
-					new CommonSwingWorker(new Runnable() {
+					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
-							try{
-								FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()),
-										WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
-							}catch(Exception e){
-								//最多下两次
-								try{
-									FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()),
-											WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
-								}catch(Exception e1){
-									
+							new CommonSwingWorker(new Runnable() {
+								public void run() {
+									try{
+										FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()),
+												WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+									}catch(Exception e){
+										//最多下两次
+										try{
+											FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()),
+													WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+										}catch(Exception e1){
+											
+										}
+									}
 								}
-							}
+							}).execute();
 						}
-					}).execute();
+					});
 				}
 			}
 		}

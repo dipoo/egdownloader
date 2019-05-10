@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import org.arong.egdownloader.model.ScriptParser;
@@ -86,13 +87,17 @@ public class TestScriptWindow extends JDialog{
 				s.setSearchScriptPath(searchScript);
 				s.setCookieInfo(setting.getCookieInfo());
 				resultArea.setText("");
-				new CommonSwingWorker(new Runnable() {
+				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						ScriptParser.testScript(url, resultArea, s, createCb.getSelectedObjects() != null,
-								collectCb.getSelectedObjects() != null, downloadCb.getSelectedObjects() != null, 
-								searchCb.getSelectedObjects() != null);
+						new CommonSwingWorker(new Runnable() {
+							public void run() {
+								ScriptParser.testScript(url, resultArea, s, createCb.getSelectedObjects() != null,
+										collectCb.getSelectedObjects() != null, downloadCb.getSelectedObjects() != null, 
+										searchCb.getSelectedObjects() != null);
+							}
+						}).execute();
 					}
-				}).execute();
+				});
 			}
 		}), 515, 15, 60, 30);
 		

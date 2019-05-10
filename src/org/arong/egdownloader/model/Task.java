@@ -66,6 +66,7 @@ public class Task {
 	private Long oldByteLength = 0L;
 	private String downSpeed = "";//下载速度
 	private String shortCreatetime = "";
+	private boolean searched;//是否被标志为搜索到的
 	
 	public String getDisplayName(){
 		return subname == null || "".equals(subname) ? name : subname;
@@ -512,5 +513,11 @@ public class Task {
 	}
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+	public boolean isSearched() {
+		return searched;
+	}
+	public void setSearched(boolean searched) {
+		this.searched = searched;
 	}
 }

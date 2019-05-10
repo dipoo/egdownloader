@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -97,73 +98,77 @@ public class AboutMenuWindow extends JDialog {
 			System.out.println("正在检测版本...");
 		}
 		final AboutMenuWindow this_ = this;
-		new CommonSwingWorker(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, "UTF-8");
-					System.out.println(egVersion);
-					Map<String, String> version = JsonUtil.json2Map(egVersion);
-					if(! Version.VERSION.equals(version.get("version"))){
-						int r = JOptionPane.showConfirmDialog(null, "最新版本号为：" + version.get("version") + "，是否前往下载？");
-						if(r == JOptionPane.OK_OPTION){
-							try {
-								Desktop.getDesktop().browse(new URI(version.get("url")));
-							} catch (IOException e1) {
-								try {
-									Runtime.getRuntime().exec("cmd.exe /c start " + version.get("url"));
-								} catch (IOException e2) {
+				new CommonSwingWorker(new Runnable() {
+					public void run() {
+						try {
+							String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, "UTF-8");
+							System.out.println(egVersion);
+							Map<String, String> version = JsonUtil.json2Map(egVersion);
+							if(! Version.VERSION.equals(version.get("version"))){
+								int r = JOptionPane.showConfirmDialog(null, "最新版本号为：" + version.get("version") + "，是否前往下载？");
+								if(r == JOptionPane.OK_OPTION){
+									try {
+										Desktop.getDesktop().browse(new URI(version.get("url")));
+									} catch (IOException e1) {
+										try {
+											Runtime.getRuntime().exec("cmd.exe /c start " + version.get("url"));
+										} catch (IOException e2) {
+										}
+									} catch (URISyntaxException e1) {
+										try {
+											Runtime.getRuntime().exec("cmd.exe /c start " + version.get("url"));
+										} catch (IOException e2) {
+										}
+									}
 								}
-							} catch (URISyntaxException e1) {
-								try {
-									Runtime.getRuntime().exec("cmd.exe /c start " + version.get("url"));
-								} catch (IOException e2) {
+							}else if(! Version.JARVERSION.equals(version.get("jarVersion")) && StringUtils.isNotBlank(version.get("jarUrl"))){
+								
+								String binPath = FileUtil2.getAppPath(getClass());
+								if(binPath.endsWith("bin")){
+									binPath = binPath.substring(0, binPath.length() - 3);
+								}else{
+									String defaultSavePath = mainWindow.setting.getDefaultSaveDir();
+									FileUtil2.ifNotExistsThenCreate(defaultSavePath);
+									File f = new File(defaultSavePath);
+									binPath = f.getAbsolutePath().replaceAll(defaultSavePath, "");
 								}
-							}
-						}
-					}else if(! Version.JARVERSION.equals(version.get("jarVersion")) && StringUtils.isNotBlank(version.get("jarUrl"))){
-						
-						String binPath = FileUtil2.getAppPath(getClass());
-						if(binPath.endsWith("bin")){
-							binPath = binPath.substring(0, binPath.length() - 3);
-						}else{
-							String defaultSavePath = mainWindow.setting.getDefaultSaveDir();
-							FileUtil2.ifNotExistsThenCreate(defaultSavePath);
-							File f = new File(defaultSavePath);
-							binPath = f.getAbsolutePath().replaceAll(defaultSavePath, "");
-						}
-						File oldjar = new File(binPath + File.separator + "jre" + File.separator
-								+ "lib" + File.separator + "ext" + File.separator + "egdownloader.jar");
-						if(oldjar.exists()){
-							int r = JOptionPane.showConfirmDialog(null, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？" + (StringUtils.isNotBlank(version.get("changelog")) ? "\n" + version.get("changelog") : ""));
-							if(r == JOptionPane.OK_OPTION){
-								new JarUpdateWorker(mainWindow, version, binPath).execute();
-								this_.dispose();
-							}
-						}else{
-							if(this_.isVisible()){
-								JOptionPane.showMessageDialog(this_, "当前已是最新版本");
+								File oldjar = new File(binPath + File.separator + "jre" + File.separator
+										+ "lib" + File.separator + "ext" + File.separator + "egdownloader.jar");
+								if(oldjar.exists()){
+									int r = JOptionPane.showConfirmDialog(null, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？" + (StringUtils.isNotBlank(version.get("changelog")) ? "\n" + version.get("changelog") : ""));
+									if(r == JOptionPane.OK_OPTION){
+										new JarUpdateWorker(mainWindow, version, binPath).execute();
+										this_.dispose();
+									}
+								}else{
+									if(this_.isVisible()){
+										JOptionPane.showMessageDialog(this_, "当前已是最新版本");
+									}else{
+										System.out.println("当前已是最新版本");
+									}
+								}
 							}else{
-								System.out.println("当前已是最新版本");
+								if(this_.isVisible()){
+									JOptionPane.showMessageDialog(this_, "当前已是最新版本");
+								}else{
+									System.out.println("当前已是最新版本");
+								}
 							}
-						}
-					}else{
-						if(this_.isVisible()){
-							JOptionPane.showMessageDialog(this_, "当前已是最新版本");
-						}else{
-							System.out.println("当前已是最新版本");
+						} catch (Exception e1) {
+							if(this_.isVisible()){
+								JOptionPane.showMessageDialog(this_, "检查版本失败," + e1.getMessage());
+							}else{
+								System.out.println("检查版本失败," + e1.getMessage());
+							}
+						}finally{
+							this_.setTitle(vtitle);
 						}
 					}
-				} catch (Exception e1) {
-					if(this_.isVisible()){
-						JOptionPane.showMessageDialog(this_, "检查版本失败," + e1.getMessage());
-					}else{
-						System.out.println("检查版本失败," + e1.getMessage());
-					}
-				}finally{
-					this_.setTitle(vtitle);
-				}
+				}).execute();
 			}
-		}).execute();
+		});
 	}
 	public void printSystemProperties(){
 		System.out.println("java_version:	" + System.getProperty("java.version"));

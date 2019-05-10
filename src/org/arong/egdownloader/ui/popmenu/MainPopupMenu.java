@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
@@ -274,29 +275,33 @@ public class MainPopupMenu extends AJPopupMenu{
 						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
 						"】这个任务吗？");
 						if(result == JOptionPane.OK_OPTION){//确定
-							new CommonSwingWorker(new Runnable() {
+							SwingUtilities.invokeLater(new Runnable() {
 								public void run() {
-									table.setRebuild(true);
-									try {
-										ScriptParser.rebuildTask(task, mainWindow.setting);
-										if(task.getPictures() != null){
-											//保存数据
-											mainWindow.taskDbTemplate.update(task);
-											//删除原来的图片
-											mainWindow.pictureDbTemplate.delete("tid", task.getId());
-											//添加新采集的图片
-											mainWindow.pictureDbTemplate.store(task.getPictures());
-											JOptionPane.showMessageDialog(mainWindow, "重建操作完成！");
-										}else{
-											JOptionPane.showMessageDialog(mainWindow, "重建操作失败：无法完成采集图片列表");
+									new CommonSwingWorker(new Runnable() {
+										public void run() {
+											table.setRebuild(true);
+											try {
+												ScriptParser.rebuildTask(task, mainWindow.setting);
+												if(task.getPictures() != null){
+													//保存数据
+													mainWindow.taskDbTemplate.update(task);
+													//删除原来的图片
+													mainWindow.pictureDbTemplate.delete("tid", task.getId());
+													//添加新采集的图片
+													mainWindow.pictureDbTemplate.store(task.getPictures());
+													JOptionPane.showMessageDialog(mainWindow, "重建操作完成！");
+												}else{
+													JOptionPane.showMessageDialog(mainWindow, "重建操作失败：无法完成采集图片列表");
+												}
+											}catch (Exception e1) {
+												JOptionPane.showMessageDialog(mainWindow, "重建操作失败！" + e1.getMessage());
+											}finally {
+												table.setRebuild(false);
+											}
 										}
-									}catch (Exception e1) {
-										JOptionPane.showMessageDialog(mainWindow, "重建操作失败！" + e1.getMessage());
-									}finally {
-										table.setRebuild(false);
-									}
+									}).execute();
 								}
-							}).execute();
+							});
 						}
 					}
 				}));

@@ -95,6 +95,7 @@ public class TaskingTable extends JTable {
 //		this.setOpaque(false);//设为透明
 		TableModel tableModel = new TaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
+		//this.setRowHeight(20);
 		TaskTableCellRenderer renderer = new TaskTableCellRenderer();
 		renderer.setHorizontalAlignment(JLabel.CENTER);   
 		this.setDefaultRenderer(Object.class, renderer);//设置渲染器
@@ -258,7 +259,7 @@ public class TaskingTable extends JTable {
 					window.taskInfoPanel.parseTask(window.tasks.get(rowIndex), rowIndex);
 				}else if(window.infoTabbedPane.getSelectedIndex() == 2){
 					TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-					panel.parseTaskAttribute(window.tasks.get(rowIndex), false);
+					panel.parseTaskAttribute(window.tasks.get(rowIndex));
 				}else if(window.infoTabbedPane.getSelectedIndex() == 3){
 					PicturesInfoPanel infoPanel = (PicturesInfoPanel) window.infoTabbedPane.getComponent(3);
 					infoPanel.showPictures(window.tasks.get(rowIndex));
@@ -391,8 +392,8 @@ public class TaskingTable extends JTable {
 			}else{
 				task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
 				task.getDownloadWorker().execute();
+				this.setRunningNum(this.getRunningNum() + 1);
 			}
-			this.setRunningNum(this.getRunningNum() + 1);
 		}
 	}
 	/**

@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -72,32 +73,36 @@ public class TaskTagsPanel extends JScrollPane {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					if("refresh".equals(e.getDescription())){
-						new CommonSwingWorker(new Runnable() {
+						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
-								int index = mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex;
-								Task currentTask = mainWindow.tasks.get(index);
-								try {
-									System.out.println("开始更新任务[" + currentTask.getDisplayName() + "]的标签组信息");
-									Task t = ScriptParser.getTaskByUrl(currentTask.getUrl(), mainWindow.setting);
-									if(t != null && StringUtils.isNotBlank(t.getTags())){
-										currentTask.setTags(t.getTags());
-										if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
-											parseTaskAttribute(currentTask, false);
+								new CommonSwingWorker(new Runnable() {
+									public void run() {
+										int index = mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex;
+										Task currentTask = mainWindow.tasks.get(index);
+										try {
+											System.out.println("开始更新任务[" + currentTask.getDisplayName() + "]的标签组信息");
+											Task t = ScriptParser.getTaskByUrl(currentTask.getUrl(), mainWindow.setting);
+											if(t != null && StringUtils.isNotBlank(t.getTags())){
+												currentTask.setTags(t.getTags());
+												if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
+													parseTaskAttribute(currentTask, false);
+												}
+												mainWindow.taskDbTemplate.update(currentTask);
+												System.out.println("<font style='color:green'>成功更新任务[" + currentTask.getDisplayName() + "]的标签组信息</font>");
+												JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组成功");
+											}else{
+												System.out.println("<font style='color:color'>更新任务[" + currentTask.getDisplayName() + "]的标签组信息失败</font>");
+												JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组失败");
+											}
+											
+										} catch (Exception e) {
+											e.printStackTrace();
+											JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组失败：" + e.getMessage());
 										}
-										mainWindow.taskDbTemplate.update(currentTask);
-										System.out.println("<font style='color:green'>成功更新任务[" + currentTask.getDisplayName() + "]的标签组信息</font>");
-										JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组成功");
-									}else{
-										System.out.println("<font style='color:color'>更新任务[" + currentTask.getDisplayName() + "]的标签组信息失败</font>");
-										JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组失败");
 									}
-									
-								} catch (Exception e) {
-									e.printStackTrace();
-									JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组失败：" + e.getMessage());
-								}
+								}).execute();
 							}
-						}).execute();
+						});
 					}else if(e.getDescription().startsWith("search|")){
 						//获取关键字
 						String key = e.getDescription().replaceAll("search\\|", "");
@@ -163,7 +168,9 @@ public class TaskTagsPanel extends JScrollPane {
 		});
 		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, b3);
 	}
-	
+	public void parseTaskAttribute(Task t){
+		parseTaskAttribute(t, false);
+	}
 	public void parseTaskAttribute(Task t, boolean trans){
 		trans = trans && tagscnMap != null;
 		textPane.setText("");
@@ -214,7 +221,7 @@ public class TaskTagsPanel extends JScrollPane {
 			sb.append("</div>");
 			textPane.setText(sb.toString());
 		}else{
-			textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'>[更新]</a></div>");
+			textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[更新]</b></a></div>");
 		}
 	}
 }
