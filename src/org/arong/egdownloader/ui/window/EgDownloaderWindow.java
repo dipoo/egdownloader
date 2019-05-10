@@ -469,7 +469,7 @@ public class EgDownloaderWindow extends JFrame {
 					}
 					SearchComicWindow scw = (SearchComicWindow) mainWindow.searchComicWindow;
 					scw.setVisible(true);
-					mainWindow.settingWindow.toFront();
+					scw.toFront();
 			    }
 		    });
 		    tray.addMouseListener(new MouseAdapter() {

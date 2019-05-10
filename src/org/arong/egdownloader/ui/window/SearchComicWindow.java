@@ -66,6 +66,7 @@ public class SearchComicWindow extends JFrame {
 	private static final long serialVersionUID = -3912589805632312855L;
 	public EgDownloaderWindow mainWindow;
 	public SearchTagWindow searchTagWindow;
+	public SearchTagsWindow searchTagsWindow;
 	public SearchCoverWindow coverWindow;
 	public JTextField keyField;
 	public JComboBox language;

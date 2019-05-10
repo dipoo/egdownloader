@@ -22,6 +22,7 @@ import javax.swing.event.HyperlinkListener;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
+import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -42,7 +43,8 @@ public class TaskTagsPanel extends JScrollPane {
 	public AJLabel selectTextLabel;
 	
 	public static Map<String, String> tagscnMap = null;
-	
+	public boolean searchTags = false;//是否为搜索时使用
+	public String currentTags = null;
 	static{
 		try {
 			String text = FileUtil2.getTextFromReader(new FileReader("script/ehtags-cn.json"));
@@ -57,6 +59,30 @@ public class TaskTagsPanel extends JScrollPane {
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			new CommonSwingWorker(new Runnable() {
+				public void run() {
+					//在线下载
+					String dir = "script/";
+					FileUtil2.ifNotExistsThenCreate(dir);
+					try {
+						String text = WebClient.getRequestUseJava("https://raw.githubusercontent.com/scooderic/exhentai-tags-chinese-translation/master/dist/ehtags-cn.json", "UTF-8");
+						if(StringUtils.isNotBlank(text)){
+							List<Map<String, String>> list = JsonUtil.jsonArray2MapList(text.trim());
+							if(list != null && list.size() > 0){
+								tagscnMap = new HashMap<String, String>();
+								for(Map<String, String> m : list){
+									tagscnMap.put(m.get("k"), m.get("v"));
+								}
+								FileUtil2.storeStr2file(text, dir, "ehtags-cn.json");
+							}
+						}
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}).execute();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,7 +111,7 @@ public class TaskTagsPanel extends JScrollPane {
 											if(t != null && StringUtils.isNotBlank(t.getTags())){
 												currentTask.setTags(t.getTags());
 												if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
-													parseTaskAttribute(currentTask, false);
+													parseTaskAttribute(currentTask);
 												}
 												mainWindow.taskDbTemplate.update(currentTask);
 												System.out.println("<font style='color:green'>成功更新任务[" + currentTask.getDisplayName() + "]的标签组信息</font>");
@@ -113,12 +139,10 @@ public class TaskTagsPanel extends JScrollPane {
 						confirmPanel.setName(key);
 						setViewportView(confirmPanel);
 					}else if(e.getDescription().startsWith("trans_")){
-						int index = mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex;
-						Task currentTask = mainWindow.tasks.get(index);
 						if(e.getDescription().contains("yes")){
-							parseTaskAttribute(currentTask, true);
+							parseTaskAttribute(currentTags, true);
 						}else{
-							parseTaskAttribute(currentTask, false);
+							parseTaskAttribute(currentTags, false);
 						}
 					}
 				}
@@ -169,34 +193,34 @@ public class TaskTagsPanel extends JScrollPane {
 		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, b3);
 	}
 	public void parseTaskAttribute(Task t){
-		parseTaskAttribute(t, false);
+		parseTaskAttribute(t.getTags(), false);
 	}
-	public void parseTaskAttribute(Task t, boolean trans){
+	public void parseTaskAttribute(String tags, boolean trans){
 		trans = trans && tagscnMap != null;
 		textPane.setText("");
-		if(t != null && StringUtils.isNotBlank(t.getTags())){
-			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:11px;margin-left:20px;'><a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a><a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "还原" : "翻译") + "]</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/scooderic/exhentai-tags-chinese-translation/'>https://github.com/scooderic/exhentai-tags-chinese-translation/</a></font>" : "") + "<br/>");
+		currentTags = tags;
+		if(StringUtils.isNotBlank(tags)){
+			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:11px;margin-left:20px;'>");
+			if(!searchTags){
+				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a>");
+			}
+			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "还原" : "翻译") + "]</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/scooderic/exhentai-tags-chinese-translation/'>https://github.com/scooderic/exhentai-tags-chinese-translation/</a></font>" : "") + "<br/>");
 			//解析属性组
+			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
-			String[] attrs = t.getTags().split(";");
+			String[] attrs = tags.split(";");
 			for(String attr : attrs){
 				String[] arr = attr.split(":");
-				if(arr.length == 1){
-					if(groups.containsKey(MISC)){
-						groups.get(MISC).add(arr[0]);
-					}else{
-						List<String> list = new ArrayList<String>();
-						list.add(arr[0]);
-						groups.put(MISC, list);
-					}
+				if(arr.length == 1 || arr[0].equals("")){
+					attr = MISC + ":" + attr.replaceAll(":", "");
+					arr = attr.split(":");
+				}
+				if(groups.containsKey(arr[0])){
+					groups.get(arr[0]).add(arr[1]);
 				}else{
-					if(groups.containsKey(arr[0])){
-						groups.get(arr[0]).add(arr[1]);
-					}else{
-						List<String> list = new ArrayList<String>();
-						list.add(arr[1]);
-						groups.put(arr[0], list);
-					}
+					List<String> list = new ArrayList<String>();
+					list.add(arr[1]);
+					groups.put(arr[0], list);
 				}
 			}
 			int i = 0;
@@ -221,7 +245,11 @@ public class TaskTagsPanel extends JScrollPane {
 			sb.append("</div>");
 			textPane.setText(sb.toString());
 		}else{
-			textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[更新]</b></a></div>");
+			if(!searchTags){
+				textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[更新]</b></a></div>");
+			}else{
+				textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组</div>");
+			}
 		}
 	}
 }

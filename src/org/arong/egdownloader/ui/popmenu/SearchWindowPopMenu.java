@@ -22,6 +22,7 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SearchTagsWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
@@ -114,14 +115,19 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						}
 					}
 				}));
-		/*JMenuItem searchTitleItem = new AJMenuItem("搜索标题", Color.BLACK, "",
+		JMenuItem showTagsTitleItem = new AJMenuItem("显示标签组", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
+						if(mainWindow.searchComicWindow.searchTagsWindow == null){
+							mainWindow.searchComicWindow.searchTagsWindow = new SearchTagsWindow(mainWindow.searchComicWindow);
+						}
 						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-						mainWindow.searchComicWindow.doSearch(task.getName());
+						mainWindow.searchComicWindow.searchTagsWindow.updateTaskTags(task);
+						mainWindow.searchComicWindow.searchTagsWindow.setVisible(true);
+						mainWindow.searchComicWindow.searchTagsWindow.toFront();
 					}
-				}));*/
+				}));
 		JMenuItem searchAuthorItem = new AJMenuItem("搜索作者", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
@@ -166,7 +172,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		this.add(openPictureItem);
 		this.add(openPageItem);
 		this.add(openBtPageItem);
-		//this.add(searchTitleItem);
+		this.add(showTagsTitleItem);
 		this.add(searchAuthorItem);
 		this.add(searchLocalAuthorItem);
 		this.add(clearCoverItem);

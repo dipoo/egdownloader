@@ -26,6 +26,8 @@ public class SearchTask {
 	
 	private String filenum;//图片个数
 	
+	private String tags;//标签
+	
 	public String getAuthor() {
 		return author;
 	}
@@ -116,6 +118,14 @@ public class SearchTask {
 
 	public void setFilenum(String filenum) {
 		this.filenum = filenum;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 	
 }

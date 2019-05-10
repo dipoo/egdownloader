@@ -11,6 +11,7 @@ var mark = {
 	filenum : ['https://exhentai.org/uploader/', 'pages</div>', '</a></div><div>', ' '],
 	btUrl : ["return popUp('", "', 610, 590)"],
 	uploader : ['exhentai.org/uploader', 'pages</div></td></tr>', '>', '<'],
+	tags : ['<div><div class="gt" ', '</div></div></a></td>', 'title="', '">'],
 	rate_position: ['<div class="ir" style="background-position:', ';opacity:'],
 	rate_mapping: {
 		"0px -1px": "5.0",
@@ -123,6 +124,14 @@ function parse(source, openhttps){
 			}
 			task.uploader = interceptFromSource(source, mark.uploader[0], mark.uploader[1]);
 			task.uploader = interceptFromSource(task.uploader, mark.uploader[2], mark.uploader[3]);
+			
+			task.tags = '';
+			var tagstemp = interceptFromSource(source, mark.tags[0], mark.tags[1]);
+			while(tagstemp.indexOf(mark.tags[2]) != -1){
+				task.tags += interceptFromSource(tagstemp, mark.tags[2], mark.tags[3]) + ";";
+				tagstemp = subFromSource(tagstemp, mark.tags[2]);
+			}
+			
 			tasks.push(task);
 			source = subFromSource(source, prefix);
 			i ++;
