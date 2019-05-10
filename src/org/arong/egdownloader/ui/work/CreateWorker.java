@@ -60,9 +60,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 					JOptionPane.showMessageDialog(null, "收集图片脚本未指定");
 					return null;
 				}
-				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
+				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow, false);
 			}else{
-				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
+				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow, false);
 			}
 			
 			if(task != null){
@@ -122,7 +122,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				JOptionPane.showMessageDialog(null, "创建异常");
 			}
 		}catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			JOptionPane.showMessageDialog(null, "创建异常:" + e.getMessage());
 			e.printStackTrace();
 		}finally{
 			((CreatingWindow)(window.creatingWindow)).reset();

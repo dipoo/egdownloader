@@ -44,7 +44,7 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 		InputStream is = null;
 		try {
 			if(setting.isOpenScript()){
-				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow);
+				task = ScriptParser.buildTaskByJavaScript(task, setting, window.creatingWindow, true);
 			}else{
 				//task = ParseEngine.buildTask_new(task, setting, window.creatingWindow);
 			}

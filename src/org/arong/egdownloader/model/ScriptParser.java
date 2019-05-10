@@ -145,7 +145,7 @@ public class ScriptParser {
 	 * @throws NoSuchAlgorithmException 
 	 * @throws KeyManagementException 
 	 */
-	public static Task buildTaskByJavaScript(Task task, Setting setting, JDialog window) throws Exception{
+	public static Task buildTaskByJavaScript(Task task, Setting setting, JDialog window, boolean rebulid) throws Exception{
 		CreatingWindow creatingWindow = (CreatingWindow)window;
 		if(task.getId() == null){
 			task.setId(UUID.randomUUID().toString());
@@ -189,7 +189,9 @@ public class ScriptParser {
 	        Tracker.println(ScriptParser.class, task.getSize());
 	        Tracker.println(ScriptParser.class, task.getCoverUrl());
 			creatingWindow.showInfo(task);
-			task.setSaveDir(genSaveDir(task));
+			if(!rebulid){
+				task.setSaveDir(genSaveDir(task));
+			}
 			
 			if(StringUtils.isBlank(t.getName()) || StringUtils.isBlank(t.getCoverUrl()) || t.getTotal() == 0){
 				throw new RuntimeException("任务信息采集不完整：名称、封面、数目不能为空");
