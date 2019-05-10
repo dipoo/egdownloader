@@ -85,9 +85,9 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							return null; 
 						Object[] streamAndLength =  null;
 						if(pic.getRealUrl().contains("exhentai.org")){
-							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo(), 10 * 1000);
+							streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), setting.getCookieInfo(), 10 * 1000);
 						}else{
-							streamAndLength =  WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
+							streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
 						}
 						is = (InputStream) streamAndLength[0];
 						int totalLength = (Integer) streamAndLength[1];

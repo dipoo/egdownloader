@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.work;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -41,13 +42,15 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 							new CommonSwingWorker(new Runnable() {
 								public void run() {
 									try{
-										FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()),
-												WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+										Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo(), 20 * 1000);
+										task.setCoverLength((Integer) streamAndLength[1]);
+										FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()), (InputStream)streamAndLength[0]);
 									}catch(Exception e){
 										//最多下两次
 										try{
-											FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()),
-													WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo()));
+											Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo(), 20 * 1000);
+											task.setCoverLength((Integer) streamAndLength[1]);
+											FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()), (InputStream)streamAndLength[0]);
 										}catch(Exception e1){
 											
 										}

@@ -28,6 +28,8 @@ public class SearchTask {
 	
 	private String tags;//标签
 	
+	private int coverLength;//封面字节大小
+	
 	public String getAuthor() {
 		return author;
 	}
@@ -126,6 +128,14 @@ public class SearchTask {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public int getCoverLength() {
+		return coverLength;
+	}
+
+	public void setCoverLength(int coverLength) {
+		this.coverLength = coverLength;
 	}
 	
 }

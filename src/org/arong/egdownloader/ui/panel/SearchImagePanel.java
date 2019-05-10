@@ -21,7 +21,6 @@ import org.arong.util.FileUtil2;
 
 public class SearchImagePanel extends JLabel {
 	private EgDownloaderWindow mainWindow;
-	public boolean iconLoadCompleted; 
 	public final static int DEFAULTWIDTH = 16;
 	public final static int DEFAULTHEIGHT = 16;
 	public SearchImagePanel(final EgDownloaderWindow mainWindow){
@@ -91,7 +90,7 @@ public class SearchImagePanel extends JLabel {
 		
 	}
 	
-	public void flush(SearchTask task, final long delay){
+	public void flush(final SearchTask task, final long delay){
 		this.setForeground(Color.WHITE);
 		boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
@@ -111,21 +110,36 @@ public class SearchImagePanel extends JLabel {
 							Thread.sleep(delay);
 						} catch (InterruptedException e) {}
 					}
-					File cover = new File(path);
+					
 					int i = 1;
 					ImageIcon icon = null;
-					while(!cover.exists() && i < 60){
+					while(task.getCoverLength() == 0 && i < 60){
+						i ++;
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {}
+					}
+					
+					i = 1;
+					File cover = new File(path);
+					while(!cover.exists() && i < 60){ 
 						i ++;
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {}
 						cover = new File(path);
 					}
-					if(!cover.exists()){ 
-						this_.setText(this_.getText() + ">加载失败");
-						this_.setIcon(null);
-						return;
+					
+					i = 1;
+					cover = new File(path);
+					while(cover.exists() && cover.length() != task.getCoverLength() && i < 60){ 
+						i ++;
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {}
+						cover = new File(path);
 					}
+					
 					icon = new ImageIcon(path);
 					icon.getImage().flush();//解决加载图片不完全问题
 					while(icon.getIconWidth() == -1 && icon.getImage().getWidth(icon.getImageObserver()) == -1){
@@ -137,9 +151,7 @@ public class SearchImagePanel extends JLabel {
 							icon.getImage().flush();//解决加载图片不完全问题
 						} catch (Exception e) {this_.setText(this_.getText() + ">加载失败");return;}
 					}
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {}
+					
 					int width = icon.getIconWidth(), height = icon.getIconHeight();
 					if(width == -1){
 						width = icon.getImage().getWidth(icon.getImageObserver());
@@ -148,7 +160,6 @@ public class SearchImagePanel extends JLabel {
 					this_.setSize(width + 4, height + 4);
 					icon.getImage().flush();
 					this_.setIcon(icon);
-					this_.iconLoadCompleted = true;
 				}
 			}).start();
 		}else{
