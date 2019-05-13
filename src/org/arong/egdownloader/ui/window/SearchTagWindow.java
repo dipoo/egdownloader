@@ -257,7 +257,9 @@ public class SearchTagWindow extends JDialog {
 					importBtn.setLocation((window.getWidth() - 130) / 2 + 70, addBtn.getY());
 				}
 				separator.setSize(window.getWidth(), 1);
-				addPanel.setLocation((window.getWidth() - addPanel.getWidth()) / 2, (window.getHeight() - addPanel.getHeight()) / 2);
+				if(addPanel != null){
+					addPanel.setLocation((window.getWidth() - addPanel.getWidth()) / 2, (window.getHeight() - addPanel.getHeight()) / 2);
+				}
 				tagPane.setSize(window.getWidth() - 30, window.getHeight() - 80);
 			}
 		});

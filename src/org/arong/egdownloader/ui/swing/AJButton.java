@@ -33,6 +33,7 @@ public class AJButton extends JButton {
 	
 	public static ButtonUI greenBtnUi = new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green);
 	public static ButtonUI blueBtnUi = new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue);
+	public static ButtonUI redBtnUi = new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.red);
 
 	private static final long serialVersionUID = 1876134017404282134L;
 

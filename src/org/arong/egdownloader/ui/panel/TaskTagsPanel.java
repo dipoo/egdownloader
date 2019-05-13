@@ -47,11 +47,13 @@ public class TaskTagsPanel extends JScrollPane {
 	private AJTextPane textPane;
 	public JPanel confirmPanel;
 	public AJLabel selectTextLabel;
+	AJButton favBtn;
 	
 	public static Map<String, String> tagscnMap = null;
 	public static Map<String, String> rowsMap = null;
 	public boolean searchTags = false;//是否为搜索时使用
 	public String currentTags = null;
+	public boolean showMyFav = false;//显示我的收藏
 	public static final String[] CNFILENAMES = new String[]{"artist.md", "character.md", "female.md", "group.md", "language.md", "male.md", "misc.md", "parody.md", "reclass.md", "rows.md"};
 	
 	static{
@@ -165,6 +167,16 @@ public class TaskTagsPanel extends JScrollPane {
 						}
 						selectTextLabel.setText("请选择[" + key + "]标签的操作");
 						confirmPanel.setName(key);
+						/**
+						 * 是否已经收藏
+						 */
+						if(StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && mainWindow.setting.getFavTags().contains(key.replaceAll("\"", "").replaceAll("\\$", "") + ";")){
+							favBtn.setText("取消收藏");
+							favBtn.setUI(AJButton.redBtnUi);
+						}else{
+							favBtn.setText("标签收藏");
+							favBtn.setUI(AJButton.blueBtnUi);
+						}
 						setViewportView(confirmPanel);
 					}else if(e.getDescription().startsWith("trans_")){
 						if(e.getDescription().contains("yes")){
@@ -172,6 +184,12 @@ public class TaskTagsPanel extends JScrollPane {
 						}else{
 							parseTaskAttribute(currentTags, false);
 						}
+					}else if("return".equals(e.getDescription())){
+						showMyFav = false;
+						parseTaskAttribute(currentTags, true);
+					}else if("fav".equals(e.getDescription())){
+						showMyFav = true;
+						parseTaskAttribute(currentTags, true);
 					}
 				}
 			}
@@ -190,8 +208,10 @@ public class TaskTagsPanel extends JScrollPane {
 		AJButton b2 = new AJButton("在线搜索");
 		b2.setBounds(120, 50, 90, 30);
 		b2.setUI(AJButton.blueBtnUi);
-		AJButton b3 = new AJButton("返回");
-		b3.setBounds(220, 50, 60, 30);
+		favBtn = new AJButton("标签收藏");
+		favBtn.setBounds(220, 50, 90, 30);
+		AJButton b4 = new AJButton("返回");
+		b4.setBounds(320, 50, 60, 30);
 		b1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
@@ -213,26 +233,51 @@ public class TaskTagsPanel extends JScrollPane {
 				mainWindow.searchComicWindow.setVisible(true);
 			}
 		});
-		b3.addActionListener(new ActionListener() {
+		favBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String tag = confirmPanel.getName().replaceAll("\"", "").replaceAll("\\$", "");
+				if(StringUtils.isNotBlank(mainWindow.setting.getFavTags())){
+					if(mainWindow.setting.getFavTags().contains(tag + ";")){
+						mainWindow.setting.setFavTags(mainWindow.setting.getFavTags().replaceAll(tag + ";", ""));
+					}else{
+						mainWindow.setting.setFavTags(mainWindow.setting.getFavTags() + tag + ";");
+					}
+				}else{
+					mainWindow.setting.setFavTags(tag + ";");
+				}
+				mainWindow.settingDbTemplate.update(mainWindow.setting);
+				setViewportView(textPane);
+			}
+		});
+		b4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
 			}
 		});
-		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, b3);
+		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, favBtn, b4);
 	}
 	public void parseTaskAttribute(Task t){
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
 	public void parseTaskAttribute(String tags, boolean trans){
 		trans = trans && tagscnMap != null;
+		if(showMyFav){
+			tags = mainWindow.setting.getFavTags();
+		}else{
+			currentTags = tags;
+		}
 		textPane.setText("");
-		currentTags = tags;
 		if(StringUtils.isNotBlank(tags)){
 			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:10px;margin-left:5px;'>");
-			if(!searchTags){
-				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a>");
+			if(!showMyFav && !searchTags){
+				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]&nbsp;</b></a>");
 			}
-			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "还原" : "翻译") + "]</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
+			if(showMyFav && currentTags != null){
+				sb.append("<a href='return' style='text-decoration:none;color:blue'><b>[返回]</b>&nbsp;</a>");
+			}else{
+				sb.append("<a href='fav' style='text-decoration:none;color:red'><b>[我的收藏]</b>&nbsp;</a>");
+			}
+			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "原文" : "翻译") + "]&nbsp;</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
@@ -262,7 +307,7 @@ public class TaskTagsPanel extends JScrollPane {
 					}
 					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
 				}
-				if(groups.keySet().size() > 8){
+				if(groups.keySet().size() > 9){
 					if(i % 2 == 0){
 						sb.append("<br/>");
 					}
@@ -273,10 +318,14 @@ public class TaskTagsPanel extends JScrollPane {
 			sb.append("</div>");
 			textPane.setText(sb.toString());
 		}else{
-			if(!searchTags){
-				textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[更新]</b></a></div>");
+			if(!showMyFav && !searchTags){
+				textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[更新]</b></a></div>");
 			}else{
-				textPane.setText("<div style='font-size:10px;margin-left:20px;'>该任务暂无标签组</div>");
+				if(!showMyFav){
+					textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组</div>");
+				}else{
+					textPane.setText("<div style='font-size:10px;margin-left:5px;'>你还没有收藏任何标签！</div>");
+				}
 			}
 		}
 	}

@@ -67,6 +67,7 @@ public class SearchComicWindow extends JFrame {
 	public EgDownloaderWindow mainWindow;
 	public SearchTagWindow searchTagWindow;
 	public SearchTagsWindow searchTagsWindow;
+	public SearchDetailInfoWindow searchDetailInfoWindow;
 	public SearchCoverWindow coverWindow;
 	public JTextField keyField;
 	public JComboBox language;
@@ -75,6 +76,7 @@ public class SearchComicWindow extends JFrame {
 	public JButton searchBtn;
 	public JButton leftBtn;
 	public JButton rightBtn;
+	public JButton favTagsBtn;
 	public JButton tagBtn;
 	public JButton changeViewBtn;
 	private JButton clearCacheBtn;
@@ -168,6 +170,17 @@ public class SearchComicWindow extends JFrame {
 			}
 		});
 		final SearchComicWindow this_ = this;
+		favTagsBtn = new AJButton("标签收藏", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(searchTagsWindow == null){
+					searchTagsWindow = new SearchTagsWindow(this_);
+				}
+				searchTagsWindow.setTitle("我收藏的标签");
+				searchTagsWindow.taskTagsPanel.showMyFav = true;
+				searchTagsWindow.taskTagsPanel.parseTaskAttribute(null, mainWindow.setting.isTagsTranslate());
+				searchTagsWindow.setVisible(true);
+			}
+		}, this.getWidth() - 220, 20, 60, 30);
 		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(searchTagWindow == null){
@@ -184,6 +197,7 @@ public class SearchComicWindow extends JFrame {
 				JOptionPane.showMessageDialog(this_, "清理成功");
 			}
 		}, this.getWidth() - 80, 20, 60, 30);
+		favTagsBtn.setUI(AJButton.blueBtnUi);
 		tagBtn.setUI(AJButton.blueBtnUi);
 		clearCacheBtn.setUI(AJButton.blueBtnUi);
 		
@@ -303,7 +317,7 @@ public class SearchComicWindow extends JFrame {
 		pager.setVisible(false);
 		
 		
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, leftBtn, rightBtn, loadingLabel, totalLabel, tagBtn, clearCacheBtn, optionPanel, pager);
+		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, leftBtn, rightBtn, loadingLabel, totalLabel, favTagsBtn, tagBtn, clearCacheBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { 
@@ -335,6 +349,7 @@ public class SearchComicWindow extends JFrame {
 				SearchComicWindow window = (SearchComicWindow) e.getSource();
 				//设置清理缓存按钮位置
 				if(clearCacheBtn != null){
+					favTagsBtn.setLocation(window.getWidth() - 220, clearCacheBtn.getY());
 					tagBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());
 					clearCacheBtn.setLocation(window.getWidth() - 80, clearCacheBtn.getY());
 				}

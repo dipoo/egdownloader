@@ -24,6 +24,7 @@ public class Setting {
 	private boolean tagsTranslate = true;//标签是否汉化显示
 	private int maxThread = 5;
 	private boolean debug = false;
+	private String favTags = "";
 	private String cookieInfo = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;";
 	//private String cookieInfo2 = "igneous=4baadb8381b3bb5c20257b33b725e4ec93f51b4fe2ab7e97621c9fe260bbda7de47a44d6394b31783a0af329a20197c80d2ab687ccf0b667ca5c558ee1b9310b;ipb_member_id=1059070;ipb_pass_hash=e8e36f507753214279ee9df5d98c476c;s=1b0e7b0b3; sk=px6ms37kr0j3lf0m2fjtr1o8q2zu; lv=1544856920-1545910092;";
 	
@@ -299,6 +300,12 @@ public class Setting {
 	}
 	public void setTagsTranslate(boolean tagsTranslate) {
 		this.tagsTranslate = tagsTranslate;
+	}
+	public String getFavTags() {
+		return favTags;
+	}
+	public void setFavTags(String favTags) {
+		this.favTags = favTags;
 	}
 	
 }

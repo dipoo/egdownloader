@@ -27,6 +27,7 @@ import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
+import org.arong.egdownloader.ui.window.SearchDetailInfoWindow;
 /**
  * 搜索结果表格
  * @author dipoo
@@ -153,6 +154,22 @@ public class SearchTasksTable extends JTable {
 				}else{
 					if(comicWindow.coverWindow != null){
 						comicWindow.coverWindow.setVisible(false);
+						currentRowIndex = -1;
+					}
+				}
+				if(columnIndex == 1){
+					SearchTask task = table.getTasks().get(rowIndex);
+					//切换行
+					if(rowIndex != currentRowIndex){
+						currentRowIndex = rowIndex;
+						if(comicWindow.searchDetailInfoWindow == null){
+							comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
+						}
+						comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+					}
+				}else{
+					if(comicWindow.searchDetailInfoWindow != null){
+						comicWindow.searchDetailInfoWindow.setVisible(false);
 						currentRowIndex = -1;
 					}
 				}

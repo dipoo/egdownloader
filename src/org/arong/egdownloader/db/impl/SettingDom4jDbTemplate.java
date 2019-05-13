@@ -180,6 +180,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		
 		ele.addAttribute("loginUrl", t.getLoginUrl());
 		ele.addAttribute("tags", t.getTags());
+		ele.addAttribute("favTags", t.getFavTags());
 		
 		ele.addAttribute("lastCreateTime", t.getLastCreateTime());
 		ele.addAttribute("lastDownloadTime", t.getLastDownloadTime());
@@ -220,6 +221,9 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setLoginUrl(ele.attributeValue("loginUrl") == null ? t.getLoginUrl() : ele.attributeValue("loginUrl"));
 		if(ele.attributeValue("tags") != null){
 			t.setTags(ele.attributeValue("tags"));
+		}
+		if(ele.attributeValue("favTags") != null){
+			t.setFavTags(ele.attributeValue("favTags"));
 		}
 		t.setSkin(ele.attributeValue("skin") == null ? t.getSkin() : ele.attributeValue("skin"));
 		t.setTaskHistoryCount(ele.attributeValue("taskHostoryCount") == null ? 0 : Integer.parseInt(ele.attributeValue("taskHostoryCount")));
