@@ -120,6 +120,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				}
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");
+				throw new RuntimeException("任务获取为空");
 			}
 		}catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "创建异常:" + e.getMessage());

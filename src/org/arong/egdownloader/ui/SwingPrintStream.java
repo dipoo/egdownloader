@@ -10,7 +10,12 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.SwingUtilities;
+
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
@@ -68,16 +73,19 @@ public class SwingPrintStream extends PrintStream {
 		message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
 			consolePanel.realtext.append("<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>")
-			.append(sdf.format(new Date())).append("</font> ").append(message).append("</b><br/>");
+			.append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");
 			try {
-				consolePanel.showLog();
-				if(!consolePanel.locked){
-					// 让光标置于最下方
-					consolePanel.paintImmediately(consolePanel.getBounds());
-					consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
-					consolePanel.updateUI();
-				}
-			
+				SwingUtilities.invokeLater(new Runnable(){
+					public void run() { 
+						consolePanel.showLog();
+						if(!consolePanel.locked){
+							// 让光标置于最下方
+							consolePanel.paintImmediately(consolePanel.getBounds());
+							consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
+							consolePanel.updateUI();
+						}
+					}
+				});
 				//写日志
 				logfw.append(sdf.format(new Date()) + " " + HtmlUtils.Html2Text(message) + "\n");
 				logfw.flush();
@@ -92,10 +100,26 @@ public class SwingPrintStream extends PrintStream {
 	 * @param consolePanel
 	 */
 	private void filter(ConsolePanel consolePanel){
-		if(consolePanel.getTextPane().getText().length() > 50000){
+		if(HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
 			consolePanel.realtext = new StringBuffer();
 			consolePanel.showLog();
 		}
+	}
+	
+	public final static Pattern HTTP_PATTERN = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+	Matcher mt = null;String formatMessage = null;String formatGroup = null;
+ 	private String formatMessage(String message){
+ 		if(StringUtils.isNotBlank(message)){
+ 			//将http链接转化为<a>标签
+ 	 		mt = HTTP_PATTERN.matcher(message);
+ 	 		formatMessage = null;
+ 	 		while(mt.find()){
+ 	 			formatGroup = mt.group().split(",proxy")[0];
+ 	 			formatMessage = message.replace(formatGroup, String.format("<a href='%s' style='color:#666'>%s</a>", formatGroup, formatGroup));
+ 	 		}
+ 	 		return formatMessage == null ? message : formatMessage;
+ 		}
+		return message;
 	}
 
 }

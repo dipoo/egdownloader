@@ -69,6 +69,8 @@ public class SettingWindow extends JFrame{
 		public JCheckBox downloadOriginalBox;
 		JLabel showAsSubnameLabel;
 		public JCheckBox showAsSubnameBox;
+		JLabel tagTranslateLabel;
+		public JCheckBox tagTranslateBox;
 		JLabel maxThreadLabel;
 		public JCheckBox saveDirAsSubnameBox;
 		JLabel saveDirAsSubnameLabel;
@@ -200,6 +202,9 @@ public class SettingWindow extends JFrame{
 			showAsSubnameLabel = new AJLabel("列表子标题展示：", labelColor, 200, 110, 100, 30);
 			showAsSubnameBox = new JCheckBox("", setting.isShowAsSubname());
 			showAsSubnameBox.setBounds(290, 110, 30, 30);
+			tagTranslateLabel = new AJLabel("标签汉化：", labelColor, 400, 110, 100, 30);
+			tagTranslateBox = new JCheckBox("", setting.isTagsTranslate());
+			tagTranslateBox.setBounds(460, 110, 30, 30);
 			
 			maxThreadLabel = new AJLabel("最多开启任务数：", labelColor, 25, 150, 100, 30);
 			maxThreadField = new AJTextField(setting.getMaxThread() + "", "", 125, 150, 60, 30);
@@ -234,7 +239,7 @@ public class SettingWindow extends JFrame{
 				}
 			}), 500, 250, 60, 30);
 		    addComponentsJpanel(basicPanel, saveDirLabel, saveDirField, browseDirButton, openDirButton,
-				saveAsNameLabel, saveAsNameBox, autoDownloadLabel, autoDownloadBox, downloadOriginalLabel,
+				saveAsNameLabel, saveAsNameBox, tagTranslateLabel, tagTranslateBox, autoDownloadLabel, autoDownloadBox, downloadOriginalLabel,
 				downloadOriginalBox, showAsSubnameLabel, showAsSubnameBox, maxThreadLabel, maxThreadField,
 				saveDirAsSubnameLabel,saveDirAsSubnameBox,
 				/*loginUrlLabel, loginUrlField,*/ cookieLabel, cookieArea,
@@ -384,6 +389,7 @@ public class SettingWindow extends JFrame{
 						boolean downloadOriginal = settingWindow.downloadOriginalBox.getSelectedObjects() == null ? false : true;
 						boolean saveDirAsSubname = saveDirAsSubnameBox.isSelected();
 						boolean showAsSubname = showAsSubnameBox.isSelected();
+						boolean tagTranslate = tagTranslateBox.isSelected();
 						String cookieInfo = settingWindow.cookieArea.getText();
 						Pattern p = Pattern.compile("[0-9]");
 						if("".equals(saveDir)){
@@ -411,6 +417,7 @@ public class SettingWindow extends JFrame{
 							setting.setDownloadOriginal(downloadOriginal);
 							setting.setSaveDirAsSubname(saveDirAsSubname);
 							setting.setShowAsSubname(showAsSubname);
+							setting.setTagsTranslate(tagTranslate);
 							setting.setMaxThread(Integer.parseInt(maxThread));
 							/*setting.setLoginUrl(loginUrl);*/
 							setting.setCookieInfo(cookieInfo);

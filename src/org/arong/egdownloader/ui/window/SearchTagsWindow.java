@@ -22,10 +22,10 @@ public class SearchTagsWindow extends JDialog {
 	
 	public void updateTaskTags(SearchTask task){
 		this.setTitle("标签组-" + task.getName());
-		taskTagsPanel.parseTaskAttribute(task.getTags(), false);
+		taskTagsPanel.parseTaskAttribute(task.getTags(), searchComicWindow.mainWindow.setting.isTagsTranslate());
 	}
 	
-	public SearchTagsWindow(SearchComicWindow searchComicWindow){
+	public SearchTagsWindow(final SearchComicWindow searchComicWindow){
 		
 		this.searchComicWindow = searchComicWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH - 200, 300);
@@ -42,6 +42,7 @@ public class SearchTagsWindow extends JDialog {
 			public void windowClosing(WindowEvent e) {
 				Window this_ = (Window) e.getSource();
 				this_.dispose();
+				searchComicWindow.toFront();
 			}
 		});
 	}

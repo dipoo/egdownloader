@@ -172,6 +172,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("downloadOriginal", t.isDownloadOriginal() + "");
 		ele.addAttribute("saveDirAsSubname", t.isSaveDirAsSubname() + "");
 		ele.addAttribute("debug", t.isDebug() + "");
+		ele.addAttribute("tagsTranslate", t.isTagsTranslate() + "");
 		ele.addAttribute("maxThread", t.getMaxThread() + "");
 		ele.addAttribute("viewModel", t.getViewModel() + "");
 		ele.addAttribute("searchViewModel", t.getSearchViewModel() + "");
@@ -212,6 +213,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setSaveDirAsSubname("true".equals(ele.attributeValue("saveDirAsSubname")));
 		t.setShowAsSubname(ele.attributeValue("showAsSubname") == null ? true : "true".equals(ele.attributeValue("showAsSubname")));
 		t.setDebug("true".equals(ele.attributeValue("debug")));
+		t.setTagsTranslate("true".equals(ele.attributeValue("tagsTranslate")) ? true : "true".equals(ele.attributeValue("tagsTranslate")));
 		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
 		t.setViewModel(ele.attributeValue("viewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("viewModel")));
 		t.setSearchViewModel(ele.attributeValue("searchViewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("searchViewModel")));

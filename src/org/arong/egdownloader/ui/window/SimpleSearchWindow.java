@@ -132,6 +132,8 @@ public class SimpleSearchWindow extends JDialog {
 					Tracker.println("[" + key_ + "]搜索完毕,结果【" + j + "】条。");
 				}
 				mainWindow.infoTabbedPane.setSelectedIndex(0);
+				mainWindow.setVisible(true);
+				mainWindow.toFront();
 			}
 		}, 510, 50, 60, 30);
 		ComponentUtil.addComponents(this.getContentPane(), descLabel, keyLabel, keyTextField, searchBtn);

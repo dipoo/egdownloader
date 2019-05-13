@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.panel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,29 +33,45 @@ import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.FileUtil2;
-import org.arong.util.JsonUtil;
 
+/**
+ * 标签组面板
+ *
+ */
 public class TaskTagsPanel extends JScrollPane {
 	
 	public final static String MISC = "misc";
+	
+	public EgDownloaderWindow mainWindow;
 	
 	private AJTextPane textPane;
 	public JPanel confirmPanel;
 	public AJLabel selectTextLabel;
 	
 	public static Map<String, String> tagscnMap = null;
+	public static Map<String, String> rowsMap = null;
 	public boolean searchTags = false;//是否为搜索时使用
 	public String currentTags = null;
+	public static final String[] CNFILENAMES = new String[]{"artist.md", "character.md", "female.md", "group.md", "language.md", "male.md", "misc.md", "parody.md", "reclass.md", "rows.md"};
+	
 	static{
+		tagscnMap = new HashMap<String, String>();String[] arr = null;
 		try {
-			String text = FileUtil2.getTextFromReader(new FileReader("script/ehtags-cn.json"));
-			if(StringUtils.isNotBlank(text)){
-				List<Map<String, String>> list = JsonUtil.jsonArray2MapList(text.trim());
-				if(list != null && list.size() > 0){
-					tagscnMap = new HashMap<String, String>();
-					for(Map<String, String> m : list){
-						tagscnMap.put(m.get("k"), m.get("v"));
-					}
+			for(String filename : CNFILENAMES){
+				BufferedReader br = new BufferedReader(new FileReader("script/EhTagTranslator.wiki/database/" + filename));
+				while(true){
+				    String line = br.readLine();
+				    if(line == null){ break; }
+				    arr = line.split("\\|");
+				    if(arr.length > 3){
+				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
+				    			&& StringUtils.isNotBlank(arr[2].trim()) && StringUtils.isNotBlank(arr[3].trim())){
+				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()).replaceAll("\\?", "").replaceAll("👙", "").replaceAll("✏", "").replaceAll("❄", "").replaceAll("👪", "").replaceAll("❤", "").replaceAll("🌠", "").replaceAll("⚾", "").replaceAll("📖", "").replaceAll("⚡️", "").replaceAll("🔪", "").replaceAll("Δ", ""));
+				    	}
+				    }
+				}
+				if(br != null){
+					br.close();
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -62,19 +79,29 @@ public class TaskTagsPanel extends JScrollPane {
 			new CommonSwingWorker(new Runnable() {
 				public void run() {
 					//在线下载
-					String dir = "script/";
+					System.out.println("开始在线下载中文标签库...");
+					String dir = "script/EhTagTranslator.wiki/database/";
 					FileUtil2.ifNotExistsThenCreate(dir);
 					try {
-						String text = WebClient.getRequestUseJava("https://raw.githubusercontent.com/scooderic/exhentai-tags-chinese-translation/master/dist/ehtags-cn.json", "UTF-8");
-						if(StringUtils.isNotBlank(text)){
-							List<Map<String, String>> list = JsonUtil.jsonArray2MapList(text.trim());
-							if(list != null && list.size() > 0){
-								tagscnMap = new HashMap<String, String>();
-								for(Map<String, String> m : list){
-									tagscnMap.put(m.get("k"), m.get("v"));
+						String[] arr = null;
+						for(String filename : CNFILENAMES){
+							String text = WebClient.getRequestUseJava("https://raw.githubusercontent.com/wiki/Mapaler/EhTagTranslator/database/" + filename, "UTF-8");
+							if(StringUtils.isNotBlank(text)){
+								String[] lines = text.split("\n");
+								if(lines.length > 1){
+									for(String line : lines){
+										arr = line.split("\\|");
+									    if(arr.length > 3){
+									    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
+									    			&& StringUtils.isNotBlank(arr[2].trim()) && StringUtils.isNotBlank(arr[3].trim())){
+									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()).replaceAll("\\?", "").replaceAll("👙", "").replaceAll("✏", "").replaceAll("❄", "").replaceAll("👪", "").replaceAll("❤", "").replaceAll("🌠", "").replaceAll("⚾", "").replaceAll("📖", "").replaceAll("⚡️", "").replaceAll("🔪", "").replaceAll("Δ", ""));
+									    	}
+									    }
+									}
+									FileUtil2.storeStr2file(text, dir, filename);
 								}
-								FileUtil2.storeStr2file(text, dir, "ehtags-cn.json");
 							}
+							System.out.println("在线下载中文标签库结束");
 						}
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -89,6 +116,7 @@ public class TaskTagsPanel extends JScrollPane {
 	}
 	
 	public TaskTagsPanel(final EgDownloaderWindow mainWindow) {
+		this.mainWindow = mainWindow;
 		textPane = new AJTextPane(null,
 				Color.BLUE);
 		textPane.setBorder(null);
@@ -193,18 +221,18 @@ public class TaskTagsPanel extends JScrollPane {
 		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, b3);
 	}
 	public void parseTaskAttribute(Task t){
-		parseTaskAttribute(t.getTags(), false);
+		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
 	public void parseTaskAttribute(String tags, boolean trans){
 		trans = trans && tagscnMap != null;
 		textPane.setText("");
 		currentTags = tags;
 		if(StringUtils.isNotBlank(tags)){
-			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:11px;margin-left:20px;'>");
+			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:10px;margin-left:5px;'>");
 			if(!searchTags){
 				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]</b></a>");
 			}
-			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "还原" : "翻译") + "]</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/scooderic/exhentai-tags-chinese-translation/'>https://github.com/scooderic/exhentai-tags-chinese-translation/</a></font>" : "") + "<br/>");
+			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "还原" : "翻译") + "]</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
@@ -226,13 +254,13 @@ public class TaskTagsPanel extends JScrollPane {
 			int i = 0;
 			for(String group : groups.keySet()){
 				i ++;
-				sb.append("<span style='font-weight:bold;color:#D2691E'>").append(group).append("</span>：");
+				sb.append("<span style='font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：");
 				for(String attr : groups.get(group)){
 					sb.append("<a style='text-decoration:none' href='search|");
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}
-					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(trans ? (tagscnMap.containsKey(attr.replaceAll("\\+", " ")) ? tagscnMap.get(attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
+					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
 				}
 				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){

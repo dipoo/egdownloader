@@ -85,7 +85,7 @@ public class DownloadWorker2 extends SwingWorker<Void, Void>{
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 					//开始任务等待列表中的第一个任务
 					table.startWaitingTask();
-					table.updateUI();
+					//table.updateUI();
 					return null;
 				}
 				if(exceptionNum >= requireNum){
@@ -95,7 +95,7 @@ public class DownloadWorker2 extends SwingWorker<Void, Void>{
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 					//开始任务等待列表中的第一个任务
 					table.startWaitingTask();
-					table.updateUI();
+					//table.updateUI();
 					return null;
 				}
 				doInBackground();
@@ -109,7 +109,7 @@ public class DownloadWorker2 extends SwingWorker<Void, Void>{
 				table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 				//开始任务等待列表中的第一个任务
 				table.startWaitingTask();
-				table.updateUI();
+				//table.updateUI();
 			}
 		}
 		
@@ -186,7 +186,7 @@ public class DownloadWorker2 extends SwingWorker<Void, Void>{
 			Tracker.println(DownloadWorker.class ,task.getName() + ":" + pic.getName() + "下载完成。");
 			success ++;
 			running --;
-			table.updateUI();//完成
+			//table.updateUI();//完成
 			return true;
 		}catch (SocketTimeoutException e){
 			//碰到异常

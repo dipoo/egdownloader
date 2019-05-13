@@ -12,14 +12,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.html.HTMLEditorKit;
 
 import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenLogMenuItem;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
+import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 
 public class ConsolePanel extends JScrollPane {
@@ -33,11 +31,11 @@ public class ConsolePanel extends JScrollPane {
 		this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.setBorder(null);
 		this.setAutoscrolls(false);
-		textPane = new JTextPane();
+		textPane = new AJTextPane();
 		textPane.setBorder(null);
-		textPane.setEditable(true);
+		textPane.setEditable(false);
 		textPane.setAutoscrolls(true);
-		textPane.setEditorKit(new HTMLEditorKit());
+		//textPane.setEditorKit(new HTMLEditorKit());
 		
 		this.setViewportView(textPane);
 		
@@ -62,12 +60,6 @@ public class ConsolePanel extends JScrollPane {
 					}
 					consolePopupMenu.show((Component) e.getSource(), e.getPoint().x, e.getPoint().y);
 				}
-			}
-		});
-		
-		textPane.addHyperlinkListener(new HyperlinkListener() {
-			public void hyperlinkUpdate(HyperlinkEvent e) {
-				
 			}
 		});
 	}
