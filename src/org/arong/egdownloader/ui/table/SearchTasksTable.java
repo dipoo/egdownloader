@@ -77,6 +77,7 @@ public class SearchTasksTable extends JTable {
 				}else{
 					c = Color.DARK_GRAY;
 				}
+				
 				if(value == null) return null;
 				
 				SearchTasksTable tb = (SearchTasksTable) table;
@@ -108,7 +109,9 @@ public class SearchTasksTable extends JTable {
 							
 						}
 					}
-					l.setToolTipText(value.toString());
+					if(! comicWindow.showdetail){
+						l.setToolTipText(value.toString());
+					}
 					return l;
 				}else if(column == 2){//图片个数
 					tc.setPreferredWidth(60);
@@ -117,18 +120,18 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 3){//评分
 					tc.setPreferredWidth(80);
 					tc.setMaxWidth(120);
-					return new AJLabel("<html>&nbsp;&nbsp;&nbsp;&nbsp;" + value.toString() + "★</html>", c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					return new AJLabel("<html>&nbsp;&nbsp;&nbsp;&nbsp;" + value.toString() + "★</html>", c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
 				}else if(column == 4){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
 					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;
 				}else if(column == 5){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
 				}else{
 					return null;
 				}
@@ -154,23 +157,29 @@ public class SearchTasksTable extends JTable {
 				}else{
 					if(comicWindow.coverWindow != null){
 						comicWindow.coverWindow.setVisible(false);
-						currentRowIndex = -1;
+						if(columnIndex != 1){
+							currentRowIndex = -1;
+						}
 					}
 				}
-				if(columnIndex == 1){
-					SearchTask task = table.getTasks().get(rowIndex);
-					//切换行
-					if(rowIndex != currentRowIndex){
-						currentRowIndex = rowIndex;
-						if(comicWindow.searchDetailInfoWindow == null){
-							comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
+				if(comicWindow.showdetail){
+					if(columnIndex == 1){
+						SearchTask task = table.getTasks().get(rowIndex);
+						//切换行
+						if(rowIndex != currentRowIndex){
+							currentRowIndex = rowIndex;
+							if(comicWindow.searchDetailInfoWindow == null){
+								comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
+							}
+							comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
 						}
-						comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
-					}
-				}else{
-					if(comicWindow.searchDetailInfoWindow != null){
-						comicWindow.searchDetailInfoWindow.setVisible(false);
-						currentRowIndex = -1;
+					}else{
+						if(comicWindow.searchDetailInfoWindow != null){
+							comicWindow.searchDetailInfoWindow.setVisible(false);
+							if(columnIndex != 0){
+								currentRowIndex = -1;
+							}
+						}
 					}
 				}
 			}
@@ -216,6 +225,14 @@ public class SearchTasksTable extends JTable {
 						comicWindow.popMenu.openBtPageItem.setVisible(true);
 					}else{
 						comicWindow.popMenu.openBtPageItem.setVisible(false);
+					}
+					if(comicWindow.showdetail){
+						comicWindow.popMenu.showTagsItem.setVisible(false);
+					}else{
+						comicWindow.popMenu.showTagsItem.setVisible(true);
+					}
+					if(comicWindow.searchDetailInfoWindow != null){
+						comicWindow.searchDetailInfoWindow.setVisible(false);
 					}
 					comicWindow.popMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}

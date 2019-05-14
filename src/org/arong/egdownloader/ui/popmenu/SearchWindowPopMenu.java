@@ -33,6 +33,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 	public JMenuItem openPictureItem;
 	public JMenuItem downItem;
 	public JMenuItem openBtPageItem;
+	public JMenuItem showTagsItem;
 	public SearchWindowPopMenu(EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		downItem = new AJMenuItem("创建任务", Color.BLACK,
@@ -115,7 +116,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						}
 					}
 				}));
-		JMenuItem showTagsTitleItem = new AJMenuItem("显示标签组", Color.BLACK, "",
+		showTagsItem = new AJMenuItem("显示标签组", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -172,7 +173,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		this.add(openPictureItem);
 		this.add(openPageItem);
 		this.add(openBtPageItem);
-		this.add(showTagsTitleItem);
+		this.add(showTagsItem);
 		this.add(searchAuthorItem);
 		this.add(searchLocalAuthorItem);
 		this.add(clearCoverItem);

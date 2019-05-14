@@ -99,6 +99,9 @@ public class SearchComicWindow extends JFrame {
 	public int selectTaskIndex = 0;//操作的任务索引
 	public int f_cats = 0;
 	public String f_sto = "";
+	
+	public boolean showdetail = true;//是否显示详细悬浮面板
+	
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		viewModel = mainWindow.setting.getSearchViewModel();
@@ -282,7 +285,7 @@ public class SearchComicWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
 				for(int i = 0; i < cs.length; i ++){
-					if(cs[i] instanceof JCheckBox){
+					if(cs[i] instanceof JCheckBox && !"showdetailCb".equals(cs[i].getName())){
 						((JCheckBox)cs[i]).setSelected(c12.isSelected());
 					}
 				}
@@ -296,7 +299,17 @@ public class SearchComicWindow extends JFrame {
 				searchBtn.doClick();
 			}
 		}, 0, 0, 60, 30);
-		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn);
+		
+		JCheckBox showdetailCb = new AJCheckBox("显示悬浮面板", Color.BLUE, font, true);
+		showdetailCb.setName("showdetailCb");
+		showdetailCb.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				JCheckBox this_ = (JCheckBox)e.getSource();
+				showdetail = this_.isSelected();
+			}
+		});
+		
+		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn, showdetailCb);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -390,6 +403,14 @@ public class SearchComicWindow extends JFrame {
 					window.setSize(window.getWidth(), ComponentConst.CLIENT_HEIGHT);
 				}
 			}
+
+			public void mouseEntered(MouseEvent e) {
+				SearchComicWindow comicWindow = (SearchComicWindow) e.getSource();
+				if(showdetail && comicWindow.searchDetailInfoWindow != null){
+					comicWindow.searchDetailInfoWindow.setVisible(false);
+				}
+			}
+			
 		});
 		
 		//检测是否存在缓存目录,不存在则创建
@@ -575,6 +596,13 @@ public class SearchComicWindow extends JFrame {
 			int hr = (int)(tablePane.getWidth() / 260);
 			int zr = (int)(25 / hr) + 1;
 			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
+			picturePane.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
+						mainWindow.searchComicWindow.searchDetailInfoWindow.setVisible(false);
+					}
+				}
+			});
 		}else{
 			picturePane.removeAll();
 		}

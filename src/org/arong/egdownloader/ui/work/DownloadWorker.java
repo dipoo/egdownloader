@@ -206,7 +206,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						exceptionNum ++;
 						//碰到异常
 						e.printStackTrace();
-						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + ">>>" + e.getLocalizedMessage() + "</font>");
+						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "===" + e.getMessage() + "</font>");
 						//继续下一个
 						continue;
 					}

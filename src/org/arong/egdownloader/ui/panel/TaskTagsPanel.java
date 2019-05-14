@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,6 +24,7 @@ import javax.swing.event.HyperlinkListener;
 
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
+import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentUtil;
@@ -43,8 +46,9 @@ public class TaskTagsPanel extends JScrollPane {
 	public final static String MISC = "misc";
 	
 	public EgDownloaderWindow mainWindow;
+	private SearchTask searchTask;
 	
-	private AJTextPane textPane;
+	public AJTextPane textPane;
 	public JPanel confirmPanel;
 	public AJLabel selectTextLabel;
 	AJButton favBtn;
@@ -190,6 +194,19 @@ public class TaskTagsPanel extends JScrollPane {
 					}else if("fav".equals(e.getDescription())){
 						showMyFav = true;
 						parseTaskAttribute(currentTags, true);
+					}else if("uploadedby".equals(e.getDescription())){
+						//搜索上传者
+						if(searchTask != null && StringUtils.isNotBlank(searchTask.getUploader())){
+							if(mainWindow.searchComicWindow == null){
+								mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
+							}
+							try {
+								mainWindow.searchComicWindow.doSearch("uploader:" + URLDecoder.decode(URLDecoder.decode(searchTask.getUploader(), "UTF-8"), "UTF-8"));
+							} catch (UnsupportedEncodingException e1) {
+								e1.printStackTrace();
+							}
+							mainWindow.searchComicWindow.setVisible(true);
+						}
 					}
 				}
 			}
@@ -259,7 +276,12 @@ public class TaskTagsPanel extends JScrollPane {
 	public void parseTaskAttribute(Task t){
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
+	public void parseTaskAttribute(SearchTask t){
+		setSearchTask(t);
+		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
+	}
 	public void parseTaskAttribute(String tags, boolean trans){
+		this.setVisible(false);
 		trans = trans && tagscnMap != null;
 		if(showMyFav){
 			tags = mainWindow.setting.getFavTags();
@@ -269,12 +291,16 @@ public class TaskTagsPanel extends JScrollPane {
 		textPane.setText("");
 		if(StringUtils.isNotBlank(tags)){
 			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:10px;margin-left:5px;'>");
+			if(searchTask != null){
+				sb.append(String.format("<b>名称：%s[uploaded by <a href='uploadedby' style='text-decoration:none;color:blue'>%s</a></b>]<br>", searchTask.getName(), searchTask.getUploader()));
+			}
 			if(!showMyFav && !searchTags){
 				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]&nbsp;</b></a>");
 			}
 			if(showMyFav && currentTags != null){
 				sb.append("<a href='return' style='text-decoration:none;color:blue'><b>[返回]</b>&nbsp;</a>");
-			}else{
+			}
+			if(!showMyFav){
 				sb.append("<a href='fav' style='text-decoration:none;color:red'><b>[我的收藏]</b>&nbsp;</a>");
 			}
 			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "原文" : "翻译") + "]&nbsp;</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
@@ -328,5 +354,14 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 		}
+		this.setVisible(true);
+	}
+
+	public SearchTask getSearchTask() {
+		return searchTask;
+	}
+
+	public void setSearchTask(SearchTask searchTask) {
+		this.searchTask = searchTask;
 	}
 }

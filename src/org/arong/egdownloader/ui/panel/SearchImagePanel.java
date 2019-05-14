@@ -2,6 +2,8 @@ package org.arong.egdownloader.ui.panel;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -17,6 +19,7 @@ import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.SearchDetailInfoWindow;
 import org.arong.util.FileUtil2;
 
 public class SearchImagePanel extends JLabel {
@@ -58,6 +61,14 @@ public class SearchImagePanel extends JLabel {
 					}else{
 						mainWindow.searchComicWindow.popMenu.openBtPageItem.setVisible(false);
 					}
+					if(mainWindow.searchComicWindow.showdetail){
+						mainWindow.searchComicWindow.popMenu.showTagsItem.setVisible(false);
+					}else{
+						mainWindow.searchComicWindow.popMenu.showTagsItem.setVisible(true);
+					}
+					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
+						mainWindow.searchComicWindow.searchDetailInfoWindow.setVisible(false);
+					}
 					mainWindow.searchComicWindow.popMenu.show(l, e.getPoint().x, e.getPoint().y);
 				}
 			}
@@ -69,13 +80,31 @@ public class SearchImagePanel extends JLabel {
 				if(l.getIcon().getIconWidth() == DEFAULTWIDTH && new File(ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1).getUrl())).exists()){
 					flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1));
 				}
+				if(mainWindow.searchComicWindow.showdetail){
+					SearchTask task = mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1);
+					if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
+						mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
+					}
+					if(Toolkit.getDefaultToolkit().getScreenSize().width - e.getXOnScreen() < mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth()){
+						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() - mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth() + 10, e.getYOnScreen() - 10));
+					}else{
+						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() - 10, e.getYOnScreen() - 10));
+					}
+				}
 			}
 
 			public void mouseExited(MouseEvent e) {
 				JLabel l = (JLabel) e.getSource();
 				l.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 				l.setCursor(Cursor.getDefaultCursor());
+				
 			}
+
+			public void mouseMoved(MouseEvent e) {
+				
+			}
+			
+			
 		});
 	}
 	public SearchImagePanel(int index, final EgDownloaderWindow mainWindow){
@@ -95,7 +124,9 @@ public class SearchImagePanel extends JLabel {
 		boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
 		this.setText(genText(task));
-		this.setToolTipText(task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : ""));
+		if(! mainWindow.searchComicWindow.showdetail){
+			this.setToolTipText(task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : ""));
+		}
 		final SearchImagePanel this_ = this;
 		
 		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
