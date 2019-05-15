@@ -160,8 +160,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							//刷新信息面板
 							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
 								mainWindow.taskInfoPanel.parseTask(task, mainWindow.runningTable.selectRowIndex);
-							}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
-								PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);
+							}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
+								PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
 								infoPanel.pictureTable.updateUI();
 							}
 						}

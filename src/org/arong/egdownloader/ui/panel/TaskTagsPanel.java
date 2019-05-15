@@ -107,8 +107,8 @@ public class TaskTagsPanel extends JScrollPane {
 									FileUtil2.storeStr2file(text, dir, filename);
 								}
 							}
-							System.out.println("在线下载中文标签库结束");
 						}
+						System.out.println("在线下载中文标签库结束");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					} catch (Exception e1) {
