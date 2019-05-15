@@ -42,7 +42,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 		Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":开始下载");
 		Setting setting = mainWindow.setting;
 		pic.setRealUrl(ScriptParser.getdownloadUrl(task, pic.getUrl(), setting));
-		InputStream is;
+		InputStream is = null;
 		try{
 			Object[] streamAndLength =  null;
 			if(pic.getRealUrl().contains("exhentai.org")){
@@ -68,7 +68,9 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 				}
 			}
 			
-			size = task.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), name, is);//保存到目录
+			File file = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
+			
+			size = task.storeStream(file, is);//保存到目录
 			if(size < 1000){
 				pic.setRealUrl(null);
 				Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
@@ -94,15 +96,15 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 				}
 			}
 			try {
-				SimpleImageInfo sii = new SimpleImageInfo(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+				SimpleImageInfo sii = new SimpleImageInfo(file);
 				pic.setPpi(sii.getWidth() + "x" + sii.getHeight());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 			
-			if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
-				PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(2);
+			if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
+				PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
 				infoPanel.showPictures(task);
 			}
 			
@@ -125,6 +127,10 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 		}catch (Exception e){
 			//碰到异常
 			e.printStackTrace();
+		}finally{
+			if(is != null){
+				try{is.close();}catch(Exception e){}
+			}
 		}
 		return null;
 	}

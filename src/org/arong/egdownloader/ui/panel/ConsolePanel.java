@@ -35,16 +35,15 @@ public class ConsolePanel extends JScrollPane {
 		textPane.setBorder(null);
 		textPane.setEditable(false);
 		textPane.setAutoscrolls(true);
-		//textPane.setEditorKit(new HTMLEditorKit());
 		
 		this.setViewportView(textPane);
 		
 		final JMenuItem clearItemPopup = new ClearConsoleMenuItem("清空控制台", mainWindow);
-		final JMenuItem lockItemPopup = new AJMenuItem("", new Color(0,0,85), new ActionListener() {
+		final JMenuItem lockItemPopup = new AJMenuItem("", new Color(0, 0, 85), new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mainWindow.consolePanel.locked = !mainWindow.consolePanel.locked;
 			}
-		}); //OpenLogMenuItem("锁定滚屏", mainWindow);
+		});
 		final JMenuItem openLogItemPopup = new OpenLogMenuItem("打开日志文件", mainWindow);
 		textPane.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -67,6 +66,10 @@ public class ConsolePanel extends JScrollPane {
 		return textPane;
 	}
 	public void showLog() {
-		textPane.setText(realtext.toString());
+		try{
+			textPane.setText(realtext.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }

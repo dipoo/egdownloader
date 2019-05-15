@@ -1,19 +1,12 @@
 package org.arong.egdownloader.ui.work;
 
-import java.awt.Dimension;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -58,7 +51,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		List<Picture> pics = task.getPictures();
 		
 		Picture pic;
-		InputStream is;
+		InputStream is = null;
 		File existNameFs = null;//判断是否有重复的文件名
 		if(pics.size() != 0){
 			int success = 0;//下载完成个数
@@ -109,6 +102,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}else{
 								name = pic.getNum() + ".jpg";
 							}
+							existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
 						}else{
 							existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
 							//已存在相同名称的文件
@@ -117,7 +111,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 								existNameFs = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/" + name);
 							}
 						}
-						size = task.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), name, is);//保存到目录
+						size = task.storeStream(existNameFs, is);//保存到目录
 						if(size < 1000){
 							pic.setRealUrl(null);
 							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
@@ -130,8 +124,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
-						}else if(totalLength - 1024 * 1 > size){
-							//误差在1K以上则不算下载成功
+						}else if(totalLength != size){
+							//获取的流大小与http响应不一致则不算下载成功
 							pic.setRealUrl(null);
 							Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName()+ "(已下载" + FileUtil2.showSizeStr((long)size) + "):下载不完整(原图大小" + FileUtil2.showSizeStr((long)totalLength) + ")</font>");
 							delete(existNameFs);
@@ -145,7 +139,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}
 						
 						try {
-							SimpleImageInfo sii = new SimpleImageInfo(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name));
+							SimpleImageInfo sii = new SimpleImageInfo(existNameFs);
 							pic.setPpi(sii.getWidth() + "x" + sii.getHeight());
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -209,6 +203,10 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "===" + e.getMessage() + "</font>");
 						//继续下一个
 						continue;
+					}finally{
+						if(is != null){
+							try{is.close();}catch(Exception e){}
+						}
 					}
 				}
 			}
@@ -261,50 +259,5 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	public Task getTask() {
 		return task;
 	}
-	/**
-     * 获取图片的分辨率
-     * 
-     * @param path
-     * @return
-     */
-    public static Dimension getImageDim(String path) {
-        Dimension result = null;
-        String suffix = getFileSuffix(path);
-        //解码具有给定后缀的文件
-        Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
-        if (iter.hasNext()) {
-            ImageReader reader = iter.next();
-            try {
-                ImageInputStream stream = new FileImageInputStream(new File(
-                        path));
-                reader.setInput(stream);
-                int width = reader.getWidth(reader.getMinIndex());
-                int height = reader.getHeight(reader.getMinIndex());
-                result = new Dimension(width, height);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                reader.dispose();
-            }
-        }
-        return result;
-    }
-    /**
-     * 获得图片的后缀名
-     * @param path
-     * @return
-     */
-    private static String getFileSuffix(final String path) {
-        String result = null;
-        if (path != null) {
-            result = "";
-            if (path.lastIndexOf('.') != -1) {
-                result = path.substring(path.lastIndexOf('.'));
-                if (result.startsWith(".")) {
-                    result = result.substring(1);
-                }
-            }
-        }
-        return result;
-    }
+	
 }

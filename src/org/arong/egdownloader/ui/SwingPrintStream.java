@@ -78,7 +78,7 @@ public class SwingPrintStream extends PrintStream {
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run() { 
 						consolePanel.showLog();
-						if(!consolePanel.locked){
+						if(! consolePanel.locked){
 							// 让光标置于最下方
 							consolePanel.paintImmediately(consolePanel.getBounds());
 							consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
@@ -100,9 +100,13 @@ public class SwingPrintStream extends PrintStream {
 	 * @param consolePanel
 	 */
 	private void filter(ConsolePanel consolePanel){
-		if(HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
-			consolePanel.realtext = new StringBuffer();
-			consolePanel.showLog();
+		try{
+			if(HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
+				consolePanel.realtext.replace(0, consolePanel.realtext.length(), "");
+				consolePanel.showLog();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	

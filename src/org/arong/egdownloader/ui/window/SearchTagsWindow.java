@@ -44,6 +44,12 @@ public class SearchTagsWindow extends JDialog {
 				this_.dispose();
 				searchComicWindow.toFront();
 			}
+			//窗体由激活状态变成非激活状态
+			public void windowDeactivated(WindowEvent e) {
+				//关闭后显示主界面
+				Window this_ = (Window) e.getSource();
+				this_.dispose();
+			}
 		});
 	}
 }

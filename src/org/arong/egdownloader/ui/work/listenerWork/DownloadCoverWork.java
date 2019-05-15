@@ -38,12 +38,11 @@ public class DownloadCoverWork implements IMenuListenerTask {
 				public void run() {
 					new CommonSwingWorker(new Runnable() {
 						public void run() {
-							InputStream is;
+							InputStream is = null;
 							try {
 								if(task.getCoverUrl() == null){
 									ScriptParser.rebuildTask(task, mainWindow.setting);
 								}
-								
 								//下载封面
 								is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
 								int size = FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
@@ -64,8 +63,11 @@ public class DownloadCoverWork implements IMenuListenerTask {
 								JOptionPane.showMessageDialog(mainWindow, "连接超时，请检查网络后重试");
 							} catch (Exception e) {
 								JOptionPane.showMessageDialog(mainWindow, e.getMessage());
-							} finally{
+							}finally{
 								mainWindow.tablePopupMenu.setVisible(false);
+								if(is != null){
+									try{is.close();}catch(Exception e){}
+								}
 							}
 						}
 					}).execute();

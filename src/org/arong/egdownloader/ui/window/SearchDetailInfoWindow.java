@@ -2,6 +2,9 @@ package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JWindow;
@@ -27,11 +30,20 @@ public class SearchDetailInfoWindow extends JWindow {
 		this.setLocationRelativeTo(searchComicWindow);
 		
 		taskTagsPanel = new TaskTagsPanel(searchComicWindow.mainWindow);
-		taskTagsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		taskTagsPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
 		//taskTagsPanel.textPane.setBackground(Color.GRAY);
 		taskTagsPanel.searchTags = true;
 		
 		ComponentUtil.addComponents(getContentPane(), taskTagsPanel);
+		
+		this.addWindowListener(new WindowAdapter() {
+			//窗体由激活状态变成非激活状态
+			public void windowDeactivated(WindowEvent e) {
+				//关闭后显示主界面
+				Window this_ = (Window) e.getSource();
+				this_.dispose();
+			}
+		});
 	}
 	/**
 	 * 搜索窗口使用
@@ -40,7 +52,7 @@ public class SearchDetailInfoWindow extends JWindow {
 		taskTagsPanel.showMyFav = false;
 		taskTagsPanel.parseTaskAttribute(task);
 		this.setLocationRelativeTo(searchComicWindow);
-		this.setLocation((int)p.getX(), (int)p.getY() - this.getHeight() / 2 - 50);
+		this.setLocation((int)p.getX(), (int)p.getY());
 		this.setVisible(true);
 	}
 }

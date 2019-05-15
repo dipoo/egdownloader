@@ -29,7 +29,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		String jarName = "egdownloader.jar";
-		InputStream is;
+		InputStream is = null;
 		System.out.println("开始下载jar文件...");
 		try {
 			//检测是否为支持jar更新的类型
@@ -64,6 +64,10 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 		}catch(Exception e1) {
 			JOptionPane.showMessageDialog(null, "jar文件更新失败，" + e1.getMessage());
 			e1.printStackTrace();
+		}finally{
+			if(is != null){
+				try{is.close();}catch(Exception e){}
+			}
 		}
 		
 		return null;

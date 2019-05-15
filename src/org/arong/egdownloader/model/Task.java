@@ -88,17 +88,14 @@ public class Task {
 	 * @param path
 	 * @throws IOException
 	 */
-	public int storeStream(String path, String name, InputStream in) throws IOException{
+	public int storeStream(File fs, InputStream in) throws IOException{
 		if(in == null){
 			return 0;
 		}
-    	File dir = new File(path);
-    	FileUtil2.ifNotExistsThenCreate(dir);
     	BufferedInputStream bis = null;
     	BufferedOutputStream bos = null;
     	int size = 0;
     	try {
-    		File fs = new File(path + File.separator + name);
 			bis = new BufferedInputStream(in);
 			bos = new BufferedOutputStream(new FileOutputStream(fs));
 			byte[] buff = new byte[1024 * 10];
@@ -113,26 +110,9 @@ public class Task {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}finally {
-			if (bos != null) {
-				try {
-					bos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (bis != null) {
-				try {
-					bis.close();
-				} catch (IOException e) {
-				}
-			}
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			if (bos != null) {try {bos.close();} catch (IOException e) {}}
+			if (bis != null) {try {bis.close();} catch (IOException e) {}}
+			if (in != null) {try {in.close();} catch (IOException e) {}}
 		}
     	return size;
     }

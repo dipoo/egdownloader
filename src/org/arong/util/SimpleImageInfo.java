@@ -15,7 +15,7 @@ public class SimpleImageInfo {
 		try {
 			processStream(is);
 		} finally {
-			is.close();
+			try{is.close();}catch(Exception e){}
 		}
 	}
 
@@ -28,7 +28,7 @@ public class SimpleImageInfo {
 		try {
 			processStream(is);
 		} finally {
-			is.close();
+			try{is.close();}catch(Exception e){}
 		}
 	}
 
