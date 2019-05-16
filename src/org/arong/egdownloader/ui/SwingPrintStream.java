@@ -101,7 +101,7 @@ public class SwingPrintStream extends PrintStream {
 	 */
 	private void filter(ConsolePanel consolePanel){
 		try{
-			if(HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
+			if(consolePanel.getTextPane() != null && HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
 				consolePanel.realtext.replace(0, consolePanel.realtext.length(), "");
 				consolePanel.showLog();
 			}

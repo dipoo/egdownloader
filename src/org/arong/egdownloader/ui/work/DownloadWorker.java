@@ -120,6 +120,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							continue;
 						}else if(size < 1010 || pic.getRealUrl().contains("509.gif")){
 							pic.setRealUrl(null);
+							//https://github.com/fffonion/xeHentai/blob/master/xeHentai/filters.py
 							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":509");
 							delete(existNameFs);
 							exceptionNum ++;
@@ -238,7 +239,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			}else{
 				//设置任务状态为已完成
 				task.setStatus(TaskStatus.COMPLETED);
-				Tracker.println(DownloadWorker.class ,"===========【" + task.getDisplayName() + "】已下载完毕===========");
+				Tracker.println(DownloadWorker.class ,"==<font color='green'>【" + task.getDisplayName() + "】已下载完毕</font>==");
 				task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 				//更新任务到文件
 				((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);
