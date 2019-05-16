@@ -71,7 +71,7 @@ public class TaskTagsPanel extends JScrollPane {
 				    arr = line.split("\\|");
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
-				    			&& StringUtils.isNotBlank(arr[2].trim()) && StringUtils.isNotBlank(arr[3].trim())){
+				    			&& StringUtils.isNotBlank(arr[2].trim())){
 				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()).replaceAll("\\?", "").replaceAll("👙", "").replaceAll("✏", "").replaceAll("❄", "").replaceAll("👪", "").replaceAll("❤", "").replaceAll("🌠", "").replaceAll("⚾", "").replaceAll("📖", "").replaceAll("⚡️", "").replaceAll("🔪", "").replaceAll("Δ", ""));
 				    	}
 				    }
