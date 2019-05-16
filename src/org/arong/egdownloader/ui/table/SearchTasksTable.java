@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.table;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -171,7 +172,11 @@ public class SearchTasksTable extends JTable {
 							if(comicWindow.searchDetailInfoWindow == null){
 								comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
 							}
-							comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+							if(Toolkit.getDefaultToolkit().getScreenSize().height - e.getYOnScreen() > comicWindow.searchDetailInfoWindow.getHeight()){
+								comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+							}else{
+								comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen() - comicWindow.searchDetailInfoWindow.getHeight()));
+							}
 						}
 					}else{
 						if(comicWindow.searchDetailInfoWindow != null){

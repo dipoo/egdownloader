@@ -43,6 +43,9 @@ public class SearchImagePanel extends JLabel {
 				if(e.getButton() == MouseEvent.BUTTON1){}
 				//右键
 				else if(e.getButton() == MouseEvent.BUTTON3){
+					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
+						mainWindow.searchComicWindow.searchDetailInfoWindow.setVisible(false);
+					}
 					//使之选中
 					if(mainWindow.searchComicWindow.popMenu == null){
 						mainWindow.searchComicWindow.popMenu = new SearchWindowPopMenu(mainWindow);
@@ -85,10 +88,10 @@ public class SearchImagePanel extends JLabel {
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
 						mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
 					}
-					if(Toolkit.getDefaultToolkit().getScreenSize().width - e.getXOnScreen() < mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth()){
-						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() - mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth() + 10, e.getYOnScreen() - 10));
+					if(Toolkit.getDefaultToolkit().getScreenSize().width - l.getX() < mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth()){
+						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(l.getX() - mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth() + 10, l.getY()));
 					}else{
-						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() - 10, e.getYOnScreen() - 10));
+						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(l.getX() + l.getWidth(), l.getY()));
 					}
 				}
 			}

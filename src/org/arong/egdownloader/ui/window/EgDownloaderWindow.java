@@ -440,7 +440,7 @@ public class EgDownloaderWindow extends JFrame {
 				}
 			});
 		    final JMenuItem searchItem = new JMenuItem("搜索");
-		    final JMenuItem settingItem = new JMenuItem("设置");
+		    final JMenuItem settingItem = new JMenuItem("配置");
 		    final JMenuItem exitItem = new JMenuItem("退出");
 		    ComponentUtil.addComponents(trayMenu, searchItem, settingItem, exitItem);
 		    exitItem.addActionListener(new ActionListener() {
