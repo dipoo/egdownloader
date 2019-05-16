@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import org.arong.egdownloader.model.Picture;
@@ -22,13 +21,13 @@ import org.arong.util.Tracker;
  */
 public class DeleteWorker extends SwingWorker<Void, Void>{
 	
-	private JFrame window;
+	private EgDownloaderWindow mainWindow;
 	private TaskingTable table;
 	private DeletingWindow w;
 	private int[] rows;
 	private boolean deleteFile;
-	public DeleteWorker(JFrame mainWindow, TaskingTable table, DeletingWindow w, int[] rows, boolean deleteFile){
-		this.window = mainWindow;
+	public DeleteWorker(EgDownloaderWindow mainWindow, TaskingTable table, DeletingWindow w, int[] rows, boolean deleteFile){
+		this.mainWindow = mainWindow;
 		this.table = table;
 		this.rows = rows;
 		this.w = w;
@@ -37,7 +36,6 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		try{
-			EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 			Task task;
 			List<Picture> pics = new ArrayList<Picture>();
 			List<Task> tasks = new ArrayList<Task>();
@@ -92,6 +90,8 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
+			mainWindow.setEnabled(true);
+			w.setVisible(false);
 			w.dispose();
 		}	
 		return null;
