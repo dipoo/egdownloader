@@ -83,17 +83,18 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						}else{
 							streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(pic.getRealUrl(), null);
 						}
-						is = (InputStream) streamAndLength[0];
-						int totalLength = (Integer) streamAndLength[1];
 						
 						if(this.isCancelled())//是否暂停
 							return null;
-						if(is == null){
+						if(streamAndLength[0] == null){
 							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + "-" + pic.getRealUrl() + ":图片流无效"));
 							pic.setRealUrl(null);
 							exceptionNum ++;
 							continue;
 						}
+						is = (InputStream) streamAndLength[0];
+						int totalLength = (Integer) streamAndLength[1];
+						
 						int size = is.available();
 						String name = pic.getName();
 						//是否以真实名称保存，是的话则要判断是否重复并处理
@@ -113,14 +114,14 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}
 						}
 						size = task.storeStream(existNameFs, is);//保存到目录
-						if(pic.getRealUrl().contains("509.gif") || size == 925 || size == 28658 || size == 144 || size == 210 || size == 1009){
+						if(pic.getRealUrl().contains("509.gif") || size == 28658 || size == 144 || size == 210 || size == 1009){
 							pic.setRealUrl(null);
 							//https://github.com/fffonion/xeHentai/blob/master/xeHentai/filters.py
 							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + ":509"));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
-						}else if(size < 1000){
+						}else if(size == 925 || size < 1000){
 							pic.setRealUrl(null);
 							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + ":403"));
 							delete(existNameFs);

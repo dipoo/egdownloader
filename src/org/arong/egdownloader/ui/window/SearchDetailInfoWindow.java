@@ -28,6 +28,7 @@ public class SearchDetailInfoWindow extends JWindow {
 		this.searchComicWindow = searchComicWindow;
 		this.setSize(ComponentConst.CLIENT_WIDTH - 400, 250);
 		this.setLocationRelativeTo(searchComicWindow);
+		this.setVisible(false);
 		
 		taskTagsPanel = new TaskTagsPanel(searchComicWindow.mainWindow);
 		taskTagsPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));

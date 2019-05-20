@@ -175,7 +175,7 @@ public class TaskTagsPanel extends JScrollPane {
 						
 						selectTag = key;
 						
-						if(selectTags == null){
+						if(StringUtils.isBlank(selectTags)){
 							selectTags = key;
 						}else{
 							if(!selectTags.contains(key)){
@@ -309,12 +309,12 @@ public class TaskTagsPanel extends JScrollPane {
 	public void showSearchTagGroup(SearchTask t){
 		showMyFav = false;
 		searchTags = true;
-		parseTaskAttribute2(t);
+		parseTaskAttribute(t);
 	}
 	public void parseTaskAttribute(Task t){
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
-	public void parseTaskAttribute2(SearchTask t){
+	public void parseTaskAttribute(SearchTask t){
 		setSearchTask(t);
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
@@ -388,7 +388,7 @@ public class TaskTagsPanel extends JScrollPane {
 				if(!showMyFav){
 					textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组</div>");
 				}else{
-					textPane.setText("<div style='font-size:10px;margin-left:5px;'>你还没有收藏任何标签！</div>");
+					textPane.setText("<div style='font-size:10px;margin-left:5px;'>你还没有收藏任何标签！&nbsp;<a href='return' style='text-decoration:none;color:blue'><b>[返回]</b></a></div>");
 				}
 			}
 		}

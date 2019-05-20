@@ -1,5 +1,6 @@
 package org.arong.egdownloader.ui.table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
@@ -15,10 +16,16 @@ public class PictureTableModel extends DefaultTableModel {
 
 	private static final long serialVersionUID = -4476733049330297521L;
 	
+	private static List<Picture> emptyPictures = new ArrayList<Picture>();
+	
 	private List<Picture> pictures;
 	
 	public PictureTableModel(List<Picture> pictures){
-		this.pictures = pictures;
+		if(pictures == null){
+			this.pictures = emptyPictures;
+		}else{
+			this.pictures = pictures;
+		}
 	}
 
 	public int getColumnCount() {

@@ -66,8 +66,6 @@ public class SearchComicWindow extends JFrame {
 
 	private static final long serialVersionUID = -3912589805632312855L;
 	
-	private static final String SHOW_DETAIL_CB_NAME = "showdetailCb";
-	
 	public EgDownloaderWindow mainWindow;
 	public SearchTagWindow searchTagWindow;
 	public SearchTagsWindow searchTagsWindow;
@@ -104,8 +102,6 @@ public class SearchComicWindow extends JFrame {
 	public int selectTaskIndex = 0;//操作的任务索引
 	public int f_cats = 0;
 	public String f_sto = "";
-	
-	public boolean showdetail = true;//是否显示详细悬浮面板
 	
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -293,7 +289,7 @@ public class SearchComicWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
 				for(int i = 0; i < cs.length; i ++){
-					if(cs[i] instanceof JCheckBox && !SHOW_DETAIL_CB_NAME.equals(cs[i].getName())){
+					if(cs[i] instanceof JCheckBox){
 						((JCheckBox)cs[i]).setSelected(c12.isSelected());
 					}
 				}
@@ -308,19 +304,7 @@ public class SearchComicWindow extends JFrame {
 			}
 		}, 0, 0, 60, 30);
 		
-		JCheckBox showdetailCb = new AJCheckBox("显示悬浮面板", Color.BLUE, font, true);
-		showdetailCb.setName(SHOW_DETAIL_CB_NAME);
-		showdetailCb.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				JCheckBox this_ = (JCheckBox)e.getSource();
-				showdetail = this_.isSelected();
-				for(int i = 0; i < searchTasks.size(); i ++){
-					picLabels[i].changeTipsShowOrNot();
-				}
-			}
-		});
-		
-		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn, showdetailCb);
+		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -417,7 +401,7 @@ public class SearchComicWindow extends JFrame {
 
 			public void mouseEntered(MouseEvent e) {
 				SearchComicWindow comicWindow = (SearchComicWindow) e.getSource();
-				if(showdetail && comicWindow.searchDetailInfoWindow != null){
+				if(comicWindow.searchDetailInfoWindow != null){
 					comicWindow.searchDetailInfoWindow.setVisible(false);
 				}
 			}
@@ -481,7 +465,7 @@ public class SearchComicWindow extends JFrame {
 		for(int i = 0; i < cs.length; i++){
 			if(cs[i] instanceof JCheckBox){
 				jc = (JCheckBox) cs[i];
-				if(jc.isSelected() && !SHOW_DETAIL_CB_NAME.equals(jc.getName())){
+				if(jc.isSelected()){
 					if(jc.getName() != null){
 						option += "&f_" + jc.getName().toLowerCase() + "=1";
 					}else{

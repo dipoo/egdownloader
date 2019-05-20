@@ -42,7 +42,24 @@ public class SearchImagePanel extends JLabel {
 				JLabel l = (JLabel) e.getSource();
 				mainWindow.searchComicWindow.selectTaskIndex = Integer.parseInt(l.getName()) - 1;
 				//左键
-				if(e.getButton() == MouseEvent.BUTTON1){}
+				if(e.getButton() == MouseEvent.BUTTON1){
+					SearchTask task = mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1);
+					if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
+						mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
+					}
+					int x = 0, y = 0;
+					if(Toolkit.getDefaultToolkit().getScreenSize().width - e.getXOnScreen() < (mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth())){
+						x = e.getXOnScreen() - mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth() + 20;
+					}else{
+						x = e.getXOnScreen() + 10;
+					}
+					if(Toolkit.getDefaultToolkit().getScreenSize().height - e.getYOnScreen() < (mainWindow.searchComicWindow.searchDetailInfoWindow.getHeight())){
+						y = e.getYOnScreen() - mainWindow.searchComicWindow.searchDetailInfoWindow.getHeight() + 20;
+					}else{
+						y = e.getYOnScreen() + 10;
+					}
+					mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(x, y));
+				}
 				//右键
 				else if(e.getButton() == MouseEvent.BUTTON3){
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
@@ -66,11 +83,7 @@ public class SearchImagePanel extends JLabel {
 					}else{
 						mainWindow.searchComicWindow.popMenu.openBtPageItem.setVisible(false);
 					}
-					if(mainWindow.searchComicWindow.showdetail){
-						mainWindow.searchComicWindow.popMenu.showTagsItem.setVisible(false);
-					}else{
-						mainWindow.searchComicWindow.popMenu.showTagsItem.setVisible(true);
-					}
+					mainWindow.searchComicWindow.popMenu.showTagsItem.setVisible(true);
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
 						mainWindow.searchComicWindow.searchDetailInfoWindow.setVisible(false);
 					}
@@ -84,17 +97,6 @@ public class SearchImagePanel extends JLabel {
 				l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				if(l.getIcon().getIconWidth() == DEFAULTWIDTH && new File(ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1).getUrl())).exists()){
 					flush(mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1));
-				}
-				if(mainWindow.searchComicWindow.showdetail){
-					SearchTask task = mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1);
-					if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
-						mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
-					}
-					if(Toolkit.getDefaultToolkit().getScreenSize().width - l.getX() < mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth()){
-						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(l.getX() - mainWindow.searchComicWindow.searchDetailInfoWindow.getWidth() + 10, l.getY()));
-					}else{
-						mainWindow.searchComicWindow.searchDetailInfoWindow.showDetail(task, new Point(l.getX() + l.getWidth(), l.getY()));
-					}
 				}
 			}
 
@@ -124,25 +126,14 @@ public class SearchImagePanel extends JLabel {
 		
 	}
 	
-	public void changeTipsShowOrNot(){
-		if(! mainWindow.searchComicWindow.showdetail){
-			this.setToolTipText(tips);
-		}else{
-			this.setToolTipText(null);
-		}
-	}
-	
 	public void flush(final SearchTask task, final long delay){
 		this.setForeground(Color.WHITE);
 		boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
 		this.setText(genText(task));
 		tips = task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : "");
-		if(! mainWindow.searchComicWindow.showdetail){
-			this.setToolTipText(tips);
-		}else{
-			this.setToolTipText(null);
-		}
+		this.setToolTipText(tips);
+		
 		final SearchImagePanel this_ = this;
 		
 		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
