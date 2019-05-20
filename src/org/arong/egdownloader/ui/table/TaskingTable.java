@@ -258,7 +258,7 @@ public class TaskingTable extends JTable {
 					window.taskInfoPanel.parseTask(window.tasks.get(rowIndex), rowIndex);
 				}else if(window.infoTabbedPane.getSelectedIndex() == 2){
 					TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-					panel.parseTaskAttribute(window.tasks.get(rowIndex));
+					panel.showTagGroup(window.tasks.get(rowIndex));
 				}else if(window.infoTabbedPane.getSelectedIndex() == 3){
 					PicturesInfoPanel infoPanel = (PicturesInfoPanel) window.infoTabbedPane.getComponent(3);
 					infoPanel.showPictures(window.tasks.get(rowIndex));

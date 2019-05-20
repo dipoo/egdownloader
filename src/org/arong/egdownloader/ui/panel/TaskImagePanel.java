@@ -237,7 +237,7 @@ public class TaskImagePanel extends AJPanel {
 													mainWindow.taskInfoPanel.parseTask(mainWindow.tasks.get(selectIndex), selectIndex);
 												}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
 													TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-													panel.parseTaskAttribute(mainWindow.tasks.get(selectIndex));
+													panel.showTagGroup(mainWindow.tasks.get(selectIndex));
 												}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
 													PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
 													infoPanel.showPictures(mainWindow.tasks.get(selectIndex));

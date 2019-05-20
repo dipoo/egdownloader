@@ -49,8 +49,7 @@ public class SearchDetailInfoWindow extends JWindow {
 	 * 搜索窗口使用
 	 */
 	public void showDetail(SearchTask task, Point p){
-		taskTagsPanel.showMyFav = false;
-		taskTagsPanel.parseTaskAttribute(task);
+		taskTagsPanel.showSearchTagGroup(task);
 		this.setLocationRelativeTo(searchComicWindow);
 		this.setLocation((int)p.getX(), (int)p.getY());
 		this.setVisible(true);

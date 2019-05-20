@@ -58,6 +58,8 @@ public class TaskTagsPanel extends JScrollPane {
 	
 	public static Map<String, String> tagscnMap = null;
 	public static Map<String, String> rowsMap = null;
+	public String selectTags = null;//已选择的全部标签
+	public String selectTag = null;//当前选择的标签
 	public boolean searchTags = false;//是否为搜索时使用
 	public String currentTags = null;
 	public boolean showMyFav = false;//显示我的收藏
@@ -149,7 +151,7 @@ public class TaskTagsPanel extends JScrollPane {
 												currentTask.setTags(t.getTags());
 												currentTask.setSyncTime(DateUtil.YYYY_MM_DD_HH_MM_SS_FORMAT.format(new Date()));
 												if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
-													parseTaskAttribute(currentTask);
+													showTagGroup(currentTask);
 												}
 												mainWindow.taskDbTemplate.update(currentTask);
 												System.out.println(HtmlUtils.greenColorHtml("成功同步任务[" + currentTask.getDisplayName() + "]的标签组信息"));
@@ -167,13 +169,24 @@ public class TaskTagsPanel extends JScrollPane {
 								}).execute();
 							}
 						});
-					}else if(e.getDescription().startsWith("search|")){
+					}else if(e.getDescription().startsWith("clickTag|")){
 						//获取关键字
-						String key = e.getDescription().replaceAll("search\\|", "");
+						String key = e.getDescription().replaceAll("clickTag\\|", "");
+						
+						selectTag = key;
+						
+						if(selectTags == null){
+							selectTags = key;
+						}else{
+							if(!selectTags.contains(key)){
+								selectTags += ";" + key;
+							}
+						}
+						
 						if(confirmPanel == null){
 							initConfirmPanel(mainWindow);
 						}
-						selectTextLabel.setText("请选择[" + key + "]标签的操作");
+						selectTextLabel.setText("请选择[" + selectTags + "]标签的操作");
 						confirmPanel.setName(key);
 						/**
 						 * 是否已经收藏
@@ -223,17 +236,19 @@ public class TaskTagsPanel extends JScrollPane {
 		confirmPanel.setLayout(null);
 		selectTextLabel = new AJLabel("", Color.BLUE);
 		selectTextLabel.setBounds(20, 10, 500, 30);
-		AJButton b1 = new AJButton("本地搜索");
-		b1.setBounds(20, 50, 90, 30);
-		b1.setUI(AJButton.blueBtnUi);
-		AJButton b2 = new AJButton("在线搜索");
-		b2.setBounds(120, 50, 90, 30);
-		b2.setUI(AJButton.blueBtnUi);
+		AJButton localBtn = new AJButton("本地搜索");
+		localBtn.setBounds(20, 50, 90, 30);
+		localBtn.setUI(AJButton.blueBtnUi);
+		AJButton onlineBtn = new AJButton("在线搜索");
+		onlineBtn.setBounds(120, 50, 90, 30);
+		onlineBtn.setUI(AJButton.blueBtnUi);
 		favBtn = new AJButton("标签收藏");
 		favBtn.setBounds(220, 50, 90, 30);
-		AJButton b4 = new AJButton("返回");
-		b4.setBounds(320, 50, 60, 30);
-		b1.addActionListener(new ActionListener() {
+		AJButton returnBtn = new AJButton("返回面板");
+		returnBtn.setBounds(320, 50, 90, 30);
+		AJButton clearBtn = new AJButton("清空所选");
+		clearBtn.setBounds(420, 50, 90, 30);
+		localBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
 				if(mainWindow.simpleSearchWindow == null){
@@ -244,43 +259,62 @@ public class TaskTagsPanel extends JScrollPane {
 				ssw.searchBtn.doClick();
 			}
 		});
-		b2.addActionListener(new ActionListener() {
+		onlineBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
 				if(mainWindow.searchComicWindow == null){
 					mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
 				}
-				mainWindow.searchComicWindow.doSearch(confirmPanel.getName());
+				mainWindow.searchComicWindow.doSearch(selectTags.replaceAll(";", " "));
 				mainWindow.searchComicWindow.setVisible(true);
 			}
 		});
 		favBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String tag = confirmPanel.getName().replaceAll("\"", "").replaceAll("\\$", "");
-				if(StringUtils.isNotBlank(mainWindow.setting.getFavTags())){
-					if(mainWindow.setting.getFavTags().contains(tag + ";")){
-						mainWindow.setting.setFavTags(mainWindow.setting.getFavTags().replaceAll(tag + ";", ""));
+				String tag = selectTag.replaceAll("\"", "").replaceAll("\\$", "");
+				if(StringUtils.isNotBlank(tag)){
+					if(StringUtils.isNotBlank(mainWindow.setting.getFavTags())){
+						if(mainWindow.setting.getFavTags().contains(tag + ";")){
+							mainWindow.setting.setFavTags(mainWindow.setting.getFavTags().replaceAll(tag + ";", ""));
+						}else{
+							mainWindow.setting.setFavTags(mainWindow.setting.getFavTags() + tag + ";");
+						}
 					}else{
-						mainWindow.setting.setFavTags(mainWindow.setting.getFavTags() + tag + ";");
+						mainWindow.setting.setFavTags(tag + ";");
 					}
-				}else{
-					mainWindow.setting.setFavTags(tag + ";");
+					mainWindow.settingDbTemplate.update(mainWindow.setting);
 				}
-				mainWindow.settingDbTemplate.update(mainWindow.setting);
 				setViewportView(textPane);
 			}
 		});
-		b4.addActionListener(new ActionListener() {
+		returnBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
 			}
 		});
-		ComponentUtil.addComponents(confirmPanel, selectTextLabel, b1, b2, favBtn, b4);
+		clearBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				selectTags = "";
+				selectTag = "";
+				setViewportView(textPane);
+			}
+		});
+		ComponentUtil.addComponents(confirmPanel, selectTextLabel, localBtn, onlineBtn, favBtn, returnBtn, clearBtn);
+	}
+	public void showTagGroup(Task t){
+		showMyFav = false;
+		searchTags = false;
+		parseTaskAttribute(t);
+	}
+	public void showSearchTagGroup(SearchTask t){
+		showMyFav = false;
+		searchTags = true;
+		parseTaskAttribute2(t);
 	}
 	public void parseTaskAttribute(Task t){
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
-	public void parseTaskAttribute(SearchTask t){
+	public void parseTaskAttribute2(SearchTask t){
 		setSearchTask(t);
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
@@ -331,7 +365,7 @@ public class TaskTagsPanel extends JScrollPane {
 				i ++;
 				sb.append("<span style='font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：");
 				for(String attr : groups.get(group)){
-					sb.append("<a style='text-decoration:none' href='search|");
+					sb.append("<a style='text-decoration:none' href='clickTag|");
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}

@@ -122,7 +122,7 @@ public class SearchComicWindow extends JFrame {
 		this.setLocationRelativeTo(mainWindow);  
 		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 20, 50, 30);
 		keyField = new AJTextField("", 60, 20, 400, 30);
-		keyField.setText("language:chinese");
+		keyField.setText("language:\"chinese$\"");
 		keyField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER){
@@ -138,7 +138,7 @@ public class SearchComicWindow extends JFrame {
 		loadingLabel.setVisible(false);
 		
 		totalLabel = new AJLabel("", "", Color.BLACK, JLabel.LEFT);
-		totalLabel.setBounds(630, 20, 300, 30);
+		totalLabel.setBounds(630, 20, 400, 30);
 		totalLabel.setVisible(false);
 		
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
@@ -214,6 +214,9 @@ public class SearchComicWindow extends JFrame {
 		optionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "条件过滤"));
 		optionPanel.setBounds(6, 55, ComponentConst.CLIENT_WIDTH - 23, 65);
 		
+		if(mainWindow.setting.isDebug()){
+			f_cats = 767; //只有Non-H
+		}
 		ItemListener itemListener = new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox jcb = (JCheckBox) e.getItem();
@@ -285,7 +288,7 @@ public class SearchComicWindow extends JFrame {
 				}
 			}
 		});
-		final JCheckBox c12 = new AJCheckBox("All", Color.RED, font, true);
+		final JCheckBox c12 = new AJCheckBox("All", Color.RED, font, mainWindow.setting.isDebug() ? false : true);
 		c12.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
@@ -499,20 +502,20 @@ public class SearchComicWindow extends JFrame {
 			case 0:
 				break;
 			case 1:
-				key = "language:chinese$ " + key;
+				key = "language:\"chinese$\" " + key;
 				break;
 			case 2:
-				key = "language:english$ " + key;
+				key = "language:\"japanese$\" " + key;
 				break;
 			case 3:
-				key = "language:korean$ " + key;
+				key = "language:\"english$\" " + key;
 				break;
 			case 4:
-				key = "language:french$ " + key;
+				key = "language:\"korean$\" " + key;
 				break;
 			case 5:
-				key = "language:spanish$ " + key;
-				break;	
+				key = "language:\"french$\" " + key;
+				break;
 		}
 		if(key.equals(keyField.getText())){
 			return;
@@ -542,7 +545,7 @@ public class SearchComicWindow extends JFrame {
 	}
 	
 	public void setTotalInfo(String totalPage, String totalTasks, long spend){
-		totalLabel.setText("<html>" + (cache ? HtmlUtils.redColorHtml("[缓存]") : "") + "共搜索到 <b>" + totalPage + "</b> 页，总计 <b>" + totalTasks + "</b> 本漫画，耗时 <b>" + spend + "</b> ms</html>");
+		totalLabel.setText("<html>" + (cache ? HtmlUtils.redColorHtml("[缓存]") : "") + "共搜索到 " + HtmlUtils.greenColorHtml(totalPage) + " 页，总计 " + HtmlUtils.greenColorHtml(totalTasks) + " 本漫画，耗时 " + HtmlUtils.greenColorHtml(spend + "") + " ms</html>");
 	}
 	
 	public SearchImagePanel[] picLabels = new SearchImagePanel[25];
