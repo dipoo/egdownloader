@@ -89,4 +89,10 @@ public class HtmlUtils {
 		}
 		return null;
 	}
+	public static String colorHtml(String msg, String color){
+		if(StringUtils.isNotBlank(msg)){
+			return String.format("<font style='color:%s'>%s</font>", color, msg);
+		}
+		return null;
+	}
 }

@@ -21,6 +21,7 @@ import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 
 public class TaskInfoPanel extends JScrollPane {
 	
@@ -125,7 +126,7 @@ public class TaskInfoPanel extends JScrollPane {
 		}else if(status == TaskStatus.WAITING){
 			color = "#D2691E";
 		}
-		return "<font color='" + color + "'><b>" + status.getStatus() + "</b></font>";
+		return "<b>" + HtmlUtils.colorHtml(status.getStatus(), color) + "</b>";
 	}
 	
 	private String getSchedule(Object current, Object total){

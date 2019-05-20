@@ -23,6 +23,7 @@ import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 import org.arong.util.SimpleImageInfo;
 import org.arong.util.Tracker;
 /**
@@ -47,7 +48,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		exceptionNum = 0;
 		//设置任务状态为下载中
 		//task.setStatus(TaskStatus.STARTED);
-		Tracker.println(getClass(), "<font color='#e60'>" + task.getDisplayName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载</font>");
+		Tracker.println(getClass(), HtmlUtils.colorHtml(task.getDisplayName() + "(" + task.getStart() + "-" + task.getEnd() + "):开始下载", "#e60"));
 		List<Picture> pics = task.getPictures();
 		
 		Picture pic;
@@ -63,15 +64,15 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					try{
 						if(this.isCancelled())//是否暂停
 							return null;
-						if(setting.isOpenScript()){
+						//if(setting.isOpenScript()){
 							pic.setRealUrl(ScriptParser.getdownloadUrl(task, pic.getUrl(), setting));
-						}else{
-							//pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
-						}
+						/*}else{
+							pic.setRealUrl(ParseEngine.getdownloadUrl(task.getName(), pic.getUrl(), setting));
+						}*/
 						
 						if(StringUtils.isBlank(pic.getRealUrl())){
 							exceptionNum ++;
-							System.out.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + ":获取图片下载地址为空</font>");
+							System.out.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + ":获取图片下载地址为空"));
 							continue;
 						}
 						if(this.isCancelled())//是否暂停
@@ -88,7 +89,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(this.isCancelled())//是否暂停
 							return null;
 						if(is == null){
-							Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "-" + pic.getRealUrl() + ":图片流无效</font>");
+							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + "-" + pic.getRealUrl() + ":图片流无效"));
 							pic.setRealUrl(null);
 							exceptionNum ++;
 							continue;
@@ -112,23 +113,23 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}
 						}
 						size = task.storeStream(existNameFs, is);//保存到目录
-						if(size < 1000){
+						if(pic.getRealUrl().contains("509.gif") || size == 925 || size == 28658 || size == 144 || size == 210 || size == 1009){
 							pic.setRealUrl(null);
-							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":403");
+							//https://github.com/fffonion/xeHentai/blob/master/xeHentai/filters.py
+							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + ":509"));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
-						}else if(size < 1010 || pic.getRealUrl().contains("509.gif")){
+						}else if(size < 1000){
 							pic.setRealUrl(null);
-							//https://github.com/fffonion/xeHentai/blob/master/xeHentai/filters.py
-							Tracker.println(task.getDisplayName() + ":" + pic.getName() + ":509");
+							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + ":403"));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
 						}else if(totalLength != size){
 							//获取的流大小与http响应不一致则不算下载成功
 							pic.setRealUrl(null);
-							Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName()+ "(已下载" + FileUtil2.showSizeStr((long)size) + "):下载不完整(原图大小" + FileUtil2.showSizeStr((long)totalLength) + ")</font>");
+							Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName()+ "(已下载" + FileUtil2.showSizeStr((long)size) + "):下载不完整(原图大小" + FileUtil2.showSizeStr((long)totalLength) + ")"));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
@@ -156,7 +157,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						
-						Tracker.println(DownloadWorker.class, "<font color='green'>" + task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成</font>");
+						Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml(task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成"));
 						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
 							//刷新信息面板
 							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
@@ -178,7 +179,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (SocketTimeoutException e){
 						exceptionNum ++;
 						//碰到异常
-						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试</font>");
+						Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + "-读取流超时，滞后重试"));
 						//删除已经下载的文件
 						delete(existNameFs);
 						//继续下一个
@@ -186,7 +187,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (ConnectTimeoutException e){
 						exceptionNum ++;
 						//碰到异常
-						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "-连接超时，滞后重试</font>");
+						Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + "-连接超时，滞后重试"));
 						//继续下一个
 						continue;
 					}catch (WebClientException e) {
@@ -201,7 +202,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						exceptionNum ++;
 						//碰到异常
 						e.printStackTrace();
-						Tracker.println("<font color='red'>" + task.getDisplayName() + ":" + pic.getName() + "===" + e.getMessage() + "</font>");
+						Tracker.println(HtmlUtils.redColorHtml(task.getDisplayName() + ":" + pic.getName() + "===" + e.getMessage()));
 						//继续下一个
 						continue;
 					}finally{
@@ -218,7 +219,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				//是否达到下载区间要求,达到则暂停
 				if(success == requireNum){
-					Tracker.println(DownloadWorker.class, "<font color='green'>【" + task.getDisplayName() + "】:完成配置区间下载。</font>");
+					Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml("【" + task.getDisplayName() + "】:完成配置区间下载。"));
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -227,7 +228,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				}
 				if(exceptionNum >= requireNum){
-					Tracker.println(DownloadWorker.class, "<font color='red'>【" + task.getDisplayName() + "】:配额不足或者下载异常，停止下载。</font>");
+					Tracker.println(DownloadWorker.class, HtmlUtils.redColorHtml("【" + task.getDisplayName() + "】:配额不足或者下载异常，停止下载。"));
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -239,7 +240,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 			}else{
 				//设置任务状态为已完成
 				task.setStatus(TaskStatus.COMPLETED);
-				Tracker.println(DownloadWorker.class ,"==<font color='green'>【" + task.getDisplayName() + "】已下载完毕</font>==");
+				Tracker.println(DownloadWorker.class ,"==" + HtmlUtils.greenColorHtml("【" + task.getDisplayName() + "】已下载完毕") + "==");
 				task.setCompletedTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 				//更新任务到文件
 				((EgDownloaderWindow)mainWindow).taskDbTemplate.update(task);

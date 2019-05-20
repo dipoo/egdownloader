@@ -53,6 +53,7 @@ import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.work.SearchComicWorker;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 
 import com.sun.awt.AWTUtilities;
 
@@ -90,6 +91,7 @@ public class SearchComicWindow extends JFrame {
 	public AJPager pager;
 	public boolean haveBt;//是否有bt下载文件
 	public String key = " ";//搜索条件的字符串
+	public boolean cache = false;//是否为缓存数据
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
 	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();//任务数据缓存
 	public Map<String, String> keyPage = new HashMap<String, String>();//分页信息缓存
@@ -227,16 +229,16 @@ public class SearchComicWindow extends JFrame {
 			}
 		};
 		
-		JCheckBox c1 = new AJCheckBox("2", "Doujinshi", Color.BLUE, font, true, itemListener);
-		JCheckBox c2 = new AJCheckBox("4", "Manga", Color.BLUE, font, true, itemListener);
-		JCheckBox c3 = new AJCheckBox("8", "Artist CG", Color.BLUE, font, true, itemListener);
-		JCheckBox c4 = new AJCheckBox("16", "Game CG", Color.BLUE, font, true, itemListener);
-		JCheckBox c5 = new AJCheckBox("512", "Western", Color.BLUE, font, true, itemListener);
+		JCheckBox c1 = new AJCheckBox("2", "Doujinshi", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c2 = new AJCheckBox("4", "Manga", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c3 = new AJCheckBox("8", "Artist CG", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c4 = new AJCheckBox("16", "Game CG", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c5 = new AJCheckBox("512", "Western", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
 		JCheckBox c6 = new AJCheckBox("256", "Non-H", Color.BLUE, font, true, itemListener);
-		JCheckBox c7 = new AJCheckBox("32", "Image Set", Color.BLUE, font, true, itemListener);
-		JCheckBox c8 = new AJCheckBox("64", "Cosplay", Color.BLUE, font, true, itemListener);
-		JCheckBox c9 = new AJCheckBox("128", "Asian Porn", Color.BLUE, font, true, itemListener);
-		JCheckBox c10 = new AJCheckBox("1", "Misc", Color.BLUE, font, true, itemListener);
+		JCheckBox c7 = new AJCheckBox("32", "Image Set", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c8 = new AJCheckBox("64", "Cosplay", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c9 = new AJCheckBox("128", "Asian Porn", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
+		JCheckBox c10 = new AJCheckBox("1", "Misc", Color.BLUE, font, mainWindow.setting.isDebug() ? false : true, itemListener);
 		JCheckBox c11 = new AJCheckBox("BT", Color.RED, font, false);//
 		c11.setToolTipText("是否可以下载BT文件");
 		c11.setName("sto");
@@ -266,19 +268,19 @@ public class SearchComicWindow extends JFrame {
 						keyField.setText(key);
 						break;
 					case 1:
-						keyField.setText("language:chinese " + key);
+						keyField.setText("language:\"chinese$\" " + key);
 						break;
 					case 2:
-						keyField.setText("language:japanese " + key);
+						keyField.setText("language:\"japanese\" " + key);
 						break;	
 					case 3:
-						keyField.setText("language:english " + key);
+						keyField.setText("language:\"english\" " + key);
 						break;
 					case 4:
-						keyField.setText("language:korean " + key);
+						keyField.setText("language:\"korean\" " + key);
 						break;
 					case 5:
-						keyField.setText("language:french " + key);
+						keyField.setText("language:\"french\" " + key);
 						break;
 				}
 			}
@@ -309,6 +311,9 @@ public class SearchComicWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				JCheckBox this_ = (JCheckBox)e.getSource();
 				showdetail = this_.isSelected();
+				for(int i = 0; i < searchTasks.size(); i ++){
+					picLabels[i].changeTipsShowOrNot();
+				}
 			}
 		});
 		
@@ -431,15 +436,20 @@ public class SearchComicWindow extends JFrame {
 		
 		String k = parseOption() + keyText;
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
-			searchTasks = datas.get(k).get(page);
-			if(viewModel == 1){
-				showResult(pageInfo.get(k), Integer.parseInt(page));
-			}else{
-				showResult2(pageInfo.get(k), Integer.parseInt(page));
+			cache = true;
+			//条件有变化
+			if(!k.equals(key)){
+				searchTasks = datas.get(k).get(page);
+				if(viewModel == 1){
+					showResult(pageInfo.get(k), Integer.parseInt(page));
+				}else{
+					showResult2(pageInfo.get(k), Integer.parseInt(page));
+				}
 			}
-			totalLabel.setText(keyPage.get(k));
+			totalLabel.setText(keyPage.get(k).replace("共搜索到", HtmlUtils.redColorHtml("[缓存]") + "共搜索到"));
 			hideLoading();
 		}else{
+			cache = false;
 			//设置为不可用
 			leftBtn.setEnabled(false);
 			rightBtn.setEnabled(false);
@@ -468,8 +478,8 @@ public class SearchComicWindow extends JFrame {
 		for(int i = 0; i < cs.length; i++){
 			if(cs[i] instanceof JCheckBox){
 				jc = (JCheckBox) cs[i];
-				if(jc.isSelected()){
-					if(jc.getName() != null && !SHOW_DETAIL_CB_NAME.equals(jc.getName())){
+				if(jc.isSelected() && !SHOW_DETAIL_CB_NAME.equals(jc.getName())){
+					if(jc.getName() != null){
 						option += "&f_" + jc.getName().toLowerCase() + "=1";
 					}else{
 						option += "&f_" + jc.getText().toLowerCase() + "=1";
@@ -515,9 +525,9 @@ public class SearchComicWindow extends JFrame {
 		totalLabel.setVisible(false);
 		loadingLabel.setVisible(true);
 		searchBtn.setEnabled(false);
-		if(tablePane != null){
+		/*if(tablePane != null){
 			tablePane.setVisible(false);
-		}
+		}*/
 		pager.setVisible(false);
 	}
 	
@@ -531,24 +541,11 @@ public class SearchComicWindow extends JFrame {
 		pager.setVisible(true);
 	}
 	
-	public void setTotalInfo(String totalPage, String totalTasks){
-		totalLabel.setText("共搜索到 " + totalPage + " 页,总计 " + totalTasks + " 本漫画");
+	public void setTotalInfo(String totalPage, String totalTasks, long spend){
+		totalLabel.setText("<html>" + (cache ? HtmlUtils.redColorHtml("[缓存]") : "") + "共搜索到 <b>" + totalPage + "</b> 页，总计 <b>" + totalTasks + "</b> 本漫画，耗时 <b>" + spend + "</b> ms</html>");
 	}
 	
 	public SearchImagePanel[] picLabels = new SearchImagePanel[25];
-	
-	//二次搜索刷新使用
-	public void updateTaskInfo(){
-		if(viewModel == 1){
-			searchTable.updateUI();
-		}else{
-			for(int i = 0; i < searchTasks.size(); i ++){
-				final SearchImagePanel coverLabel = picLabels[i];
-				coverLabel.setText(coverLabel.genText(searchTasks.get(i)));
-			}
-			
-		}
-	}
 	
 	public void showResult(String totalPage, Integer currentPage){
 		if(picturePane != null){mainWindow.searchComicWindow.getContentPane().remove(tablePane);tablePane = null;}

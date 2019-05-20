@@ -21,6 +21,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJLabel;
+import org.arong.util.HtmlUtils;
 
 /**
  * 任务表格单元格渲染器
@@ -75,8 +76,8 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		}else if(column == 1){//第二列：名称
 			tc.setPreferredWidth(480);
 			tc.setMaxWidth(1200);
-			String preffix = "<html><font color='#248FB7'>[" + task.getShortCreatetime() + "]</font>" + (task.isSearched() ? "<font color='red'><b>[搜]</b></font>" : "") + ("一般".equals(task.getTag().trim()) ? "" : "<font color='#248FB7'>[<i>" + task.getTag() + "</i>]</font>");
-			String suffix = (StringUtils.isNotBlank(task.getPostedTime()) ? "<font color=\"#248FB7\">[" + task.getPostedTime() + "]</font>" : "") + "</html>";
+			String preffix = new StringBuffer("<html>").append(HtmlUtils.colorHtml("[" + task.getShortCreatetime() + "]", "#248FB7")).append((task.isSearched() ? "<b>" + HtmlUtils.redColorHtml("[搜]") + "</b>" : "")).append(("一般".equals(task.getTag().trim()) ? "" : HtmlUtils.colorHtml("[<i>" + task.getTag() + "</i>]", "#248FB7"))).toString();
+			String suffix = (StringUtils.isNotBlank(task.getPostedTime()) ? HtmlUtils.colorHtml("[" + task.getPostedTime() + "]", "#248FB7") : "") + "</html>";
 			if(setting.isShowAsSubname() && task.getSubname() !=null && !"".equals(task.getSubname().trim()) && !"null".equals(task.getSubname().trim())){
 				String subname = task.getSubname().trim();
 				JLabel nameLabel = null;

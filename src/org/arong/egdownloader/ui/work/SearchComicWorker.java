@@ -3,17 +3,15 @@ package org.arong.egdownloader.ui.work;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.script.ScriptException;
 import javax.swing.SwingWorker;
 
-import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 import org.arong.util.JsonUtil;
 import org.arong.util.Tracker;
 /**
@@ -34,6 +32,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		try {
+			long t = System.currentTimeMillis();
 			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo(), 10 * 1000);
 			if(source == null){
 				Tracker.println(this.getClass(), this.url + ":搜索出错");
@@ -49,12 +48,18 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 						json += "###" + result[i];
 					}
 				}
-				List<SearchTask> searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
+				List<SearchTask> searchTasks = null;
+				try{
+					searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
+				}catch(Exception e){
+					System.out.println(HtmlUtils.redColorHtml("返回的搜索数据：" + json));
+					throw e;
+				}
 				String totalTasks = result[0].split(",")[0];
 				//总页数
 				String totalPage = result[0].split(",")[1];//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
 				
-				searchComicWindow.setTotalInfo(totalPage, totalTasks);
+				searchComicWindow.setTotalInfo(totalPage, totalTasks, System.currentTimeMillis() - t);
 				searchComicWindow.searchTasks = searchTasks;
 				
 				//下载封面线程

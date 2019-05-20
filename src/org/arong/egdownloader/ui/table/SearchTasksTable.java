@@ -29,6 +29,7 @@ import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SearchCoverWindow;
 import org.arong.egdownloader.ui.window.SearchDetailInfoWindow;
+import org.arong.util.HtmlUtils;
 /**
  * 搜索结果表格
  * @author dipoo
@@ -102,7 +103,7 @@ public class SearchTasksTable extends JTable {
 					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel("<html>" + (contains ? "<font color='red'>[已存在]</font>" : "") + value.toString() + "</html>", c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel("<html>" + (contains ? HtmlUtils.redColorHtml("[已存在]") : "") + value.toString() + "</html>", c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));
