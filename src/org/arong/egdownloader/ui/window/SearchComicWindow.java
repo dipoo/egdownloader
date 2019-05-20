@@ -64,6 +64,9 @@ import com.sun.awt.AWTUtilities;
 public class SearchComicWindow extends JFrame {
 
 	private static final long serialVersionUID = -3912589805632312855L;
+	
+	private static final String SHOW_DETAIL_CB_NAME = "showdetailCb";
+	
 	public EgDownloaderWindow mainWindow;
 	public SearchTagWindow searchTagWindow;
 	public SearchTagsWindow searchTagsWindow;
@@ -285,7 +288,7 @@ public class SearchComicWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				Component[] cs = optionPanel.getComponents();
 				for(int i = 0; i < cs.length; i ++){
-					if(cs[i] instanceof JCheckBox && !"showdetailCb".equals(cs[i].getName())){
+					if(cs[i] instanceof JCheckBox && !SHOW_DETAIL_CB_NAME.equals(cs[i].getName())){
 						((JCheckBox)cs[i]).setSelected(c12.isSelected());
 					}
 				}
@@ -301,7 +304,7 @@ public class SearchComicWindow extends JFrame {
 		}, 0, 0, 60, 30);
 		
 		JCheckBox showdetailCb = new AJCheckBox("显示悬浮面板", Color.BLUE, font, true);
-		showdetailCb.setName("showdetailCb");
+		showdetailCb.setName(SHOW_DETAIL_CB_NAME);
 		showdetailCb.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				JCheckBox this_ = (JCheckBox)e.getSource();
@@ -466,7 +469,7 @@ public class SearchComicWindow extends JFrame {
 			if(cs[i] instanceof JCheckBox){
 				jc = (JCheckBox) cs[i];
 				if(jc.isSelected()){
-					if(jc.getName() != null){
+					if(jc.getName() != null && !SHOW_DETAIL_CB_NAME.equals(jc.getName())){
 						option += "&f_" + jc.getName().toLowerCase() + "=1";
 					}else{
 						option += "&f_" + jc.getText().toLowerCase() + "=1";

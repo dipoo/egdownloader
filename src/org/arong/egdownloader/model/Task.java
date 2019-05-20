@@ -505,4 +505,17 @@ public class Task {
 	public void setSearched(boolean searched) {
 		this.searched = searched;
 	}
+	public String getSyncTime() {
+		return syncTime;
+	}
+	public String getStoreSyncTime() {
+		//如果与创建时间一致，则置空，节省数据库空间
+		return syncTime == null || syncTime.equals(createTime) ? "" : syncTime;
+	}
+	public String getShowSyncTime() {
+		return StringUtils.isNotBlank(syncTime) ? syncTime : (createTime != null ? createTime : "");
+	}
+	public void setSyncTime(String syncTime) {
+		this.syncTime = syncTime;
+	}
 }

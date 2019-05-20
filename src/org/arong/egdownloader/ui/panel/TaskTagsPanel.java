@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,7 +36,9 @@ import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
+import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 
 /**
  * 标签组面板
@@ -140,24 +143,25 @@ public class TaskTagsPanel extends JScrollPane {
 										int index = mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex;
 										Task currentTask = mainWindow.tasks.get(index);
 										try {
-											System.out.println("开始更新任务[" + currentTask.getDisplayName() + "]的标签组信息");
+											System.out.println("开始同步任务[" + currentTask.getDisplayName() + "]的标签组信息");
 											Task t = ScriptParser.getTaskByUrl(currentTask.getUrl(), mainWindow.setting);
 											if(t != null && StringUtils.isNotBlank(t.getTags())){
 												currentTask.setTags(t.getTags());
+												currentTask.setSyncTime(DateUtil.YYYY_MM_DD_HH_MM_SS_FORMAT.format(new Date()));
 												if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
 													parseTaskAttribute(currentTask);
 												}
 												mainWindow.taskDbTemplate.update(currentTask);
-												System.out.println("<font style='color:green'>成功更新任务[" + currentTask.getDisplayName() + "]的标签组信息</font>");
-												JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组成功");
+												System.out.println(HtmlUtils.greenColorHtml("成功同步任务[" + currentTask.getDisplayName() + "]的标签组信息"));
+												JOptionPane.showMessageDialog(mainWindow, "同步任务[" + currentTask.getDisplayName() + "]标签组成功");
 											}else{
-												System.out.println("<font style='color:color'>更新任务[" + currentTask.getDisplayName() + "]的标签组信息失败</font>");
-												JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组失败");
+												System.out.println(HtmlUtils.redColorHtml("同步任务[" + currentTask.getDisplayName() + "]的标签组信息失败"));
+												JOptionPane.showMessageDialog(mainWindow, "同步任务[" + currentTask.getDisplayName() + "]标签组失败");
 											}
 											
 										} catch (Exception e) {
 											e.printStackTrace();
-											JOptionPane.showMessageDialog(mainWindow, "更新任务[" + currentTask.getDisplayName() + "]标签组失败：" + e.getMessage());
+											JOptionPane.showMessageDialog(mainWindow, "同步任务[" + currentTask.getDisplayName() + "]标签组失败：" + e.getMessage());
 										}
 									}
 								}).execute();
@@ -295,7 +299,7 @@ public class TaskTagsPanel extends JScrollPane {
 				sb.append(String.format("<b>名称：%s[uploaded by <a href='uploadedby' style='text-decoration:none;color:blue'>%s</a></b>]<br>", searchTask.getName(), searchTask.getUploader()));
 			}
 			if(!showMyFav && !searchTags){
-				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[更新]&nbsp;</b></a>");
+				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[同步]&nbsp;</b></a>");
 			}
 			if(showMyFav && currentTags != null){
 				sb.append("<a href='return' style='text-decoration:none;color:blue'><b>[返回]</b>&nbsp;</a>");
@@ -345,7 +349,7 @@ public class TaskTagsPanel extends JScrollPane {
 			textPane.setText(sb.toString());
 		}else{
 			if(!showMyFav && !searchTags){
-				textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[更新]</b></a></div>");
+				textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[同步]</b></a></div>");
 			}else{
 				if(!showMyFav){
 					textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组</div>");

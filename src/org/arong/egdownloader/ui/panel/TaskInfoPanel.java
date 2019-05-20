@@ -89,6 +89,7 @@ public class TaskInfoPanel extends JScrollPane {
 						.replace("@t_postedTime", t.getPostedTime() == null ? "" : t.getPostedTime())
 						.replace("@t_status", renderStatus(t.getStatus()))
 						.replace("@t_createTime", t.getCreateTime() == null ? "" : t.getCreateTime())
+						.replace("@t_syncTime", t.getShowSyncTime())
 						.replace("@t_completedTime", t.getCompletedTime() == null ? "" : t.getCompletedTime())
 						.replace("@t_current", t.getCurrent() + "")
 						.replace("@t_ocurrentSize", FileUtil2.showSizeStr(size))

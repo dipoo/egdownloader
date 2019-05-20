@@ -70,7 +70,11 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 			} catch (SQLException e1) {
 			}
 			try{
-				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column tags varchar(1024)", JdbcUtil.getConnection());
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column tags varchar(2048)", JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
+			try{
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column syncTime varchar(64)", JdbcUtil.getConnection());
 			} catch (SQLException e1) {
 			}
 	}
@@ -271,6 +275,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		model.setTags(rs.getString("tags") == null ? "" : rs.getString("tags"));
 		model.setReaded("true".equals(rs.getString("readed")));
 		model.setCreateTime(rs.getString("createTime"));
+		model.setSyncTime(rs.getString("syncTime"));
 		model.setCompletedTime(rs.getString("completedTime"));
 		model.setPostedTime(rs.getString("postedTime"));
 		model.setUploader(rs.getString("uploader") == null ? "" : rs.getString("uploader"));
@@ -285,13 +290,14 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 	}
 	
 	private void storeSql(Task model, StringBuffer sqlsb){
-		sqlsb.append("insert into task(id,groupname,url,name,subname,coverUrl,language,type,saveDir,tag,tags,readed,createTime,completedTime,postedTime,uploader,original,total,current,size,status,start,end) values('")
+		sqlsb.append("insert into task(id,groupname,url,name,subname,coverUrl,language,type,saveDir,tag,tags,readed,createTime,syncTime,completedTime,postedTime,uploader,original,total,current,size,status,start,end) values('")
 		.append(model.getId()).append("','").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("','").append(StringEscapeUtils.escapeSql(model.getUrl())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getName())).append("','").append(StringEscapeUtils.escapeSql(model.getSubname())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getCoverUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getLanguage())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getType())).append("','").append(StringEscapeUtils.escapeSql(model.getSaveDir())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getTag())).append("','").append(StringEscapeUtils.escapeSql(model.getTags())).append("','").append(model.isReaded()).append("','")
-		.append(model.getCreateTime()).append("','").append(model.getCompletedTime() == null ? "" : model.getCompletedTime()).append("','")
+		.append(model.getCreateTime()).append("','").append(model.getStoreSyncTime()).append("','")
+		.append(model.getCompletedTime() == null ? "" : model.getCompletedTime()).append("','")
 		.append(model.getPostedTime() == null ? "" : model.getPostedTime()).append("','")
 		.append(model.getUploader() == null ? "" : model.getUploader()).append("','").append(model.isOriginal()).append("','")
 		.append(model.getTotal()).append("','").append(model.getCurrent()).append("','")
@@ -314,6 +320,7 @@ public class TaskSqliteDbTemplate implements DbTemplate<Task> {
 		.append("tags='").append(StringEscapeUtils.escapeSql(t.getTags())).append("',")
 		.append("readed='").append(t.isReaded()).append("',")
 		.append("createTime='").append(t.getCreateTime()).append("',")
+		.append("syncTime='").append(t.getStoreSyncTime()).append("',")
 		.append("completedTime='").append(t.getCompletedTime() == null ? "" : t.getCompletedTime()).append("',")
 		.append("postedTime='").append(t.getPostedTime() == null ? "" : t.getPostedTime()).append("',")
 		.append("uploader='").append(t.getUploader()).append("',")

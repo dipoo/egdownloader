@@ -76,4 +76,17 @@ public class HtmlUtils {
         // 返回文本字符串
         return textStr;
     }
+	
+	public static String redColorHtml(String msg){
+		if(StringUtils.isNotBlank(msg)){
+			return String.format("<font style='color:red'>%s</font>", msg);
+		}
+		return null;
+	}
+	public static String greenColorHtml(String msg){
+		if(StringUtils.isNotBlank(msg)){
+			return String.format("<font style='color:green'>%s</font>", msg);
+		}
+		return null;
+	}
 }
