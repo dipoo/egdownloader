@@ -1,4 +1,7 @@
 package org.arong.egdownloader.model;
+
+import org.arong.egdownloader.ui.ComponentConst;
+
 /**
  * 搜索绅士站漫画列表任务模型
  * @author dipoo
@@ -104,6 +107,9 @@ public class SearchTask {
 
 	public String getCoverUrl() {
 		return coverUrl;
+	}
+	public String getDownloadCoverUrl() {
+		return coverUrl != null ? coverUrl.replaceAll(ComponentConst.EX_DOMAIN, ComponentConst.EX_COVER_DOMAIN) : coverUrl;
 	}
 
 	public String getRating() {

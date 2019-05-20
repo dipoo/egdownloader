@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -17,9 +16,11 @@ import java.util.TimerTask;
 
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.work.CreateWorker;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.egdownloader.ui.work.ReCreateWorker;
+import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
 /**
  * 任务模型
@@ -42,7 +43,8 @@ public class Task {
 	private String tag;//标签
 	private String tags;
 	private boolean readed;//已读
-	private String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
+	private String createTime = DateUtil.YYYY_MM_DD_HH_MM_SS_FORMAT.format(new Date());//创建时间
+	private String syncTime;//同步时间，比如标签，初始与createTime一致
 	private String completedTime;//完成时间
 	private int total;//图片总数
 	private int current = 0;//已下载完成总数
@@ -56,8 +58,8 @@ public class Task {
 	private boolean saveDirAsSubname;//以子名称作为保存目录
 	
 	private List<Picture> pictures;
-	private DownloadWorker downloadWorker;//下载线程实例,不保存
-	private ReCreateWorker reCreateWorker;//重新创建线程实例,不保存
+	private DownloadWorker downloadWorker;//下载线程实例，不保存
+	private ReCreateWorker reCreateWorker;//重新创建线程实例，不保存
 	private CreateWorker createWorker;
 	private String author;
 	private Timer timer;//下载速度刷新定时器
@@ -204,6 +206,9 @@ public class Task {
 
 	public String getCoverUrl() {
 		return coverUrl;
+	}
+	public String getDownloadCoverUrl() {
+		return coverUrl != null ? coverUrl.replaceAll(ComponentConst.EX_DOMAIN, ComponentConst.EX_COVER_DOMAIN) : coverUrl;
 	}
 
 	public void setCoverUrl(String coverUrl) {

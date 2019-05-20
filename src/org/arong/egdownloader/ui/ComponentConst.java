@@ -49,9 +49,12 @@ public final class ComponentConst {
 	
 	public static String SETTING_XML_DATA_PATH = DATA_PATH + "/setting.xml";//配置文件保存路径
 	
-	public static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径
+	public static String TASK_XML_DATA_PATH = DATA_PATH + "/task.xml";//任务数据保存路径(该文件已弃用)
 	
-	public static String PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径
+	public static String PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径(该文件已弃用)
+	
+	public static String EX_DOMAIN = "exhentai.org"; //域名
+	public static String EX_COVER_DOMAIN = "ehgt.org"; //封面替换域名
 	
 	public final static String RESOURCES_PATH = "/resources/";
 	

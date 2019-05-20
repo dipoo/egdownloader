@@ -8,6 +8,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class DateUtil {
+	public final static String YYYY_MM_DD = "yyyy-MM-dd"; 
+	public final static String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+	public final static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+	public final static SimpleDateFormat YYYY_MM_DD_FORMAT = new SimpleDateFormat(YYYY_MM_DD);
+	public final static SimpleDateFormat YYYY_MM_DD_HH_MM_FORMAT = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
+	public final static SimpleDateFormat YYYY_MM_DD_HH_MM_SS_FORMAT = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
 	/**
 	 * 返回当前年份(年)
 	 * @return String
