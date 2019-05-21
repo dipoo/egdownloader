@@ -244,10 +244,11 @@ public class TaskTagsPanel extends JScrollPane {
 		onlineBtn.setUI(AJButton.blueBtnUi);
 		favBtn = new AJButton("标签收藏");
 		favBtn.setBounds(220, 50, 90, 30);
-		AJButton returnBtn = new AJButton("返回面板");
-		returnBtn.setBounds(320, 50, 90, 30);
 		AJButton clearBtn = new AJButton("清空所选");
-		clearBtn.setBounds(420, 50, 90, 30);
+		clearBtn.setBounds(320, 50, 90, 30);
+		AJButton returnBtn = new AJButton("返回面板");
+		returnBtn.setBounds(420, 50, 90, 30);
+		//本地搜索
 		localBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
@@ -255,10 +256,11 @@ public class TaskTagsPanel extends JScrollPane {
 					mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
 				}
 				SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
-				ssw.keyTextField.setText("tags:" + confirmPanel.getName().replaceAll("\"", "").replaceAll("\\$", ""));
+				ssw.keyTextField.setText("tags:" + selectTags.replaceAll("\"", "").replaceAll("\\$", ""));
 				ssw.searchBtn.doClick();
 			}
 		});
+		//在线搜索
 		onlineBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
@@ -269,6 +271,7 @@ public class TaskTagsPanel extends JScrollPane {
 				mainWindow.searchComicWindow.setVisible(true);
 			}
 		});
+		//标签收藏
 		favBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String tag = selectTag.replaceAll("\"", "").replaceAll("\\$", "");
@@ -299,7 +302,7 @@ public class TaskTagsPanel extends JScrollPane {
 				setViewportView(textPane);
 			}
 		});
-		ComponentUtil.addComponents(confirmPanel, selectTextLabel, localBtn, onlineBtn, favBtn, returnBtn, clearBtn);
+		ComponentUtil.addComponents(confirmPanel, selectTextLabel, localBtn, onlineBtn, favBtn, clearBtn, returnBtn);
 	}
 	public void showTagGroup(Task t){
 		showMyFav = false;

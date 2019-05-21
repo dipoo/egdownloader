@@ -67,17 +67,31 @@ public class SimpleSearchWindow extends JDialog {
 				}
 				
 				if(key_.startsWith("tags:")){
-					String key = key_.replaceAll("tags:", "").replaceAll(" ", "+");
+					String keys = key_.replaceAll("tags:", "").replaceAll(" ", "+");
+					String[] keysArr = keys.split(";");
 					TaskingTable table = (TaskingTable)mainWindow.runningTable;
 					List<Task> allTasks = table.getTasks();
 					int j = 0;
 					List<Integer> indexs = new ArrayList<Integer>();
+					boolean hits;
 					for(int i = 0; i < allTasks.size(); i++){
 						j ++;
-						if(allTasks.get(i).getTags() != null && allTasks.get(i).getTags().toLowerCase().contains(key.toLowerCase() + ";")){
-							allTasks.get(i).setSearched(true);//标识为已被搜索
-							allTasks.add(0, allTasks.remove(i));
-							indexs.add(i);
+						if(allTasks.get(i).getTags() != null){
+							hits = true;
+							//需要全部命中
+							for(String key : keysArr){
+								if(!allTasks.get(i).getTags().toLowerCase().startsWith(key.toLowerCase() + ";") && !allTasks.get(i).getTags().toLowerCase().contains(";" + key.toLowerCase() + ";")){
+									hits = false;
+								}
+							}
+							if(hits){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
+								allTasks.add(0, allTasks.remove(i));
+								indexs.add(i);
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
 						}else{
 							allTasks.get(i).setSearched(false);
 							j --;

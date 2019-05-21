@@ -18,6 +18,7 @@ import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.util.FileUtil2;
+import org.arong.util.HtmlUtils;
 import org.arong.util.Tracker;
 /**
  * 新建任务线程类
@@ -69,7 +70,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
 				try{
-					is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), setting.getCookieInfo());
+					is = WebClient.getStreamUseJavaWithCookie(task.getDownloadCoverUrl(), setting.getCookieInfo());
 					FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				} catch (SocketTimeoutException e){
 					JOptionPane.showMessageDialog(null, "读取封面文件超时，请检查网络后重试");
@@ -92,7 +93,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 					new Thread(new Runnable() {
 						public void run() {
 							window.pictureDbTemplate.store(task.getPictures());//保存图片信息
-							Tracker.println(task.getDisplayName() + "(" + task.getTotal() + ")：图片信息保存完成");
+							Tracker.println(HtmlUtils.greenColorHtml(task.getDisplayName() + "(" + task.getTotal() + ")：图片信息保存完成"));
 						}
 					}).start();
 				}else{
