@@ -529,7 +529,7 @@ public class SearchComicWindow extends JFrame {
 	}
 	
 	public void setTotalInfo(String totalPage, String totalTasks, long spend){
-		totalLabel.setText("<html>" + (cache ? HtmlUtils.redColorHtml("[缓存]") : "") + "共搜索到 " + HtmlUtils.greenColorHtml(totalPage) + " 页，总计 " + HtmlUtils.greenColorHtml(totalTasks) + " 本漫画，耗时 " + HtmlUtils.greenColorHtml(spend + "") + " ms</html>");
+		totalLabel.setText("<html>" + (cache ? HtmlUtils.redColorHtml("[缓存]") : "") + "共搜索到 " + HtmlUtils.greenColorHtml(totalPage) + " 页，总计 " + HtmlUtils.greenColorHtml(totalTasks == null ? "1" : totalTasks) + " 本漫画，耗时 " + HtmlUtils.greenColorHtml(spend + "") + " ms</html>");
 	}
 	
 	public SearchImagePanel[] picLabels = new SearchImagePanel[25];
