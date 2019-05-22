@@ -424,20 +424,20 @@ public class TaskTagsPanel extends JScrollPane {
 		}
 		textPane.setText("");
 		if(StringUtils.isNotBlank(tags)){
-			StringBuffer sb = new StringBuffer("<div style='font-family:Consolas,微软雅黑;font-size:10px;margin-left:5px;'>");
+			StringBuffer sb = new StringBuffer("<div style='font-family:微软雅黑;font-size:9px;margin-left:5px;'>");
 			if(searchTask != null){
 				sb.append(String.format("<b>名称：%s[uploaded by <a href='uploadedby' style='text-decoration:none;color:blue'>%s</a></b>]<br>", searchTask.getName(), searchTask.getUploader()));
 			}
 			if(!showMyFav && !searchTags){
-				sb.append("<a href='refresh' style='font-size:10px;text-decoration:none;color:blue'><b>[同步]&nbsp;</b></a>");
+				sb.append("<a href='refresh' style='text-decoration:none;color:blue'><b>[&nbsp;同步&nbsp;]&nbsp;</b></a>");
 			}
 			if(showMyFav && currentTags != null){
-				sb.append("<a href='return' style='text-decoration:none;color:blue'><b>[返回]</b>&nbsp;</a>");
+				sb.append("<a href='return' style='text-decoration:none;color:blue'><b>[&nbsp;返回&nbsp;]</b>&nbsp;</a>");
 			}
 			if(!showMyFav){
-				sb.append("<a href='fav' style='text-decoration:none;color:red'><b>[我的收藏]</b>&nbsp;</a>");
+				sb.append("<a href='fav' style='text-decoration:none;color:red'><b>[&nbsp;我的收藏&nbsp;]</b>&nbsp;</a>");
 			}
-			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='font-size:10px;text-decoration:none;color:blue'><b>[" + (trans ? "原文" : "翻译") + "]&nbsp;</b></a>" + (trans ? "--<font style='font-size:10px;color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
+			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='text-decoration:none;color:blue'><b>[&nbsp;" + (trans ? "原文" : "翻译") + "&nbsp;]&nbsp;</b></a>" + (trans ? "--<font style='color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
@@ -465,9 +465,9 @@ public class TaskTagsPanel extends JScrollPane {
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}
-					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[").append(trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("]</a>&nbsp;");
+					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[&nbsp;").append(trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("&nbsp;]</a>&nbsp;");
 				}
-				if(groups.keySet().size() > 9){
+				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){
 						sb.append("<br/>");
 					}

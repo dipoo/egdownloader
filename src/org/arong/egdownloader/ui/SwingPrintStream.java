@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
-import org.arong.util.UnicodeUtil;
 import org.arong.utils.StringUtil;
 
 /**
@@ -68,25 +67,11 @@ public class SwingPrintStream extends PrintStream {
 		this.consolePanel = consolePanel;
 	}
 
-	/*public void println(String x) {
-		
-		try {
-			super.println(new String(UnicodeUtil.stringToUnicode(x).getBytes("UTF-8"), "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-
 	// 重写write方法，这是什么模式？装饰？代理？
 	String message = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
-		try {
-			message = new String(buf, off, len, "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			message = new String(buf, off, len);
-		}
+		message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
 			consolePanel.realtext.append("<b><font style='color:#0000dd;'>")
 			.append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");

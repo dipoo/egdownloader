@@ -208,7 +208,8 @@ public class Task {
 		return coverUrl;
 	}
 	public String getDownloadCoverUrl() {
-		return coverUrl != null ? coverUrl.replaceAll(ComponentConst.EX_DOMAIN, ComponentConst.EX_COVER_DOMAIN) : coverUrl;
+		return coverUrl;
+		//return coverUrl != null ? coverUrl.replaceAll(ComponentConst.EX_DOMAIN, ComponentConst.EX_COVER_DOMAIN) : coverUrl;
 	}
 
 	public void setCoverUrl(String coverUrl) {

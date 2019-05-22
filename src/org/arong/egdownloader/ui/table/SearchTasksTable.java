@@ -162,28 +162,6 @@ public class SearchTasksTable extends JTable {
 						}
 					}
 				}
-				if(columnIndex == 1){
-					SearchTask task = table.getTasks().get(rowIndex);
-					//切换行
-					if(rowIndex != currentRowIndex){
-						currentRowIndex = rowIndex;
-						if(comicWindow.searchDetailInfoWindow == null){
-							comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
-						}
-						if(Toolkit.getDefaultToolkit().getScreenSize().height - e.getYOnScreen() > comicWindow.searchDetailInfoWindow.getHeight()){
-							comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
-						}else{
-							comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen() - comicWindow.searchDetailInfoWindow.getHeight()));
-						}
-					}
-				}else{
-					if(comicWindow.searchDetailInfoWindow != null){
-						comicWindow.searchDetailInfoWindow.setVisible(false);
-						if(columnIndex != 0){
-							currentRowIndex = -1;
-						}
-					}
-				}
 			}
 		});
 		this.addMouseListener(new MouseAdapter() {
@@ -205,6 +183,21 @@ public class SearchTasksTable extends JTable {
 					//点击上传者
 					if(columnIndex == 4){
 						comicWindow.doSearch("uploader:" + tasks.get(rowIndex).getUploader());
+					}
+					if(columnIndex == 1){
+						SearchTask task = table.getTasks().get(rowIndex);
+						//切换行
+						if(rowIndex != currentRowIndex){
+							currentRowIndex = rowIndex;
+							if(comicWindow.searchDetailInfoWindow == null){
+								comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
+							}
+							if(Toolkit.getDefaultToolkit().getScreenSize().height - e.getYOnScreen() > comicWindow.searchDetailInfoWindow.getHeight()){
+								comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+							}else{
+								comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen() - comicWindow.searchDetailInfoWindow.getHeight()));
+							}
+						}
 					}
 				}
 				//右键

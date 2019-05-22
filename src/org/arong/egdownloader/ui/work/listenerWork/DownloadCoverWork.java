@@ -2,7 +2,6 @@ package org.arong.egdownloader.ui.work.listenerWork;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 
@@ -31,9 +30,9 @@ public class DownloadCoverWork implements IMenuListenerTask {
 		TaskingTable table = (TaskingTable) mainWindow.runningTable;
 		int index = table.getSelectedRow();
 		final Task task = table.getTasks().get(index);
-		File cover = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg");
+		//File cover = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg");
 		//不存在封面则下载
-		if(cover == null || !cover.exists()){
+		//if(cover == null || !cover.exists()){
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					new CommonSwingWorker(new Runnable() {
@@ -44,7 +43,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 									ScriptParser.rebuildTask(task, mainWindow.setting);
 								}
 								//下载封面
-								is =  WebClient.getStreamUseJavaWithCookie(task.getCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
+								is =  WebClient.getStreamUseJavaWithCookie(task.getDownloadCoverUrl(), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
 								int size = FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 								if(size == 0){
 									JOptionPane.showMessageDialog(mainWindow, "下载失败，地址错误或者地址不可访问");
@@ -73,10 +72,10 @@ public class DownloadCoverWork implements IMenuListenerTask {
 					}).execute();
 				}
 			});
-		}else{
+		/*}else{
 			JOptionPane.showMessageDialog(mainWindow, "封面已存在");
 			mainWindow.tablePopupMenu.setVisible(false);
-		}
+		}*/
 	}
 
 }
