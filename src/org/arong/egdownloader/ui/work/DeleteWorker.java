@@ -91,7 +91,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 			e.printStackTrace();
 		}finally{
 			mainWindow.setEnabled(true);
-			w.setVisible(false);
+			mainWindow.toFront();
 			w.dispose();
 		}	
 		return null;

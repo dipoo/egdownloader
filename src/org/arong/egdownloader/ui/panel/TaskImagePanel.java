@@ -180,7 +180,6 @@ public class TaskImagePanel extends AJPanel {
 									JProgressBar bar = (JProgressBar)p.getComponent(1);
 									bar.setString(getTaskInfo(ptasks.get(i)));
 								}else{
-									//p = new AJPanel();
 									p = new AJPanel();
 									//name规则：taskID|list索引
 									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
@@ -333,7 +332,7 @@ public class TaskImagePanel extends AJPanel {
 								imageTaskPager.setVisible(true);
 							}
 						}
-						System.gc();
+						//System.gc();
 					}
 				}).execute();
 			}

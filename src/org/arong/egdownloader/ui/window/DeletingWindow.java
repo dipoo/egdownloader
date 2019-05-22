@@ -37,12 +37,6 @@ public class DeletingWindow extends JDialog {
 		ComponentUtil.addComponents(getContentPane(), dataLabel, infoLabel);
 	}
 	
-	public void dispose() {
-		mainWindow.setEnabled(true);
-		mainWindow.setVisible(true);
-		super.dispose();
-	}
-	
 	public void setData(String data){
 		dataLabel.setText(data);
 	}
