@@ -124,7 +124,7 @@ public class HtmlUtils {
 			String formatGroup = null;
 			while(mt.find()){
  	 			formatGroup = mt.group();
- 	 			tmp = tmp.replaceAll(formatGroup, String.format("<span style=\"font-family:'Segoe UI Symbol'\">%s</span>", formatGroup));
+ 	 			tmp = tmp.replaceAll(formatGroup, String.format("<span style=\"font-family:'Segoe UI Symbol','Segoe UI Emoji'\">%s</span>", formatGroup));
  	 		}
 			
 		    if (!EmojiFilter.containsEmoji(tmp)) {
