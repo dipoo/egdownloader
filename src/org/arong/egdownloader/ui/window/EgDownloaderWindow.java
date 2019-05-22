@@ -22,7 +22,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -72,9 +71,9 @@ import org.arong.egdownloader.ui.menuitem.UpdateAllNullTagsMenuItem;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.egdownloader.ui.panel.InfoTabbedPane;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
-import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.panel.TaskImagePanel;
 import org.arong.egdownloader.ui.panel.TaskInfoPanel;
+import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.popmenu.MainPopupMenu;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -408,8 +407,8 @@ public class EgDownloaderWindow extends JFrame {
 		try {
 			//将syso信息推送到控制台
 			new SwingPrintStream(System.out, consolePanel);
-		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "控制台初始化错误！");
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "控制台初始化错误！" + e1.getMessage());
 		}
 		
 		taskInfoPanel = new TaskInfoPanel(this);

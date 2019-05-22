@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -19,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
+import org.arong.util.UnicodeUtil;
 import org.arong.utils.StringUtil;
 
 /**
@@ -60,17 +62,31 @@ public class SwingPrintStream extends PrintStream {
 	private ConsolePanel consolePanel;
 
 	public SwingPrintStream(OutputStream out, ConsolePanel consolePanel)
-			throws FileNotFoundException {
-		super(out);
+			throws FileNotFoundException, UnsupportedEncodingException {
+		super(out, true);
 		System.setOut(this);
 		this.consolePanel = consolePanel;
 	}
+
+	/*public void println(String x) {
+		
+		try {
+			super.println(new String(UnicodeUtil.stringToUnicode(x).getBytes("UTF-8"), "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}*/
 
 	// 重写write方法，这是什么模式？装饰？代理？
 	String message = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
-		message = new String(buf, off, len);
+		try {
+			message = new String(buf, off, len, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			message = new String(buf, off, len);
+		}
 		if(StringUtil.notBlank(message)){
 			consolePanel.realtext.append("<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>")
 			.append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");

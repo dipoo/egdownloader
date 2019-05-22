@@ -42,6 +42,7 @@ import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.DateUtil;
+import org.arong.util.EmojiFilter;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
 
@@ -83,7 +84,7 @@ public class TaskTagsPanel extends JScrollPane {
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
 				    			&& StringUtils.isNotBlank(arr[2].trim())){
-				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()).replaceAll("\\?", "").replaceAll("👙", "").replaceAll("✏", "").replaceAll("❄", "").replaceAll("👪", "").replaceAll("❤", "").replaceAll("🌠", "").replaceAll("⚾", "").replaceAll("📖", "").replaceAll("⚡️", "").replaceAll("🔪", "").replaceAll("Δ", ""));
+				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , EmojiFilter.filterEmoji((arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim())));
 				    	}
 				    }
 				}
@@ -111,7 +112,7 @@ public class TaskTagsPanel extends JScrollPane {
 									    if(arr.length > 3){
 									    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
 									    			&& StringUtils.isNotBlank(arr[2].trim()) && StringUtils.isNotBlank(arr[3].trim())){
-									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()).replaceAll("\\?", "").replaceAll("👙", "").replaceAll("✏", "").replaceAll("❄", "").replaceAll("👪", "").replaceAll("❤", "").replaceAll("🌠", "").replaceAll("⚾", "").replaceAll("📖", "").replaceAll("⚡️", "").replaceAll("🔪", "").replaceAll("Δ", ""));
+									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , EmojiFilter.filterEmoji((arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim())));
 									    	}
 									    }
 									}
@@ -222,9 +223,7 @@ public class TaskTagsPanel extends JScrollPane {
 		/* 分类条件 */
 		selectedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		selectedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "已经选择的标签（点击可以移除；红色为最新选择，可以收藏或取消收藏）"));
-		selectedPanel.setBounds(5, 5, mainWindow.getWidth() - 20, 100);
-		/*selectTextLabel = new AJLabel("", Color.BLUE);
-		selectTextLabel.setBounds(20, 10, 500, 30);*/
+		selectedPanel.setBounds(5, 5, mainWindow.getWidth() - 30, 100);
 		AJButton localBtn = new AJButton("本地搜索");
 		localBtn.setBounds(5, 110, 90, 30);
 		localBtn.setUI(AJButton.blueBtnUi);
@@ -292,6 +291,7 @@ public class TaskTagsPanel extends JScrollPane {
 				selectTag = "";
 				//清空
 				renderSelectTags(null, false);
+				setViewportView(textPane);
 			}
 		});
 		ComponentUtil.addComponents(confirmPanel, selectedPanel, localBtn, onlineBtn, favBtn, clearBtn, returnBtn);

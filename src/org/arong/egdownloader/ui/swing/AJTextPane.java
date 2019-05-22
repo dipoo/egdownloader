@@ -33,6 +33,32 @@ public class AJTextPane extends JTextPane {
 		this.setBorder(border);
 		this.setEditable(false);
 		this.setEditorKit(editorKit);
+		
+		/*final Font[] fList;
+        //初始化Font列表
+        String[] lstr = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        fList = new Font[lstr.length];
+		for (int i = 0; i < lstr.length; i++) {
+			fList[i] = new Font(lstr[i], this.getFont().getStyle(), this.getFont().getSize());
+		}
+		this.addCaretListener(new CaretListener() {
+			public void caretUpdate(CaretEvent e) {
+				JTextPane jtp = (JTextPane) e.getSource();
+				String s = jtp.getText();
+				Font f = jtp.getFont();
+				if(f.canDisplayUpTo(s) != -1){//发现不能显示字体，则查找可使用的字体
+					System.out.println(f.getFontName() + ":" + f.canDisplayUpTo(s));
+					for(int i = 0; i < fList.length; i++){
+						if(fList[i].canDisplayUpTo(s) == -1){
+							jtp.setFont(fList[i]);
+							break;
+						}
+					}
+				}
+			}
+		});*/
+
+		
 		//点击超链接打开浏览器事件
 		this.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
