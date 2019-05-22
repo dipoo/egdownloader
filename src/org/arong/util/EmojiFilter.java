@@ -27,7 +27,7 @@ public class EmojiFilter {
 	    return false;
 	}
 
-	private static boolean isEmojiCharacter(char codePoint) {
+	public static boolean isEmojiCharacter(char codePoint) {
 	    return (codePoint == 0x0) || 
 	            (codePoint == 0x9) ||                            
 	            (codePoint == 0xA) ||
@@ -48,7 +48,7 @@ public class EmojiFilter {
 			"\\\\u270f\\\\ufe0f", "\\\\ud83d\\\\udc6a", "\\\\ud83c\\\\udf20", "\\\\ud83d\\\\udcd6",
 			"\\\\ud83d\\\\udd2a", "\\\\ud83c\\\\udfc0", "\\\\ud83c\\\\udfae", "\\\\ud83c\\\\udf74",
 			"\\\\u26a2"/*, "\\\\u270f", "\\\\u2744", "\\\\u2200", "\\\\u2764",
-			"\\\\u2642"*/, "\\\\u26e9", "\\\\ufe0f",};
+			"\\\\u2642"*/, "\\\\u26e9", "\\\\ufe0f"};
 
 	/**
 	 * 过滤emoji 或者 其他非文字类型的字符

@@ -19,6 +19,7 @@ import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.swing.AJPopupMenu;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.util.HtmlUtils;
 
 public class ConsolePanel extends JScrollPane {
 	
@@ -67,7 +68,7 @@ public class ConsolePanel extends JScrollPane {
 	}
 	public void showLog() {
 		try{
-			textPane.setText(realtext.toString());
+			textPane.setText("<html><body style=\"font-size:9px;font-family:微软雅黑\">" + HtmlUtils.filterEmoji2SegoeUISymbolFont(realtext.toString()) + "</body></html>");
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -88,7 +88,7 @@ public class SwingPrintStream extends PrintStream {
 			message = new String(buf, off, len);
 		}
 		if(StringUtil.notBlank(message)){
-			consolePanel.realtext.append("<b style='font-size:9px;font-family:微软雅黑;'><font style='color:#0000dd;'>")
+			consolePanel.realtext.append("<b><font style='color:#0000dd;'>")
 			.append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");
 			try {
 				SwingUtilities.invokeLater(new Runnable(){

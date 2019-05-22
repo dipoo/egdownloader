@@ -3,6 +3,7 @@ package org.arong.egdownloader.ui.panel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -35,6 +36,7 @@ import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentUtil;
+import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -84,7 +86,7 @@ public class TaskTagsPanel extends JScrollPane {
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
 				    			&& StringUtils.isNotBlank(arr[2].trim())){
-				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , EmojiFilter.filterEmoji((arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim())));
+				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , /*EmojiFilter.filterEmoji(*/(arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()));
 				    	}
 				    }
 				}
@@ -355,9 +357,9 @@ public class TaskTagsPanel extends JScrollPane {
 					if(StringUtils.isBlank(row)){
 						row = arr[0];
 					}
-					text = row + "：" + stag;
+					text = row + ":" + stag;
 				}
-				AJButton btn = new AJButton(text, null, new MouseAdapter() {
+				AJButton btn = new AJButton("<html>" + HtmlUtils.filterEmoji2SegoeUISymbolFont(text) + "</html>", null, new MouseAdapter() {
 					public void mouseClicked(MouseEvent e) {
 						String tag_ = ((JButton)e.getSource()).getName();
 						String tag = tag_.replaceAll("\\$\"", "=====\"");
@@ -367,6 +369,8 @@ public class TaskTagsPanel extends JScrollPane {
 					}
 				}, true);
 				btn.setName(tag);
+				btn.setFont(FontConst.Microsoft_BOLD_12);
+				btn.setMargin(new Insets(1, 1, 1, 1));
 				btn.setToolTipText(tag);
 				btn.setForeground(Color.WHITE);
 				btn.setUI(AJButton.redBtnUi);
@@ -375,7 +379,7 @@ public class TaskTagsPanel extends JScrollPane {
 			/**
 			 * 是否已经收藏
 			 */
-			if(StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && mainWindow.setting.getFavTags().contains(selectTag.replaceAll("\"", "").replaceAll("\\$", "") + ";")){
+			if(StringUtils.isNotBlank(selectTag) && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && mainWindow.setting.getFavTags().contains(selectTag.replaceAll("\"", "").replaceAll("\\$", "") + ";")){
 				favBtn.setText("取消收藏");
 				favBtn.setUI(AJButton.redBtnUi);
 			}else{
@@ -391,6 +395,7 @@ public class TaskTagsPanel extends JScrollPane {
 		});
 	}
 	public void showTagGroup(Task t){
+		//System.out.println("哈哈");
 		showMyFav = false;
 		searchTags = false;
 		setViewportView(textPane);
@@ -471,7 +476,7 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 			sb.append("</div>");
-			textPane.setText(sb.toString());
+			textPane.setText(HtmlUtils.filterEmoji2SegoeUISymbolFont(sb.toString()));
 		}else{
 			if(!showMyFav && !searchTags){
 				textPane.setText("<div style='font-size:10px;margin-left:5px;'>该任务暂无标签组&nbsp;&nbsp;<a href='refresh' style='text-decoration:none;color:blue'><b>[同步]</b></a></div>");

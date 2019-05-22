@@ -95,4 +95,68 @@ public class HtmlUtils {
 		}
 		return null;
 	}
+	public static final String[] EMOJI_FILTER_CHARS = {"\\\\ud83e\\\\udddb\\\\u200d\\\\u2640\\\\ufe0f",
+		"\\\\ud83e\\\\udddf\\\\u200d\\\\u2640\\\\ufe0f", "\\\\u26be\\\\ud83d\\\\udc08", 
+		"\\\\ud83d\\\\udc7b", "\\\\ud83e\\\\udd16", "\\\\ud83d\\\\udc3b", "\\\\ud83d\\\\udc7d",
+		"\\\\ud83d\\\\udc2a", "\\\\ud83d\\\\udc08", "\\\\ud83d\\\\udc04", "\\\\ud83e\\\\udd80",
+		"\\\\ud83e\\\\udd95", "\\\\ud83d\\\\udc29", "\\\\ud83d\\\\udc2c", "\\\\ud83d\\\\udc09",
+		"\\\\ud83d\\\\udc18", "\\\\ud83d\\\\udc1f", "\\\\ud83d\\\\udc51", "\\\\ud83d\\\\udc53",
+		"\\\\ud83d\\\\udc8b", "\\\\ud83d\\\\udc8f", "\\\\ud83d\\\\udeac", "\\\\ud83d\\\\udcaa",
+		"\\\\ud83d\\\\udc59", "\\\\ud83e\\\\udd36", "\\\\ud83d\\\\udc58", "\\\\ud83d\\\\udca9",
+		"\\\\u270f\\\\ufe0f", "\\\\ud83d\\\\udc6a", "\\\\ud83c\\\\udf20", "\\\\ud83d\\\\udcd6",
+		"\\\\ud83d\\\\udd2a", "\\\\ud83c\\\\udfc0", "\\\\ud83c\\\\udfae", "\\\\ud83c\\\\udf74",
+		"\\\\u26a2"/*, "\\\\u270f", "\\\\u2744", "\\\\u2200", "\\\\u2764",
+		"\\\\u2642", "\\\\u26e9"*/, "\\\\ufe0f"};
+	public static final String[] UNPARSE_FILTER_CHARS = {"\\\\u26e9"};//无法解析的字符，替换为空
+	public final static Pattern EMOJI_PATTERN = Pattern.compile("[\\ud800\\udc00-\\udbff\\udfff\\ud800-\\udfff]");
+	public static String filterEmoji2SegoeUISymbolFont(String source){
+		if(StringUtils.isNotBlank(source)){
+			String tmp = UnicodeUtil.stringToUnicode(source);
+			for(String c : UNPARSE_FILTER_CHARS){
+				tmp = tmp.replaceAll(c, "");
+			}
+			for(String c : EMOJI_FILTER_CHARS){
+				tmp = tmp.replaceAll(c, "\\\\u003c\\\\u0073\\\\u0070\\\\u0061\\\\u006e\\\\u0020\\\\u0073\\\\u0074\\\\u0079\\\\u006c\\\\u0065\\\\u003d\\\\u0022\\\\u0066\\\\u006f\\\\u006e\\\\u0074\\\\u002d\\\\u0066\\\\u0061\\\\u006d\\\\u0069\\\\u006c\\\\u0079\\\\u003a\\\\u0027\\\\u0053\\\\u0065\\\\u0067\\\\u006f\\\\u0065\\\\u0020\\\\u0055\\\\u0049\\\\u0020\\\\u0053\\\\u0079\\\\u006d\\\\u0062\\\\u006f\\\\u006c\\\\u0027\\\\u0022\\\\u003e" + c + "\\\\u003c\\\\u002f\\\\u0073\\\\u0070\\\\u0061\\\\u006e\\\\u003e");
+			}
+			tmp = UnicodeUtil.unicodeToString(tmp);
+			
+			Matcher mt = EMOJI_PATTERN.matcher(tmp);
+			String formatGroup = null;
+			while(mt.find()){
+ 	 			formatGroup = mt.group();
+ 	 			tmp = tmp.replaceAll(formatGroup, String.format("<span style=\"font-family:'Segoe UI Symbol'\">%s</span>", formatGroup));
+ 	 		}
+			
+		    if (!EmojiFilter.containsEmoji(tmp)) {
+		        return tmp;//如果不包含，直接返回
+		    }
+		    //到这里铁定包含
+		    StringBuilder buf = null;
+		    int len = tmp.length();
+		    for (int i = 0; i < len; i++) {
+		        char codePoint = tmp.charAt(i);
+
+		        if (EmojiFilter.isEmojiCharacter(codePoint)) {
+		            if (buf == null) {
+		                buf = new StringBuilder(tmp.length());
+		            }
+		            buf.append(codePoint);
+		        } else {
+		            buf.append("*");
+		        }
+		    }
+
+		    if (buf == null) {
+		        return tmp;//如果没有找到 emoji表情，则返回源字符串
+		    } else {
+		        if (buf.length() == len) {//这里的意义在于尽可能少的toString，因为会重新生成字符串
+		            buf = null;
+		            return tmp;
+		        } else {
+		            return buf.toString();
+		        }
+		    }
+		}
+		return source;
+	}
 }
