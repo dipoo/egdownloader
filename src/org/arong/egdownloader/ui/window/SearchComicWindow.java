@@ -89,6 +89,7 @@ public class SearchComicWindow extends JFrame {
 	public AJPager pager;
 	public boolean haveBt;//是否有bt下载文件
 	public String key = " ";//搜索条件的字符串
+	public String currentPage = "1";
 	public boolean cache = false;//是否为缓存数据
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
 	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();//任务数据缓存
@@ -312,7 +313,7 @@ public class SearchComicWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JButton btn = (JButton) e.getSource();
 				page = btn.getName();
-				search(Integer.parseInt(btn.getName()) + "");
+				search(btn.getName());
 			}
 		});
 		JButton btn = new AJButton("顶部⇧");
@@ -424,14 +425,11 @@ public class SearchComicWindow extends JFrame {
 		String k = parseOption() + keyText;
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			cache = true;
-			//条件有变化
-			if(!k.equals(key)){
-				searchTasks = datas.get(k).get(page);
-				if(viewModel == 1){
-					showResult(pageInfo.get(k), Integer.parseInt(page));
-				}else{
-					showResult2(pageInfo.get(k), Integer.parseInt(page));
-				}
+			searchTasks = datas.get(k).get(page);
+			if(viewModel == 1){
+				showResult(pageInfo.get(k), Integer.parseInt(page));
+			}else{
+				showResult2(pageInfo.get(k), Integer.parseInt(page));
 			}
 			totalLabel.setText(keyPage.get(k).replace("共搜索到", HtmlUtils.redColorHtml("[缓存]") + "共搜索到"));
 			hideLoading();
@@ -442,6 +440,7 @@ public class SearchComicWindow extends JFrame {
 			rightBtn.setEnabled(false);
 			
 			key = k;
+			currentPage = page;
 			String exurl = "https://exhentai.org/?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
 					(Integer.parseInt(page) - 1) + "&f_cats=" + f_cats + "&f_sto=" + f_sto;
 			if(!keyText.equals("")){

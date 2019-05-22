@@ -375,7 +375,7 @@ public class TaskTagsPanel extends JScrollPane {
 			/**
 			 * 是否已经收藏
 			 */
-			if(StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && mainWindow.setting.getFavTags().contains(tag.replaceAll("\"", "").replaceAll("\\$", "") + ";")){
+			if(StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && mainWindow.setting.getFavTags().contains(selectTag.replaceAll("\"", "").replaceAll("\\$", "") + ";")){
 				favBtn.setText("取消收藏");
 				favBtn.setUI(AJButton.redBtnUi);
 			}else{
