@@ -53,12 +53,16 @@ public final class ComponentConst {
 	
 	public static String PICTURE_XML_DATA_PATH = DATA_PATH + "/picture.xml";//图片数据保存路径(该文件已弃用)
 	
-	public static String EX_DOMAIN = "exhentai.org"; //域名
-	public static String EX_REPLACE_COVER_DOMAIN = "ehgt.org"; //封面替换域名
-	
 	public final static String RESOURCES_PATH = "/resources/";
 	
 	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
+	
+	public final static String TAGS_CN_FILE_PATH = "script/EhTagTranslator.wiki/database/";//标签汉化文件目录
+	public static final String[] TAGS_CN_FILENAMES = new String[]{"artist.md", "character.md", "female.md", "group.md", "language.md", "male.md", "misc.md", "parody.md", "reclass.md", "rows.md"};
+	public static final String TAGS_CN_FILENAMES_DOWNLOAD_URL_PREFFIX = "https://raw.githubusercontent.com/wiki/Mapaler/EhTagTranslator/database/";
+	
+	public static String EX_DOMAIN = "exhentai.org"; //域名
+	public static String EX_REPLACE_COVER_DOMAIN = "ehgt.org"; //封面替换域名
 	
 	public final static String[] TASK_TABLE_HEADER = {"", "名称", "数目 /大小", "语言", "已下载", "状态"};
 	

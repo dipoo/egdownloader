@@ -35,6 +35,7 @@ import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -72,13 +73,12 @@ public class TaskTagsPanel extends JScrollPane {
 	public boolean searchTags = false;//是否为搜索时使用
 	public String currentTags = null;
 	public boolean showMyFav = false;//显示我的收藏
-	public static final String[] CNFILENAMES = new String[]{"artist.md", "character.md", "female.md", "group.md", "language.md", "male.md", "misc.md", "parody.md", "reclass.md", "rows.md"};
 	
 	static{
 		tagscnMap = new HashMap<String, String>();String[] arr = null;
 		try {
-			for(String filename : CNFILENAMES){
-				BufferedReader br = new BufferedReader(new FileReader("script/EhTagTranslator.wiki/database/" + filename));
+			for(String filename : ComponentConst.TAGS_CN_FILENAMES){
+				BufferedReader br = new BufferedReader(new FileReader(ComponentConst.TAGS_CN_FILE_PATH + filename));
 				while(true){
 				    String line = br.readLine();
 				    if(line == null){ break; }
@@ -100,12 +100,11 @@ public class TaskTagsPanel extends JScrollPane {
 				public void run() {
 					//在线下载
 					System.out.println("开始在线下载中文标签库...");
-					String dir = "script/EhTagTranslator.wiki/database/";
-					FileUtil2.ifNotExistsThenCreate(dir);
+					FileUtil2.ifNotExistsThenCreate(ComponentConst.TAGS_CN_FILE_PATH);
 					try {
 						String[] arr = null;
-						for(String filename : CNFILENAMES){
-							String text = WebClient.getRequestUseJava("https://raw.githubusercontent.com/wiki/Mapaler/EhTagTranslator/database/" + filename, "UTF-8");
+						for(String filename : ComponentConst.TAGS_CN_FILENAMES){
+							String text = WebClient.getRequestUseJava(ComponentConst.TAGS_CN_FILENAMES_DOWNLOAD_URL_PREFFIX + filename, "UTF-8");
 							if(StringUtils.isNotBlank(text)){
 								String[] lines = text.split("\n");
 								if(lines.length > 1){
@@ -118,7 +117,7 @@ public class TaskTagsPanel extends JScrollPane {
 									    	}
 									    }
 									}
-									FileUtil2.storeStr2file(text, dir, filename);
+									FileUtil2.storeStr2file(text, ComponentConst.TAGS_CN_FILE_PATH, filename);
 								}
 							}
 						}
