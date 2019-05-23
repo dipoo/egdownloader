@@ -70,7 +70,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				window.creatingWindow.setTitle("正在下载封面");
 				//下载封面
 				try{
-					is = WebClient.getStreamUseJavaWithCookie(task.getDownloadCoverUrl(), setting.getCookieInfo());
+					is = WebClient.getStreamUseJavaWithCookie(task.getDownloadCoverUrl(setting.isUseCoverReplaceDomain()), setting.getCookieInfo());
 					FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
 				} catch (SocketTimeoutException e){
 					JOptionPane.showMessageDialog(null, "读取封面文件超时，请检查网络后重试");
