@@ -9,9 +9,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -75,14 +76,17 @@ public class TaskTagsPanel extends JScrollPane {
 	public boolean showMyFav = false;//显示我的收藏
 	
 	static{
-		tagscnMap = new HashMap<String, String>();String[] arr = null;
+		tagscnMap = new HashMap<String, String>();String[] arr = null;String line = null;
+		BufferedReader br = null;FileInputStream fs = null;InputStreamReader isr = null;
 		try {
 			for(String filename : ComponentConst.TAGS_CN_FILENAMES){
-				BufferedReader br = new BufferedReader(new FileReader(ComponentConst.TAGS_CN_FILE_PATH + filename));
+				fs = new FileInputStream(ComponentConst.TAGS_CN_FILE_PATH + filename);
+				isr = new InputStreamReader(fs, "UTF-8");
+				br = new BufferedReader(isr);
 				while(true){
-				    String line = br.readLine();
+				    line = br.readLine();
 				    if(line == null){ break; }
-				    line = new String(line.getBytes(), "UTF-8");
+				    /*line = new String(line.getBytes(), "UTF-8");*/
 				    arr = line.split("\\|");
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
@@ -118,20 +122,24 @@ public class TaskTagsPanel extends JScrollPane {
 									    	}
 									    }
 									}
-									FileUtil2.storeStr2file(text, ComponentConst.TAGS_CN_FILE_PATH, filename);
+									FileUtil2.storeStr2file(text, ComponentConst.TAGS_CN_FILE_PATH, filename, "UTF-8");
 								}
 							}
 						}
 						System.out.println("在线下载中文标签库结束");
-					} catch (IOException e1) {
+					}catch (Exception e1) {
 						e1.printStackTrace();
-					} catch (Exception e1) {
-						e1.printStackTrace();
+						System.out.println(HtmlUtils.redColorHtml("在线下载中文标签库失败：" + e1.getMessage()));
 					}
 				}
 			}).execute();
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println(HtmlUtils.redColorHtml("读取中文标签库失败：" + e.getMessage()));
+		} finally{
+			if(br != null){try {br.close();} catch (IOException e) {e.printStackTrace();}}
+			if(isr != null){try {isr.close();} catch (IOException e) {e.printStackTrace();}}
+			if(fs != null){try {fs.close();} catch (IOException e) {e.printStackTrace();}}
 		}
 	}
 	
@@ -465,7 +473,7 @@ public class TaskTagsPanel extends JScrollPane {
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}
-					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[&nbsp;").append(trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")).append("&nbsp;]</a>&nbsp;");
+					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[&nbsp;").append(parseFav(group, attr.replaceAll("\\+", " "), trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " "))).append("&nbsp;]</a>&nbsp;");
 				}
 				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){
@@ -489,6 +497,13 @@ public class TaskTagsPanel extends JScrollPane {
 			}
 		}
 		this.setVisible(true);
+	}
+	
+	private String parseFav(String group, String tag, String ftag){
+		if(StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + group + ":" + tag)){
+			return "<font color='red'>" + ftag + "</font>";
+		}
+		return ftag;
 	}
 
 	public SearchTask getSearchTask() {
