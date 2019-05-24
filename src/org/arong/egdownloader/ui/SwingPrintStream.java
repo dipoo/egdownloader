@@ -68,12 +68,12 @@ public class SwingPrintStream extends PrintStream {
 	}
 
 	// 重写write方法，这是什么模式？装饰？代理？
-	String message = null, line = null;
+	String message = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
 		message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			line = new StringBuffer().append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b>").toString();
+			final String line = new StringBuffer().append("<font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).toString();
 			//consolePanel.realtext.append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");
 			try {
 				SwingUtilities.invokeLater(new Runnable(){

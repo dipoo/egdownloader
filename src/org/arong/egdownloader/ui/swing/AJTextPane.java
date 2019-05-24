@@ -30,8 +30,10 @@ public class AJTextPane extends JTextPane {
 	
 	private HTMLEditorKit htmlEditorKit;
 	private HTMLDocument htmlDoc;
-
 	public AJTextPane(){
+		this(true);
+	}
+	public AJTextPane(boolean html){
 		htmlEditorKit = new HTMLEditorKit();
 		htmlDoc = (HTMLDocument) htmlEditorKit.createDefaultDocument();
 		Border border = new EmptyBorder(10, 20, 20, 10);
