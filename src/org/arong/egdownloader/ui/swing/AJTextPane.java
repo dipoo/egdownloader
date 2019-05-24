@@ -11,7 +11,9 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.EditorKit;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 /**
@@ -25,39 +27,19 @@ import javax.swing.text.html.HTMLEditorKit;
  * 
  */
 public class AJTextPane extends JTextPane {
+	
+	private HTMLEditorKit htmlEditorKit;
+	private HTMLDocument htmlDoc;
 
-	private static final long serialVersionUID = 5006884186865600388L;
 	public AJTextPane(){
-		EditorKit editorKit = new HTMLEditorKit();
+		htmlEditorKit = new HTMLEditorKit();
+		htmlDoc = (HTMLDocument) htmlEditorKit.createDefaultDocument();
 		Border border = new EmptyBorder(10, 20, 20, 10);
 		this.setBorder(border);
+		this.setEditorKit(htmlEditorKit);
+		this.setContentType("text/html");
+		this.setDocument(htmlDoc);
 		this.setEditable(false);
-		this.setEditorKit(editorKit);
-		
-		/*final Font[] fList;
-        //初始化Font列表
-        String[] lstr = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        fList = new Font[lstr.length];
-		for (int i = 0; i < lstr.length; i++) {
-			fList[i] = new Font(lstr[i], this.getFont().getStyle(), this.getFont().getSize());
-		}
-		this.addCaretListener(new CaretListener() {
-			public void caretUpdate(CaretEvent e) {
-				JTextPane jtp = (JTextPane) e.getSource();
-				String s = jtp.getText();
-				Font f = jtp.getFont();
-				if(f.canDisplayUpTo(s) != -1){//发现不能显示字体，则查找可使用的字体
-					System.out.println(f.getFontName() + ":" + f.canDisplayUpTo(s));
-					for(int i = 0; i < fList.length; i++){
-						if(fList[i].canDisplayUpTo(s) == -1){
-							jtp.setFont(fList[i]);
-							break;
-						}
-					}
-				}
-			}
-		});*/
-
 		
 		//点击超链接打开浏览器事件
 		this.addHyperlinkListener(new HyperlinkListener() {
@@ -89,5 +71,35 @@ public class AJTextPane extends JTextPane {
 		if(color != null)
 			this.setForeground(color);
 		this.setText(text);
+	}
+	
+	public void appendBHtml(String html){
+		if(htmlEditorKit != null && htmlDoc != null){
+			try {
+				htmlEditorKit.insertHTML(htmlDoc, htmlDoc.getLength(), html, 0, 0, HTML.Tag.B);
+				htmlEditorKit.insertHTML(htmlDoc, htmlDoc.getLength(), "<br/>", 0, 0, HTML.Tag.BR);
+			}catch (Exception e) {
+				this.setText(this.getText() + "======exception:" + e.getMessage());
+			}
+		}else{
+			this.setText(this.getText() + html);
+		}
+	}
+	public void clear(){
+		if(htmlEditorKit != null && htmlDoc != null){
+			try {
+				htmlDoc.remove(0, htmlDoc.getLength());
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		}else{
+			this.setText("");
+		}
+	}
+	public HTMLEditorKit getHtmlEditorKit() {
+		return htmlEditorKit;
+	}
+	public HTMLDocument getHtmlDoc() {
+		return htmlDoc;
 	}
 }

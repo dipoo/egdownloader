@@ -23,7 +23,7 @@ import org.arong.util.HtmlUtils;
 
 public class ConsolePanel extends JScrollPane {
 	
-	private JTextPane textPane;
+	private AJTextPane textPane;
 	public JPopupMenu consolePopupMenu;
 	public boolean locked;//是否锁屏
 	public StringBuffer realtext = new StringBuffer();
@@ -63,7 +63,7 @@ public class ConsolePanel extends JScrollPane {
 			}
 		});
 	}
-	public JTextPane getTextPane() {
+	public AJTextPane getTextPane() {
 		return textPane;
 	}
 	public void showLog() {
@@ -73,4 +73,12 @@ public class ConsolePanel extends JScrollPane {
 			e.printStackTrace();
 		}
 	}
+	public void showLog(String msg) {
+		try{
+			textPane.appendBHtml(HtmlUtils.filterEmoji2SegoeUISymbolFont(msg));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 }

@@ -82,6 +82,7 @@ public class TaskTagsPanel extends JScrollPane {
 				while(true){
 				    String line = br.readLine();
 				    if(line == null){ break; }
+				    line = new String(line.getBytes(), "UTF-8");
 				    arr = line.split("\\|");
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())

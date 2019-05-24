@@ -68,17 +68,17 @@ public class SwingPrintStream extends PrintStream {
 	}
 
 	// 重写write方法，这是什么模式？装饰？代理？
-	String message = null;
+	String message = null, line = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
 		message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			consolePanel.realtext.append("<b><font style='color:#0000dd;'>")
-			.append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");
+			line = new StringBuffer().append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b>").toString();
+			//consolePanel.realtext.append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");
 			try {
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run() { 
-						consolePanel.showLog();
+						consolePanel.showLog(line);
 						if(! consolePanel.locked){
 							// 让光标置于最下方
 							consolePanel.paintImmediately(consolePanel.getBounds());
@@ -101,13 +101,16 @@ public class SwingPrintStream extends PrintStream {
 	 * @param consolePanel
 	 */
 	private void filter(ConsolePanel consolePanel){
-		try{
+		/*try{
 			if(consolePanel.getTextPane() != null && HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
 				consolePanel.realtext.replace(0, consolePanel.realtext.length(), "");
 				consolePanel.showLog();
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		}*/
+		if(consolePanel.getTextPane() != null && consolePanel.getTextPane().getHtmlDoc().getLength() > 50000){
+			consolePanel.getTextPane().clear();
 		}
 	}
 	
