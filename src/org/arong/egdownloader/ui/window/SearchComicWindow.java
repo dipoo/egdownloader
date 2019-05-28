@@ -37,6 +37,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -528,7 +529,7 @@ public class SearchComicWindow extends JFrame {
 	}
 	
 	public void setTotalInfo(String totalPage, String totalTasks, long spend){
-		totalLabel.setText(String.format("<html>%s共搜索到 <b>%s</b> 页，总计 <b>%s</b> 本漫画，耗时 <b>%s</b> 秒</html>", (cache ? HtmlUtils.redColorHtml("[缓存]") : ""), HtmlUtils.greenColorHtml(totalPage), HtmlUtils.greenColorHtml(totalTasks == null ? "1" : totalTasks), HtmlUtils.greenColorHtml(String.format("%.2f", (spend / 1000f)))));
+		totalLabel.setText(String.format("<html>%s共搜索到 <b>%s</b> 页，总计 <b>%s</b> 本漫画，耗时 <b>%s</b> 秒</html>", (cache ? HtmlUtils.redColorHtml("[缓存]") : ""), HtmlUtils.greenColorHtml(totalPage), HtmlUtils.greenColorHtml(StringUtils.isBlank(totalTasks) ? "1" : totalTasks), HtmlUtils.greenColorHtml(String.format("%.2f", (spend / 1000f)))));
 	}
 	
 	public SearchImagePanel[] picLabels = new SearchImagePanel[25];

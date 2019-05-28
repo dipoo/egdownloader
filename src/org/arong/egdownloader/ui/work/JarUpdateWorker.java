@@ -31,10 +31,11 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 		String jarName = "egdownloader.jar";
 		InputStream is = null;
 		System.out.println("开始下载jar文件...");
+		String bakPath = binPath + File.separator + "bak" + File.separator + Version.JARVERSION + File.separator;
+		File oldjar = null;
 		try {
 			//检测是否为支持jar更新的类型
-			
-			File oldjar = new File(binPath + File.separator + "jre" + File.separator
+			oldjar = new File(binPath + File.separator + "jre" + File.separator
 					+ "lib" + File.separator + "ext" + File.separator + jarName);
 			if(!oldjar.exists()){
 				JOptionPane.showMessageDialog(null, "当前模式不支持jar文件更新");
@@ -46,12 +47,13 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 			is = (InputStream) o[0];
 			int totalLength = (Integer) o[1];
 			System.out.println("jar文件大小：" + FileUtil2.showSizeStr((long)totalLength));
+			
 			if(is == null){
 				JOptionPane.showMessageDialog(null, "jar文件更新失败");
 			}else{
 				//备份
-				String bakPath = binPath + File.separator + "bak" + File.separator + Version.JARVERSION + File.separator;
 				FileUtil2.ifNotExistsThenCreate(bakPath);
+				System.out.println(String.format("备份文件%s至%s", oldjar.getPath(), bakPath + jarName));
 				org.arong.utils.FileUtil.copyFile(oldjar.getPath(), bakPath + jarName);
 				//保存
 				int fsize = FileUtil2.storeStream(oldjar.getParent(), jarName, is);
@@ -63,6 +65,9 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 			}
 		}catch(Exception e1) {
 			JOptionPane.showMessageDialog(null, "jar文件更新失败，" + e1.getMessage());
+			//还原
+			System.out.println(String.format("还原文件%s至%s", bakPath + jarName, oldjar.getPath()));
+			org.arong.utils.FileUtil.copyFile(bakPath + jarName, oldjar.getPath());
 			e1.printStackTrace();
 		}finally{
 			if(is != null){
