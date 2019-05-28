@@ -30,7 +30,7 @@ public class ConsolePanel extends JScrollPane {
 		this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.setBorder(null);
 		this.setAutoscrolls(false);
-		textPane = new AJTextPane();
+		textPane = new AJTextPane(true);
 		textPane.setBorder(null);
 		textPane.setEditable(false);
 		textPane.setAutoscrolls(true);
@@ -64,9 +64,10 @@ public class ConsolePanel extends JScrollPane {
 	public AJTextPane getTextPane() {
 		return textPane;
 	}
+
 	public void showLog(String msg) {
 		try{
-			textPane.appendBHtml(HtmlUtils.filterEmoji2SegoeUISymbolFont(msg));
+			textPane.appendBHtml("<b style=\"font-size:9px;font-family:微软雅黑\">" + HtmlUtils.filterEmoji2SegoeUISymbolFont(msg) + "</b>");
 		}catch(Exception e){
 			e.printStackTrace();
 		}

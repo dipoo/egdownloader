@@ -133,6 +133,7 @@ public class EditWindow extends JDialog {
 		tagField.setText(task.getTag());
 		startField.setText(task.getStart() + "");
 		endField.setText(task.getEnd() + "");
+		originalCheckBox.setSelected(task.isOriginal());
 	}
 	public Task getTask() {
 		return task;

@@ -72,7 +72,7 @@ public class SwingPrintStream extends PrintStream {
 		filter(consolePanel);
 		String message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			final String line = new StringBuffer().append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b>").toString();
+			final String line = new StringBuffer().append("<font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).toString();
 			try {
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run() { 

@@ -105,7 +105,7 @@ public class HtmlUtils {
 		"\\\\ud83d\\\\udc59", "\\\\ud83d\\\\udc58", "\\\\ud83d\\\\udca9",
 		"\\\\u270f\\\\ufe0f", "\\\\ud83d\\\\udc6a", "\\\\ud83c\\\\udf20", "\\\\ud83d\\\\udcd6",
 		"\\\\ud83d\\\\udd2a", "\\\\ud83c\\\\udfc0", "\\\\ud83c\\\\udfae", "\\\\ud83c\\\\udf74",
-		"\\\\u26a2"/*, , "\\\\u26e9", "\\\\ufe0f"*/};
+		"\\\\u26a2", "\\\\u26a3", "\\\\u26a4"/*, , "\\\\u26e9", "\\\\ufe0f"*/, "\\\\u9891"};
 	// "\u270f"✏, "\u2744"❄, "\u2200"∀, "\u2764"❤, "\u2642"♂ 默认支持
 	public static final String[] UNPARSE_FILTER_CHARS = {"\\\\u26e9", "\\\\ufe0f", "\\\\ud83e\\\\udd36", "\ud83e\udd21"};//无法解析的字符，替换为空
 	public final static Pattern EMOJI_PATTERN = Pattern.compile("[\\ud800\\udc00-\\udbff\\udfff\\ud800-\\udfff]");
