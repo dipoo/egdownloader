@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
 import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
@@ -26,7 +25,6 @@ public class ConsolePanel extends JScrollPane {
 	private AJTextPane textPane;
 	public JPopupMenu consolePopupMenu;
 	public boolean locked;//是否锁屏
-	public StringBuffer realtext = new StringBuffer();
 	
 	public ConsolePanel(final EgDownloaderWindow mainWindow) {
 		this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -65,13 +63,6 @@ public class ConsolePanel extends JScrollPane {
 	}
 	public AJTextPane getTextPane() {
 		return textPane;
-	}
-	public void showLog() {
-		try{
-			textPane.setText("<html><body style=\"font-size:9px;font-family:微软雅黑\">" + HtmlUtils.filterEmoji2SegoeUISymbolFont(realtext.toString()) + "</body></html>");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	public void showLog(String msg) {
 		try{

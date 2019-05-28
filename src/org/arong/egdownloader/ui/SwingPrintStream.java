@@ -68,27 +68,28 @@ public class SwingPrintStream extends PrintStream {
 	}
 
 	// 重写write方法，这是什么模式？装饰？代理？
-	String message = null, line = null;
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
-		message = new String(buf, off, len);
+		String message = new String(buf, off, len);
 		if(StringUtil.notBlank(message)){
-			line = new StringBuffer().append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b>").toString();
-			//consolePanel.realtext.append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b><br/>");
+			final String line = new StringBuffer().append("<b><font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).append("</b>").toString();
 			try {
 				SwingUtilities.invokeLater(new Runnable(){
 					public void run() { 
+						int caretPosition = consolePanel.getTextPane().getCaretPosition();
 						consolePanel.showLog(line);
 						if(! consolePanel.locked){
 							// 让光标置于最下方
 							consolePanel.paintImmediately(consolePanel.getBounds());
 							consolePanel.getTextPane().setCaretPosition(consolePanel.getTextPane().getStyledDocument().getLength()); 
 							consolePanel.updateUI();
+						}else{
+							consolePanel.getTextPane().setCaretPosition(caretPosition);
 						}
 					}
 				});
 				//写日志
-				logfw.append(sdf.format(new Date()) + " " + HtmlUtils.Html2Text(message) + "\n");
+				logfw.append(sdf.format(new Date())).append(" ").append(HtmlUtils.Html2Text(message)).append("\n");
 				logfw.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -101,14 +102,6 @@ public class SwingPrintStream extends PrintStream {
 	 * @param consolePanel
 	 */
 	private void filter(ConsolePanel consolePanel){
-		/*try{
-			if(consolePanel.getTextPane() != null && HtmlUtils.Html2Text(consolePanel.getTextPane().getText()).length() > 50000){
-				consolePanel.realtext.replace(0, consolePanel.realtext.length(), "");
-				consolePanel.showLog();
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
 		if(consolePanel.getTextPane() != null && consolePanel.getTextPane().getHtmlDoc().getLength() > 50000){
 			consolePanel.getTextPane().clear();
 		}

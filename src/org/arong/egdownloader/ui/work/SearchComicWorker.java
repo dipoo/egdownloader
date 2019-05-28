@@ -31,8 +31,8 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
+		long t = System.currentTimeMillis();
 		try {
-			long t = System.currentTimeMillis();
 			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo(), 10 * 1000);
 			if(source == null){
 				Tracker.println(this.getClass(), this.url + ":搜索出错");
@@ -57,7 +57,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				}
 				String totalTasks = result[0].split(",")[0];
 				//总页数
-				String totalPage = result[0].split(",")[1];//Spider.getTextFromSource(source, "+Math.min(", ", Math.max(");
+				String totalPage = result[0].split(",")[1];
 				
 				searchComicWindow.setTotalInfo(totalPage, totalTasks, System.currentTimeMillis() - t);
 				searchComicWindow.searchTasks = searchTasks;
@@ -78,13 +78,13 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				}
 				
 			}else{
-				searchComicWindow.totalLabel.setText("搜索不到相关内容");
+				searchComicWindow.totalLabel.setText(HtmlUtils.redColorHtml("搜索不到相关内容"));
 				searchComicWindow.hideLoading();
 				return null;
 			}
 		}catch (Exception e) {
 			searchComicWindow.key = " ";
-			searchComicWindow.totalLabel.setText(e.getMessage());
+			searchComicWindow.totalLabel.setText(HtmlUtils.redColorHtml(String.format("%s,耗时：%s", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
 			e.printStackTrace();
 		} finally{
 			searchComicWindow.hideLoading();

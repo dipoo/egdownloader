@@ -150,7 +150,7 @@ public class EgDownloaderWindow extends JFrame {
 				//当前一秒内的流量
 				Long length = FileUtil2.byteLength - FileUtil2.oldByteLength;
 				//显示到标题栏
-				mainWindow.setTitle(mainWindow.wtitle + " (" + FileUtil2.showSizeStr(length) + "/S)");
+				mainWindow.setTitle(String.format("%s (%s/S)", mainWindow.wtitle, FileUtil2.showSizeStr(length)));
 				if(FileUtil2.byteLength > 999900000){
 					FileUtil2.byteLength = 0L;
 					FileUtil2.oldByteLength = 0L;
@@ -177,7 +177,7 @@ public class EgDownloaderWindow extends JFrame {
 		//加载任务列表
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
 		// 设置主窗口
-		this.wtitle = Version.NAME + "v" + Version.VERSION + "." + Version.JARVERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
+		this.wtitle = String.format("%sv%s.%s / %s", Version.NAME, Version.VERSION, Version.JARVERSION, "".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
 		this.setTitle(this.wtitle);
 		
 		this.setIconImage(IconManager.getIcon("download").getImage());
@@ -603,7 +603,7 @@ public class EgDownloaderWindow extends JFrame {
 	protected void processWindowEvent(WindowEvent e) {
 		//关闭，询问
 		if(e.getID() == WindowEvent.WINDOW_CLOSING){
-			int r = JOptionPane.showConfirmDialog(this, "您确定要关闭" + Version.NAME + "吗？", "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			int r = JOptionPane.showConfirmDialog(this, String.format("您确定要关闭%s吗？", Version.NAME), "提示", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if(r == JOptionPane.OK_OPTION){
 				//保存数据
 				this.saveTaskGroupData();
@@ -619,7 +619,7 @@ public class EgDownloaderWindow extends JFrame {
 					minTips.setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 80);
 					minTips.setLayout(new FlowLayout());
 					minTips.getContentPane().setBackground(Color.BLACK);
-					JLabel tips = new AJLabel(Version.NAME + "已最小化到托盘", Color.WHITE);
+					JLabel tips = new AJLabel(String.format("%s已最小化到托盘", Version.NAME), Color.WHITE);
 					tips.setToolTipText("点击完毕");
 					tips.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent e) {
@@ -666,7 +666,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.tasks.clear();
 		//加载任务列表
 		this.tasks = tasks == null ? new TaskList<Task>() : tasks;
-		this.wtitle = Version.NAME + "v" + Version.VERSION + " / " + ("".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
+		this.wtitle = String.format("%sv%s.%s / %s", Version.NAME, Version.VERSION, Version.JARVERSION, "".equals(ComponentConst.groupName) ? "默认空间" : ComponentConst.groupName);
 		// 设置主窗口
 		this.setTitle(wtitle);
 		if(this.tasks.isEmpty()){
@@ -677,8 +677,7 @@ public class EgDownloaderWindow extends JFrame {
 			this.emptyPanel.setVisible(false);
 			this.runningTable.changeModel(this);
 		}
-		this.consolePanel.realtext = new StringBuffer();
-		this.consolePanel.showLog();
+		this.consolePanel.getTextPane().clear();
 		//开启网络下载速度监听
 		netSpeedtimer.cancel();
 		setupNetSpeedtimer(this);
