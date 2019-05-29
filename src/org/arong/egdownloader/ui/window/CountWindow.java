@@ -6,7 +6,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JDialog;
 import javax.swing.JTextPane;
@@ -18,6 +20,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
+import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.util.FileUtil2;
 /**
@@ -33,7 +36,7 @@ public class CountWindow extends JDialog {
 	public CountWindow(EgDownloaderWindow window){
 		this.window = window;
 		// 设置主窗口
-		this.setSize(700, 250);
+		this.setSize(700, 300);
 		this.setIconImage(IconManager.getIcon("count").getImage());
 		this.setTitle("统计");
 		this.setVisible(true);
@@ -86,6 +89,7 @@ public class CountWindow extends JDialog {
 		String lastDownloadTime = setting.getLastDownloadTime();
 		long totalSize = 0;
 		long downSize = 0;
+		Map<String, Integer> tagMap = new HashMap<String, Integer>();
 		for(Task task : tasks){
 			if(task.getStatus() == TaskStatus.COMPLETED){
 				t_complete ++;
@@ -100,6 +104,12 @@ public class CountWindow extends JDialog {
 					}
 				}
 			}
+			if(StringUtils.isNotBlank(task.getTags())){
+				String[] arr = task.getTags().split(";");
+				for(String tag : arr){
+					tagMap.put(tag, 0);
+				}
+			}
 		}
 		t_uncomplete = t_count - t_complete;
 		p_uncomplete = p_count - p_complete;
@@ -107,8 +117,10 @@ public class CountWindow extends JDialog {
 		p_completionRate = new BigDecimal(Double.parseDouble(p_complete + "") * 100 / Double.parseDouble(p_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		
 		String s = String.format(ComponentConst.countHtml, t_count, t_historyCount, t_complete, t_uncomplete, p_count, 
-				p_historyCount, p_complete, p_uncomplete,t_completionRate, p_completionRate, lastCreateTime == null ? "" : lastCreateTime,
-				lastDownloadTime == null ? "" : lastDownloadTime, FileUtil2.showSizeStr(totalSize), FileUtil2.showSizeStr(downSize));
+				p_historyCount, p_complete, p_uncomplete,t_completionRate, p_completionRate, FileUtil2.showSizeStr(totalSize), FileUtil2.showSizeStr(downSize),
+				TaskTagsPanel.tagscnMap == null ? 0 : TaskTagsPanel.tagscnMap.size(), tagMap.size(),
+				lastCreateTime == null ? "" : lastCreateTime, lastDownloadTime == null ? "" : lastDownloadTime);
+		tagMap = null;
 		return s;
 	}
 	
