@@ -84,7 +84,6 @@ public class SearchImagePanel extends JLabel {
 					}else{
 						mainWindow.searchComicWindow.popMenu.openBtPageItem.setVisible(false);
 					}
-					mainWindow.searchComicWindow.popMenu.showTagsItem.setVisible(true);
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
 						mainWindow.searchComicWindow.searchDetailInfoWindow.setVisible(false);
 					}

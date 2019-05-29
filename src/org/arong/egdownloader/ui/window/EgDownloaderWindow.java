@@ -122,6 +122,7 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog resetAllTaskWindow;
 	public JDialog simpleSearchWindow;
 	public JDialog countWindow;
+	public AllTagsWindow allTagsWindow;
 	public SearchComicWindow searchComicWindow;
 	
 	public MainPopupMenu tablePopupMenu;

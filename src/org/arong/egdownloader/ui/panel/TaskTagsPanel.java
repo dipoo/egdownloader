@@ -41,12 +41,12 @@ import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJTextPane;
+import org.arong.egdownloader.ui.window.AllTagsWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.DateUtil;
-import org.arong.util.EmojiFilter;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
 
@@ -89,7 +89,7 @@ public class TaskTagsPanel extends JScrollPane {
 				    arr = line.split("\\|");
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
-				    			&& StringUtils.isNotBlank(arr[2].trim())){
+				    			&& StringUtils.isNotBlank(arr[2].trim()) && !arr[1].trim().contains("--------") && !arr[1].trim().contains("英文原名")){
 				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , /*EmojiFilter.filterEmoji(*/(arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()));
 				    	}
 				    }
@@ -116,8 +116,8 @@ public class TaskTagsPanel extends JScrollPane {
 										arr = line.split("\\|");
 									    if(arr.length > 3){
 									    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
-									    			&& StringUtils.isNotBlank(arr[2].trim()) && StringUtils.isNotBlank(arr[3].trim())){
-									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , EmojiFilter.filterEmoji((arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim())));
+									    			&& StringUtils.isNotBlank(arr[2].trim()) && !arr[0].trim().contains("--------") && !arr[0].trim().contains("英文原名")){
+									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()));
 									    	}
 									    }
 									}
@@ -206,6 +206,11 @@ public class TaskTagsPanel extends JScrollPane {
 					}else if("fav".equals(e.getDescription())){
 						showMyFav = true;
 						parseTaskAttribute(currentTags, true);
+					}else if("showAllTagsWindow".equals(e.getDescription())){
+						if(mainWindow.allTagsWindow == null){
+							mainWindow.allTagsWindow = new AllTagsWindow(mainWindow);
+						}
+						mainWindow.allTagsWindow.setVisible(true);
 					}else if("uploadedby".equals(e.getDescription())){
 						//搜索上传者
 						if(searchTask != null && StringUtils.isNotBlank(searchTask.getUploader())){
@@ -310,7 +315,6 @@ public class TaskTagsPanel extends JScrollPane {
 		if(StringUtils.isBlank(tag)){
 			selectedPanel.removeAll();
 		}else{
-			
 			Component[] comps = selectedPanel.getComponents();
 			boolean contains = false;
 			if(comps.length > 0){
@@ -446,6 +450,7 @@ public class TaskTagsPanel extends JScrollPane {
 			if(!showMyFav){
 				sb.append("<a href='fav' style='text-decoration:none;color:red'><b>[&nbsp;我的收藏&nbsp;]</b>&nbsp;</a>");
 			}
+			sb.append("<a href='showAllTagsWindow' style='text-decoration:none;color:blue'><b>[&nbsp;所有标签&nbsp;]&nbsp;</b></a>");
 			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='text-decoration:none;color:blue'><b>[&nbsp;" + (trans ? "原文" : "翻译") + "&nbsp;]&nbsp;</b></a>" + (trans ? "--<font style='color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx

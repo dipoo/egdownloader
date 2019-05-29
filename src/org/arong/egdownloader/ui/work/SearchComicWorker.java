@@ -84,7 +84,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			}
 		}catch (Exception e) {
 			searchComicWindow.key = " ";
-			searchComicWindow.totalLabel.setText(HtmlUtils.redColorLabelHtml(String.format("%s,耗时：%s", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
+			searchComicWindow.totalLabel.setText(HtmlUtils.redColorLabelHtml(String.format("%s,耗时：<b>%s</b>秒", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
 			e.printStackTrace();
 		} finally{
 			searchComicWindow.hideLoading();

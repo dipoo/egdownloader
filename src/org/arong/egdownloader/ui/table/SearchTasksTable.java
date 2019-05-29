@@ -221,7 +221,6 @@ public class SearchTasksTable extends JTable {
 					}else{
 						comicWindow.popMenu.openBtPageItem.setVisible(false);
 					}
-					comicWindow.popMenu.showTagsItem.setVisible(true);
 					if(comicWindow.searchDetailInfoWindow != null){
 						comicWindow.searchDetailInfoWindow.setVisible(false);
 					}

@@ -32,7 +32,6 @@ public class SearchWindowPopMenu extends JPopupMenu {
 	public JMenuItem openPictureItem;
 	public JMenuItem downItem;
 	public JMenuItem openBtPageItem;
-	public JMenuItem showTagsItem;
 	public SearchWindowPopMenu(EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		downItem = new AJMenuItem("创建任务", Color.BLACK,
