@@ -78,13 +78,13 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				}
 				
 			}else{
-				searchComicWindow.totalLabel.setText(HtmlUtils.redColorHtml("搜索不到相关内容"));
+				searchComicWindow.totalLabel.setText(HtmlUtils.redColorLabelHtml("搜索不到相关内容"));
 				searchComicWindow.hideLoading();
 				return null;
 			}
 		}catch (Exception e) {
 			searchComicWindow.key = " ";
-			searchComicWindow.totalLabel.setText(HtmlUtils.redColorHtml(String.format("%s,耗时：%s", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
+			searchComicWindow.totalLabel.setText(HtmlUtils.redColorLabelHtml(String.format("%s,耗时：%s", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
 			e.printStackTrace();
 		} finally{
 			searchComicWindow.hideLoading();

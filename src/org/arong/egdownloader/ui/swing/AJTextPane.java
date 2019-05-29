@@ -87,6 +87,17 @@ public class AJTextPane extends JTextPane {
 			this.setText(this.getText() + html);
 		}
 	}
+	public void appendDivHtml(String html){
+		if(htmlEditorKit != null && htmlDoc != null){
+			try {
+				htmlEditorKit.insertHTML(htmlDoc, htmlDoc.getLength(), html, 0, 0, HTML.Tag.DIV);
+			}catch (Exception e) {
+				this.setText(this.getText() + "======exception:" + e.getMessage());
+			}
+		}else{
+			this.setText(this.getText() + html);
+		}
+	}
 	public void clear(){
 		if(htmlEditorKit != null && htmlDoc != null){
 			try {

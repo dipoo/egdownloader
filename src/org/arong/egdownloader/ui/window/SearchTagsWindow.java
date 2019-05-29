@@ -22,6 +22,7 @@ public class SearchTagsWindow extends JDialog {
 	
 	public void updateTaskTags(SearchTask task){
 		this.setTitle("标签组-" + task.getName());
+		taskTagsPanel.showMyFav = false;
 		taskTagsPanel.parseTaskAttribute(task.getTags(), searchComicWindow.mainWindow.setting.isTagsTranslate());
 	}
 	

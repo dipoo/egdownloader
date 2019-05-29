@@ -44,6 +44,7 @@ public class SearchImagePanel extends JLabel {
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){
 					SearchTask task = mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1);
+					
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
 						mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
 					}
@@ -102,9 +103,13 @@ public class SearchImagePanel extends JLabel {
 
 			public void mouseExited(MouseEvent e) {
 				JLabel l = (JLabel) e.getSource();
-				l.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 				l.setCursor(Cursor.getDefaultCursor());
-				
+				SearchTask task = mainWindow.searchComicWindow.searchTasks.get(Integer.parseInt(l.getName()) - 1);
+				if(task.isFavAuthorOrGroup(mainWindow.setting.getFavTags())){
+					l.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+				}else{
+					l.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+				}
 			}
 
 			public void mouseMoved(MouseEvent e) {
@@ -133,6 +138,10 @@ public class SearchImagePanel extends JLabel {
 		this.setText(genText(task));
 		tips = task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : "");
 		this.setToolTipText(tips);
+		
+		if(task.isFavAuthorOrGroup(mainWindow.setting.getFavTags())){
+			this.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+		}
 		
 		final SearchImagePanel this_ = this;
 		

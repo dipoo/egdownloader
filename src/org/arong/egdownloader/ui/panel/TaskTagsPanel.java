@@ -403,7 +403,6 @@ public class TaskTagsPanel extends JScrollPane {
 		});
 	}
 	public void showTagGroup(Task t){
-		//System.out.println("哈哈");
 		showMyFav = false;
 		searchTags = false;
 		setViewportView(textPane);
@@ -430,11 +429,16 @@ public class TaskTagsPanel extends JScrollPane {
 		}else{
 			currentTags = tags;
 		}
+		//textPane.clear();
 		textPane.setText("");
 		if(StringUtils.isNotBlank(tags)){
-			StringBuffer sb = new StringBuffer("<div style='font-family:微软雅黑;font-size:9px;margin-left:5px;'>");
+			StringBuilder sb = new StringBuilder("<div style='font-family:微软雅黑;font-size:10px;padding:2px 5px;'>");
 			if(searchTask != null){
-				sb.append(String.format("<b>名称：%s[uploaded by <a href='uploadedby' style='text-decoration:none;color:blue'>%s</a></b>]<br>", searchTask.getName(), searchTask.getUploader()));
+				sb.append(String.format("<b style='font-size:11px;color:#666'>%s</b><br>", searchTask.getName(), searchTask.getUploader()));
+				sb.append(String.format("<span>发布时间：<b style='color:orange'>%s</b>&nbsp;&nbsp;/&nbsp;&nbsp;图片数：<b style='color:orange'>%s</b>&nbsp;&nbsp;/&nbsp;&nbsp;评分：<b style='color:orange'>%s</b><br>上传者：<a href='uploadedby' style='text-decoration:none;'>%s</a>&nbsp;&nbsp;/&nbsp;&nbsp;BT：%s</span>", 
+						searchTask.getDate(), searchTask.getFilenum(), searchTask.getRating(), searchTask.getUploader(), 
+						StringUtils.isNotBlank(searchTask.getBtUrl()) ? String.format("<a href='%s' style='text-decoration:none;'>前往下载</a>", searchTask.getBtUrl()) : "无"));
+				sb.append(String.format("<hr>"));
 			}
 			if(!showMyFav && !searchTags){
 				sb.append("<a href='refresh' style='text-decoration:none;color:blue'><b>[&nbsp;同步&nbsp;]&nbsp;</b></a>");
@@ -484,6 +488,7 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 			sb.append("</div>");
+			//textPane.appendDivHtml(HtmlUtils.filterEmoji2SegoeUISymbolFont(sb.toString()));
 			textPane.setText(HtmlUtils.filterEmoji2SegoeUISymbolFont(sb.toString()));
 		}else{
 			if(!showMyFav && !searchTags){
@@ -500,7 +505,7 @@ public class TaskTagsPanel extends JScrollPane {
 	}
 	
 	private String parseFav(String group, String tag, String ftag){
-		if(StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + group + ":" + tag)){
+		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(MISC) ? "" : group + ":") + tag)){
 			return "<font color='red'>" + ftag + "</font>";
 		}
 		return ftag;

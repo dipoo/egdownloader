@@ -83,6 +83,12 @@ public class HtmlUtils {
 		}
 		return null;
 	}
+	public static String redColorLabelHtml(String msg){
+		if(StringUtils.isNotBlank(msg)){
+			return String.format("<html><font style='color:red'>%s</font></html>", msg);
+		}
+		return null;
+	}
 	public static String greenColorHtml(String msg){
 		if(StringUtils.isNotBlank(msg)){
 			return String.format("<font style='color:green'>%s</font>", msg);

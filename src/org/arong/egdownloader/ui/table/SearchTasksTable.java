@@ -103,7 +103,7 @@ public class SearchTasksTable extends JTable {
 					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel("<html>" + (contains ? HtmlUtils.redColorHtml("[已存在]") : "") + value.toString() + "</html>", c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel(String.format("<html>%s%s%s</html>", (contains ? HtmlUtils.redColorHtml("[已存在]") : ""), (task.isFavAuthorOrGroup(comicWindow.mainWindow.setting.getFavTags()) ? "[<font color=red>★</font>]" : ""), value.toString()), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));
@@ -120,7 +120,7 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 3){//评分
 					tc.setPreferredWidth(80);
 					tc.setMaxWidth(120);
-					return new AJLabel("<html>&nbsp;&nbsp;&nbsp;&nbsp;" + value.toString() + "★</html>", c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
+					return new AJLabel(String.format("<html>&nbsp;&nbsp;&nbsp;&nbsp;%s★</html>", value.toString()), c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
 				}else if(column == 4){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);

@@ -1,5 +1,6 @@
 package org.arong.egdownloader.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.ComponentConst;
 
 /**
@@ -142,6 +143,63 @@ public class SearchTask {
 
 	public void setCoverLength(int coverLength) {
 		this.coverLength = coverLength;
+	}
+	
+	public boolean isFavAuthorOrGroup(String favTags){
+		//获取团队/作者
+		if(StringUtils.isNotBlank(favTags)){
+			if(StringUtils.isNotBlank(this.getTags())){
+				if(this.getTags().contains("artist:")){
+					String[] arr = this.getTags().split(";");
+					for(String tag : arr){
+						if(tag.startsWith("artist:")){
+							if(favTags.contains(String.format("%s;", tag))){
+								return true;
+							}
+						}
+					}
+				}
+				if(this.getTags().contains("group:")){
+					String[] arr = this.getTags().split(";");
+					for(String tag : arr){
+						if(tag.startsWith("group:")){
+							if(favTags.contains(String.format("%s;", tag))){
+								return true;
+							}
+						}
+					}
+				}
+			}
+			if(StringUtils.isNotBlank(this.getAuthor())){
+				//包含作者及团队
+				if(this.getAuthor().contains("(") && this.getAuthor().contains(")") && this.getAuthor().indexOf("(") < this.getAuthor().indexOf(")")){
+					String authors = this.getAuthor().substring(this.getAuthor().indexOf("(") + 1, this.getAuthor().indexOf(")"));
+					//多个作者以逗号分隔
+					String[] arr = authors.split(",");
+					for(String author : arr){
+						if(favTags.contains(String.format("artist:%s;", author.toLowerCase()))){
+							return true;
+						}
+					}
+					String groups = this.getAuthor().substring(0, this.getAuthor().indexOf("("));
+					arr =  groups.split(",");
+					for(String group : arr){
+						if(favTags.contains(String.format("group:%s;", group.toLowerCase()))){
+							return true;
+						}
+					}
+				}else{
+					//多个作者以逗号分隔
+					String[] arr = this.getAuthor().split(",");
+					for(String author : arr){
+						if(favTags.contains(String.format(";artist:%s;", author.toLowerCase()))){
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 }
