@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -312,10 +313,10 @@ public class Task {
 	}
 
 	public List<Picture> getPictures() {
-		if(pictures == null){
+		if(pictures == null && pictureSqliteDbTemplate != null){
 			pictures = pictureSqliteDbTemplate.query("tid", this.getId());
 		}
-		return pictures;
+		return pictures == null ? new ArrayList<Picture>() : pictures;
 	}
 
 	public void setPictures(List<Picture> pictures) {

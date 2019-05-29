@@ -22,7 +22,6 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.window.SearchTagsWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
@@ -116,7 +115,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						}
 					}
 				}));
-		showTagsItem = new AJMenuItem("显示标签组", Color.BLACK, "",
+		/*showTagsItem = new AJMenuItem("显示标签组", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -128,7 +127,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						mainWindow.searchComicWindow.searchTagsWindow.setVisible(true);
 						mainWindow.searchComicWindow.searchTagsWindow.toFront();
 					}
-				}));
+				}));*/
 		JMenuItem searchAuthorItem = new AJMenuItem("搜索作者", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
@@ -173,7 +172,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		this.add(openPictureItem);
 		this.add(openPageItem);
 		this.add(openBtPageItem);
-		this.add(showTagsItem);
+		/*this.add(showTagsItem);*/
 		this.add(searchAuthorItem);
 		this.add(searchLocalAuthorItem);
 		this.add(clearCoverItem);

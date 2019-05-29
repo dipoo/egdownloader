@@ -383,12 +383,12 @@ public class TaskingTable extends JTable {
 		if(this.getRunningNum() >= this.mainWindow.setting.getMaxThread()){
 			this.addWaitingTask(task);
 		}else{
-			task.setStatus(TaskStatus.STARTED);
 			//如果是未采集，则先开启采集
-			if(task.getPictures() == null || task.getPictures().size() == 0){
+			if(task.getStatus() == TaskStatus.UNCREATED || (task.getPictures() == null || task.getPictures().size() == 0)){
 				task.setReCreateWorker(new ReCreateWorker(task, this.getMainWindow()));
 				task.getReCreateWorker().execute();
 			}else{
+				task.setStatus(TaskStatus.STARTED);
 				task.setDownloadWorker(new DownloadWorker(task, this.getMainWindow()));
 				task.getDownloadWorker().execute();
 				this.setRunningNum(this.getRunningNum() + 1);

@@ -66,11 +66,11 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 				window.setVisible(true);
 				//下载
 				TaskingTable table = (TaskingTable)window.runningTable;
+				task.setStatus(TaskStatus.UNSTARTED);
 				table.startTask(task);
 			}else{
 				window.creatingWindow.dispose();
 				JOptionPane.showMessageDialog(null, "重建任务异常");
-				window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
 				//开始任务等待列表中的第一个任务
 				window.runningTable.startWaitingTask();
 				task.setStatus(TaskStatus.UNCREATED);
@@ -79,7 +79,6 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, "读取文件超时，请检查网络后重试");
-			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
 			task.setStatus(TaskStatus.UNCREATED);
 			//开始任务等待列表中的第一个任务
 			window.runningTable.startWaitingTask();
@@ -87,7 +86,6 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, "连接超时，请检查网络后重试");
-			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
 			task.setStatus(TaskStatus.UNCREATED);
 			//开始任务等待列表中的第一个任务
 			window.runningTable.startWaitingTask();
@@ -95,7 +93,6 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, e.getMessage());
-			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
 			task.setStatus(TaskStatus.UNCREATED);
 			//开始任务等待列表中的第一个任务
 			window.runningTable.startWaitingTask();
@@ -103,7 +100,6 @@ public class ReCreateWorker extends SwingWorker<Void, Void>{
 			((CreatingWindow)(window.creatingWindow)).reset();
 			window.creatingWindow.dispose();
 			JOptionPane.showMessageDialog(null, e.getMessage());
-			window.runningTable.setRunningNum(window.runningTable.getRunningNum() - 1);//当前运行的任务数-1
 			task.setStatus(TaskStatus.UNCREATED);
 			//开始任务等待列表中的第一个任务
 			window.runningTable.startWaitingTask();
