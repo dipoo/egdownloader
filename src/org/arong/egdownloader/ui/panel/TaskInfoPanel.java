@@ -66,7 +66,7 @@ public class TaskInfoPanel extends JScrollPane {
 	}
 	
 	public void parseTask(Task t, int index){
-		textPane.setText("");
+		textPane.setText("<b>加载中...</b>");
 		try{
 			if(t != null){
 				this.t = t;
@@ -76,8 +76,34 @@ public class TaskInfoPanel extends JScrollPane {
 						size += pic.getSize();
 					}
 				}
-				
-				String text = ComponentConst.taskinfoHtml
+				String infoHtml = String.format(ComponentConst.taskinfoHtml, 
+						t.getName(), 
+						t.getSubname() == null ? "" : t.getSubname(),
+						String.format("<a href='%s'>%s</a>", t.getUrl(), (t.getUrl() == null ? "" : t.getUrl())),
+						String.format("<a href='%s'>%s</a>", t.getCoverUrl(), (t.getCoverUrl() == null ? "" : t.getCoverUrl())),
+						t.getLanguage() == null ? "" : t.getLanguage(), 
+						t.getTotal(), 
+						t.getSize(), 
+						t.getType() == null ? "" : t.getType(),
+						t.getUploader() == null ? "" : URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8"),
+						t.getPostedTime() == null ? "" : t.getPostedTime(), 
+						renderStatus(t.getStatus()),
+						t.getCurrent() + "",
+						FileUtil2.showSizeStr(size), 
+						t.getCurrent() == 0 ? "0B" : FileUtil2.showSizeStr(size / t.getCurrent()), 
+						getSchedule(t.getCurrent(), t.getTotal()), 
+						t.getCreateTime() == null ? "" : t.getCreateTime(), 
+						t.getShowSyncTime(), 
+						t.getCompletedTime() == null ? "" : t.getCompletedTime(), 
+						t.getStart(), 
+						t.getEnd(), 
+						t.isReaded() ? "是" : "否", 
+						t.isOriginal() ? "是" : "否", 
+						t.isSaveDirAsSubname() ? "是" : "否", 
+						StringUtils.isBlank(t.getTag()) ? "一般" : t.getTag(), 
+						StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname(), 
+						t.getSaveDir());
+				/*String text = ComponentConst.taskinfoHtml
 						.replace("@t_name", t.getName())
 						.replace("@t_subname", t.getSubname() == null ? "" : t.getSubname())
 						.replace("@t_url", "<a href='" + t.getUrl() + "'>" + (t.getUrl() == null ? "" : t.getUrl()) + "</a>")
@@ -103,13 +129,12 @@ public class TaskInfoPanel extends JScrollPane {
 						.replace("@t_saveDirAsSubname", t.isSaveDirAsSubname() ? "是" : "否")
 						.replace("@t_tag", StringUtils.isBlank(t.getTag()) ? "一般" : t.getTag())
 						.replace("@t_groupname", StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname())
-						.replace("@t_saveDir", t.getSaveDir());
-				textPane.setText(text);
-				/*JScrollBar jScrollBar = this.getVerticalScrollBar();
-				jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
-*/			}
+						.replace("@t_saveDir", t.getSaveDir());*/
+				textPane.setText(infoHtml);
+			}
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
+			textPane.setText(e1.getMessage());
 		}
 	}
 	

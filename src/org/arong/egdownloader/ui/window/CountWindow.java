@@ -11,12 +11,15 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JTextPane;
 
+import org.apache.commons.lang.StringUtils;
+import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
+import org.arong.util.FileUtil2;
 /**
  * 任务统计面板
  * @author dipoo
@@ -52,11 +55,13 @@ public class CountWindow extends JDialog {
 			}
 		});
 
-		htmlPanel = new AJTextPane(transferHtml(), Color.BLUE);
+		htmlPanel = new AJTextPane("", Color.BLUE);
 		this.getContentPane().add(htmlPanel);
+		showCountPanel();
 	}
 	
 	public void showCountPanel(){
+		htmlPanel.setText("<br><br><center>统计中...</center>");
 		htmlPanel.setText(transferHtml());
 		this.setVisible(true);
 	}
@@ -79,31 +84,47 @@ public class CountWindow extends JDialog {
 		double p_completionRate = 0.0;
 		String lastCreateTime = setting.getLastCreateTime();
 		String lastDownloadTime = setting.getLastDownloadTime();
+		long totalSize = 0;
+		long downSize = 0;
 		for(Task task : tasks){
 			if(task.getStatus() == TaskStatus.COMPLETED){
 				t_complete ++;
 			}
 			p_count += task.getTotal();
 			p_complete += task.getCurrent();
+			totalSize += parseLongSize(task.getSize());
+			if(task.getPictures() != null){
+				for(Picture pic : task.getPictures()){
+					if(pic.isCompleted()){
+						downSize += pic.getSize();
+					}
+				}
+			}
 		}
 		t_uncomplete = t_count - t_complete;
 		p_uncomplete = p_count - p_complete;
 		t_completionRate = new BigDecimal(Double.parseDouble(t_complete + "") * 100 / Double.parseDouble(t_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		p_completionRate = new BigDecimal(Double.parseDouble(p_complete + "") * 100 / Double.parseDouble(p_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		
-		String s = ComponentConst.countHtml;
-		s = s.replace("@t_count", t_count + "").
-			replace("@t_historyCount", t_historyCount + "").
-			replace("@t_complete", t_complete + "").
-			replace("@t_uncomplete", t_uncomplete + "").
-			replace("@p_count", p_count + "").
-			replace("@p_historyCount", p_historyCount + "").
-			replace("@p_complete", p_complete + "").
-			replace("@p_uncomplete", p_uncomplete + "").
-			replace("@t_completionRate", t_completionRate + "%").
-			replace("@p_completionRate", p_completionRate + "%").
-			replace("@lastCreateTime", lastCreateTime == null ? "" : lastCreateTime).
-			replace("@lastDownloadTime", lastDownloadTime == null ? "" : lastDownloadTime);
+		String s = String.format(ComponentConst.countHtml, t_count, t_historyCount, t_complete, t_uncomplete, p_count, 
+				p_historyCount, p_complete, p_uncomplete,t_completionRate, p_completionRate, lastCreateTime == null ? "" : lastCreateTime,
+				lastDownloadTime == null ? "" : lastDownloadTime, FileUtil2.showSizeStr(totalSize), FileUtil2.showSizeStr(downSize));
+		return s;
+	}
+	
+	private long parseLongSize(String size){
+		long s = 0;
+		if(StringUtils.isNotBlank(size)){
+			if(size.contains("G")){
+				s += Double.parseDouble(size.substring(0, size.indexOf("G"))) * 1024 * 1024 * 1024;
+			}else if(size.contains("M")){
+				s += Double.parseDouble(size.substring(0, size.indexOf("M"))) * 1024 * 1024;
+			}else if(size.contains("K")){
+				s += Double.parseDouble(size.substring(0, size.indexOf("K"))) * 1024;
+			}else if(size.contains("B")){
+				s += Double.parseDouble(size.substring(0, size.indexOf("B")));
+			}
+		}
 		return s;
 	}
 }

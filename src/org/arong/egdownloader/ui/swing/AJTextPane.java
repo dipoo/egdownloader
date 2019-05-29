@@ -11,7 +11,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -87,27 +86,9 @@ public class AJTextPane extends JTextPane {
 			this.setText(this.getText() + html);
 		}
 	}
-	public void appendDivHtml(String html){
-		if(htmlEditorKit != null && htmlDoc != null){
-			try {
-				htmlEditorKit.insertHTML(htmlDoc, htmlDoc.getLength(), html, 0, 0, HTML.Tag.DIV);
-			}catch (Exception e) {
-				this.setText(this.getText() + "======exception:" + e.getMessage());
-			}
-		}else{
-			this.setText(this.getText() + html);
-		}
-	}
+	
 	public void clear(){
-		if(htmlEditorKit != null && htmlDoc != null){
-			try {
-				htmlDoc.remove(0, htmlDoc.getLength());
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}else{
-			this.setText("");
-		}
+		this.setText(null);
 	}
 	public HTMLEditorKit getHtmlEditorKit() {
 		return htmlEditorKit;
