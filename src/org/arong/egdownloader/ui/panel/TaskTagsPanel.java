@@ -68,7 +68,6 @@ public class TaskTagsPanel extends JScrollPane {
 	AJButton favBtn;
 	
 	public static Map<String, String> tagscnMap = null;
-	public static Map<String, String> rowsMap = null;
 	public String selectTags = null;//已选择的全部标签
 	public String selectTag = null;//当前选择的标签
 	public boolean searchTags = false;//是否为搜索时使用
@@ -422,15 +421,13 @@ public class TaskTagsPanel extends JScrollPane {
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
 	public void parseTaskAttribute(String tags, boolean trans){
-		this.setVisible(false);
 		trans = trans && tagscnMap != null;
 		if(showMyFav){
 			tags = mainWindow.setting.getFavTags();
 		}else{
 			currentTags = tags;
 		}
-		//textPane.clear();
-		textPane.setText("");
+		textPane.setText("...加载中...");
 		if(StringUtils.isNotBlank(tags)){
 			StringBuilder sb = new StringBuilder("<div style='font-family:微软雅黑;font-size:10px;padding:2px 5px;'>");
 			if(searchTask != null){
@@ -488,7 +485,6 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 			sb.append("</div>");
-			//textPane.appendDivHtml(HtmlUtils.filterEmoji2SegoeUISymbolFont(sb.toString()));
 			textPane.setText(HtmlUtils.filterEmoji2SegoeUISymbolFont(sb.toString()));
 		}else{
 			if(!showMyFav && !searchTags){
@@ -501,7 +497,6 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 		}
-		this.setVisible(true);
 	}
 	
 	private String parseFav(String group, String tag, String ftag){

@@ -12,7 +12,7 @@ import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 
 /**
- * 显示搜索漫画列表任务的标签组窗口
+ * 显示搜索漫画列表任务的标签组窗口(或显示我收藏的标签)
  * @author dipoo
  * @date 2019-05-10
  */
