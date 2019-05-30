@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,9 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
+import org.arong.jdbc.JdbcUtil;
 import org.arong.util.FileUtil2;
+import org.arong.util.JdbcSqlExecutor;
 /**
  * 任务统计面板
  * @author dipoo
@@ -37,7 +41,7 @@ public class CountWindow extends JDialog {
 	public CountWindow(EgDownloaderWindow window){
 		this.window = window;
 		// 设置主窗口
-		this.setSize(700, 300);
+		this.setSize(700, 350);
 		this.setIconImage(IconManager.getIcon("count").getImage());
 		this.setTitle("统计");
 		this.setVisible(true);
@@ -67,7 +71,7 @@ public class CountWindow extends JDialog {
 	public void showCountPanel(){
 		if(worker != null && !worker.isDone()){
 			this.setVisible(true);
-			System.out.println("请等待...");
+			//System.out.println("请等待...");
 			return;
 		}
 		final CountWindow this_ = this;
@@ -118,7 +122,7 @@ public class CountWindow extends JDialog {
 				}
 			}
 		}
-		/*String sql = "select count(*) as totalsize from picture where size is not null and size <> ''";
+		String sql = "select sum(size) as totalsize from picture where size is not null and size <> ''";
 		try {
 			downSize = JdbcSqlExecutor.getInstance().executeQuery(sql, JdbcUtil.getConnection(), new JdbcSqlExecutor.CallBack<Long>(){
 				public Long action(ResultSet rs) throws SQLException {
@@ -129,7 +133,7 @@ public class CountWindow extends JDialog {
 				}});
 		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 		
 		t_uncomplete = t_count - t_complete;
 		p_uncomplete = p_count - p_complete;
@@ -147,14 +151,18 @@ public class CountWindow extends JDialog {
 	private long parseLongSize(String size){
 		long s = 0;
 		if(StringUtils.isNotBlank(size)){
-			if(size.contains("G")){
-				s += Double.parseDouble(size.substring(0, size.indexOf("G"))) * 1024 * 1024 * 1024;
-			}else if(size.contains("M")){
-				s += Double.parseDouble(size.substring(0, size.indexOf("M"))) * 1024 * 1024;
-			}else if(size.contains("K")){
-				s += Double.parseDouble(size.substring(0, size.indexOf("K"))) * 1024;
-			}else if(size.contains("B")){
-				s += Double.parseDouble(size.substring(0, size.indexOf("B")));
+			try{
+				if(size.contains("G")){
+					s += ((Double)Double.parseDouble(size.substring(0, size.indexOf("G")))).longValue() * 1024 * 1024 * 1024;
+				}else if(size.contains("M")){
+					s += ((Double)Double.parseDouble(size.substring(0, size.indexOf("M")))).longValue() * 1024 * 1024;
+				}else if(size.contains("K")){
+					s += ((Double)Double.parseDouble(size.substring(0, size.indexOf("K")))).longValue() * 1024;
+				}else if(size.contains("B")){
+					s += ((Double)Double.parseDouble(size.substring(0, size.indexOf("B")))).longValue();
+				}
+			}catch(Exception e){
+				e.printStackTrace();
 			}
 		}
 		return s;

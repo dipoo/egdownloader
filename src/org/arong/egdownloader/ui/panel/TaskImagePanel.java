@@ -204,42 +204,43 @@ public class TaskImagePanel extends AJPanel {
 											mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
 											if(e.getButton() == MouseEvent.BUTTON3){
 												Task task = mainWindow.runningTable.getTasks().get(selectIndex);
-												mainWindow.tablePopupMenu.show(task, p, e.getPoint().x, e.getPoint().y);
-											}
-											//双击切换
-											if(e.getClickCount() == 2){
-												//任务开始或暂停
-												if(mainWindow.runningTable.rebuild){
-													Tracker.println(TaskingTable.class, "正在重建任务");
-													return;
-												}
-												Task task = mainWindow.runningTable.getTasks().get(selectIndex);
-												//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
-												if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
-													mainWindow.runningTable.startTask(task);
-												}
-												//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
-												else if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
-													mainWindow.runningTable.stopTask(task);
-												}
-												//如果状态为未创建，则开启创建线程
-												else if(task.getStatus() == TaskStatus.UNCREATED){
-													Tracker.println(getClass(), task.getName() + ":重新采集");
-													task.setReCreateWorker(new ReCreateWorker(task, mainWindow));
-													task.getReCreateWorker().execute();
-												}
-												
-												mainWindow.infoTabbedPane.setSelectedIndex(1);
+												mainWindow.tablePopupMenu.show(task, p, e.getPoint().x - 1, e.getPoint().y - 1);
 											}else{
-												//切换信息面板tab
-												if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
-													mainWindow.taskInfoPanel.parseTask(mainWindow.tasks.get(selectIndex), selectIndex);
-												}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
-													TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-													panel.showTagGroup(mainWindow.tasks.get(selectIndex));
-												}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
-													PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
-													infoPanel.showPictures(mainWindow.tasks.get(selectIndex));
+												//双击切换
+												if(e.getClickCount() == 2){
+													//任务开始或暂停
+													if(mainWindow.runningTable.rebuild){
+														Tracker.println(TaskingTable.class, "正在重建任务");
+														return;
+													}
+													Task task = mainWindow.runningTable.getTasks().get(selectIndex);
+													//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
+													if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
+														mainWindow.runningTable.startTask(task);
+													}
+													//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
+													else if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
+														mainWindow.runningTable.stopTask(task);
+													}
+													//如果状态为未创建，则开启创建线程
+													else if(task.getStatus() == TaskStatus.UNCREATED){
+														Tracker.println(getClass(), task.getName() + ":重新采集");
+														task.setReCreateWorker(new ReCreateWorker(task, mainWindow));
+														task.getReCreateWorker().execute();
+													}
+													
+													//mainWindow.infoTabbedPane.setSelectedIndex(1);
+												}else{
+													//切换信息面板tab
+													if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
+														mainWindow.taskInfoPanel.parseTask(mainWindow.tasks.get(selectIndex), selectIndex);
+													}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
+														TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
+														panel.showTagGroup(mainWindow.tasks.get(selectIndex));
+													}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
+														PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
+														infoPanel.showPictures(mainWindow.tasks.get(selectIndex));
+													}
 												}
 											}
 										}

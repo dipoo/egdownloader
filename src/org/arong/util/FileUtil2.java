@@ -148,6 +148,7 @@ public final class FileUtil2 {
 		}
 	}
 	
+	public static DecimalFormat d2df = new DecimalFormat("#####0.00");
 	/**
 	 * 将字节数转化为合适的单位字符串
 	 * @param length
@@ -156,18 +157,24 @@ public final class FileUtil2 {
 	public static String showSizeStr(Long length){
 		String s = "0B";
 		double d = (double)length;
-		DecimalFormat df = new DecimalFormat("#####0.00");
-		if(length < 1024){
+		if(length < 1024L){
 			s = d + "B";
-		}else if(d < 1024 * 1024 ){
-			s = df.format(d / 1024.0) + "KB";
-		}else if(d < 1024 * 1024 * 1024){
-			s = df.format(d / (1024.0 * 1024.0)) + "MB";
-		}else if(d < 1024 * 1024 * 1024 * 1024){
-			s = df.format(d / (1024.0 * 1024.0 * 1024.0)) + "GB";
+		}else if(d < 1024L * 1024 ){
+			s = d2df.format(d / 1024.0) + "KB";
+		}else if(d < 1024L * 1024 * 1024){
+			s = d2df.format(d / (1024.0 * 1024.0)) + "MB";
+		}else if(d < 1024L * 1024 * 1024 * 1024){
+			s = d2df.format(d / (1024.0 * 1024.0 * 1024.0)) + "GB";
+		}else if(d < 1024L * 1024 * 1024 * 1024 * 1024){
+			s = d2df.format(d / (1024.0 * 1024.0 * 1024.0 * 1024.0)) + "TB";
+		}else if(d < 1024L * 1024 * 1024 * 1024 * 1024 * 1024){
+			s = d2df.format(d / (1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0)) + "PB";
+		}else{
+			s = d + "B";
 		}
 		return s;
 	}
+	
 	
 	public static String filterDir(String dir){
 		try{
