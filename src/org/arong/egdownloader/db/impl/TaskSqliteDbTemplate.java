@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.db.AbstractSqlDbTemplate;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
@@ -15,7 +15,7 @@ import org.arong.jdbc.JdbcUtil;
 import org.arong.util.JdbcSqlExecutor;
 import org.arong.utils.StringUtil;
 
-public class TaskSqliteDbTemplate implements DbTemplate<Task> {
+public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 	
 	public static void main(String[] args) {
 		

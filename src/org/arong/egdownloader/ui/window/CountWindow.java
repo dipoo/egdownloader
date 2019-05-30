@@ -14,7 +14,6 @@ import javax.swing.JDialog;
 import javax.swing.JTextPane;
 
 import org.apache.commons.lang.StringUtils;
-import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
@@ -22,6 +21,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.swing.AJTextPane;
+import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.FileUtil2;
 /**
  * 任务统计面板
@@ -33,6 +33,7 @@ public class CountWindow extends JDialog {
 	private static final long serialVersionUID = 344119118958307328L;
 	public JTextPane htmlPanel;
 	EgDownloaderWindow window;
+	public CommonSwingWorker worker = null;
 	public CountWindow(EgDownloaderWindow window){
 		this.window = window;
 		// 设置主窗口
@@ -64,9 +65,22 @@ public class CountWindow extends JDialog {
 	}
 	
 	public void showCountPanel(){
-		htmlPanel.setText("<br><br><center>统计中...</center>");
-		htmlPanel.setText(transferHtml());
-		this.setVisible(true);
+		if(worker != null && !worker.isDone()){
+			this.setVisible(true);
+			System.out.println("请等待...");
+			return;
+		}
+		final CountWindow this_ = this;
+		worker = new CommonSwingWorker(new Runnable() {
+			public void run() {
+				this_.setVisible(true);
+				htmlPanel.setText("<br><br><center>统计中...</center>");
+				htmlPanel.setText(transferHtml());
+				worker = null;
+			}
+		});
+		worker.execute();
+		
 	}
 	
 	public String transferHtml(){
@@ -97,13 +111,6 @@ public class CountWindow extends JDialog {
 			p_count += task.getTotal();
 			p_complete += task.getCurrent();
 			totalSize += parseLongSize(task.getSize());
-			if(task.getPictures() != null){
-				for(Picture pic : task.getPictures()){
-					if(pic.isCompleted()){
-						downSize += pic.getSize();
-					}
-				}
-			}
 			if(StringUtils.isNotBlank(task.getTags())){
 				String[] arr = task.getTags().split(";");
 				for(String tag : arr){
@@ -111,6 +118,19 @@ public class CountWindow extends JDialog {
 				}
 			}
 		}
+		/*String sql = "select count(*) as totalsize from picture where size is not null and size <> ''";
+		try {
+			downSize = JdbcSqlExecutor.getInstance().executeQuery(sql, JdbcUtil.getConnection(), new JdbcSqlExecutor.CallBack<Long>(){
+				public Long action(ResultSet rs) throws SQLException {
+					if(rs.next()){
+						return rs.getLong("totalsize");
+					}
+					return 0L;
+				}});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		
 		t_uncomplete = t_count - t_complete;
 		p_uncomplete = p_count - p_complete;
 		t_completionRate = new BigDecimal(Double.parseDouble(t_complete + "") * 100 / Double.parseDouble(t_count + "")).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

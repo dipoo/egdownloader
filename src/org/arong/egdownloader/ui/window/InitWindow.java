@@ -15,6 +15,7 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.arong.egdownloader.db.AbstractSqlDbTemplate;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
 import org.arong.egdownloader.db.impl.PictureSqliteDbTemplate;
@@ -49,9 +50,9 @@ public class InitWindow extends JWindow {
 	
 	public DbTemplate<Setting> settingDbTemplate;
 	
-	public DbTemplate<Task> taskDbTemplate;
+	public AbstractSqlDbTemplate<Task> taskDbTemplate;
 	
-	public DbTemplate<Picture> pictureDbTemplate;
+	public AbstractSqlDbTemplate<Picture> pictureDbTemplate;
 	
 	public Setting setting;
 	

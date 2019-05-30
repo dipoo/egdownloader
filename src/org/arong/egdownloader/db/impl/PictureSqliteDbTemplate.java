@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.arong.egdownloader.db.DbTemplate;
+import org.arong.egdownloader.db.AbstractSqlDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.ui.work.DownloadWorker;
 import org.arong.jdbc.JdbcUtil;
@@ -14,7 +14,7 @@ import org.arong.util.JdbcSqlExecutor;
 import org.arong.util.Tracker;
 import org.arong.utils.StringUtil;
 
-public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
+public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 	
 	static{
 		StringBuffer sqlsb = new StringBuffer("create table picture (")
@@ -213,6 +213,7 @@ public class PictureSqliteDbTemplate implements DbTemplate<Picture> {
 	public boolean exsits(String name, String value) {
 		return query(name, value) != null && query(name, value).size() > 0;
 	}
+	
 	private void resultSet2Picture(ResultSet rs, Picture model) throws SQLException{
 		model.setId(rs.getString("id"));
 		model.setNum(rs.getString("num"));

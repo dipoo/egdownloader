@@ -43,6 +43,7 @@ import javax.swing.JWindow;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.HyperlinkEvent;
 
+import org.arong.egdownloader.db.AbstractSqlDbTemplate;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
@@ -138,8 +139,8 @@ public class EgDownloaderWindow extends JFrame {
 	public Setting setting;
 	public TaskList<Task> tasks;
 	
-	public DbTemplate<Task> taskDbTemplate;
-	public DbTemplate<Picture> pictureDbTemplate;
+	public AbstractSqlDbTemplate<Task> taskDbTemplate;
+	public AbstractSqlDbTemplate<Picture> pictureDbTemplate;
 	public DbTemplate<Setting> settingDbTemplate;
 	
 	Timer netSpeedtimer;
@@ -164,7 +165,7 @@ public class EgDownloaderWindow extends JFrame {
 		//1秒执行一次
 		netSpeedtimer.schedule(timerTask, 1000, 1000);
 	}
-	public EgDownloaderWindow(InitWindow initWindow, Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
+	public EgDownloaderWindow(InitWindow initWindow, Setting setting, TaskList<Task> tasks, AbstractSqlDbTemplate<Task> taskDbTemplate, AbstractSqlDbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate) {
 		final EgDownloaderWindow mainWindow = this;
 		
 		this.initWindow = initWindow;
@@ -657,7 +658,7 @@ public class EgDownloaderWindow extends JFrame {
 		this.settingDbTemplate.update(this.setting);
 	}
 	
-	public void changeTaskGroup(Setting setting, TaskList<Task> tasks, DbTemplate<Task> taskDbTemplate, DbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate){
+	public void changeTaskGroup(Setting setting, TaskList<Task> tasks, AbstractSqlDbTemplate<Task> taskDbTemplate, AbstractSqlDbTemplate<Picture> pictureDbTemplate, DbTemplate<Setting> settingDbTemplate){
 		this.taskDbTemplate = taskDbTemplate;
 		this.pictureDbTemplate = pictureDbTemplate;
 		this.settingDbTemplate = settingDbTemplate;
