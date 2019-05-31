@@ -450,7 +450,7 @@ public class TaskTagsPanel extends JScrollPane {
 			if(!showMyFav){
 				sb.append("<a href='fav' style='text-decoration:none;color:red'><b>[&nbsp;我的收藏&nbsp;]</b>&nbsp;</a>");
 			}
-			sb.append("<a href='showAllTagsWindow' style='text-decoration:none;color:blue'><b>[&nbsp;所有标签&nbsp;]&nbsp;</b></a>");
+			sb.append("<a href='showAllTagsWindow' style='text-decoration:none;color:blue;'><b>[&nbsp;所有标签&nbsp;]&nbsp;</b></a>");
 			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='text-decoration:none;color:blue'><b>[&nbsp;" + (trans ? "原文" : "翻译") + "&nbsp;]&nbsp;</b></a>" + (trans ? "--<font style='color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx

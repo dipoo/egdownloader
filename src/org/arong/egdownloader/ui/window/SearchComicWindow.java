@@ -92,6 +92,7 @@ public class SearchComicWindow extends JFrame {
 	public String key = " ";//搜索条件的字符串
 	public String currentPage = "1";
 	public boolean cache = false;//是否为缓存数据
+	public String PrevOptionKey = null;//上一次的过滤条件
 	public List<SearchTask> searchTasks = new ArrayList<SearchTask>();
 	public Map<String, Map<String, List<SearchTask>>> datas = new HashMap<String, Map<String, List<SearchTask>>>();//任务数据缓存
 	public Map<String, String> keyPage = new HashMap<String, String>();//分页信息缓存
@@ -418,12 +419,18 @@ public class SearchComicWindow extends JFrame {
 	public void search(String page){
 		showLoading();
 		String keyText = keyField.getText().trim();
-		//如果当前的关键字与上一个不相同，则添加进去
-		if(! (keyText + "," + page).equals(keyList.get(keyList.size() - 1))){
-			keyList.add(keyText + "," + page);
-		}
 		
 		String k = parseOption() + keyText;
+		if(! k.equals(PrevOptionKey)){
+			//重置页数
+			page = "1";
+			PrevOptionKey = k;
+		}
+		
+		//如果当前的关键字与上一个不相同，则添加进去
+		if(! (k + "," + page).equals(keyList.get(keyList.size() - 1))){
+			keyList.add(k + "," + page);
+		}
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			cache = true;
 			searchTasks = datas.get(k).get(page);

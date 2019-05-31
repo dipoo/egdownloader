@@ -39,9 +39,9 @@ public class TaskTableModel extends AbstractTableModel{
 			case 1 :
 				return tasks.get(rowIndex).getName();
 			case 2 :
-				return tasks.get(rowIndex).getTotal() + showxx(tasks.get(rowIndex).getTotal()) +  "(" + tasks.get(rowIndex).getSize() + ")";
+				return String.format("<span style='font-family:Consolas;'><b style='color:blue;'>%s</b>%s(%s)</span>", tasks.get(rowIndex).getTotal(), showxx(tasks.get(rowIndex).getTotal()), tasks.get(rowIndex).getSize());
 			case 3 :
-				return tasks.get(rowIndex).getLanguage();
+				return String.format("<span style='font-family:Consolas;'>%s</span>", "Chinese".equals(tasks.get(rowIndex).getLanguage()) ? String.format("<font color=red>%s</html>", tasks.get(rowIndex).getLanguage()) : tasks.get(rowIndex).getLanguage());
 			case 4 :
 				return tasks.get(rowIndex).getCurrent();
 			case 5 :	
@@ -71,11 +71,11 @@ public class TaskTableModel extends AbstractTableModel{
 		if(num >= 1000){
 			return "";
 		}else if(num >= 100){
-			return " ";
+			return "<span style='color:white'>0</span>";
 		}else if(num >= 10){
-			return "  ";
+			return "<span style='color:white'>00</span>";
 		}else{
-			return "   ";
+			return "<span style='color:white'>000</span>";
 		}
 	}
 }

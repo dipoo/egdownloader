@@ -39,7 +39,8 @@ public class PictureTableModel extends DefaultTableModel {
 	public int getRowCount() {
 		return pictures == null ? 0 : pictures.size();
 	}
-
+	private static final String COMPLETED_VALUE = "<html><font color='green'><b>已完成</b></font></html>";
+	private static final String UNCOMPLETED_VALUE = "未下载";
 	public Object getValueAt(int row, int column) {
 		Picture pic = pictures.get(row);
 		switch (column) {
@@ -48,26 +49,21 @@ public class PictureTableModel extends DefaultTableModel {
 		case 1:
 			return pic.getName();
 		case 2:
-			if(pic.isCompleted()){
-				if(!pic.isSaveAsName()){
-					if(pic.getName().indexOf(".") != -1){
-						return pic.getNum() + pic.getName().substring(pic.getName().lastIndexOf("."), pic.getName().length());
-					}else{
-						return pic.getNum() + ".jpg";
-					}
+			if(!pic.isSaveAsName()){
+				if(pic.getName().indexOf(".") != -1){
+					return pic.getNum() + pic.getName().substring(pic.getName().lastIndexOf("."), pic.getName().length());
 				}else{
-					return pic.getName();
+					return pic.getNum() + ".jpg";
 				}
 			}else{
-				return "";
+				return pic.getName();
 			}
-			
 		case 3:
 			return pic.getSize();
 		case 4:
 			return pic.getPpi();	
 		case 5:
-			return pic.isCompleted() ? "完成" : "未下载";
+			return pic.isCompleted() ? COMPLETED_VALUE : UNCOMPLETED_VALUE;
 		case 6:
 			return pic.getUrl();
 		case 7:

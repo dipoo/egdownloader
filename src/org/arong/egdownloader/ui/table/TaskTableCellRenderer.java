@@ -55,7 +55,7 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 		Setting setting = ((TaskingTable)table).getMainWindow().setting;
 		if(column == 0){//第一列：图标
 			tc.setPreferredWidth(130);
-			tc.setMaxWidth(150);
+			tc.setMaxWidth(160);
 			JLabel l = new JLabel();
 			
 			if(task.getType() != null){
@@ -108,13 +108,13 @@ public class TaskTableCellRenderer extends DefaultTableCellRenderer {
 			}
 		}else if(column == 2){//第三列：图片总数
 			tc.setPreferredWidth(80);
-			tc.setMaxWidth(250);
-			JLabel l = new AJLabel(value.toString(), fontColor, FontConst.Microsoft_BOLD_11, JLabel.LEFT);
+			tc.setMaxWidth(120);
+			JLabel l = new AJLabel(String.format("<html>%s</html>", value.toString()), fontColor, FontConst.Microsoft_BOLD_12, JLabel.LEFT);
 			return l;
 		}else if(column == 3){//第三列：语言
 			tc.setPreferredWidth(50);
 			tc.setMaxWidth(120);
-			return new AJLabel(value == null ? "" : value.toString(), fontColor, FontConst.Microsoft_BOLD_11, JLabel.LEFT);
+			return new AJLabel(String.format("<html>%s</html>", value == null ? "" : value.toString()), fontColor, FontConst.Microsoft_BOLD_11, JLabel.LEFT);
 		}else if(column == 4){//第四列：进度
 			tc.setPreferredWidth(80);
 			tc.setMaxWidth(150);

@@ -1,7 +1,9 @@
 package org.arong.egdownloader.ui.work;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 	private Task task;
 	private Setting setting;
 	private int exceptionNum = 0;
+	private InputStream is = null;//当前下载的图片输入流
+	
 	public DownloadWorker(Task task, EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.task = task;
@@ -52,7 +56,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		List<Picture> pics = task.getPictures();
 		
 		Picture pic;
-		InputStream is = null;
+		is = null;
 		File existNameFs = null;//判断是否有重复的文件名
 		if(pics.size() != 0){
 			int success = 0;//下载完成个数
@@ -207,9 +211,15 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						return null;
 					}catch (Exception e){
 						exceptionNum ++;
-						//碰到异常
-						e.printStackTrace();
-						Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s===%s", task.getDisplayName(), pic.getName(), e.getMessage())));
+						//删除已经下载的文件
+						delete(existNameFs);
+						if(e instanceof SocketException && "Socket Closed".equals(e.getMessage())){
+							
+						}else{
+							//碰到异常
+							e.printStackTrace();
+							Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s===%s", task.getDisplayName(), pic.getName(), e.getMessage())));
+						}
 						//继续下一个
 						continue;
 					}finally{
@@ -259,6 +269,15 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 		
 		return null;
 	}
+	
+	protected void done() {
+		if(is != null){
+			//中断正在下载的线程
+			try {is.close();is = null;} catch (IOException e) {e.printStackTrace();}
+		}
+		super.done();
+	}
+
 	private void delete(File existNameFs){
 		//是否以真实名称保存，是的话则要删除下载不完整的文件
 		if(setting.isSaveAsName() && existNameFs != null && existNameFs.exists()){

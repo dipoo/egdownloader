@@ -39,8 +39,6 @@ public class ZiptingWindow extends JDialog {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				ZiptingWindow window = (ZiptingWindow) e.getSource();
-				window.mainWindow.setEnabled(true);
-				window.mainWindow.setVisible(true);
 				window.dispose();
 			}
 			//窗体由激活状态变成非激活状态
@@ -51,7 +49,7 @@ public class ZiptingWindow extends JDialog {
 				window.dispose();
 			}*/
 			public void windowActivated(WindowEvent e) {
-				mainWindow.setEnabled(false);
+				//mainWindow.setEnabled(false);
 			}
 		});
 		
@@ -65,18 +63,13 @@ public class ZiptingWindow extends JDialog {
 	
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
-		//关闭事件
+		/*//关闭事件
 		if(e.getID() == WindowEvent.WINDOW_CLOSING){
 			//do nothing
 		}else{
 			super.processWindowEvent(e);
-		}
-	}
-
-	public void dispose() {
-		mainWindow.setEnabled(true);
-		mainWindow.setVisible(true);
-		super.dispose();
+		}*/
+		super.processWindowEvent(e);
 	}
 
 }
