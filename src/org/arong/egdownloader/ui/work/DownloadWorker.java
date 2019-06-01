@@ -65,7 +65,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 				pic = pics.get(i);
 				if(pic.getUrl() != null && ! pic.isRunning() && !pic.isCompleted()){
 					requireNum ++;
-					long connectStart = 0;
+					long connectStart = System.currentTimeMillis();
 					try{
 						if(this.isCancelled())//是否暂停
 							return null;

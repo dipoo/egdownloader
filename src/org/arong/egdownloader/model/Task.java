@@ -91,7 +91,7 @@ public class Task {
 	 * @param path
 	 * @throws IOException
 	 */
-	public int storeStream(File fs, InputStream in) throws IOException{
+	public int storeStream(File fs, InputStream in) throws Exception{
 		if(in == null){
 			return 0;
 		}
@@ -112,6 +112,8 @@ public class Task {
 			bos.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			fs.getParentFile().mkdirs();
+			throw new RuntimeException(String.format("[%s]文件夹不存在，自动创建", fs.getParent()));
 		}finally {
 			if (bos != null) {try {bos.close();} catch (IOException e) {}}
 			if (bis != null) {try {bis.close();} catch (IOException e) {}}

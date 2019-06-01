@@ -71,10 +71,10 @@ public class CheckResetWork implements IMenuListenerTask {
 								if(task.getCurrent() >= 1){
 									task.setCurrent(task.getCurrent() - 1);//任务进度减一
 								}
+								mainWindow.pictureDbTemplate.update(pic);//保存图片
 							}
 						}
 						task.setStatus(TaskStatus.STOPED);//重置任务为已暂停
-						mainWindow.pictureDbTemplate.update(pics);//保存图片
 						mainWindow.taskDbTemplate.update(task);//保存任务
 						mainWindow.checkingWindow.dispose();
 						JOptionPane.showMessageDialog(mainWindow, "重置任务完成！");

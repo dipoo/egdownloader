@@ -428,8 +428,8 @@ public class SearchComicWindow extends JFrame {
 		}
 		
 		//如果当前的关键字与上一个不相同，则添加进去
-		if(! (k + "," + page).equals(keyList.get(keyList.size() - 1))){
-			keyList.add(k + "," + page);
+		if(! (keyText + "," + page).equals(keyList.get(keyList.size() - 1))){
+			keyList.add(keyText + "," + page);
 		}
 		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			cache = true;
