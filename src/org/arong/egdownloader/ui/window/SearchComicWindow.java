@@ -419,11 +419,10 @@ public class SearchComicWindow extends JFrame {
 	public void search(String page){
 		showLoading();
 		String keyText = keyField.getText().trim();
-		
+		boolean keyChange = false;
 		String k = parseOption() + keyText;
 		if(! k.equals(PrevOptionKey)){
-			//重置页数
-			page = "1";
+			keyChange = true;
 			PrevOptionKey = k;
 		}
 		
@@ -442,6 +441,10 @@ public class SearchComicWindow extends JFrame {
 			totalLabel.setText(keyPage.get(k).replace("共搜索到", HtmlUtils.redColorHtml("[缓存]") + "共搜索到"));
 			hideLoading();
 		}else{
+			if(keyChange){
+				//重置页数
+				page = "1";
+			}
 			cache = false;
 			//设置为不可用
 			leftBtn.setEnabled(false);
