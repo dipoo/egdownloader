@@ -24,9 +24,11 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -291,12 +293,26 @@ public class TaskTagsPanel extends JScrollPane {
 				}else{
 					JOptionPane.showMessageDialog(mainWindow, "当前选择的标签为空");
 				}
-				setViewportView(textPane);
+				if(textPane.getText().length() == 110 && textPane.getCom() != null){
+					if(textPane.getCom() instanceof JDialog || 
+							textPane.getCom() instanceof JWindow){
+						textPane.getCom().setVisible(false);
+					}
+				}else{
+					setViewportView(textPane);
+				}
 			}
 		});
 		returnBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setViewportView(textPane);
+				if(textPane.getText().length() == 110 && textPane.getCom() != null){
+					if(textPane.getCom() instanceof JDialog || 
+							textPane.getCom() instanceof JWindow){
+						textPane.getCom().setVisible(false);
+					}
+				}else{
+					setViewportView(textPane);
+				}
 			}
 		});
 		clearBtn.addActionListener(new ActionListener() {
@@ -305,7 +321,9 @@ public class TaskTagsPanel extends JScrollPane {
 				selectTag = "";
 				//清空
 				renderSelectTags(null, false);
-				setViewportView(textPane);
+				if(textPane.getText().length() != 110){
+					setViewportView(textPane);
+				}
 			}
 		});
 		ComponentUtil.addComponents(confirmPanel, selectedPanel, localBtn, onlineBtn, favBtn, clearBtn, returnBtn);
@@ -454,7 +472,7 @@ public class TaskTagsPanel extends JScrollPane {
 			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='text-decoration:none;color:blue'><b>[&nbsp;" + (trans ? "原文" : "翻译") + "&nbsp;]&nbsp;</b></a>" + (trans ? "--<font style='color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
-			Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
+			Map<String, List<String>> groups = parseTagGroup(tags);
 			String[] attrs = tags.split(";");
 			for(String attr : attrs){
 				String[] arr = attr.split(":");
@@ -517,5 +535,28 @@ public class TaskTagsPanel extends JScrollPane {
 
 	public void setSearchTask(SearchTask searchTask) {
 		this.searchTask = searchTask;
+	}
+	
+	public static Map<String, List<String>> parseTagGroup(String tags){
+		//解析属性组
+		// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
+		Map<String, List<String>> groups = new LinkedHashMap<String, List<String>>();
+		if(tags == null) return groups;
+		String[] attrs = tags.split(";");
+		for(String attr : attrs){
+			String[] arr = attr.split(":");
+			if(arr.length == 1 || arr[0].equals("")){
+				attr = MISC + ":" + attr.replaceAll(":", "");
+				arr = attr.split(":");
+			}
+			if(groups.containsKey(arr[0])){
+				groups.get(arr[0]).add(arr[1]);
+			}else{
+				List<String> list = new ArrayList<String>();
+				list.add(arr[1]);
+				groups.put(arr[0], list);
+			}
+		}
+		return groups;
 	}
 }

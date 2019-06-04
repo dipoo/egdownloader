@@ -206,7 +206,7 @@ public class SearchComicWindow extends JFrame {
 		}, this.getWidth() - 80, 20, 60, 30);
 		favTagsBtn.setUI(AJButton.blueBtnUi);
 		tagBtn.setUI(AJButton.blueBtnUi);
-		clearCacheBtn.setUI(AJButton.blueBtnUi);
+		clearCacheBtn.setUI(AJButton.redBtnUi);
 		
 		/* 分类条件 */
 		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

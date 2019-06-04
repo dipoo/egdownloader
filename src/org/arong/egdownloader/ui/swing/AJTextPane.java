@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.swing;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -29,6 +30,7 @@ public class AJTextPane extends JTextPane {
 	
 	private HTMLEditorKit htmlEditorKit;
 	private HTMLDocument htmlDoc;
+	private Component com;
 	public AJTextPane(){
 		this(true);
 	}
@@ -95,5 +97,11 @@ public class AJTextPane extends JTextPane {
 	}
 	public HTMLDocument getHtmlDoc() {
 		return htmlDoc;
+	}
+	public Component getCom() {
+		return com;
+	}
+	public void setCom(Component com) {
+		this.com = com;
 	}
 }

@@ -3,6 +3,8 @@ package org.arong.egdownloader.ui.window;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -26,7 +28,7 @@ public class SearchDetailInfoWindow extends JWindow {
 	public SearchDetailInfoWindow(final SearchComicWindow searchComicWindow){
 		
 		this.searchComicWindow = searchComicWindow;
-		this.setSize(ComponentConst.CLIENT_WIDTH - 400, 250);
+		this.setSize(ComponentConst.CLIENT_WIDTH - 400, 180);
 		this.setLocationRelativeTo(searchComicWindow);
 		this.setVisible(false);
 		
@@ -44,14 +46,29 @@ public class SearchDetailInfoWindow extends JWindow {
 				this_.dispose();
 			}
 		});
+		final SearchDetailInfoWindow this_ = this;
+		taskTagsPanel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				//点击自身隐藏
+				this_.setVisible(false);
+			}
+			
+		});
 	}
 	/**
 	 * 搜索窗口使用
 	 */
 	public void showDetail(SearchTask task, Point p){
+		//重设高度
+		this.setSize(this.getWidth(), 250);
+		//渲染面板
 		taskTagsPanel.showSearchTagGroup(task);
 		this.setLocationRelativeTo(searchComicWindow);
 		this.setLocation((int)p.getX(), (int)p.getY());
 		this.setVisible(true);
+		if(taskTagsPanel.getVerticalScrollBar().isVisible()){
+			//重设高度
+			this.setSize(this.getWidth(), this.getHeight() + 30);
+		}
 	}
 }
