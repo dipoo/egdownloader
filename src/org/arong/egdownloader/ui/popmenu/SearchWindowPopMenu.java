@@ -21,7 +21,9 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
+import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.MergeWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
@@ -32,6 +34,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 	public JMenuItem openPictureItem;
 	public JMenuItem downItem;
 	public JMenuItem openBtPageItem;
+	public JMenuItem showMergeItem;
 	public SearchWindowPopMenu(EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		downItem = new AJMenuItem("创建任务", Color.BLACK,
@@ -114,6 +117,23 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						}
 					}
 				}));
+		showMergeItem = new AJMenuItem("合并任务", Color.BLACK, "",
+				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
+						if(mainWindow.searchComicWindow.mergeWindow == null){
+							mainWindow.searchComicWindow.mergeWindow = new MergeWindow(mainWindow);
+						}
+						SearchTask st = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
+						mainWindow.searchComicWindow.mergeWindow.setSearchTask(st);
+						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						Task t = table.getTasks().get(table.selectRowIndex);
+						mainWindow.searchComicWindow.mergeWindow.setTask(t);
+						mainWindow.searchComicWindow.mergeWindow.showMergeInfo();
+						mainWindow.searchComicWindow.mergeWindow.setVisible(true);
+						mainWindow.searchComicWindow.mergeWindow.toFront();
+					}
+				}));
 		/*showTagsItem = new AJMenuItem("显示标签组", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
@@ -172,6 +192,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		this.add(openPageItem);
 		this.add(openBtPageItem);
 		/*this.add(showTagsItem);*/
+		this.add(showMergeItem);
 		this.add(searchAuthorItem);
 		this.add(searchLocalAuthorItem);
 		this.add(clearCoverItem);

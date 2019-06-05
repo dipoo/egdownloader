@@ -51,13 +51,13 @@ public class TestScriptWindow extends JDialog{
 		JLabel crLabel = new AJLabel("任务", Color.BLACK, 100, 55, 25, 30);
 		final JCheckBox createCb = new JCheckBox("", true);
 		createCb.setBounds(130, 55, 30, 30);
-		JLabel clLabel = new AJLabel("图片列表", Color.BLACK, 165, 55, 50, 30);
+		JLabel clLabel = new AJLabel("图片列表", Color.BLACK, 165, 55, 70, 30);
 		final JCheckBox collectCb = new JCheckBox("", true);
-		collectCb.setBounds(220, 55, 30, 30);
-		JLabel doLabel = new AJLabel("真实地址", Color.BLACK, 260, 55, 50, 30);
+		collectCb.setBounds(240, 55, 30, 30);
+		JLabel doLabel = new AJLabel("真实地址", Color.BLACK, 280, 55, 70, 30);
 		final JCheckBox downloadCb = new JCheckBox("", true);
-		downloadCb.setBounds(320, 55, 30, 30);
-		JLabel seLabel = new AJLabel("搜索列表", Color.BLACK, 360, 55, 50, 30);
+		downloadCb.setBounds(360, 55, 30, 30);
+		JLabel seLabel = new AJLabel("搜索列表", Color.BLACK, 400, 55, 70, 30);
 		final JCheckBox searchCb = new JCheckBox("", true);
 		searchCb.setBounds(420, 55, 30, 30);
 		final JTextArea resultArea = new AJTextArea();

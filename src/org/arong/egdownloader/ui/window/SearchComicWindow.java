@@ -70,6 +70,7 @@ public class SearchComicWindow extends JFrame {
 	public EgDownloaderWindow mainWindow;
 	public SearchTagWindow searchTagWindow;
 	public SearchTagsWindow searchTagsWindow;
+	public MergeWindow mergeWindow;
 	public SearchDetailInfoWindow searchDetailInfoWindow;
 	public SearchCoverWindow coverWindow;
 	public JTextField keyField;
