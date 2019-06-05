@@ -8,6 +8,8 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,21 +20,26 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.ButtonUI;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.FontConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.swing.AJButton;
+import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
+import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.HtmlUtils;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
@@ -45,24 +52,128 @@ import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 public class AllTagsWindow extends JDialog {
 	public EgDownloaderWindow mainWindow;
 	public JPanel typeBtnPanel;
-	public JPopupMenu popupMenu;//右键菜单
+	public AJTextField searchField;
+	public AJButton searchBtn;
 	public JSeparator separator;
 	public JPanel tagPane;
 	public JScrollPane scrollPane;
+	public AJLabel emptyLabel;
 	//public AJTextPane tagPane;
 	
 	public String title = "选择标签";
 	public CommonSwingWorker worker = null;
-	public AJButton[] tagBtns;
+	public Component[] tagBtns;
 	public String currentGroup;
 	public int currentPage;
-	public int pageSize = 300;
+	public int pageSize = 250;
 	public AJPager pager;
 	public Map<String, Set<String>> allKeys;
-	public void updateTagScrollPane(){
-		updateTagScrollPane(1);
+	public String emptyText = "在分类[%s]下搜索不到匹配的标签";
+	
+	public AllTagsWindow(final EgDownloaderWindow egDownloaderWindow){
+		
+		this.mainWindow = egDownloaderWindow;
+		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
+		this.setTitle(title);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setLayout(null);
+		this.setLocationRelativeTo(null);
+		searchField = new AJTextField(null, 5, 10, 200, 25);
+		searchField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					searchBtn.doClick();
+				}
+			}
+		});
+		searchBtn = new AJButton("搜索", "", new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				searchTags(1, searchField.getText().trim());
+			}
+		}, 210, 10, 60, 25);
+		searchBtn.setForeground(Color.WHITE);
+		searchBtn.setUI(AJButton.blueBtnUi);
+		
+		typeBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		typeBtnPanel.setBounds(280, 5, 620, 40);
+		ActionListener typeBtnActionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AJButton btn = (AJButton) e.getSource();
+				for(Component com : typeBtnPanel.getComponents()){
+					if(com instanceof JButton){
+						((JButton)com).setUI(AJButton.greenBtnUi);
+					}
+				}
+				btn.setUI(AJButton.redBtnUi);
+				String row = btn.getName();
+				currentGroup = row;
+				searchTags();
+			}
+		};
+		for(String row : ComponentConst.TAGS_CN_FILENAMES){
+			if("rows.md".equals(row)) continue;
+			AJButton btn = new AJButton(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey("rows:" + row.replaceAll(".md", ""))? 
+					TaskTagsPanel.tagscnMap.get("rows:" + row.replaceAll(".md", "")) : row.replaceAll(".md", ""), null);
+			btn.setName(row.replaceAll(".md", ""));
+			btn.setToolTipText(row.replaceAll(".md", ""));
+			btn.addActionListener(typeBtnActionListener);
+			typeBtnPanel.add(btn);
+		}
+		separator = new JSeparator(); 
+		separator.setBounds(0, 48, this.getWidth(), 1);
+		
+		tagPane = new JPanel();
+		tagPane.setLayout(new FlowLayout(FlowLayout.LEFT));
+		tagPane.setBounds(5, 5, this.getWidth() - 40, this.getHeight() - 160);
+		tagPane.setPreferredSize(new Dimension(this.getWidth() - 40,  this.getHeight() - 60));
+		tagPane.setBorder(null);
+		
+		scrollPane = new JScrollPane(tagPane);
+		scrollPane.setBounds(0, 50, this.getWidth() - 20, this.getHeight() - 140);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBorder(null);
+		
+		emptyLabel = new AJLabel("", Color.RED);
+		
+		pager = new AJPager(10, this.getHeight() - 80, this.getWidth() - 30, 40, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JButton btn = (JButton) e.getSource();
+				searchTags(Integer.parseInt(btn.getName()), searchField.getText().trim());
+			}
+		});
+		pager.setVisible(false);
+		
+		ComponentUtil.addComponents(getContentPane(), typeBtnPanel, searchField, searchBtn, separator, scrollPane, pager);
+		setVisible(true);
+		
+		((JButton)(typeBtnPanel.getComponent(6))).setUI(AJButton.redBtnUi);
+		currentGroup = ComponentConst.TAGS_CN_FILENAMES[6].replaceAll(".md", "");
+		searchTags();
+		
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				Window this_ = (Window) e.getSource();
+				this_.dispose();
+			}
+			//窗体由激活状态变成非激活状态
+			public void windowDeactivated(WindowEvent e) {
+				//关闭后显示主界面
+				Window this_ = (Window) e.getSource();
+				this_.dispose();
+			}
+		});
 	}
-	public void updateTagScrollPane(final int page){
+	public ButtonUI[] btnUis = {
+			AJButton.blueBtnUi,
+			AJButton.greenBtnUi,
+			new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue),
+			new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.red)
+	};
+	
+	public void searchTags(){
+		searchTags(1, null);
+	}
+	public void searchTags(final int page, final String searchkey){
 		if(worker != null && !worker.isDone()){
 			System.out.println("请等待...");
 			return;
@@ -101,41 +212,58 @@ public class AllTagsWindow extends JDialog {
 							keys = allKeys.get(currentGroup);
 						}
 						if(keys != null){
+							//关键字过滤
+							if(StringUtils.isNotBlank(searchkey)){
+								HashSet<String> filterKeys = new HashSet<String>();
+								for( String key : keys){
+									if(key.contains(searchkey.toLowerCase())){
+										filterKeys.add(key);
+									}else if(mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.get(key).contains(searchkey.toLowerCase())){
+										filterKeys.add(key);
+									}
+								}
+								keys = filterKeys;
+							}
+							if(keys.size() == 0){
+								emptyLabel.setText(String.format(emptyText, mainWindow.setting.isTagsTranslate() ? TaskTagsPanel.tagscnMap.get("rows:" + currentGroup) : currentGroup));
+								tagPane.add(emptyLabel);
+								tagPane.updateUI();
+								return;
+							}
 							currentPage = page;
 							this_.setTitle(String.format("%s(%s条记录)", title, keys.size()));
 							//分页处理
 							if(keys.size() > pageSize){
-								HashSet<String> pageKeys_ = new HashSet<String>();
-								int i = (page - 1) * pageSize;
+								HashSet<String> pageKeys = new HashSet<String>();
+								int index = (page - 1) * pageSize, i = 0;
 								for( String key : keys ){
-									if(i < page * pageSize && i < keys.size()){
-										pageKeys_.add(key);
-										i ++;
+									i ++;
+									if(i > index && i <= page * pageSize){
+										if(i > keys.size()) break;
+										pageKeys.add(key);
 									}else{
-										break;
+										continue;
 									}
 								}
 								pager.change(keys.size() % pageSize == 0 ? keys.size() / pageSize : keys.size() / pageSize + 1, currentPage);
 								if(keys.size() > pageSize){
 									pager.setVisible(true);
 								}
-								keys = pageKeys_;
+								keys = pageKeys;
 							}
 							int i = 0;int ebtnlength = tagBtns != null ? tagBtns.length : 0;
-							//StringBuilder sb = new StringBuilder("<div style='font-family:微软雅黑;font-size:10px;padding:5px 10px;'>");
+							JButton b = null;
 							for(final String key : keys){
 								i ++;
-								/*sb.append(String.format("<a style='text-decoration:none;margin-bottom:10px;' href='clickTag|%s:\"%s\"'>[%s]</a>&nbsp;&nbsp;", group, key, HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() ? 
-										TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(group + ":", ""))));*/
 								if(i < ebtnlength){
-									JButton b = tagBtns[i - 1];
+									b = (JButton) tagBtns[i - 1];
 									b.setText(mainWindow.setting.isDebug() ? "" + i : String.format("<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() ? 
 											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", ""))));
 									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setVisible(true);
 								}else{
-									JButton b = new JButton(mainWindow.setting.isDebug() ? "" + i : String.format("<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() ? 
+									b = new JButton(mainWindow.setting.isDebug() ? "" + i : String.format("<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() ? 
 											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", ""))));
 									b.setFont(FontConst.Microsoft_BOLD_12);
 									b.setMargin(new Insets(1, 1, 1, 1));
@@ -146,15 +274,12 @@ public class AllTagsWindow extends JDialog {
 									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.addMouseListener(btnMouseListener);
-									tagPane.add(b);
-									if(i % 5 == 0) tagPane.updateUI();
 								}
+								tagPane.add(b, i - 1);
+								tagPane.updateUI();
 							}
-							/*sb.append("</div>");
-							tagPane.setText(sb.toString());*/
-							tagPane.updateUI();
 							if(tagBtns == null || tagBtns.length < i){
-								tagBtns = (AJButton[]) tagPane.getComponents();
+								tagBtns = tagPane.getComponents();
 							}
 						}
 					}
@@ -164,87 +289,6 @@ public class AllTagsWindow extends JDialog {
 		});
 	}
 	
-	public AllTagsWindow(final EgDownloaderWindow egDownloaderWindow){
-		
-		this.mainWindow = egDownloaderWindow;
-		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
-		this.setTitle(title);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setLayout(null);
-		this.setLocationRelativeTo(null);
-		typeBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		typeBtnPanel.setBounds(5, 5, ComponentConst.CLIENT_WIDTH - 10, 40);
-		ActionListener typeBtnActionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				AJButton btn = (AJButton) e.getSource();
-				for(Component com : typeBtnPanel.getComponents()){
-					if(com instanceof JButton){
-						((JButton)com).setUI(AJButton.greenBtnUi);
-					}
-				}
-				btn.setUI(AJButton.redBtnUi);
-				String row = btn.getName();
-				currentGroup = row;
-				updateTagScrollPane();
-			}
-		};
-		for(String row : ComponentConst.TAGS_CN_FILENAMES){
-			if("rows.md".equals(row)) continue;
-			AJButton btn = new AJButton(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey("rows:" + row.replaceAll(".md", ""))? 
-					TaskTagsPanel.tagscnMap.get("rows:" + row.replaceAll(".md", "")) : row.replaceAll(".md", ""), null);
-			btn.setName(row.replaceAll(".md", ""));
-			btn.setToolTipText(row.replaceAll(".md", ""));
-			btn.addActionListener(typeBtnActionListener);
-			typeBtnPanel.add(btn);
-		}
-		
-		separator = new JSeparator(); 
-		separator.setBounds(0, 45, this.getWidth(), 1);
-		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 50, this.getWidth() - 10, this.getHeight() - 140);
-		scrollPane.setBorder(null);
-		
-		tagPane = new JPanel();
-		tagPane.setLayout(new FlowLayout(FlowLayout.LEFT));
-		tagPane.setBounds(0, 5, this.getWidth() - 30, this.getHeight() - 160);
-		tagPane.setPreferredSize(new Dimension(this.getWidth() - 30,  this.getHeight() - 160));
-		scrollPane.setViewportView(tagPane);
-		
-		pager = new AJPager(10, this.getHeight() - 80, this.getWidth() - 30, 40, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JButton btn = (JButton) e.getSource();
-				updateTagScrollPane(Integer.parseInt(btn.getName()));
-			}
-		});
-		pager.setVisible(false);
-		
-		ComponentUtil.addComponents(getContentPane(), typeBtnPanel, separator, scrollPane, pager);
-		setVisible(true);
-		
-		((JButton)(typeBtnPanel.getComponent(6))).setUI(AJButton.redBtnUi);
-		currentGroup = ComponentConst.TAGS_CN_FILENAMES[6].replaceAll(".md", "");
-		updateTagScrollPane();
-		
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				Window this_ = (Window) e.getSource();
-				this_.dispose();
-			}
-			//窗体由激活状态变成非激活状态
-			public void windowDeactivated(WindowEvent e) {
-				//关闭后显示主界面
-				Window this_ = (Window) e.getSource();
-				this_.dispose();
-			}
-		});
-	}
-	public ButtonUI[] btnUis = {
-			AJButton.blueBtnUi,
-			AJButton.greenBtnUi,
-			new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.lightBlue),
-			new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.red)
-	};
 	public MouseListener btnMouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
 			JButton btn = (JButton) e.getSource();

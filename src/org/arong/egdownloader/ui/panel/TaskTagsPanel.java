@@ -473,21 +473,7 @@ public class TaskTagsPanel extends JScrollPane {
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = parseTagGroup(tags);
-			String[] attrs = tags.split(";");
-			for(String attr : attrs){
-				String[] arr = attr.split(":");
-				if(arr.length == 1 || arr[0].equals("")){
-					attr = MISC + ":" + attr.replaceAll(":", "");
-					arr = attr.split(":");
-				}
-				if(groups.containsKey(arr[0])){
-					groups.get(arr[0]).add(arr[1]);
-				}else{
-					List<String> list = new ArrayList<String>();
-					list.add(arr[1]);
-					groups.put(arr[0], list);
-				}
-			}
+			
 			int i = 0;
 			for(String group : groups.keySet()){
 				i ++;
