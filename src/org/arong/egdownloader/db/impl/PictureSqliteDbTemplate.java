@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.AbstractSqlDbTemplate;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.ui.work.DownloadWorker;
-import org.arong.jdbc.JdbcUtil;
-import org.arong.util.JdbcSqlExecutor;
 import org.arong.util.Tracker;
-import org.arong.utils.StringUtil;
+import org.arong.util.jdbc.JdbcSqlExecutor;
+import org.arong.util.jdbc.JdbcUtil;
 
 public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 	
@@ -160,7 +160,7 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 		if(o instanceof Picture){
 			Picture model = (Picture)o;
 			StringBuffer sqlsb = new StringBuffer("select * from picture where 1=1");
-			if(StringUtil.notBlank(model.getTid())){
+			if(StringUtils.isNotBlank(model.getTid())){
 				sqlsb.append(" and tid = '").append(model.getTid()).append("'");
 			}
 			sqlsb.append(" order by num desc");

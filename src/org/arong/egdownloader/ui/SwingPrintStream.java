@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
-import org.arong.utils.StringUtil;
 
 /**
  * 用于将控制台信息即System.out.println打印的信息转移到Swing组件JtextArea上显示
@@ -71,7 +70,7 @@ public class SwingPrintStream extends PrintStream {
 	public void write(byte[] buf, int off, int len) {
 		filter(consolePanel);
 		String message = new String(buf, off, len);
-		if(StringUtil.notBlank(message)){
+		if(StringUtils.isNotBlank(message)){
 			final String line = new StringBuffer().append("<font style='color:#0000dd;'>").append(sdf.format(new Date())).append("</font> ").append(formatMessage(message)).toString();
 			try {
 				SwingUtilities.invokeLater(new Runnable(){

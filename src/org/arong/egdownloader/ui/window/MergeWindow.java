@@ -25,7 +25,6 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.FileUtil2;
 import org.arong.util.StringUtil;
-import org.arong.utils.FileUtil;
 /**
  * 任务合并面板
  * @author dipoo
@@ -96,6 +95,8 @@ public class MergeWindow extends JDialog {
 										newtask.setTag(oldtask.getTag());
 										newtask.setOriginal(oldtask.isOriginal());
 										newtask.setSaveDirAsSubname(oldtask.isSaveDirAsSubname());
+										//创建保存目录
+										FileUtil2.ifNotExistsThenCreate(newtask.getSaveDir());
 										System.out.println("复制封面");
 										File cover = new File(oldtask.getSaveDir() + File.separator + "cover.jpg");
 										if(cover.exists()){
@@ -120,7 +121,7 @@ public class MergeWindow extends JDialog {
 																name = (newpic.isSaveAsName() ? name.substring(0, name.lastIndexOf(".") - 1) : newpic.getNum()) + ".jpg";
 															}
 															try{
-																FileUtil.copyFile(oldtask.getSaveDir() + File.separator + name, newtask.getSaveDir() + File.separator + name2);
+																FileUtil2.copyFile(oldtask.getSaveDir() + File.separator + name, newtask.getSaveDir() + File.separator + name2);
 																newpic.setCompleted(true);
 																newpic.setPpi(oldpic.getPpi());
 																newpic.setSize(oldpic.getSize());

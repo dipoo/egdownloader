@@ -1,4 +1,4 @@
-package org.arong.util;
+package org.arong.util.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -11,9 +11,8 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
-import org.arong.jdbc.JdbcUtil;
-import org.arong.util.JdbcSqlExecutor;
-import org.arong.utils.StringUtil;
+import org.arong.util.jdbc.JdbcSqlExecutor;
+import org.arong.util.jdbc.JdbcUtil;
 
 public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 	
@@ -193,13 +192,13 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 		if(o instanceof Task){
 			Task model = (Task)o;
 			StringBuffer sqlsb = new StringBuffer("select * from task where 1=1");
-			if(StringUtil.notBlank(model.getName())){
+			if(StringUtils.isNotBlank(model.getName())){
 				sqlsb.append(" and name like '%").append(model.getName()).append("%'");
 			}
-			if(StringUtil.notBlank(model.getSubname())){
+			if(StringUtils.isNotBlank(model.getSubname())){
 				sqlsb.append(" and subname like '%").append(model.getSubname()).append("%'");
 			}
-			if(StringUtil.notBlank(model.getType())){
+			if(StringUtils.isNotBlank(model.getType())){
 				sqlsb.append(" and type = '").append(model.getType()).append("'");
 			}
 			if(model.getStatus() != null){

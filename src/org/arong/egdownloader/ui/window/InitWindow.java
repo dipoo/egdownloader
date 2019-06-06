@@ -35,7 +35,6 @@ import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.UpdateScriptWorker;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil2;
-import org.arong.utils.FileUtil;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 /**
  * 程序初始化窗口
@@ -146,7 +145,7 @@ public class InitWindow extends JWindow {
 					setting.setPictureHistoryCount(p_historyCount);
 				}
 				textLabel.setText("数据文件备份");
-				FileUtil.copyFile(ComponentConst.DB_DATA_FILE_PATH, ComponentConst.DB_DATA_FILE_PATH_BAK);
+				FileUtil2.copyFile(ComponentConst.DB_DATA_FILE_PATH, ComponentConst.DB_DATA_FILE_PATH_BAK);
 			}else{
 				//检测是否存在task.xml
 				tasks = (TaskList<Task>)new TaskDom4jDbTemplate().query();

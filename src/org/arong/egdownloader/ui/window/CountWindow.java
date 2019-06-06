@@ -24,9 +24,9 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
-import org.arong.jdbc.JdbcUtil;
 import org.arong.util.FileUtil2;
-import org.arong.util.JdbcSqlExecutor;
+import org.arong.util.jdbc.JdbcSqlExecutor;
+import org.arong.util.jdbc.JdbcUtil;
 /**
  * 任务统计面板
  * @author dipoo

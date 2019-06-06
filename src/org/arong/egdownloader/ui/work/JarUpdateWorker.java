@@ -54,7 +54,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 				//备份
 				FileUtil2.ifNotExistsThenCreate(bakPath);
 				System.out.println(String.format("备份文件%s至%s", oldjar.getPath(), bakPath + jarName));
-				org.arong.utils.FileUtil.copyFile(oldjar.getPath(), bakPath + jarName);
+				FileUtil2.copyFile(oldjar.getPath(), bakPath + jarName);
 				//保存
 				int fsize = FileUtil2.storeStream(oldjar.getParent(), jarName, is);
 				if(fsize != totalLength){
@@ -67,7 +67,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 			JOptionPane.showMessageDialog(null, "jar文件更新失败，" + e1.getMessage());
 			//还原
 			System.out.println(String.format("还原文件%s至%s", bakPath + jarName, oldjar.getPath()));
-			org.arong.utils.FileUtil.copyFile(bakPath + jarName, oldjar.getPath());
+			FileUtil2.copyFile(bakPath + jarName, oldjar.getPath());
 			e1.printStackTrace();
 		}finally{
 			if(is != null){

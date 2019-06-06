@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -340,5 +341,45 @@ public final class FileUtil2 {
             filePath = filePath.substring(0, filePath.lastIndexOf(File.separator) + 1);  
         }  
         return filePath;  
+	}
+	/**
+	 * 通过字节流的方式复制文件
+	 * @param srcPath
+	 * @param deskPath
+	 * @throws IOException
+	 */
+	public static void copyFile(String srcPath, String deskPath) throws IOException{
+		copyByte(new File(srcPath), new File(deskPath));
+	}
+	/**
+	 * 字节文件复制
+	 * @param srcFile 源文件
+	 * @param deskFile 目标文件
+	 * @throws IOException
+	 */
+	public static void copyByte(File srcFile, File deskFile) throws IOException {
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		FileOutputStream fos = null;
+		BufferedOutputStream bos = null;
+		try{
+			fis = new FileInputStream(srcFile);
+			bis = new BufferedInputStream(fis);
+			fos = new FileOutputStream(deskFile);
+			bos = new BufferedOutputStream(fos);
+			byte[] b = new byte[1024];
+			int len = 0;
+			while (-1 != (len = bis.read(b))) {
+				bos.write(b, 0, len);
+			}
+			bos.flush();
+		}catch(IOException e){
+			throw e;
+		}finally{
+			if(bos != null){bos.close();}
+			if(fos != null){fos.close();}
+			if(bis != null){bis.close();}
+			if(fis != null){fis.close();}
+		}
 	}
 }
