@@ -65,14 +65,13 @@ public class SimpleSearchWindow extends JDialog {
 					JOptionPane.showMessageDialog(this_, "请输入关键字！");
 					return;
 				}
-				
+				TaskingTable table = (TaskingTable)mainWindow.runningTable;
+				List<Task> allTasks = table.getTasks();
+				int j = 0;
+				List<Integer> indexs = new ArrayList<Integer>();
 				if(key_.startsWith("tags:")){
 					String keys = key_.replaceAll("tags:", "").replaceAll(" ", "+");
 					String[] keysArr = keys.split(";");
-					TaskingTable table = (TaskingTable)mainWindow.runningTable;
-					List<Task> allTasks = table.getTasks();
-					int j = 0;
-					List<Integer> indexs = new ArrayList<Integer>();
 					boolean hits;
 					for(int i = 0; i < allTasks.size(); i++){
 						j ++;
@@ -97,23 +96,22 @@ public class SimpleSearchWindow extends JDialog {
 							j --;
 						}
 					}
-					if(j > 0){
-						if(mainWindow.viewModel == 1){
-							table.setRowSelectionInterval(0, 0);
-							table.scrollRectToVisible(table.getCellRect(0, 0, true));
+				}else if(key_.startsWith("cover:")){
+					String key = key_.replaceAll("cover:", "");
+					for(int i = 0; i < allTasks.size(); i++){
+						j ++;
+						if(allTasks.get(i).getCoverUrl().toLowerCase().contains(key.toLowerCase())){
+							allTasks.get(i).setSearched(true);//标识为已被搜索
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
+							break;
 						}else{
-							mainWindow.taskImagePanel.page = 1;
-							mainWindow.taskImagePanel.init(table.getTasks());
-							mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));
+							allTasks.get(i).setSearched(false);
+							j --;
 						}
 					}
-					Tracker.println("[" + key_ + "]搜索完毕,结果【" + j + "】条。");
 				}else{
 					String[] keys = key_.trim().split("\\|\\|");
-					TaskingTable table = (TaskingTable)mainWindow.runningTable;
-					List<Task> allTasks = table.getTasks();
-					int j = 0;
-					List<Integer> indexs = new ArrayList<Integer>();
 					for(int i = 0; i < allTasks.size(); i++){
 						for(String key : keys){
 							j ++;
@@ -133,18 +131,18 @@ public class SimpleSearchWindow extends JDialog {
 							}
 						}
 					}
-					if(j > 0){
-						if(mainWindow.viewModel == 1){
-							table.setRowSelectionInterval(0, 0);
-							table.scrollRectToVisible(table.getCellRect(0, 0, true));
-						}else{
-							mainWindow.taskImagePanel.page = 1;
-							mainWindow.taskImagePanel.init(table.getTasks());
-							mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));
-						}
-					}
-					Tracker.println("[" + key_ + "]搜索完毕,结果【" + j + "】条。");
 				}
+				if(j > 0){
+					if(mainWindow.viewModel == 1){
+						table.setRowSelectionInterval(0, 0);
+						table.scrollRectToVisible(table.getCellRect(0, 0, true));
+					}else{
+						mainWindow.taskImagePanel.page = 1;
+						mainWindow.taskImagePanel.init(table.getTasks());
+						mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));
+					}
+				}
+				Tracker.println("[" + key_ + "]搜索完毕,结果【" + j + "】条。");
 				mainWindow.infoTabbedPane.setSelectedIndex(0);
 				mainWindow.setVisible(true);
 				mainWindow.toFront();
