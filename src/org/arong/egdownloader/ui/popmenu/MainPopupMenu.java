@@ -179,7 +179,7 @@ public class MainPopupMenu extends AJPopupMenu{
 						}
 						SearchComicWindow scw = mainWindow.searchComicWindow;
 						if(task.getAuthor() != null){
-							scw.doSearch(task.getAuthor());
+							scw.doSearch(String.format("\"%s\"", task.getAuthor()));
 							scw.setVisible(true);
 						}
 					}

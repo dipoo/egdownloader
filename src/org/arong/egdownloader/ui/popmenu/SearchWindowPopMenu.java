@@ -156,7 +156,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
 						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						if(task.getAuthor() != null){
-							mainWindow.searchComicWindow.doSearch(task.getAuthor());
+							mainWindow.searchComicWindow.doSearch(String.format("\"%s\"", task.getAuthor()));
 						}
 					}
 				}));

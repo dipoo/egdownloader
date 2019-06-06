@@ -72,6 +72,9 @@ public class SearchTask {
 	}
 
 	public void setUrl(String url) {
+		if("/".equals(url.substring(url.length() - 1, url.length()))){
+			url = url.substring(0, url.length() - 1);
+		}
 		this.url = url;
 	}
 
