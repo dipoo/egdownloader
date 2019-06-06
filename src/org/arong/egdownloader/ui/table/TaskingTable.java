@@ -292,7 +292,7 @@ public class TaskingTable extends JTable {
 						//显示预览图
 						if(column == 0){
 							Task task = table.getTasks().get(rowIndex);
-							String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
+							String path = task.getSaveDir() + "/cover.jpg";
 							File cover = new File(path);
 							//不存在封面
 							if(cover == null || !cover.exists()){

@@ -19,7 +19,6 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -110,13 +109,13 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							}else{
 								name = pic.getNum() + ".jpg";
 							}
-							existNameFs = new File(String.format("%s%s%s%s", ComponentConst.getSavePathPreffix(), task.getSaveDir(), File.separator, name));
+							existNameFs = new File(String.format("%s%s%s", task.getSaveDir(), File.separator, name));
 						}else{
-							existNameFs = new File(String.format("%s%s%s%s", ComponentConst.getSavePathPreffix(), task.getSaveDir(), File.separator, name));
+							existNameFs = new File(String.format("%s%s%s", task.getSaveDir(), File.separator, name));
 							//已存在相同名称的文件
 							while(existNameFs.exists()){
 								name = String.format("%s_%s", name.substring(0, name.lastIndexOf(".")), name.substring(name.lastIndexOf("."), name.length()));
-								existNameFs = new File(String.format("%s%s%s%s", ComponentConst.getSavePathPreffix(), task.getSaveDir(), File.separator, name));
+								existNameFs = new File(String.format("%s%s%s", task.getSaveDir(), File.separator, name));
 							}
 						}
 						size = task.storeStream(existNameFs, is);//保存到目录

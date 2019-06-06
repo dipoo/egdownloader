@@ -36,6 +36,10 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 			JdbcSqlExecutor.getInstance().executeUpdate("alter table picture add column ppi varchar(64)", JdbcUtil.getConnection());
 		} catch (SQLException e1) {
 		}
+		try{
+			JdbcSqlExecutor.getInstance().executeUpdate("alter table picture add column oldurl varchar(512)", JdbcUtil.getConnection());
+		} catch (SQLException e1) {
+		}
 	}
 	
 	public boolean store(Picture model) {
@@ -219,6 +223,7 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 		model.setNum(rs.getString("num"));
 		model.setTid(rs.getString("tid"));
 		model.setUrl(rs.getString("url"));
+		model.setOldurl(rs.getString("oldurl"));
 		model.setName(rs.getString("name"));
 		model.setRealUrl(rs.getString("realUrl"));
 		model.setTime(rs.getString("time"));
@@ -229,10 +234,11 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 	}
 	
 	private void storeSql(Picture model, StringBuffer sqlsb){
-		sqlsb.append("insert into picture(id,tid,num,name,url,realUrl,size,ppi,time,saveAsName,isCompleted) values('")
+		sqlsb.append("insert into picture(id,tid,num,name,url,oldurl,realUrl,size,ppi,time,saveAsName,isCompleted) values('")
 		.append(model.getId()).append("','").append(model.getTid()).append("','")
 		.append(model.getNum()).append("','").append(StringEscapeUtils.escapeSql(model.getName())).append("','")
-		.append(StringEscapeUtils.escapeSql(model.getUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getRealUrl())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getOldurl() == null ? "" : model.getOldurl())).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getRealUrl())).append("','")
 		.append(model.getSize()).append("','").append(model.getPpi() == null ? "" : model.getPpi()).append("','").append(model.getTime() == null ? "" : model.getTime()).append("','")
 		.append(model.isSaveAsName()).append("','").append(model.isCompleted())
 		.append("')").append(JdbcSqlExecutor.BAT_SPLIT);
@@ -244,9 +250,10 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 		.append("num='").append(t.getNum()).append("',")
 		.append("name='").append(StringEscapeUtils.escapeSql(t.getName())).append("',")
 		.append("url='").append(StringEscapeUtils.escapeSql(t.getUrl())).append("',")
+		.append("oldurl='").append(StringEscapeUtils.escapeSql(t.getOldurl() == null ? "" : t.getOldurl())).append("',")
 		.append("realUrl='").append(StringEscapeUtils.escapeSql(t.getRealUrl())).append("',")
 		.append("size='").append(t.getSize()).append("',")
-		.append("ppi='").append(t.getPpi()).append("',")
+		.append("ppi='").append(t.getPpi() == null ? "" : t.getPpi()).append("',")
 		.append("time='").append(t.getTime()).append("',")
 		.append("saveAsName='").append(t.isSaveAsName()).append("',")
 		.append("isCompleted='").append(t.isCompleted())

@@ -117,7 +117,7 @@ public class TaskImagePanel extends AJPanel {
 						if(p != null){
 							AJLabel l = (AJLabel)p.getComponent(0);
 							if(l.getIcon() == null){
-								String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
+								String path = task.getSaveDir() + "/cover.jpg";
 								File cover = new File(path);
 								if(cover != null && cover.exists()){
 									try{
@@ -268,7 +268,7 @@ public class TaskImagePanel extends AJPanel {
 									l.setHorizontalTextPosition(JLabel.LEADING);
 									//Border border = BorderFactory.createLineBorder(Color.BLACK);
 									//l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
-									final String path = ComponentConst.getSavePathPreffix() + ptasks.get(i).getSaveDir() + "/cover.jpg";
+									final String path = ptasks.get(i).getSaveDir() + "/cover.jpg";
 									File cover = new File(path);
 									if(cover != null && cover.exists()){
 										try{

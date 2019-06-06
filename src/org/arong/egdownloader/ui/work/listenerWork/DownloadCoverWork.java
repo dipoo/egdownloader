@@ -12,7 +12,6 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
@@ -44,7 +43,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 								}
 								//下载封面
 								is =  WebClient.getStreamUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo());//getStreamUseJava(task.getCoverUrl());
-								int size = FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+								int size = FileUtil2.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
 								if(size == 0){
 									JOptionPane.showMessageDialog(mainWindow, "下载失败，地址错误或者地址不可访问");
 								}else{

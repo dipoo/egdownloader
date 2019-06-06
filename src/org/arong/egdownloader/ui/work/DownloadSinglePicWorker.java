@@ -16,7 +16,6 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil2;
@@ -68,7 +67,7 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 				}
 			}
 			
-			File file = new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + name);
+			File file = new File(task.getSaveDir() + File.separator + name);
 			
 			size = task.storeStream(file, is);//保存到目录
 			if(size < 1000){

@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CheckingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -35,7 +34,7 @@ public class CheckResetWork implements IMenuListenerTask {
 		List<Picture> pics = task.getPictures();
 		//任务为未开始状态或者图片列表为空都不用再检测了
 		if(task.getStatus() != TaskStatus.UNSTARTED && pics != null && pics.size() > 0){
-			String[] fileNames = getFiles(ComponentConst.getSavePathPreffix() + task.getSaveDir());
+			String[] fileNames = getFiles(task.getSaveDir());
 			if(fileNames != null){
 				List<Integer> indexs = new ArrayList<Integer>();//需要重置状态的图片索引
 				Picture pic;

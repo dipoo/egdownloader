@@ -177,7 +177,7 @@ public class SettingWindow extends JFrame{
 			openDirButton = new AJButton("打开", IconManager.getIcon("folder"), new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					try {
-						String path = ComponentConst.getSavePathPreffix() + saveDirField.getText();
+						String path = saveDirField.getText();
 						File f = new File(path);
 						FileUtil2.ifNotExistsThenCreate(f);
 						Desktop.getDesktop().open(f);

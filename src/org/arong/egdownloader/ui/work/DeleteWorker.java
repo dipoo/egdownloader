@@ -14,6 +14,7 @@ import org.arong.egdownloader.ui.window.DeletingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil2;
 import org.arong.util.Tracker;
+import org.jaxen.function.StringFunction;
 /**
  * 删除任务线程类
  * @author 阿荣
@@ -37,50 +38,36 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 	protected Void doInBackground() throws Exception {
 		try{
 			Task task;
-			List<Picture> pics = new ArrayList<Picture>();
 			List<Task> tasks = new ArrayList<Task>();
-			List<String> urls = new ArrayList<String>();
-			List<Integer> indexes = new ArrayList<Integer>();
 			for(int i = 0; i < rows.length; i ++){
 				if(table.getTasks().size() >= (rows[i])){
 					task = table.getTasks().get(rows[i]);
 					tasks.add(task);
-					indexes.add(rows[i]);
-					urls.add(task.getUrl().replaceAll("https://", "http://"));
 					w.setData((i + 1) + "/" + rows.length);
 					w.setInfo("收集:" + task.getName());
 					Tracker.println("待删除：" + task.getName());
-					if(task.getPictures() != null && task.getPictures().size() > 0){
-						pics.addAll(task.getPictures());
-					}
 				}
-				
 			}
 			//操作数据库
 			if(tasks.size() > 0){
-				if(pics.size() > 0){
-					w.setInfo("正在删除任务图片");
-					mainWindow.pictureDbTemplate.delete(pics);//删除图片信息
-				}
-				//删除文件
-				if(deleteFile){
-					File file = null;
-					for(int i = 0; i < tasks.size(); i ++){
-						file = new File(ComponentConst.getSavePathPreffix() + tasks.get(i).getSaveDir());
-						if(file.exists()){
-							FileUtil2.deleteFile(file);
+				for(Task t : tasks){
+					if(t.getPictures() != null && t.getPictures().size() > 0){
+						w.setInfo("正在删除任务图片");
+						mainWindow.pictureDbTemplate.delete("tid", t.getId());
+						if(deleteFile){
+							//删除文件
+							FileUtil2.deleteFile(new File(t.getSaveDir()));
 						}
 					}
+					w.setInfo(String.format("正在删除任务【%s】", t.getDisplayName()));
+					mainWindow.taskDbTemplate.delete(t);//删除任务
+					//更新内存
+					table.getTasks().remove(t, t.getUrl().replaceAll("https://", "http://"));
+					if(mainWindow.taskImagePanel != null){
+						mainWindow.taskImagePanel.init();
+					}
 				}
-				w.setInfo("正在删除任务");
-				Tracker.println("正在删除" + tasks.size() + "个任务");
-				mainWindow.taskDbTemplate.delete(tasks);//删除任务
 				Tracker.println("删除" + tasks.size() + "个任务完成");
-				//更新内存
-				table.getTasks().removeAll(tasks, urls);
-				if(mainWindow.taskImagePanel != null){
-					mainWindow.taskImagePanel.init();
-				}
 			}
 			table.clearSelection();//使之不选中任何行
 			if(table.getTasks().size() == 0){

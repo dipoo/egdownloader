@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -34,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.FontConst;
-import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
@@ -107,7 +105,7 @@ public class AllTagsWindow extends JDialog {
 				btn.setUI(AJButton.redBtnUi);
 				String row = btn.getName();
 				currentGroup = row;
-				searchTags();
+				searchTags(1, searchField.getText().trim());
 			}
 		};
 		for(String row : ComponentConst.TAGS_CN_FILENAMES){

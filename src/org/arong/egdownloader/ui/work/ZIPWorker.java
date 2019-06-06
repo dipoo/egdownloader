@@ -15,7 +15,6 @@ import javax.swing.SwingWorker;
 
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.ZiptingWindow;
@@ -56,29 +55,29 @@ public class ZIPWorker extends SwingWorker<Void, Void>{
 			w.setVisible(true);//显示窗口
 			
 			Tracker.println(task.getDisplayName() + "：打包中...");
-			zipfilepath = ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + task.getRealSaveDirName() + ".zip";
+			zipfilepath = task.getSaveDir() + File.separator + task.getRealSaveDirName() + ".zip";
 			fos = new FileOutputStream(zipfilepath);
 			out = new ZipOutputStream(fos);
 	        bo = new BufferedOutputStream(out);  
 	        //zip(out, inputFile, inputFile.getName(), bo);
 			for(int i = 0; i < pics.size(); i ++){
-				boolean succ = zip(out, new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + pics.get(i).getName()), pics.get(i).getName(), bo);
+				boolean succ = zip(out, new File(task.getSaveDir() + File.separator + pics.get(i).getName()), pics.get(i).getName(), bo);
 				if(succ){
 					success ++;
 				}
 			}
 			if(success == 0){
 				w.bar.setValue(0);
-				//out = new ZipOutputStream(new FileOutputStream(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + task.getRealSaveDirName() + ".zip"));  
+				//out = new ZipOutputStream(new FileOutputStream(task.getSaveDir() + File.separator + task.getRealSaveDirName() + ".zip"));  
 		        bo = new BufferedOutputStream(out);  
 				for(int i = 0; i < pics.size(); i ++){
-					boolean succ = zip(out, new File(ComponentConst.getSavePathPreffix() + task.getSaveDir() + File.separator + pics.get(i).getNum() + ".jpg"), pics.get(i).getNum() + ".jpg", bo);
+					boolean succ = zip(out, new File(task.getSaveDir() + File.separator + pics.get(i).getNum() + ".jpg"), pics.get(i).getNum() + ".jpg", bo);
 					if(succ){
 						success ++;
 					}
 				}
 				if(success > 0){
-					Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir()));
+					Desktop.getDesktop().open(new File(task.getSaveDir()));
 				}
 			}
 		}catch(Exception e){

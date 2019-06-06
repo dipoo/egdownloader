@@ -27,6 +27,7 @@ public class PicturesPopMenu extends JPopupMenu {
 	public EgDownloaderWindow mainWindow;
 	public JMenuItem openPictureItem;
 	public JMenuItem downItem;
+	public JMenuItem oldUrlItem;
 	public PictureTable table;
 	public PicturesPopMenu(EgDownloaderWindow mainWindow, PictureTable pictable){
 		this.mainWindow = mainWindow;
@@ -40,9 +41,9 @@ public class PicturesPopMenu extends JPopupMenu {
 							try {
 								String name = pic.getName();
 								if(name.indexOf(".") != -1){
-									name = pic.getNum() + name.substring(name.lastIndexOf("."), name.length());
+									name = (pic.isSaveAsName() ? name.substring(0, name.lastIndexOf(".") - 1) : pic.getNum()) + name.substring(name.lastIndexOf("."), name.length());
 								}else{
-									name = pic.getNum() + ".jpg";
+									name = (pic.isSaveAsName() ? name.substring(0, name.lastIndexOf(".") - 1) : pic.getNum()) + ".jpg";
 								}
 								Desktop.getDesktop().open(new File(table.getTask().getSaveDir() + File.separator + name));
 							} catch (Exception e1) {
@@ -90,11 +91,20 @@ public class PicturesPopMenu extends JPopupMenu {
 						openPage(pic.getUrl());
 					}
 				}));
+		oldUrlItem = new AJMenuItem("旧版网页", Color.BLACK,
+				IconManager.getIcon("browse"),
+				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
+					public void doWork(Window window, ActionEvent e) {
+						Picture pic = table.getTask().getPictures().get(table.getSelectedRow());
+						openPage(pic.getOldurl());
+					}
+				}));
 		
 		this.add(openPictureItem);
 		this.add(downItem);
 		this.add(resetStatusItem);
 		this.add(openPageItem);
+		this.add(oldUrlItem);
 	}
 	
 	public void openPage(String url){

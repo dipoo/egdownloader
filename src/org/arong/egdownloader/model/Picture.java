@@ -11,6 +11,7 @@ public class Picture {
 	private String num;//序号
 	private String name;//真实名称
 	private String url;//浏览地址
+	private String oldurl;//旧版本地址
 	private String realUrl;//真实下载地址
 	private int size;//大小
 	private String ppi;//分辨率
@@ -106,5 +107,11 @@ public class Picture {
 	}
 	public void setTotalSize(long totalSize) {
 		this.totalSize = totalSize;
+	}
+	public String getOldurl() {
+		return oldurl;
+	}
+	public void setOldurl(String oldurl) {
+		this.oldurl = oldurl;
 	}
 }

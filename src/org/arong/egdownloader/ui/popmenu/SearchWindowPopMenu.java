@@ -117,7 +117,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						}
 					}
 				}));
-		showMergeItem = new AJMenuItem("合并任务", Color.BLACK, "",
+		showMergeItem = new AJMenuItem("版本合并", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
@@ -127,6 +127,9 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						SearchTask st = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
 						mainWindow.searchComicWindow.mergeWindow.setSearchTask(st);
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
+						if(table.getTasks() == null || table.getTasks().size() == 0){
+							return;
+						}
 						Task t = table.getTasks().get(table.selectRowIndex);
 						mainWindow.searchComicWindow.mergeWindow.setTask(t);
 						mainWindow.searchComicWindow.mergeWindow.showMergeInfo();

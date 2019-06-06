@@ -138,6 +138,50 @@ public class ScriptParser {
 		param.put("htmlSource", source);
 		return JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
 	}
+	public static Task getTaskAndPicByUrl(String url, String tid, Setting setting) throws Exception{
+		String source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", setting.getCookieInfo());
+		//保存源文件
+		FileUtil2.storeStr2file(source, "source/", "task.html");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("htmlSource", source);
+		Task task = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+		task.setUrl(url);
+		task.setId(tid);
+		task.setEnd(task.getTotal());
+		//获取图片集合
+        int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;
+        List<Picture> pictures = new ArrayList<Picture>();
+        int i = 0;
+        while(pictures.size() < task.getTotal() && i < page){
+        	try{
+	        	if(i == 0){
+	        		pictures.addAll(collectpictrues(source, setting));
+	        	}else{
+	        		source = WebClient.getRequestUseJavaWithCookie(task.getUrl() + "?" + setting.getPageParam() + "=" + i, "UTF-8", setting.getCookieInfo());
+	        		pictures.addAll(collectpictrues(source, setting));
+	        	}
+	        	i ++;
+        	}catch(Exception e){
+            	//未采集状态
+            	task.setStatus(TaskStatus.UNCREATED);
+            	//重置图片列表
+            	pictures = null;
+            	break;
+            }
+        }
+        if(pictures != null){
+        	i = 0;
+        	for(Picture pic : pictures){
+        		pic.setId(UUID.randomUUID().toString());
+        		pic.setTid(task.getId());
+        		pic.setNum(genNum(task.getTotal(), i));
+        		pic.setSaveAsName(setting.isSaveAsName());
+        		i ++;
+        	}
+        	task.setPictures(pictures);
+        }
+        return task;
+	}
 	
 	/**
 	 * 创建任务

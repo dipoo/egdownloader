@@ -77,6 +77,10 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column syncTime varchar(64)", JdbcUtil.getConnection());
 			} catch (SQLException e1) {
 			}
+			try{
+				JdbcSqlExecutor.getInstance().executeUpdate("alter table task add column oldurl varchar(512)", JdbcUtil.getConnection());
+			} catch (SQLException e1) {
+			}
 	}
 
 	public boolean store(List<Task> tasks) {
@@ -265,6 +269,7 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 		model.setId(rs.getString("id"));
 		model.setGroupname(rs.getString("groupname"));
 		model.setUrl(rs.getString("url"));
+		model.setOldurl(rs.getString("oldurl"));
 		model.setName(rs.getString("name"));
 		model.setSubname(rs.getString("subname") == null ? "" : rs.getString("subname"));
 		model.setCoverUrl(rs.getString("coverUrl"));
@@ -290,8 +295,9 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 	}
 	
 	private void storeSql(Task model, StringBuffer sqlsb){
-		sqlsb.append("insert into task(id,groupname,url,name,subname,coverUrl,language,type,saveDir,tag,tags,readed,createTime,syncTime,completedTime,postedTime,uploader,original,total,current,size,status,start,end) values('")
-		.append(model.getId()).append("','").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("','").append(StringEscapeUtils.escapeSql(model.getUrl())).append("','")
+		sqlsb.append("insert into task(id,groupname,url,oldurl,name,subname,coverUrl,language,type,saveDir,tag,tags,readed,createTime,syncTime,completedTime,postedTime,uploader,original,total,current,size,status,start,end) values('")
+		.append(model.getId()).append("','").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("','")
+		.append(StringEscapeUtils.escapeSql(model.getUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getOldurl() == null ? "" : model.getOldurl())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getName())).append("','").append(StringEscapeUtils.escapeSql(model.getSubname())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getCoverUrl())).append("','").append(StringEscapeUtils.escapeSql(model.getLanguage())).append("','")
 		.append(StringEscapeUtils.escapeSql(model.getType())).append("','").append(StringEscapeUtils.escapeSql(model.getSaveDir())).append("','")
@@ -310,6 +316,7 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 		sqlsb.append("update task set ")
 		.append("groupname='").append(StringEscapeUtils.escapeSql(ComponentConst.groupName)).append("',")
 		.append("url='").append(StringEscapeUtils.escapeSql(t.getUrl())).append("',")
+		.append("oldurl='").append(StringEscapeUtils.escapeSql(t.getOldurl() == null ? "" : t.getOldurl())).append("',")
 		.append("name='").append(StringEscapeUtils.escapeSql(t.getName())).append("',")
 		.append("subname='").append(StringEscapeUtils.escapeSql(t.getSubname() == null ? "" : t.getSubname())).append("',")
 		.append("coverUrl='").append(StringEscapeUtils.escapeSql(t.getCoverUrl())).append("',")

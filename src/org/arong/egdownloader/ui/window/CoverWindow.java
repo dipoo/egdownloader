@@ -10,7 +10,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -43,7 +42,7 @@ public class CoverWindow extends JDialog {
 		});
 	}
 	public void showCover(Task task){
-		String path = ComponentConst.getSavePathPreffix() + task.getSaveDir() + "/cover.jpg";
+		String path = task.getSaveDir() + "/cover.jpg";
 		File cover = new File(path);
 		//不存在封面
 		if(cover == null || !cover.exists()){

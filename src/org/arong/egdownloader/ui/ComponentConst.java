@@ -292,14 +292,5 @@ public final class ComponentConst {
 			return DATA_PATH;
 		}
 	}
-
-	public static String getSavePathPreffix(){
-		return "";
-		/*if("".equals(groupName)){
-			return "";
-		}else{
-			return ROOT_DATA_PATH + "/" + groupName + "/";
-		}*/
-	}
 	
 }

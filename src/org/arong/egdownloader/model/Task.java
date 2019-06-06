@@ -35,6 +35,7 @@ public class Task {
 	private String id;//id
 	private String groupname;//任务组名称
 	private String url;//下载地址
+	private String oldurl;//旧版本下载地址
 	private String name;//名称
 	private String subname;//子名称
 	private String coverUrl;//封面路径
@@ -520,5 +521,11 @@ public class Task {
 	}
 	public void setSyncTime(String syncTime) {
 		this.syncTime = syncTime;
+	}
+	public String getOldurl() {
+		return oldurl;
+	}
+	public void setOldurl(String oldurl) {
+		this.oldurl = oldurl;
 	}
 }

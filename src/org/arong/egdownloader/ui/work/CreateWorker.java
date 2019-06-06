@@ -12,7 +12,6 @@ import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.spider.WebClient;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -71,7 +70,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				//下载封面
 				try{
 					is = WebClient.getStreamUseJavaWithCookie(task.getDownloadCoverUrl(setting.isUseCoverReplaceDomain()), setting.getCookieInfo());
-					FileUtil2.storeStream(ComponentConst.getSavePathPreffix() + task.getSaveDir(), "cover.jpg", is);//保存到目录
+					FileUtil2.storeStream(task.getSaveDir(), "cover.jpg", is);//保存到目录
 				} catch (SocketTimeoutException e){
 					JOptionPane.showMessageDialog(null, "读取封面文件超时，请检查网络后重试");
 				} catch (ConnectTimeoutException e){

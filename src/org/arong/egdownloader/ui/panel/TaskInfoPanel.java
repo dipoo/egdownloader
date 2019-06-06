@@ -42,7 +42,7 @@ public class TaskInfoPanel extends JScrollPane {
 					if("openSaveDir".equals(e.getDescription())){
 						//打开保存目录
 						try {
-							Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + t.getSaveDir()));
+							Desktop.getDesktop().open(new File(t.getSaveDir()));
 						} catch (Exception e1) {
 							JOptionPane.showMessageDialog(null, "打开文件夹失败");
 						}
@@ -102,7 +102,9 @@ public class TaskInfoPanel extends JScrollPane {
 						t.isSaveDirAsSubname() ? "是" : "否", 
 						StringUtils.isBlank(t.getTag()) ? "一般" : t.getTag(), 
 						StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname(), 
-						t.getSaveDir());
+						t.getSaveDir(), 
+						StringUtils.isNotBlank(t.getOldurl()) ? "block" : "none",
+						StringUtils.isNotBlank(t.getOldurl()) ? String.format("<a href='%s'>%s</a>", t.getOldurl(), t.getOldurl()) : "");
 				/*String text = ComponentConst.taskinfoHtml
 						.replace("@t_name", t.getName())
 						.replace("@t_subname", t.getSubname() == null ? "" : t.getSubname())

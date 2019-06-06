@@ -7,10 +7,10 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
@@ -29,7 +29,7 @@ public class PictureTable extends JTable {
 	
 	private Task task;
 	public EgDownloaderWindow mainWindow;
-	public JPopupMenu popupMenu;
+	public PicturesPopMenu popupMenu;
 	public int showPictureTimes = 0;
 	
 	public void changeModel(Task task){
@@ -99,6 +99,12 @@ public class PictureTable extends JTable {
 				if(e.getButton() == MouseEvent.BUTTON3){
 					//使之选中
 					table.setRowSelectionInterval(rowIndex, rowIndex);
+					Task task = table.getTask();
+					if(StringUtils.isNotBlank(task.getPictures().get(rowIndex).getOldurl())){
+						popupMenu.oldUrlItem.setVisible(true);
+					}else{
+						popupMenu.oldUrlItem.setVisible(false);
+					}
 					popupMenu.show(table, e.getPoint().x, e.getPoint().y);
 				}
 			}

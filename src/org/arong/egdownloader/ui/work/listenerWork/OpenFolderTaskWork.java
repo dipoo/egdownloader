@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
@@ -27,7 +26,7 @@ public class OpenFolderTaskWork implements IMenuListenerTask {
 		Task task = table.getTasks().get(rowIndex);
 		if(TaskStatus.UNCREATED != task.getStatus()){
 			try {
-				Desktop.getDesktop().open(new File(ComponentConst.getSavePathPreffix() + task.getSaveDir()));
+				Desktop.getDesktop().open(new File(task.getSaveDir()));
 			} catch (Exception e1) {
 				//e1.printStackTrace();
 				JOptionPane.showMessageDialog(mainWindow, "文件夹已被删除");
