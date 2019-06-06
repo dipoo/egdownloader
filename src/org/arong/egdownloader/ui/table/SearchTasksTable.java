@@ -100,7 +100,7 @@ public class SearchTasksTable extends JTable {
 					return l;
 				}else if(column == 1){//名称
 					SearchTask task = tasks.get(row);
-					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+					boolean contains = comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
 					JLabel l = new AJLabel(String.format("<html>%s%s%s</html>", (contains ? HtmlUtils.redColorHtml("[已存在]") : ""), (task.isFavAuthorOrGroup(comicWindow.mainWindow.setting.getFavTags()) ? "[<font color=red>★</font>]" : ""), value.toString()), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
@@ -208,7 +208,7 @@ public class SearchTasksTable extends JTable {
 						comicWindow.popMenu = new SearchWindowPopMenu(comicWindow.mainWindow);
 					}
 					SearchTask task = comicWindow.searchTasks.get(comicWindow.selectTaskIndex);
-					boolean contains = comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+					boolean contains = comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					if(contains){
 						comicWindow.popMenu.openPictureItem.setVisible(true);
 						comicWindow.popMenu.downItem.setVisible(false);

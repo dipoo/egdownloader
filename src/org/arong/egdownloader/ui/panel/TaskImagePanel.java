@@ -28,7 +28,6 @@ import javax.swing.SwingUtilities;
 
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;

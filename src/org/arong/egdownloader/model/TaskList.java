@@ -5,21 +5,27 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 /**
  * 对ArrayList的调整类，主要添加属性监听
  * @author dipoo
  * @since 2015-07-25
- * @param <T>
  */
 public class TaskList<T> extends ArrayList<T> {
-
 	private static final long serialVersionUID = 8354635507256958013L;
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);//属性变化监听支持
-	private Map<String, Integer> taskMap = new HashMap<String, Integer>();
+	private Map<String, Integer> taskUrlMap = new HashMap<String, Integer>();//用于通过地址检查任务是否已存在
+	//http://exhentai.org/t/33/9d【/339d】f975fe9d2fdff9b097db4c220341baf463ad-1431193-1428-2018-png_250.jpg
+	private StringBuilder taskTokens = new StringBuilder();//用于通过任务地址与封面地址检查任务是否存在已添加的旧版，格式如：/339d_{gid}/228s_{gid}
 	
-	public Map<String, Integer> getTaskMap() {
-		return taskMap;
+	public Map<String, Integer> getTaskUrlMap() {
+		return taskUrlMap;
+	}
+	public StringBuilder getTokenTokens() {
+		return taskTokens;
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -29,60 +35,87 @@ public class TaskList<T> extends ArrayList<T> {
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 		changeSupport.removePropertyChangeListener(l);
 	}
+	
+	private void addCoverToken(Task task){
+		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
+			String[] taskarr = task.getUrl().split("/g/");
+			String[] coverarr = task.getCoverUrl().split("-");
+			taskTokens.append(coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 5))
+					.append(taskarr[1].substring(0, taskarr[1].indexOf("/")));
+		}
+	}
+	private void revoceCoverToken(Task task){
+		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
+			String[] taskarr = task.getUrl().split("/g/");
+			String[] coverarr = task.getCoverUrl().split("-");
+			String token = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 5) + taskarr[1].substring(0, taskarr[1].indexOf("/"));
+			if(taskTokens.indexOf(token) != -1){
+				taskTokens.replace(taskTokens.indexOf(token), taskTokens.indexOf(token) + token.length(), "");
+			}
+		}
+	}
 
 	public boolean add(T e) {
+		if(e instanceof Task){
+			Task t = (Task)e;
+			taskUrlMap.put(t.getUrl().replaceAll("https://", "http://"), 0);
+			addCoverToken(t);
+		}
 		changeSupport.firePropertyChange("", null, null);
 		return super.add(e);
 	}
 	
-	public boolean add(T e, String key) {
-		taskMap.put(key, 0);
-		return add(e);
-	}
-
 	public boolean remove(Object o) {
+		if(o instanceof Task){
+			Task t = (Task)o;
+			taskUrlMap.remove(t.getUrl().replaceAll("https://", "http://"));
+			revoceCoverToken(t);
+		}
 		changeSupport.firePropertyChange("", null, null);
+		System.out.println(taskTokens.toString() + "," + taskTokens.length());
 		return super.remove(o);
 	}
 	
-	public boolean remove(Object o, String key) {
-		taskMap.remove(key);
-		return remove(o);
-	}
-
 	public boolean addAll(Collection<? extends T> c) {
+		if(c != null && c.size() > 0 && c.iterator().next() instanceof Task){
+			Iterator<? extends T> it = c.iterator();
+			while(it.hasNext()){
+				T o = it.next();
+				if(o instanceof Task){
+					Task t = (Task)o;
+					taskUrlMap.put(t.getUrl().replaceAll("https://", "http://"), 0);
+					addCoverToken(t);
+				}
+			}
+		}
 		changeSupport.firePropertyChange("", null, null);
 		return super.addAll(c);
 	}
 	
-	public boolean addAll(Collection<? extends T> c, Collection<String> keys) {
-		if(keys != null){
-			for (String key : keys) {
-				taskMap.put(key, 0);
+	public boolean removeAll(Collection<?> c) {
+		if(c != null && c.size() > 0 && c.iterator().next() instanceof Task){
+			Iterator<?> it = c.iterator();
+			while(it.hasNext()){
+				Object o = it.next();
+				if(o instanceof Task){
+					Task t = (Task)o;
+					taskUrlMap.remove(t.getUrl().replaceAll("https://", "http://"));
+					revoceCoverToken(t);
+				}
 			}
 		}
-		return addAll(c);
-	}
-
-	public boolean removeAll(Collection<?> c) {
 		changeSupport.firePropertyChange("", null, null);
 		return super.removeAll(c);
 	}
-	public boolean removeAll(Collection<?> c, Collection<String> keys) {
-		if(keys != null){
-			for (String key : keys) {
-				taskMap.remove(key);
-			}
-		}
-		return removeAll(c);
-	}
 
-	public void add(int index, T element) {
+	public void add(int index, T e) {
+		if(e instanceof Task){
+			Task t = (Task)e;
+			taskUrlMap.put(t.getUrl().replaceAll("https://", "http://"), 0);
+			addCoverToken(t);
+		}
 		changeSupport.firePropertyChange("", null, null);
-		super.add(index, element);
-	}
-	public void add(int index, T element, String key) {
-		taskMap.put(key, 0);
-		add(index, element);
+		System.out.println(taskTokens.toString() + "," + taskTokens.length());
+		super.add(index, e);
 	}
 }

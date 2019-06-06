@@ -218,7 +218,7 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 						while(rs.next()){
 							model = new Task();
 							resultSet2Task(rs, model);
-							list.add(model, model.getUrl().replaceAll("https://", "http://"));
+							list.add(model);
 						}
 						return list;
 					}
@@ -244,7 +244,7 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 					while(rs.next()){
 						model = new Task();
 						resultSet2Task(rs, model);
-						list.add(model, model.getUrl().replaceAll("https://", "http://"));
+						list.add(model);
 					}
 					return list;
 				}

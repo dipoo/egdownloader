@@ -152,9 +152,9 @@ public class MergeWindow extends JDialog {
 										window.pictureDbTemplate.delete("tid", oldtask.getId());
 										//保存到内存
 										final TaskingTable taskTable = (TaskingTable)window.runningTable;
-										taskTable.getTasks().add(0, newtask, newtask.getUrl().replaceAll("https://", "http://"));//将任务添加到列表最前面
+										taskTable.getTasks().add(0, newtask);//将任务添加到列表最前面
 										taskTable.propertyChange(newtask);//开始观察者模式，显示下载速度
-										taskTable.getTasks().remove(oldtask, oldtask.getUrl().replaceAll("https://", "http://"));
+										taskTable.getTasks().remove(oldtask);
 										System.out.println("删除旧版本文件");
 										//删除磁盘文件
 										FileUtil2.deleteFile(new File(oldtask.getSaveDir()));

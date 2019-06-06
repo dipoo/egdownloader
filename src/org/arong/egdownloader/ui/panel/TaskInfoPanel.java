@@ -104,7 +104,7 @@ public class TaskInfoPanel extends JScrollPane {
 						StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname(), 
 						t.getSaveDir(), 
 						StringUtils.isNotBlank(t.getOldurl()) ? "block" : "none",
-						StringUtils.isNotBlank(t.getOldurl()) ? String.format("<a href='%s'>%s</a>", t.getOldurl(), t.getOldurl()) : "");
+						StringUtils.isNotBlank(t.getOldurl()) ? String.format("旧版本：<a href='%s'>%s</a>", t.getOldurl(), t.getOldurl()) : "");
 				/*String text = ComponentConst.taskinfoHtml
 						.replace("@t_name", t.getName())
 						.replace("@t_subname", t.getSubname() == null ? "" : t.getSubname())

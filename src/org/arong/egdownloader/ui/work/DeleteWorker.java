@@ -62,7 +62,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					w.setInfo(String.format("正在删除任务【%s】", t.getDisplayName()));
 					mainWindow.taskDbTemplate.delete(t);//删除任务
 					//更新内存
-					table.getTasks().remove(t, t.getUrl().replaceAll("https://", "http://"));
+					table.getTasks().remove(t);
 					if(mainWindow.taskImagePanel != null){
 						mainWindow.taskImagePanel.init();
 					}

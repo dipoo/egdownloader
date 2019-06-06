@@ -71,7 +71,7 @@ public class SearchImagePanel extends JLabel {
 						mainWindow.searchComicWindow.popMenu = new SearchWindowPopMenu(mainWindow);
 					}
 					SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-					boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+					boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					if(contains){
 						mainWindow.searchComicWindow.popMenu.openPictureItem.setVisible(true);
 						mainWindow.searchComicWindow.popMenu.downItem.setVisible(false);
@@ -132,7 +132,7 @@ public class SearchImagePanel extends JLabel {
 	
 	public void flush(final SearchTask task, final long delay){
 		this.setForeground(Color.WHITE);
-		boolean contains = mainWindow.tasks.getTaskMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
 		this.setText(genText(task));
 		tips = task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : "");
