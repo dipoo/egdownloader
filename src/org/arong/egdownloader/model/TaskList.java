@@ -44,7 +44,7 @@ public class TaskList<T> extends ArrayList<T> {
 					.append(taskarr[1].substring(0, taskarr[1].indexOf("/")));
 		}
 	}
-	private void revoceCoverToken(Task task){
+	private void removeCoverToken(Task task){
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] taskarr = task.getUrl().split("/g/");
 			String[] coverarr = task.getCoverUrl().split("-");
@@ -69,10 +69,9 @@ public class TaskList<T> extends ArrayList<T> {
 		if(o instanceof Task){
 			Task t = (Task)o;
 			taskUrlMap.remove(t.getUrl().replaceAll("https://", "http://"));
-			revoceCoverToken(t);
+			removeCoverToken(t);
 		}
 		changeSupport.firePropertyChange("", null, null);
-		System.out.println(taskTokens.toString() + "," + taskTokens.length());
 		return super.remove(o);
 	}
 	
@@ -100,7 +99,7 @@ public class TaskList<T> extends ArrayList<T> {
 				if(o instanceof Task){
 					Task t = (Task)o;
 					taskUrlMap.remove(t.getUrl().replaceAll("https://", "http://"));
-					revoceCoverToken(t);
+					removeCoverToken(t);
 				}
 			}
 		}
@@ -115,7 +114,6 @@ public class TaskList<T> extends ArrayList<T> {
 			addCoverToken(t);
 		}
 		changeSupport.firePropertyChange("", null, null);
-		System.out.println(taskTokens.toString() + "," + taskTokens.length());
 		super.add(index, e);
 	}
 }

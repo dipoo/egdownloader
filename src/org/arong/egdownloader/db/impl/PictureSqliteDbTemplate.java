@@ -49,7 +49,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying store picture...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return store(model);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -64,7 +72,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
 				return c > 0;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying store pictures...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return store(list);
+				}else{
+					e.printStackTrace();
+				}
 			}
 		}
 		/*for (Picture model : list) {
@@ -103,7 +119,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
 				return c > 0;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying update pictures...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return update(list);
+				}else{
+					e.printStackTrace();
+				}
 			}
 		}
 		/*for (Picture model : list) {
@@ -119,7 +143,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying delete picture...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return delete(t);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -130,7 +162,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying delete pictures...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return delete(name, value);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -143,7 +183,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
 				return c > 0;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying delete pictures...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return delete(list);
+				}else{
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
@@ -160,6 +208,9 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 		if(o instanceof Picture){
 			Picture model = (Picture)o;
 			StringBuffer sqlsb = new StringBuffer("select * from picture where 1=1");
+			if(StringUtils.isNotBlank(model.getId())){
+				sqlsb.append(" and id = '").append(model.getTid()).append("'");
+			}
 			if(StringUtils.isNotBlank(model.getTid())){
 				sqlsb.append(" and tid = '").append(model.getTid()).append("'");
 			}
@@ -178,7 +229,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 					}
 				});
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying query pictures...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return query(o);
+				}else{
+					e.printStackTrace();
+				}
 			}
 			return null;
 		}else{
@@ -204,7 +263,15 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 				}
 			});
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(PictureSqliteDbTemplate.class , "database is locked, trying query pictures...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return query(name, value);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -215,7 +282,8 @@ public class PictureSqliteDbTemplate extends AbstractSqlDbTemplate<Picture> {
 	}
 
 	public boolean exsits(String name, String value) {
-		return query(name, value) != null && query(name, value).size() > 0;
+		List<Picture> list = query(name, value);
+		return list != null && list.size() > 0;
 	}
 	
 	private void resultSet2Picture(ResultSet rs, Picture model) throws SQLException{

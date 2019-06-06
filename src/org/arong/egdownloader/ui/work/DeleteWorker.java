@@ -59,7 +59,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 							FileUtil2.deleteFile(new File(t.getSaveDir()));
 						}
 					}
-					w.setInfo(String.format("正在删除任务【%s】", t.getDisplayName()));
+					w.setInfo(String.format("正在删除任务【%s】-%s", t.getDisplayName(), t.getUrl()));
 					mainWindow.taskDbTemplate.delete(t);//删除任务
 					//更新内存
 					table.getTasks().remove(t);

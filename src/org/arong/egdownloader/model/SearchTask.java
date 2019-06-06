@@ -112,7 +112,7 @@ public class SearchTask {
 	public String getDownloadCoverUrl(boolean useCoverReplaceDomain) {
 		return coverUrl != null && useCoverReplaceDomain ? coverUrl.replaceAll(ComponentConst.EX_DOMAIN, ComponentConst.EX_REPLACE_COVER_DOMAIN) : coverUrl;
 	}
-
+	
 	public String getRating() {
 		return rating;
 	}

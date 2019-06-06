@@ -40,7 +40,7 @@ public class MergeWindow extends JDialog {
 	public MergeWindow(final EgDownloaderWindow window){
 		this.window = window;
 		// 设置主窗口
-		this.setSize(ComponentConst.CLIENT_WIDTH, 350);
+		this.setSize(ComponentConst.CLIENT_WIDTH, 320);
 		this.setIconImage(IconManager.getIcon("count").getImage());
 		this.setTitle("版本合并");
 		this.setVisible(true);
@@ -145,7 +145,7 @@ public class MergeWindow extends JDialog {
 										window.taskDbTemplate.store(newtask);
 										//保存新版本图片
 										window.pictureDbTemplate.store(newtask.getPictures());
-										System.out.println("删除旧版本");
+										System.out.println(String.format("删除旧版本：%s", oldtask.getUrl()));
 										//删除旧版本任务
 										window.taskDbTemplate.delete(oldtask);
 										//删除旧版本图片
@@ -155,10 +155,13 @@ public class MergeWindow extends JDialog {
 										taskTable.getTasks().add(0, newtask);//将任务添加到列表最前面
 										taskTable.propertyChange(newtask);//开始观察者模式，显示下载速度
 										taskTable.getTasks().remove(oldtask);
-										System.out.println("删除旧版本文件");
-										//删除磁盘文件
+										System.out.println(String.format("删除旧版本文件：%s", oldtask.getSaveDir()));
+										//删除旧版本文件
 										FileUtil2.deleteFile(new File(oldtask.getSaveDir()));
 										System.out.println(String.format("结束合并任务【%s】，耗时%s秒", oldtask.getDisplayName(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f))));
+										if(window.taskImagePanel != null){
+											window.taskImagePanel.init();
+										}
 										JOptionPane.showMessageDialog(MergeWindow.this, "任务合并成功");
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -211,11 +214,11 @@ public class MergeWindow extends JDialog {
 		}else if(StringUtil.getSimilarityRatio(st.getName(), t.getName()) < 0.95f){
 			cantMsg =  "标题相似度低于95％，无法合并，请确认所选中的任务是否为同一个本子";
 		}
-		String s = String.format("<html>【新版本】(%s-<font color='blue'>%s</font>)%s<br>【旧版本】(%s-<font color='blue'>%s</font>)%s<br><br><center>%s</center><br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并。<br>合并的规则为：旧版本中已完成的图片，名称相同的部分直接复制，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></html>", 
-				st.getDate(), st.getUploader(), st.getName(), 
-				t.getPostedTime(), t.getUploader(), t.getName(),
+		String s = String.format("<html>【新版本】[%s-<font color='blue'>%s</font>]<font color='red'>%s</font>[%s P]<br>【旧版本】[%s-<font color='blue'>%s</font>]<font color='red'>%s</font>[%s P]<br><br>%s<br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></html>", 
+				st.getDate(), st.getUploader(), st.getName(), st.getFilenum(),
+				t.getPostedTime(), t.getUploader(), t.getName(), t.getTotal(),
 				cantMsg == null ? String.format("<a style='text-decoration:underline' href='merge'>%s</a>", merging ? "任务合并中..." : "开始合并") :
-					String.format("<b><font color=red>%s</font></b>", cantMsg));
+					String.format("<h1><font color=red>%s</font></h1>", cantMsg));
 		return s;
 	}
 }

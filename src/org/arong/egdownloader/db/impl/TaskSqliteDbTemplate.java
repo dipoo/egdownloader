@@ -11,6 +11,7 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.util.Tracker;
 import org.arong.util.jdbc.JdbcSqlExecutor;
 import org.arong.util.jdbc.JdbcUtil;
 
@@ -92,7 +93,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
 				return c > 0;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying store tasks...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return store(tasks);
+				}else{
+					e.printStackTrace();
+				}
 			}
 		}
 		/*for (Task model : tasks) {
@@ -108,7 +117,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying store task...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return store(model);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -120,7 +137,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying update task...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return update(t);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -135,7 +160,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
 				return c > 0;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying update tasks...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return update(tasks);
+				}else{
+					e.printStackTrace();
+				}
 			}
 		}
 		/*for (Task model : tasks) {
@@ -150,7 +183,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying delete task...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return delete(t);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -161,7 +202,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 			int c = JdbcSqlExecutor.getInstance().executeUpdate(sql, JdbcUtil.getConnection());
 			return c > 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying delete tasks...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return delete(name, value);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -174,7 +223,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 				int c = JdbcSqlExecutor.getInstance().executeUpdate(sqlsb.toString(), true, JdbcUtil.getConnection());
 				return c > 0;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying delete tasks...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return delete(tasks);
+				}else{
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
@@ -224,7 +281,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 					}
 				});
 			} catch (SQLException e) {
-				e.printStackTrace();
+				if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+					Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying query tasks...");
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e2){}
+					return query(o);
+				}else{
+					e.printStackTrace();
+				}
 			}
 			return null;
 		}else{
@@ -250,7 +315,15 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 				}
 			});
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage() != null && e.getMessage().contains("database is locked")){
+				Tracker.println(TaskSqliteDbTemplate.class , "database is locked, trying query tasks...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception e2){}
+				return query(name, value);
+			}else{
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -261,7 +334,8 @@ public class TaskSqliteDbTemplate extends AbstractSqlDbTemplate<Task> {
 	}
 
 	public boolean exsits(String name, String value) {
-		return query(name, value) != null && query(name, value).size() > 0;
+		List<Task> list = query(name, value);
+		return list != null && list.size() > 0;
 	}
 
 	private void resultSet2Task(ResultSet rs, Task model) throws SQLException{

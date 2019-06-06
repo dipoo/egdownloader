@@ -75,9 +75,11 @@ public class SearchImagePanel extends JLabel {
 					if(contains){
 						mainWindow.searchComicWindow.popMenu.openPictureItem.setVisible(true);
 						mainWindow.searchComicWindow.popMenu.downItem.setVisible(false);
+						mainWindow.searchComicWindow.popMenu.showMergeItem.setVisible(false);
 					}else{
 						mainWindow.searchComicWindow.popMenu.openPictureItem.setVisible(false);
 						mainWindow.searchComicWindow.popMenu.downItem.setVisible(true);
+						mainWindow.searchComicWindow.popMenu.showMergeItem.setVisible(true);
 					}
 					if(StringUtils.isNotBlank(task.getBtUrl())){
 						mainWindow.searchComicWindow.popMenu.openBtPageItem.setVisible(true);
@@ -228,7 +230,21 @@ public class SearchImagePanel extends JLabel {
 	}
 	
 	public String genText(SearchTask task){
-		return "<html><small>" + HtmlUtils.colorHtml(task.getRating() + "分 ", "#f2e986") +  
+		//是否含有新版本
+		boolean hasOldVersion = false;
+		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
+			String[] coverarr = task.getCoverUrl().split("-");
+			String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 5);
+			if(mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken) != -1){
+				String[] taskarr = task.getUrl().split("/g/");
+				String taskToken = taskarr[1].substring(0, taskarr[1].indexOf("/"));
+				if(mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken + taskToken) == -1){
+					hasOldVersion = true;
+				}
+			}
+		}
+		
+		return "<html><small>" + (hasOldVersion ? HtmlUtils.redColorHtml("[新]") : "") + HtmlUtils.colorHtml(task.getRating() + "分 ", "#f2e986") +  
 				(StringUtils.isNotBlank(task.getType()) ? 
 						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
 						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate().substring(2)) + (StringUtils.isBlank(task.getFilenum()) ? "" : " " + HtmlUtils.colorHtml(task.getFilenum() + "P", "#f2e986")) + "</small></html>";
