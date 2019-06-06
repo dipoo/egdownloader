@@ -196,7 +196,7 @@ public class SearchTasksTable extends JTable {
 				if(e.getButton() == MouseEvent.BUTTON1){
 					//点击上传者
 					if(columnIndex == 4){
-						comicWindow.doSearch("uploader:" + tasks.get(rowIndex).getUploader());
+						comicWindow.doSearch(String.format("uploader:\"%s\"", tasks.get(rowIndex).getUploader()));
 					}
 					if(columnIndex == 1){
 						SearchTask task = table.getTasks().get(rowIndex);

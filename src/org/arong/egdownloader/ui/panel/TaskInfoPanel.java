@@ -53,7 +53,7 @@ public class TaskInfoPanel extends JScrollPane {
 								mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
 							}
 							try {
-								mainWindow.searchComicWindow.doSearch("uploader:" + URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8"));
+								mainWindow.searchComicWindow.doSearch(String.format("uploader:\"%s\"", URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8")));
 							} catch (UnsupportedEncodingException e1) {
 								e1.printStackTrace();
 							}

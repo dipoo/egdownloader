@@ -45,7 +45,7 @@ public class MergeWindow extends JDialog {
 		this.setTitle("版本合并");
 		this.setVisible(true);
 		this.setResizable(false);
-		this.setLocationRelativeTo(window);
+		this.setLocationRelativeTo(window.searchComicWindow);
 		//关闭监听，释放窗口资源，否则消耗大量CPU
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -214,9 +214,9 @@ public class MergeWindow extends JDialog {
 		}else if(StringUtil.getSimilarityRatio(st.getName(), t.getName()) < 0.95f){
 			cantMsg =  "标题相似度低于95％，无法合并，请确认所选中的任务是否为同一个本子";
 		}
-		String s = String.format("<html>【新版本】[%s-<font color='blue'>%s</font>]<font color='red'>%s</font>[%s P]<br>【旧版本】[%s-<font color='blue'>%s</font>]<font color='red'>%s</font>[%s P]<br><br>%s<br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></html>", 
-				st.getDate(), st.getUploader(), st.getName(), st.getFilenum(),
-				t.getPostedTime(), t.getUploader(), t.getName(), t.getTotal(),
+		String s = String.format("<html><div style='font-family:微软雅黑;font-size:10px;'>【新版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br>【旧版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br><br>%s<br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></div></html>", 
+				st.getName(), st.getDate(), st.getUploader(), st.getFilenum(),
+				t.getName(), t.getPostedTime(), t.getUploader(), t.getTotal(),
 				cantMsg == null ? String.format("<a style='text-decoration:underline' href='merge'>%s</a>", merging ? "任务合并中..." : "开始合并") :
 					String.format("<h1><font color=red>%s</font></h1>", cantMsg));
 		return s;
