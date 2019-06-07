@@ -3,6 +3,8 @@ package org.arong.egdownloader.ui.window;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.swing.AJButton;
@@ -58,6 +61,13 @@ public class SimpleSearchWindow extends JDialog {
 		JLabel descLabel = new AJLabel("Tips:搜索的结果会显示在控制台", Color.GRAY, 200, 10, 180, 30);
 		JLabel keyLabel = new AJLabel("关键字：", Color.BLUE, 10, 50, 50, 30);
 		keyTextField = new AJTextField("", "", 70, 50, 430, 30);
+		keyTextField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					searchBtn.doClick();
+				}
+			}
+		});
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String key_ = keyTextField.getText();
@@ -69,7 +79,7 @@ public class SimpleSearchWindow extends JDialog {
 				List<Task> allTasks = table.getTasks();
 				int j = 0;
 				List<Integer> indexs = new ArrayList<Integer>();
-				if(key_.startsWith("tags:")){
+				if(key_.startsWith("tags:") && !key_.startsWith("tags:uploader:")){
 					String keys = key_.replaceAll("tags:", "").replaceAll(" ", "+");
 					String[] keysArr = keys.split(";");
 					boolean hits;
@@ -104,7 +114,58 @@ public class SimpleSearchWindow extends JDialog {
 							allTasks.get(i).setSearched(true);//标识为已被搜索
 							allTasks.add(0, allTasks.remove(i));
 							indexs.add(i);
-							break;
+						}else{
+							allTasks.get(i).setSearched(false);
+							j --;
+						}
+					}
+				}else if(key_.startsWith("type:")){
+					String key = key_.replaceAll("type:", "");
+					for(int i = 0; i < allTasks.size(); i++){
+						j ++;
+						if(allTasks.get(i).getType().toLowerCase().contains(key.toLowerCase())){
+							allTasks.get(i).setSearched(true);//标识为已被搜索
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
+						}else{
+							allTasks.get(i).setSearched(false);
+							j --;
+						}
+					}
+				}else if(key_.startsWith("uploader:") || key_.startsWith("tags:uploader:")){
+					String key = key_.replaceAll("tags:uploader:", "").replaceAll("uploader:", "");
+					for(int i = 0; i < allTasks.size(); i++){
+						j ++;
+						if(allTasks.get(i).getUploader().toLowerCase().contains(key.toLowerCase())){
+							allTasks.get(i).setSearched(true);//标识为已被搜索
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
+						}else{
+							allTasks.get(i).setSearched(false);
+							j --;
+						}
+					}
+				}else if(key_.startsWith("language:")){
+					String key = key_.replaceAll("language:", "");
+					for(int i = 0; i < allTasks.size(); i++){
+						j ++;
+						if(allTasks.get(i).getLanguage().toLowerCase().contains(key.toLowerCase())){
+							allTasks.get(i).setSearched(true);//标识为已被搜索
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
+						}else{
+							allTasks.get(i).setSearched(false);
+							j --;
+						}
+					}
+				}else if(key_.startsWith("localtag:")){
+					String key = key_.replaceAll("localtag:", "");
+					for(int i = 0; i < allTasks.size(); i++){
+						j ++;
+						if((key_.equals("一般") && StringUtils.isBlank(allTasks.get(i).getTag())) || allTasks.get(i).getTag().toLowerCase().contains(key.toLowerCase())){
+							allTasks.get(i).setSearched(true);//标识为已被搜索
+							allTasks.add(0, allTasks.remove(i));
+							indexs.add(i);
 						}else{
 							allTasks.get(i).setSearched(false);
 							j --;
@@ -133,10 +194,9 @@ public class SimpleSearchWindow extends JDialog {
 					}
 				}
 				if(j > 0){
-					if(mainWindow.viewModel == 1){
-						table.setRowSelectionInterval(0, 0);
-						table.scrollRectToVisible(table.getCellRect(0, 0, true));
-					}else{
+					table.setRowSelectionInterval(0, 0);
+					table.scrollRectToVisible(table.getCellRect(0, 0, true));
+					if(mainWindow.viewModel == 2){
 						mainWindow.taskImagePanel.page = 1;
 						mainWindow.taskImagePanel.init(table.getTasks());
 						mainWindow.taskImagePanel.scrollRectToVisible(table.getCellRect(0, 0, true));

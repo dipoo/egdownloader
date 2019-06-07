@@ -19,7 +19,7 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.window.SearchComicWindow;
+import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
 
@@ -39,6 +39,10 @@ public class TaskInfoPanel extends JScrollPane {
 		textPane.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					if(mainWindow.simpleSearchWindow == null){
+						mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
+					}
+					SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 					if("openSaveDir".equals(e.getDescription())){
 						//打开保存目录
 						try {
@@ -49,7 +53,11 @@ public class TaskInfoPanel extends JScrollPane {
 					}else if("searchUploader".equals(e.getDescription())){
 						//搜索上传者
 						if(StringUtils.isNotBlank(t.getUploader())){
-							if(mainWindow.searchComicWindow == null){
+							
+							mainWindow.infoTabbedPane.setSelectedComponent(mainWindow.taskTagsPanel);
+							mainWindow.taskTagsPanel.renderSelectTags(String.format("uploader:\"%s\"", t.getUploader()), true);
+							
+							/*if(mainWindow.searchComicWindow == null){
 								mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
 							}
 							try {
@@ -57,7 +65,22 @@ public class TaskInfoPanel extends JScrollPane {
 							} catch (UnsupportedEncodingException e1) {
 								e1.printStackTrace();
 							}
-							mainWindow.searchComicWindow.setVisible(true);
+							mainWindow.searchComicWindow.setVisible(true);*/
+						}
+					}else if("searchLanguage".equals(e.getDescription())){
+						if(StringUtils.isNotBlank(t.getLanguage())){
+							ssw.keyTextField.setText(String.format("language:%s", t.getLanguage()));
+							ssw.searchBtn.doClick();
+						}
+					}else if("searchType".equals(e.getDescription())){
+						if(StringUtils.isNotBlank(t.getType())){
+							ssw.keyTextField.setText(String.format("type:%s", t.getType()));
+							ssw.searchBtn.doClick();
+						}
+					}else if("searchLocalTag".equals(e.getDescription())){
+						if(StringUtils.isNotBlank(t.getTag())){
+							ssw.keyTextField.setText(String.format("localtag:%s", t.getTag()));
+							ssw.searchBtn.doClick();
 						}
 					}
 				}

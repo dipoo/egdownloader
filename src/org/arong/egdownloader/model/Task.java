@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -468,6 +470,9 @@ public class Task {
 	}
 
 	public String getUploader() {
+		try {
+			return StringUtils.isNotBlank(uploader) ? URLDecoder.decode(URLDecoder.decode(uploader, "UTF-8"), "UTF-8") : "";
+		} catch (UnsupportedEncodingException e) {}
 		return uploader;
 	}
 

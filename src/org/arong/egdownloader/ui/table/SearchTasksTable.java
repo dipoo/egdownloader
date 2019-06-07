@@ -104,7 +104,7 @@ public class SearchTasksTable extends JTable {
 					boolean hasOldVersion = false;
 					if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 						String[] coverarr = task.getCoverUrl().split("-");
-						String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 5);
+						String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 10);
 						if(comicWindow.mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken) != -1){
 							String[] taskarr = task.getUrl().split("/g/");
 							String taskToken = taskarr[1].substring(0, taskarr[1].indexOf("/"));
@@ -226,9 +226,11 @@ public class SearchTasksTable extends JTable {
 					if(contains){
 						comicWindow.popMenu.openPictureItem.setVisible(true);
 						comicWindow.popMenu.downItem.setVisible(false);
+						comicWindow.popMenu.showMergeItem.setVisible(false);
 					}else{
 						comicWindow.popMenu.openPictureItem.setVisible(false);
 						comicWindow.popMenu.downItem.setVisible(true);
+						comicWindow.popMenu.showMergeItem.setVisible(true);
 					}
 					if(StringUtils.isNotBlank(task.getBtUrl())){
 						comicWindow.popMenu.openBtPageItem.setVisible(true);

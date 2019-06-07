@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.UUID;
 
@@ -152,18 +153,28 @@ public class MergeWindow extends JDialog {
 										window.taskDbTemplate.delete(oldtask);
 										//删除旧版本图片
 										window.pictureDbTemplate.delete("tid", oldtask.getId());
+										System.out.println(String.format("删除旧版本文件：%s", oldtask.getSaveDir()));
+										//删除旧版本文件
+										FileUtil2.deleteFile(new File(oldtask.getSaveDir()));
+										//文件夹重命名
+										try{
+											boolean success = new File(newtask.getSaveDir()).renameTo(new File(oldtask.getSaveDir()));
+											if(success){
+												newtask.setSaveDir(oldtask.getSaveDir());
+												//重新更新新版本任务
+												window.taskDbTemplate.update(newtask);
+											}
+										}catch(Exception e){}
+										
 										//保存到内存
 										final TaskingTable taskTable = (TaskingTable)window.runningTable;
 										taskTable.getTasks().add(0, newtask);//将任务添加到列表最前面
 										taskTable.propertyChange(newtask);//开始观察者模式，显示下载速度
 										taskTable.getTasks().remove(oldtask);
-										System.out.println(String.format("删除旧版本文件：%s", oldtask.getSaveDir()));
-										//删除旧版本文件
-										FileUtil2.deleteFile(new File(oldtask.getSaveDir()));
-										System.out.println(String.format("结束合并任务【%s】，耗时%s秒", oldtask.getDisplayName(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f))));
 										if(window.taskImagePanel != null){
 											window.taskImagePanel.init();
 										}
+										System.out.println(String.format("结束合并任务【%s】，耗时%s秒", oldtask.getDisplayName(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f))));
 										JOptionPane.showMessageDialog(MergeWindow.this, "任务合并成功");
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -216,7 +227,7 @@ public class MergeWindow extends JDialog {
 		}else if(!st.getUploader().equals(t.getUploader())){
 			cantMsg =  "上传者不一致，无法合并，请确认所选中的任务是否为同一个本子";
 		}else if(StringUtil.getSimilarityRatio(st.getName(), t.getName()) < 0.95f){
-			cantMsg =  "标题相似度低于95％，无法合并，请确认所选中的任务是否为同一个本子";
+			cantMsg =  String.format("标题相似度%s％低于95％，无法合并，请确认所选中的任务是否为同一个本子", new BigDecimal(StringUtil.getSimilarityRatio(st.getName(), t.getName()) * 100).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 		}
 		String oUploader = t.getUploader();
 		try {
@@ -224,7 +235,7 @@ public class MergeWindow extends JDialog {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		String s = String.format("<html><div style='font-family:微软雅黑;font-size:10px;'>【新版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br>【旧版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br><br><h1><font color=red>%s</font></h1><br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></div></html>", 
+		String s = String.format("<html><div style='font-family:微软雅黑;font-size:10px;'>【新版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br>【旧版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br><br><h1><font color=red>%s</font></h1><br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并，过程比较耗时，请耐心等候。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></div></html>", 
 				st.getName(), st.getDate(), st.getUploader(), st.getFilenum(),
 				t.getName(), t.getPostedTime(), oUploader, t.getTotal(),
 				cantMsg == null ? String.format("<a style='text-decoration:underline' href='merge'>%s</a>", merging ? "任务合并中..." : "开始合并") :

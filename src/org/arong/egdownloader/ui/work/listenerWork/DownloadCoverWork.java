@@ -52,7 +52,7 @@ public class DownloadCoverWork implements IMenuListenerTask {
 									}
 									JOptionPane.showMessageDialog(mainWindow, "下载成功");
 									if(mainWindow.taskImagePanel != null){
-										mainWindow.taskImagePanel.flush(task); 
+										mainWindow.taskImagePanel.flush(task, true); 
 									}
 								}
 							} catch (SocketTimeoutException e){

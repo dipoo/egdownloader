@@ -64,7 +64,7 @@ public class TaskImagePanel extends AJPanel {
 		});
 		container = new JPanel(layout);
 		final TaskImagePanel this_ = this;
-		this_.add(container, BorderLayout.CENTER);
+		this_.add(container, BorderLayout.NORTH);
 		
 		//初始化组件
 		init(mainWindow.tasks);
@@ -101,6 +101,9 @@ public class TaskImagePanel extends AJPanel {
 		init(mainWindow.tasks);
 	}
 	public void flush(final Task task){
+		flush(task, false);
+	}
+	public void flush(final Task task, final boolean iconload){
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new CommonSwingWorker(new Runnable() {
@@ -115,7 +118,7 @@ public class TaskImagePanel extends AJPanel {
 						}
 						if(p != null){
 							AJLabel l = (AJLabel)p.getComponent(0);
-							if(l.getIcon() == null){
+							if(iconload || l.getIcon() == null){
 								String path = task.getSaveDir() + "/cover.jpg";
 								File cover = new File(path);
 								if(cover != null && cover.exists()){
@@ -163,6 +166,7 @@ public class TaskImagePanel extends AJPanel {
 							if(imageTaskPager != null){
 								imageTaskPager.setVisible(false);
 							}
+							selectIndex = mainWindow.runningTable.getSelectedRow();
 							for(int i = 0; i < ptasks.size(); i ++){
 								//判断AJPanel是否存在
 								//AJPanel p = null;
@@ -173,9 +177,12 @@ public class TaskImagePanel extends AJPanel {
 										break;
 									}
 								}
+								//获取选中行
+								boolean selected = ((page - 1) * PAGESIZE + i) == selectIndex;
 								if(p != null){
 									//name规则：taskID|list索引
 									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
+									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
 									JProgressBar bar = (JProgressBar)p.getComponent(1);
 									bar.setString(getTaskInfo(ptasks.get(i)));
 								}else{
@@ -187,7 +194,7 @@ public class TaskImagePanel extends AJPanel {
 									p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 									p.setBackground(Color.WHITE);
 									p.setForeground(Color.WHITE);
-									p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
 									p.addMouseListener(new MouseAdapter() {
 										public void mouseClicked(MouseEvent e) {
 											for(int i = 0; i < container.getComponents().length; i ++){
@@ -252,8 +259,9 @@ public class TaskImagePanel extends AJPanel {
 										public void mouseExited(MouseEvent e) {
 											AJPanel p = (AJPanel)e.getSource();
 											if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
-												//p.setBackground(Color.WHITE);
 												p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+											}else{
+												p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 											}
 										}
 									});

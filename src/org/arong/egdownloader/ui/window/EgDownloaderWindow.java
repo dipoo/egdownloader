@@ -134,6 +134,8 @@ public class EgDownloaderWindow extends JFrame {
 	public JPanel emptyPanel;
 	public TaskImagePanel taskImagePanel;
 	public TaskInfoPanel taskInfoPanel;
+	public TaskTagsPanel taskTagsPanel;
+	public PicturesInfoPanel picturesInfoPanel;
 	
 	
 	public Setting setting;
@@ -415,11 +417,13 @@ public class EgDownloaderWindow extends JFrame {
 		
 		taskInfoPanel = new TaskInfoPanel(this);
 		taskInfoPanel.setBounds(5, 5, ComponentConst.CLIENT_WIDTH - 20, 200);
+		taskTagsPanel = new TaskTagsPanel(this);
+		picturesInfoPanel = new PicturesInfoPanel(this);
 		
 		infoTabbedPane.add("控制台", consolePanel);
 		infoTabbedPane.add("任务信息", taskInfoPanel);
-		infoTabbedPane.add("标签组", new TaskTagsPanel(this));
-		infoTabbedPane.add("图片列表", new PicturesInfoPanel(this));
+		infoTabbedPane.add("标签组", taskTagsPanel);
+		infoTabbedPane.add("图片列表", picturesInfoPanel);
 
 		// 添加各个子组件
 		ComponentUtil.addComponents(getContentPane(), infoTabbedPane, jMenuBar, tablePane, tablePopupMenu, emptyPanel);

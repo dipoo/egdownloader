@@ -168,6 +168,12 @@ public class TaskTagsPanel extends JScrollPane {
 											if(t != null && StringUtils.isNotBlank(t.getTags())){
 												currentTask.setTags(t.getTags());
 												currentTask.setSyncTime(DateUtil.YYYY_MM_DD_HH_MM_SS_FORMAT.format(new Date()));
+												if(StringUtils.isBlank(currentTask.getUploader())){
+													currentTask.setUploader(t.getUploader());
+												}
+												if(StringUtils.isBlank(currentTask.getPostedTime())){
+													currentTask.setPostedTime(t.getPostedTime());
+												}
 												if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
 													showTagGroup(currentTask);
 												}

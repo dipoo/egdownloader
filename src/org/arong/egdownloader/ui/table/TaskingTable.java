@@ -76,6 +76,7 @@ public class TaskingTable extends JTable {
 		}
 		TableModel tableModel = new TaskTableModel(this.tasks);
 		this.setModel(tableModel);//设置数据模型
+		if(this.tasks != null && this.tasks.size() > 0){this.setRowSelectionInterval(0, 0);}
 	}
 	
 	public TaskingTable(int x, int y, int width, int height, TaskList<Task> tasks, final EgDownloaderWindow mainWindow){
@@ -348,6 +349,7 @@ public class TaskingTable extends JTable {
 				}
 			}
 		}, 1000, 1000);
+		if(this.tasks != null && this.tasks.size() > 0){this.setRowSelectionInterval(0, 0);}
 	}
 	public void propertyChange(final Task task){
 		final TaskingTable table = this;

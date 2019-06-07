@@ -234,7 +234,7 @@ public class SearchImagePanel extends JLabel {
 		boolean hasOldVersion = false;
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] coverarr = task.getCoverUrl().split("-");
-			String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 5);
+			String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 10);
 			if(mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken) != -1){
 				String[] taskarr = task.getUrl().split("/g/");
 				String taskToken = taskarr[1].substring(0, taskarr[1].indexOf("/"));

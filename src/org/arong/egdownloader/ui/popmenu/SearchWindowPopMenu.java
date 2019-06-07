@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.model.Task;
@@ -130,7 +131,18 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						if(table.getTasks() == null || table.getTasks().size() == 0){
 							return;
 						}
-						Task t = table.getTasks().get(table.selectRowIndex);
+						//以封面地址搜索
+						if(mainWindow.simpleSearchWindow == null){
+							mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
+						}
+						SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
+						if(StringUtils.isNotBlank(st.getCoverUrl())){
+							ssw.keyTextField.setText(String.format("cover:%s", st.getCoverUrl().replaceAll("-jpg_l.jpg", "").replaceAll("https:", "").replaceAll("http:", "")));
+							ssw.searchBtn.doClick();
+							mainWindow.setVisible(true);
+							mainWindow.toFront();
+						}
+						Task t = table.getTasks().get(0);//选中第一行
 						mainWindow.searchComicWindow.mergeWindow.setTask(t);
 						mainWindow.searchComicWindow.mergeWindow.showMergeInfo();
 						mainWindow.searchComicWindow.mergeWindow.setVisible(true);
