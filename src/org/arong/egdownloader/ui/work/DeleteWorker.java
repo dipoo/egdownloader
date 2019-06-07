@@ -6,15 +6,12 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.DeletingWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.FileUtil2;
 import org.arong.util.Tracker;
-import org.jaxen.function.StringFunction;
 /**
  * 删除任务线程类
  * @author 阿荣
@@ -44,7 +41,7 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					task = table.getTasks().get(rows[i]);
 					tasks.add(task);
 					w.setData((i + 1) + "/" + rows.length);
-					w.setInfo("收集:" + task.getName());
+					w.setInfo("收集：" + task.getName());
 					Tracker.println("待删除：" + task.getName());
 				}
 			}

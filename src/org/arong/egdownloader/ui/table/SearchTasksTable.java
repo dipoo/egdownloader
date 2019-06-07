@@ -100,24 +100,11 @@ public class SearchTasksTable extends JTable {
 					return l;
 				}else if(column == 1){//名称
 					SearchTask task = tasks.get(row);
-					//是否含有新版本
-					boolean hasOldVersion = false;
-					if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
-						String[] coverarr = task.getCoverUrl().split("-");
-						String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 10);
-						if(comicWindow.mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken) != -1){
-							String[] taskarr = task.getUrl().split("/g/");
-							String taskToken = taskarr[1].substring(0, taskarr[1].indexOf("/"));
-							if(comicWindow.mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken + taskToken) == -1){
-								hasOldVersion = true;
-							}
-						}
-					}
 					//是否已创建该任务
 					boolean contains = comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel(String.format("<html>%s%s%s%s</html>", (hasOldVersion ? HtmlUtils.redColorHtml("[新版本]") : ""), (contains ? HtmlUtils.redColorHtml("[已存在]") : ""), (task.isFavAuthorOrGroup(comicWindow.mainWindow.setting.getFavTags()) ? "[<font color=red>★</font>]" : ""), value.toString()), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel(String.format("<html>%s%s%s%s</html>", (comicWindow.checkNewVersion(task) ? HtmlUtils.redColorHtml("[新版本]") : ""), (contains ? HtmlUtils.redColorHtml("[已存在]") : ""), (task.isFavAuthorOrGroup(comicWindow.mainWindow.setting.getFavTags()) ? "[<font color=red>★</font>]" : ""), value.toString()), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));
@@ -230,7 +217,7 @@ public class SearchTasksTable extends JTable {
 					}else{
 						comicWindow.popMenu.openPictureItem.setVisible(false);
 						comicWindow.popMenu.downItem.setVisible(true);
-						comicWindow.popMenu.showMergeItem.setVisible(true);
+						comicWindow.popMenu.showMergeItem.setVisible(comicWindow.checkNewVersion(task) ? true : false);
 					}
 					if(StringUtils.isNotBlank(task.getBtUrl())){
 						comicWindow.popMenu.openBtPageItem.setVisible(true);

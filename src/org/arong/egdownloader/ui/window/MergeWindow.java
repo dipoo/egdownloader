@@ -26,6 +26,7 @@ import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
+import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
 import org.arong.util.StringUtil;
 /**
@@ -52,8 +53,12 @@ public class MergeWindow extends JDialog {
 		//关闭监听，释放窗口资源，否则消耗大量CPU
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				MergeWindow window = (MergeWindow) e.getSource();
-				window.dispose();
+				MergeWindow this_ = (MergeWindow) e.getSource();
+				this_.dispose();
+				if(window.searchComicWindow != null){
+					window.searchComicWindow.setVisible(true);
+					window.searchComicWindow.toFront();
+				}
 			}
 		});
 
@@ -220,7 +225,7 @@ public class MergeWindow extends JDialog {
 		String cantMsg = null;
 		if(st.getUrl().replaceAll("https://", "http://").equals(t.getUrl().replaceAll("https://", "http://"))){
 			cantMsg =  "同一任务不能合并";
-		}else if(StringUtils.isBlank(st.getUploader())){
+		}/*else if(StringUtils.isBlank(st.getUploader())){
 			cantMsg =  "新版本上传者为空，无法合并";
 		}else if(StringUtils.isBlank(t.getUploader())){
 			cantMsg =  "旧版本上传者为空，无法合并";
@@ -228,17 +233,21 @@ public class MergeWindow extends JDialog {
 			cantMsg =  "上传者不一致，无法合并，请确认所选中的任务是否为同一个本子";
 		}else if(StringUtil.getSimilarityRatio(st.getName(), t.getName()) < 0.95f){
 			cantMsg =  String.format("标题相似度%s％低于95％，无法合并，请确认所选中的任务是否为同一个本子", new BigDecimal(StringUtil.getSimilarityRatio(st.getName(), t.getName()) * 100).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+		}*/
+		//<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。
+		boolean isnewpost = true;
+		//比较两个任务发布时间
+		if(StringUtils.isNotBlank(t.getPostedTime()) && StringUtils.isNotBlank(st.getDate())){
+			try{
+				if(DateUtil.String2Date(t.getPostedTime()).after(DateUtil.String2Date(st.getDate()))){
+					isnewpost = false;
+				}
+			}catch(Exception e){}
 		}
-		String oUploader = t.getUploader();
-		try {
-			oUploader = URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		String s = String.format("<html><div style='font-family:微软雅黑;font-size:10px;'>【新版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br>【旧版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br><br><h1><font color=red>%s</font></h1><br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并，过程比较耗时，请耐心等候。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。<br>可以合并的前提条件为：1、上传者一致。2、标题相似度95％以上。</b></div></html>", 
+		String s = String.format("<html><div style='font-family:微软雅黑;font-size:10px;'>【新版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br>【旧版本】<font color='red'>%s</font>[%s-<font color='blue'>%s</font>-%sP]<br><br><h1><font color=red>%s</font></h1><br><b style='color:green'>说明：本功能主要用来对某些持续更新而生成新版本的本子与旧版本进行合并，过程比较耗时，请耐心等候。<br>合并的操作为：创建新版本任务，与旧版本比较：已完成的图片，名称相同的部分直接复制到新版本，复制完成后删除旧版本任务，新增的图片继续从服务器下载。</b></div></html>", 
 				st.getName(), st.getDate(), st.getUploader(), st.getFilenum(),
-				t.getName(), t.getPostedTime(), oUploader, t.getTotal(),
-				cantMsg == null ? String.format("<a style='text-decoration:underline' href='merge'>%s</a>", merging ? "任务合并中..." : "开始合并") :
+				t.getName(), t.getPostedTime(), t.getUploader(), t.getTotal(),
+				cantMsg == null ? String.format("<a style='text-decoration:underline' href='merge'>%s</a>%s", merging ? "任务合并中..." : "开始合并", isnewpost ? "" : String.format("&nbsp;(%s)", "请注意：新版本发布时间晚于当前版本")) :
 					String.format("%s", cantMsg));
 		return s;
 	}

@@ -122,20 +122,20 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						if(pic.getRealUrl().contains("509.gif") || size == 28658 || size == 144 || size == 210 || size == 1009){
 							pic.setRealUrl(null);
 							//https://github.com/fffonion/xeHentai/blob/master/xeHentai/filters.py
-							Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s:509", task.getDisplayName(), pic.getName())));
+							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s：509", task.getDisplayName(), pic.getName())));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
 						}else if(size == 925 || size < 1000){
 							pic.setRealUrl(null);
-							Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s:403", task.getDisplayName(), pic.getName())));
+							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s：403", task.getDisplayName(), pic.getName())));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
 						}else if(totalLength != size){
 							//获取的流大小与http响应不一致则不算下载成功
 							pic.setRealUrl(null);
-							Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s(已下载%s):下载不完整(原图大小%s),耗时%s", task.getDisplayName(), pic.getName(), FileUtil2.showSizeStr((long)size), FileUtil2.showSizeStr((long)totalLength), formatSecend(System.currentTimeMillis() - connectStart))));
+							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s(已下载%s)：下载不完整(原图大小%s)，耗时%s", task.getDisplayName(), pic.getName(), FileUtil2.showSizeStr((long)size), FileUtil2.showSizeStr((long)totalLength), formatSecend(System.currentTimeMillis() - connectStart))));
 							delete(existNameFs);
 							exceptionNum ++;
 							continue;
@@ -151,7 +151,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							pic.setPpi(String.format("%sx%s", sii.getWidth(), sii.getHeight()));
 						} catch (Exception e) {
 							e.printStackTrace();
-							Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s:图片无法解析", task.getDisplayName(), pic.getName())));
+							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s：图片无法解析", task.getDisplayName(), pic.getName())));
 							pic.setRealUrl(null);
 							delete(existNameFs);
 							exceptionNum ++;
@@ -167,7 +167,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						pic.setTime(DateUtil.YYYY_MM_DD_HH_MM_SS_FORMAT.format(new Date()));//下载完成时间
 						pic.setCompleted(true);//设置为已下载完成
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
-						Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml(String.format("%s:%s(%s, %s):下载完成,耗时%s", task.getDisplayName(), pic.getName(), FileUtil2.showSizeStr((long)size), pic.getPpi(), formatSecend(System.currentTimeMillis() - connectStart))));
+						Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml(String.format("%s：%s(%s, %s)：下载完成，耗时%s", task.getDisplayName(), pic.getName(), FileUtil2.showSizeStr((long)size), pic.getPpi(), formatSecend(System.currentTimeMillis() - connectStart))));
 						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
 							//刷新信息面板
 							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
@@ -189,7 +189,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (SocketTimeoutException e){
 						exceptionNum ++;
 						//碰到异常
-						Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s-读取流超时，滞后重试,耗时%s", task.getDisplayName(), pic.getName(), formatSecend(System.currentTimeMillis() - connectStart))));
+						Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s-读取流超时，滞后重试，耗时%s", task.getDisplayName(), pic.getName(), formatSecend(System.currentTimeMillis() - connectStart))));
 						//删除已经下载的文件
 						delete(existNameFs);
 						//继续下一个
@@ -197,7 +197,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					}catch (ConnectTimeoutException e){
 						exceptionNum ++;
 						//碰到异常
-						Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s-连接超时，滞后重试,耗时%s", task.getDisplayName(), pic.getName(), formatSecend(System.currentTimeMillis() - connectStart))));
+						Tracker.println(HtmlUtils.redColorHtml(String.format("%s：s%s-连接超时，滞后重试，耗时%s", task.getDisplayName(), pic.getName(), formatSecend(System.currentTimeMillis() - connectStart))));
 						//继续下一个
 						continue;
 					}catch (WebClientException e) {
@@ -212,12 +212,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						exceptionNum ++;
 						//删除已经下载的文件
 						delete(existNameFs);
-						if(e instanceof SocketException && "Socket Closed".equals(e.getMessage())){
+						if(e instanceof SocketException && "Socket Closed".equals(e.getMessage())){//主动暂停任务引起的异常，可忽略
 							
 						}else{
 							//碰到异常
 							e.printStackTrace();
-							Tracker.println(HtmlUtils.redColorHtml(String.format("%s:%s===%s", task.getDisplayName(), pic.getName(), e.getMessage())));
+							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s===%s", task.getDisplayName(), pic.getName(), e.getMessage())));
 						}
 						//继续下一个
 						continue;
@@ -235,7 +235,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				//是否达到下载区间要求,达到则暂停
 				if(success == requireNum){
-					Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml(String.format("【%s】:完成配置区间(%s-%s)下载。", task.getDisplayName(), task.getStart(), task.getEnd())));
+					Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml(String.format("【%s】：完成配置区间(%s-%s)下载。", task.getDisplayName(), task.getStart(), task.getEnd())));
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
@@ -244,7 +244,7 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 					return null;
 				}
 				if(exceptionNum >= requireNum){
-					Tracker.println(DownloadWorker.class, HtmlUtils.redColorHtml(String.format("【%s】:配额不足或者下载异常，停止下载。", task.getDisplayName())));
+					Tracker.println(DownloadWorker.class, HtmlUtils.redColorHtml(String.format("【%s】：配额不足或者下载异常，停止下载。", task.getDisplayName())));
 					//设置任务状态为已暂停
 					task.setStatus(TaskStatus.STOPED);
 					table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
