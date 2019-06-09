@@ -134,7 +134,7 @@ public class SearchImagePanel extends JLabel {
 	
 	public void flush(final SearchTask task, final long delay){
 		this.setForeground(Color.WHITE);
-		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
 		this.setText(genText(task));
 		tips = task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : "");
@@ -146,7 +146,7 @@ public class SearchImagePanel extends JLabel {
 		
 		final SearchImagePanel this_ = this;
 		
-		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
+		final String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl() + "/");
 		File cover = new File(path);
 		if(cover == null || !cover.exists()){
 			this.setSize(DEFAULTWIDTH, DEFAULTHEIGHT);

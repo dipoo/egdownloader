@@ -194,7 +194,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
 						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-						String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
+						String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl() + "/");
 						File coverFile = new File(path);
 						if(coverFile.exists()){
 							coverFile.delete();

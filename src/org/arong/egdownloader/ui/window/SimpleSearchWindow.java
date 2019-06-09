@@ -79,120 +79,124 @@ public class SimpleSearchWindow extends JDialog {
 				List<Task> allTasks = table.getTasks();
 				int j = 0;
 				List<Integer> indexs = new ArrayList<Integer>();
-				if(key_.startsWith("tags:") && !key_.startsWith("tags:uploader:")){
-					String keys = key_.replaceAll("tags:", "").replaceAll(" ", "+");
-					String[] keysArr = keys.split(";");
-					boolean hits;
-					for(int i = 0; i < allTasks.size(); i++){
-						j ++;
-						if(allTasks.get(i).getTags() != null){
-							hits = true;
-							//需要全部命中
-							for(String key : keysArr){
-								if(!allTasks.get(i).getTags().toLowerCase().startsWith(key.toLowerCase() + ";") && !allTasks.get(i).getTags().toLowerCase().contains(";" + key.toLowerCase() + ";")){
-									hits = false;
+				try {
+					if(key_.startsWith("tags:") && !key_.startsWith("tags:uploader:")){
+						String keys = key_.replaceAll("tags:", "").replaceAll(" ", "+");
+						String[] keysArr = keys.split(";");
+						boolean hits;
+						for(int i = 0; i < allTasks.size(); i++){
+							j ++;
+							if(allTasks.get(i).getTags() != null){
+								hits = true;
+								//需要全部命中
+								for(String key : keysArr){
+									if(!allTasks.get(i).getTags().toLowerCase().startsWith(key.toLowerCase() + ";") && !allTasks.get(i).getTags().toLowerCase().contains(";" + key.toLowerCase() + ";")){
+										hits = false;
+									}
+								}
+								if(hits){
+									allTasks.get(i).setSearched(true);//标识为已被搜索
+									allTasks.add(0, allTasks.remove(i));
+									indexs.add(i);
+								}else{
+									allTasks.get(i).setSearched(false);
+									j --;
+								}
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
+						}
+					}else if(key_.startsWith("cover:")){
+						String key = key_.replaceAll("cover:", "");
+						for(int i = 0; i < allTasks.size(); i++){
+							j ++;
+							if(allTasks.get(i).getCoverUrl().toLowerCase().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
+								allTasks.add(0, allTasks.remove(i));
+								indexs.add(i);
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
+						}
+					}else if(key_.startsWith("type:")){
+						String key = key_.replaceAll("type:", "");
+						for(int i = 0; i < allTasks.size(); i++){
+							j ++;
+							if(allTasks.get(i).getType().toLowerCase().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
+								allTasks.add(0, allTasks.remove(i));
+								indexs.add(i);
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
+						}
+					}else if(key_.startsWith("uploader:") || key_.startsWith("tags:uploader:")){
+						String key = key_.replaceAll("tags:uploader:", "").replaceAll("uploader:", "");
+						for(int i = 0; i < allTasks.size(); i++){
+							j ++;
+							if(allTasks.get(i).getUploader().toLowerCase().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
+								allTasks.add(0, allTasks.remove(i));
+								indexs.add(i);
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
+						}
+					}else if(key_.startsWith("language:")){
+						String key = key_.replaceAll("language:", "");
+						for(int i = 0; i < allTasks.size(); i++){
+							j ++;
+							if(allTasks.get(i).getLanguage().toLowerCase().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
+								allTasks.add(0, allTasks.remove(i));
+								indexs.add(i);
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
+						}
+					}else if(key_.startsWith("localtag:")){
+						String key = key_.replaceAll("localtag:", "");
+						for(int i = 0; i < allTasks.size(); i++){
+							j ++;
+							if((key_.equals("一般") && StringUtils.isBlank(allTasks.get(i).getTag())) || allTasks.get(i).getTag().toLowerCase().contains(key.toLowerCase())){
+								allTasks.get(i).setSearched(true);//标识为已被搜索
+								allTasks.add(0, allTasks.remove(i));
+								indexs.add(i);
+							}else{
+								allTasks.get(i).setSearched(false);
+								j --;
+							}
+						}
+					}else{
+						String[] keys = key_.trim().split("\\|\\|");
+						for(int i = 0; i < allTasks.size(); i++){
+							for(String key : keys){
+								j ++;
+								if(allTasks.get(i).getName().toLowerCase().contains(key.toLowerCase())){
+									allTasks.get(i).setSearched(true);//标识为已被搜索
+									allTasks.add(0, allTasks.remove(i));
+									indexs.add(i);
+									break;
+								}else if(allTasks.get(i).getSubname() != null && allTasks.get(i).getSubname().contains(key.toLowerCase())){
+									allTasks.get(i).setSearched(true);//标识为已被搜索
+									allTasks.add(0, allTasks.remove(i));
+									indexs.add(i);
+									break;
+								}else{
+									allTasks.get(i).setSearched(false);
+									j --;
 								}
 							}
-							if(hits){
-								allTasks.get(i).setSearched(true);//标识为已被搜索
-								allTasks.add(0, allTasks.remove(i));
-								indexs.add(i);
-							}else{
-								allTasks.get(i).setSearched(false);
-								j --;
-							}
-						}else{
-							allTasks.get(i).setSearched(false);
-							j --;
 						}
 					}
-				}else if(key_.startsWith("cover:")){
-					String key = key_.replaceAll("cover:", "");
-					for(int i = 0; i < allTasks.size(); i++){
-						j ++;
-						if(allTasks.get(i).getCoverUrl().toLowerCase().contains(key.toLowerCase())){
-							allTasks.get(i).setSearched(true);//标识为已被搜索
-							allTasks.add(0, allTasks.remove(i));
-							indexs.add(i);
-						}else{
-							allTasks.get(i).setSearched(false);
-							j --;
-						}
-					}
-				}else if(key_.startsWith("type:")){
-					String key = key_.replaceAll("type:", "");
-					for(int i = 0; i < allTasks.size(); i++){
-						j ++;
-						if(allTasks.get(i).getType().toLowerCase().contains(key.toLowerCase())){
-							allTasks.get(i).setSearched(true);//标识为已被搜索
-							allTasks.add(0, allTasks.remove(i));
-							indexs.add(i);
-						}else{
-							allTasks.get(i).setSearched(false);
-							j --;
-						}
-					}
-				}else if(key_.startsWith("uploader:") || key_.startsWith("tags:uploader:")){
-					String key = key_.replaceAll("tags:uploader:", "").replaceAll("uploader:", "");
-					for(int i = 0; i < allTasks.size(); i++){
-						j ++;
-						if(allTasks.get(i).getUploader().toLowerCase().contains(key.toLowerCase())){
-							allTasks.get(i).setSearched(true);//标识为已被搜索
-							allTasks.add(0, allTasks.remove(i));
-							indexs.add(i);
-						}else{
-							allTasks.get(i).setSearched(false);
-							j --;
-						}
-					}
-				}else if(key_.startsWith("language:")){
-					String key = key_.replaceAll("language:", "");
-					for(int i = 0; i < allTasks.size(); i++){
-						j ++;
-						if(allTasks.get(i).getLanguage().toLowerCase().contains(key.toLowerCase())){
-							allTasks.get(i).setSearched(true);//标识为已被搜索
-							allTasks.add(0, allTasks.remove(i));
-							indexs.add(i);
-						}else{
-							allTasks.get(i).setSearched(false);
-							j --;
-						}
-					}
-				}else if(key_.startsWith("localtag:")){
-					String key = key_.replaceAll("localtag:", "");
-					for(int i = 0; i < allTasks.size(); i++){
-						j ++;
-						if((key_.equals("一般") && StringUtils.isBlank(allTasks.get(i).getTag())) || allTasks.get(i).getTag().toLowerCase().contains(key.toLowerCase())){
-							allTasks.get(i).setSearched(true);//标识为已被搜索
-							allTasks.add(0, allTasks.remove(i));
-							indexs.add(i);
-						}else{
-							allTasks.get(i).setSearched(false);
-							j --;
-						}
-					}
-				}else{
-					String[] keys = key_.trim().split("\\|\\|");
-					for(int i = 0; i < allTasks.size(); i++){
-						for(String key : keys){
-							j ++;
-							if(allTasks.get(i).getName().toLowerCase().contains(key.toLowerCase())){
-								allTasks.get(i).setSearched(true);//标识为已被搜索
-								allTasks.add(0, allTasks.remove(i));
-								indexs.add(i);
-								break;
-							}else if(allTasks.get(i).getSubname().contains(key.toLowerCase())){
-								allTasks.get(i).setSearched(true);//标识为已被搜索
-								allTasks.add(0, allTasks.remove(i));
-								indexs.add(i);
-								break;
-							}else{
-								allTasks.get(i).setSearched(false);
-								j --;
-							}
-						}
-					}
-				}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}	
 				if(j > 0){
 					table.setRowSelectionInterval(0, 0);
 					table.scrollRectToVisible(table.getCellRect(0, 0, true));

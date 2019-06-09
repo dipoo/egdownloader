@@ -31,7 +31,7 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 		if(tasks != null){
 			for(int i = 0; i < tasks.size(); i ++){
 				final SearchTask task = tasks.get(i);
-				localPath = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl());
+				localPath = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl() + "/");
 				cover = new File(localPath);
 				if(cover == null || !cover.exists()){
 					try {
@@ -46,14 +46,14 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 										Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 20 * 1000);
 										task.setCoverLength((Integer) streamAndLength[1]);
 										is = (InputStream)streamAndLength[0];
-										FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()), is);
+										FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl() + "/"), is);
 									}catch(Exception e){
 										//最多下两次
 										try{
 											Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 20 * 1000);
 											task.setCoverLength((Integer) streamAndLength[1]);
 											is = (InputStream)streamAndLength[0];
-											FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl()), is);
+											FileUtil2.storeStream(ComponentConst.CACHE_PATH, FileUtil2.filterDir(task.getUrl() + "/"), is);
 										}catch(Exception e1){
 											
 										}finally{
