@@ -54,6 +54,7 @@ import org.arong.egdownloader.ui.swing.AJPager;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.work.SearchComicWorker;
+import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
 
@@ -74,17 +75,20 @@ public class SearchComicWindow extends JFrame {
 	public MergeWindow mergeWindow;
 	public SearchDetailInfoWindow searchDetailInfoWindow;
 	public SearchCoverWindow coverWindow;
+	public SearchHistoryWindow historyWindow;
 	public JTextField keyField;
 	public JComboBox language;
 	private JLabel loadingLabel;
 	public JLabel totalLabel;
 	public JButton searchBtn;
+	public JButton cancelSearchBtn;
 	public JButton leftBtn;
 	public JButton rightBtn;
 	public JButton favTagsBtn;
 	public JButton tagBtn;
 	public JButton changeViewBtn;
 	private JButton clearCacheBtn;
+	private JButton historyBtn;
 	public SearchTasksTable searchTable;
 	public JScrollPane tablePane;
 	public JPanel picturePane;
@@ -105,10 +109,12 @@ public class SearchComicWindow extends JFrame {
 	public SearchWindowPopMenu popMenu;
 	public int viewModel = 2;//2为图片浏览；1为表格浏览
 	public int selectTaskIndex = 0;//操作的任务索引
-	public int f_cats = 0;
-	public String f_sto = "";
+	public int f_cats = 0; //ex分类参数
+	public String f_sto = ""; //ex是否具有BT文件参数
+	public SearchComicWorker searchComicWorker;
 	
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
+		final SearchComicWindow this_ = this;
 		this.mainWindow = mainWindow;
 		viewModel = mainWindow.setting.getSearchViewModel();
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
@@ -121,8 +127,8 @@ public class SearchComicWindow extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		//this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);  
-		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 20, 50, 30);
-		keyField = new AJTextField("", 60, 20, 400, 30);
+		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 5, 50, 30);
+		keyField = new AJTextField("", 60, 5, 500, 30);
 		keyField.setText("language:\"chinese$\"");
 		keyField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
@@ -134,24 +140,24 @@ public class SearchComicWindow extends JFrame {
 		
 		keyList.add(",1");
 		
-		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
-		loadingLabel.setBounds(630, 20, 120, 30);
-		loadingLabel.setVisible(false);
-		
-		totalLabel = new AJLabel("", "", Color.BLACK, JLabel.LEFT);
-		totalLabel.setBounds(630, 20, 400, 30);
-		totalLabel.setVisible(false);
-		
 		searchBtn = new AJButton("搜索", "", new ActionListener() {
-			
 			public void actionPerformed(ActionEvent ae) {
 				mainWindow.searchComicWindow.toFront();
 				search(page);
 			}
 			
-		}, 470, 20, 60, 30);
+		}, 570, 5, 60, 30);
+		cancelSearchBtn = new AJButton("取消", "", new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				mainWindow.searchComicWindow.toFront();
+				searchComicWorker.cancel(true);
+			}
+			
+		}, 570, 5, 60, 30);
+		cancelSearchBtn.setVisible(false);
+		
 		leftBtn = new JButton(IconManager.getIcon("left"));
-		leftBtn.setBounds(540, 20, 30, 30);
+		leftBtn.setBounds(640, 5, 30, 30);
 		leftBtn.setToolTipText("后退");
 		leftBtn.setFocusable(false);
 		leftBtn.setCursor(CursorManager.getPointerCursor());
@@ -165,7 +171,7 @@ public class SearchComicWindow extends JFrame {
 			}
 		});
 		rightBtn = new JButton(IconManager.getIcon("right"));
-		rightBtn.setBounds(580, 20, 30, 30);
+		rightBtn.setBounds(680, 5, 30, 30);
 		rightBtn.setToolTipText("前进");
 		rightBtn.setFocusable(false);
 		rightBtn.setCursor(CursorManager.getPointerCursor());
@@ -178,7 +184,27 @@ public class SearchComicWindow extends JFrame {
 				searchBtn.doClick();
 			}
 		});
-		final SearchComicWindow this_ = this;
+		historyBtn = new AJButton("搜索历史", "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(historyWindow == null){
+					historyWindow = new SearchHistoryWindow(this_);
+				}
+				historyWindow.setVisible(true);
+				historyWindow.toFront();
+				historyWindow.render();
+			}
+		}, 720, 5, 60, 30);
+		historyBtn.setUI(AJButton.blueBtnUi);
+		
+		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
+		loadingLabel.setBounds(640, 5, 120, 30);
+		loadingLabel.setVisible(false);
+		
+		totalLabel = new AJLabel("", "", Color.DARK_GRAY, JLabel.LEFT);
+		totalLabel.setBounds(60, 35, 600, 20);
+		totalLabel.setVisible(false);
+		
+		
 		favTagsBtn = new AJButton("标签收藏", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(searchTagsWindow == null){
@@ -189,7 +215,7 @@ public class SearchComicWindow extends JFrame {
 				searchTagsWindow.taskTagsPanel.parseTaskAttribute(null, mainWindow.setting.isTagsTranslate());
 				searchTagsWindow.setVisible(true);
 			}
-		}, this.getWidth() - 220, 20, 60, 30);
+		}, this.getWidth() - 220, 5, 60, 30);
 		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(searchTagWindow == null){
@@ -197,7 +223,7 @@ public class SearchComicWindow extends JFrame {
 				}
 				searchTagWindow.setVisible(true);
 			}
-		}, this.getWidth() - 150, 20, 60, 30);
+		}, this.getWidth() - 150, 5, 60, 30);
 		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				datas.clear();
@@ -205,7 +231,8 @@ public class SearchComicWindow extends JFrame {
 				keyPage.clear();
 				JOptionPane.showMessageDialog(this_, "清理成功");
 			}
-		}, this.getWidth() - 80, 20, 60, 30);
+		}, this.getWidth() - 80, 5, 60, 30);
+		
 		favTagsBtn.setUI(AJButton.blueBtnUi);
 		tagBtn.setUI(AJButton.blueBtnUi);
 		clearCacheBtn.setUI(AJButton.redBtnUi);
@@ -229,7 +256,6 @@ public class SearchComicWindow extends JFrame {
 						f_cats += Integer.parseInt(jcb.getName());
 					}
 				}catch(Exception e1){}
-
 			}
 		};
 		
@@ -252,20 +278,20 @@ public class SearchComicWindow extends JFrame {
 				f_sto = jcb.isSelected() ? "on" : "";
 			}
 		});
-		language = new JComboBox(new String[]{"全部", "中文", "日文", "英文", "韩文", "法文"});
+		language = new JComboBox(new String[]{"全部", "中文"/*, "日文"*/, "英文", "韩文", "法文"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String key = keyField.getText();
 				String[] keys = key.split(" ");
 				if(keys[0].indexOf("language:") != -1){
-					key = "";
-					for(int i = 1; i < keys.length; i ++){
+					key = key.replace(keys[0], "");
+					/*for(int i = 1; i < keys.length; i ++){
 						key += keys[i];
 						if(i != keys.length - 1){
-							key += "";
+							key += " ";
 						}
-					}
+					}*/
 				}
 				switch(language.getSelectedIndex()){
 					case 0:
@@ -274,17 +300,17 @@ public class SearchComicWindow extends JFrame {
 					case 1:
 						keyField.setText("language:\"chinese$\" " + key);
 						break;
+					/*case 2:
+						keyField.setText("language:\"japanese$\" " + key);
+						break;*/	
 					case 2:
-						keyField.setText("language:\"japanese\" " + key);
-						break;	
+						keyField.setText("language:\"english$\" " + key);
+						break;
 					case 3:
-						keyField.setText("language:\"english\" " + key);
+						keyField.setText("language:\"korean$\" " + key);
 						break;
 					case 4:
-						keyField.setText("language:\"korean\" " + key);
-						break;
-					case 5:
-						keyField.setText("language:\"french\" " + key);
+						keyField.setText("language:\"french$\" " + key);
 						break;
 				}
 			}
@@ -330,7 +356,8 @@ public class SearchComicWindow extends JFrame {
 		pager.setVisible(false);
 		
 		
-		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, leftBtn, rightBtn, loadingLabel, totalLabel, favTagsBtn, tagBtn, clearCacheBtn, optionPanel, pager);
+		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, cancelSearchBtn, leftBtn, rightBtn,
+				loadingLabel, totalLabel, favTagsBtn, tagBtn, clearCacheBtn, historyBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { 
@@ -448,9 +475,6 @@ public class SearchComicWindow extends JFrame {
 				page = "1";
 			}
 			cache = false;
-			//设置为不可用
-			leftBtn.setEnabled(false);
-			rightBtn.setEnabled(false);
 			
 			key = k;
 			currentPage = page;
@@ -465,7 +489,15 @@ public class SearchComicWindow extends JFrame {
 				}
 				exurl = exurl + "&f_search=" + keyText;
 			}
-			new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page)).execute();
+			searchComicWorker = new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page));
+			searchComicWorker.execute();
+			if(historyWindow == null){
+				historyWindow = new SearchHistoryWindow(this);
+			}
+			if(historyWindow.historyMap == null){
+				historyWindow.loadConsoleLog();
+			}
+			historyWindow.historyMap.put(keyText, DateUtil.showDate(DateUtil.YYYY_MM_DD_HH_MM_SS));
 		}
 	}
 	
@@ -488,30 +520,34 @@ public class SearchComicWindow extends JFrame {
 		}
 		return option;
 	}
-	
 	public void doSearch(String text){
+		doSearch(text, false);
+	}
+	public void doSearch(String text, boolean clear){
 		if(text == null || "".equals(text)){
 			return;
 		}
 		String key = text;
-		switch(language.getSelectedIndex()){
-			case 0:
-				break;
-			case 1:
-				key = "language:\"chinese$\" " + key;
-				break;
-			case 2:
-				key = "language:\"japanese$\" " + key;
-				break;
-			case 3:
-				key = "language:\"english$\" " + key;
-				break;
-			case 4:
-				key = "language:\"korean$\" " + key;
-				break;
-			case 5:
-				key = "language:\"french$\" " + key;
-				break;
+		if(!clear){
+			switch(language.getSelectedIndex()){
+				case 0:
+					break;
+				case 1:
+					key = "language:\"chinese$\" " + key;
+					break;
+				/*case 2:
+					key = "language:\"japanese$\" " + key;
+					break;*/
+				case 2:
+					key = "language:\"english$\" " + key;
+					break;
+				case 3:
+					key = "language:\"korean$\" " + key;
+					break;
+				case 4:
+					key = "language:\"french$\" " + key;
+					break;
+			}
 		}
 		if(key.equals(keyField.getText())){
 			return;
@@ -523,20 +559,26 @@ public class SearchComicWindow extends JFrame {
 	public void showLoading(){
 		totalLabel.setVisible(false);
 		loadingLabel.setVisible(true);
-		searchBtn.setEnabled(false);
-		/*if(tablePane != null){
-			tablePane.setVisible(false);
-		}*/
+		//隐藏按钮
+		searchBtn.setVisible(false);
+		leftBtn.setVisible(false);
+		rightBtn.setVisible(false);
+		historyBtn.setVisible(false);
+		//显示取消按钮
+		cancelSearchBtn.setVisible(true);
 		pager.setVisible(false);
 	}
 	
 	public void hideLoading(){
 		loadingLabel.setVisible(false);
-		searchBtn.setEnabled(true);
 		totalLabel.setVisible(true);
-		if(tablePane != null){
-			tablePane.setVisible(true);
-		}
+		//隐藏取消按钮
+		cancelSearchBtn.setVisible(false);
+		//显示按钮
+		searchBtn.setVisible(true);
+		leftBtn.setVisible(true);
+		rightBtn.setVisible(true);
+		historyBtn.setVisible(true);
 		pager.setVisible(true);
 	}
 	

@@ -34,7 +34,9 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 		SearchComicWindow searchComicWindow = (SearchComicWindow)this.mainWindow.searchComicWindow;
 		long t = System.currentTimeMillis();
 		try {
+			if(isCancelled()) return null;
 			String source = WebClient.getRequestUseJavaWithCookie(this.url, "UTF-8", mainWindow.setting.getCookieInfo(), 10 * 1000);
+			if(isCancelled()) return null;
 			if(source == null){
 				Tracker.println(this.getClass(), this.url + ":搜索出错");
 				return null;
@@ -59,10 +61,10 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				String totalTasks = result[0].split(",")[0];
 				//总页数
 				String totalPage = result[0].split(",")[1];
-				
+				if(isCancelled()) return null;
 				searchComicWindow.setTotalInfo(totalPage, totalTasks, System.currentTimeMillis() - t);
 				searchComicWindow.searchTasks = searchTasks;
-				
+				if(isCancelled()) return null;
 				//下载封面线程
 				new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
 				
@@ -85,16 +87,19 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 			}
 		}catch (Exception e) {
 			searchComicWindow.key = " ";
-			searchComicWindow.totalLabel.setText(HtmlUtils.redColorLabelHtml(String.format("%s,耗时：<b>%s</b>秒", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
+			searchComicWindow.totalLabel.setText(HtmlUtils.redColorLabelHtml(String.format("搜索失败：%s，耗时 <b>%s</b> 秒", e.getMessage(), String.format("%.2f", ((System.currentTimeMillis() - t) / 1000f)))));
 			e.printStackTrace();
 		} finally{
 			searchComicWindow.hideLoading();
-			searchComicWindow.leftBtn.setEnabled(true);
-			searchComicWindow.rightBtn.setEnabled(true);
 			if(searchComicWindow.isVisible()){
 				searchComicWindow.toFront();
 			}
 		}
 		return null;
+	}
+
+	protected void done() {
+		this.mainWindow.searchComicWindow.hideLoading();
+		super.done();
 	}
 }

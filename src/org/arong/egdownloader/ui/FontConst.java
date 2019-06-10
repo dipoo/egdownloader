@@ -10,19 +10,23 @@ import java.awt.Font;
 public class FontConst {
 	public static String[] DEFAULT_FONT = new String[] { "Table.font",
 		"TableHeader.font", "CheckBox.font", "Tree.font", "Viewport.font",
-		/*"ProgressBar.font",*/ "RadioButtonMenuItem.font",
+		"ProgressBar.font", "RadioButtonMenuItem.font",
 		"ToolBar.font",
 		"ColorChooser.font",
 		"ToggleButton.font",
 		"Panel.font",
-		/*"TextArea.font"*,/
+		"Label.font",
+		"MenuItem.font",
+		"Button.font",
 		"Menu.font",
+		"TextField.font",
+		"OptionPane.font",
+		/*"TextArea.font"*,/
 		"TableHeader.font"
-		// ,"TextField.font"
-		, "OptionPane.font", "MenuBar.font", "Button.font", "Label.font",
-		"PasswordField.font", "ScrollPane.font", "MenuItem.font",
+		"MenuBar.font", 
+		"PasswordField.font", "ScrollPane.font",
 		/*"ToolTip.font",*/ "List.font", "EditorPane.font", "Table.font",
-		/*"TabbedPane.font",*/ "RadioButton.font", "CheckBoxMenuItem.font",
+		"TabbedPane.font", "RadioButton.font", "CheckBoxMenuItem.font",
 		"TextPane.font", "PopupMenu.font", "TitledBorder.font",
 		"ComboBox.font" };
 	// 调整默认字体
