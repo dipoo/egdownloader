@@ -48,7 +48,7 @@ public class ResetTaskWork {
 						mainWindow.pictureDbTemplate.update(task.getPictures());
 					}
 					//保存数据
-					mainWindow.taskDbTemplate.update(mainWindow.tasks);
+					mainWindow.taskDbTemplate.update(tasks);
 					w.dispose();
 					JOptionPane.showMessageDialog(mainWindow, "重置任务完成！");
 				}

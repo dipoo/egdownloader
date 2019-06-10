@@ -40,6 +40,7 @@ import javax.swing.JTextField;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.CursorManager;
@@ -645,7 +646,7 @@ public class SearchComicWindow extends JFrame {
 		//是否含有新版本
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] coverarr = task.getCoverUrl().split("-");
-			String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 10);
+			String coverToken = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + TaskList.COVER_TOKEN_SUB_LENGTH);
 			if(mainWindow.runningTable.getTasks().getTokenTokens().indexOf(coverToken) != -1){
 				String[] taskarr = task.getUrl().split("/g/");
 				String taskToken = taskarr[1].substring(0, taskarr[1].indexOf("/"));

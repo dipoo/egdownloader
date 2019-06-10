@@ -196,14 +196,18 @@ public class MainPopupMenu extends AJPopupMenu{
 						if(mainWindow.simpleSearchWindow == null){
 							mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
 						}
-						SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
+						final SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 						if(task.getAuthor() != null || task.getSubAuthor() != null){
 							if(task.getAuthor().contains("(") && task.getAuthor().contains(")") && task.getAuthor().indexOf("(") < task.getAuthor().indexOf(")")){
 								ssw.keyTextField.setText(task.getAuthor().substring(task.getAuthor().indexOf("(") + 1, task.getAuthor().indexOf(")")));
 							}else{
 								ssw.keyTextField.setText(task.getAuthor() + "||" + task.getSubAuthor());
 							}
-							ssw.searchBtn.doClick();
+							new CommonSwingWorker(new Runnable() {
+								public void run() {
+									ssw.searchBtn.doClick();
+								}
+							}).execute();
 						}
 					}
 				}));
@@ -231,15 +235,15 @@ public class MainPopupMenu extends AJPopupMenu{
 						"】任务到初始状态吗？");
 					}
 				}));
-		//右键菜单：完成任务
+		//右键菜单：置为完成
 		AJMenuItem completedMenuItem = new AJMenuItem(ComponentConst.POPUP_COMPLETED_MENU_TEXT, menuItemColor,
 				IconManager.getIcon("ok"),
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						final EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						int index = table.getSelectedRow();
-						Task task = table.getTasks().get(index);
+						final Task task = table.getTasks().get(index);
 						if(task.getStatus() == TaskStatus.STARTED){
 							JOptionPane.showMessageDialog(mainWindow, "正在下载中的任务不能执行此操作！");
 							return;
@@ -249,11 +253,20 @@ public class MainPopupMenu extends AJPopupMenu{
 						+ ("".equals(task.getSubname()) ? task.getName() : task.getSubname()) +
 						"】置为完成状态吗？");
 						if(result == JOptionPane.OK_OPTION){//确定
-							task.setCurrent(task.getTotal());
-							task.setStatus(TaskStatus.COMPLETED);
-							//保存数据
-							mainWindow.taskDbTemplate.update(mainWindow.tasks);
-							JOptionPane.showMessageDialog(mainWindow, "操作完成！");
+							new CommonSwingWorker(new Runnable() {
+								public void run() {
+									if(task.getPictures() != null){
+										for(int i = 0; i < task.getPictures().size(); i ++){
+											task.getPictures().get(i).setCompleted(true);
+										}
+									}
+									task.setCurrent(task.getTotal());
+									task.setStatus(TaskStatus.COMPLETED);
+									//保存数据
+									mainWindow.taskDbTemplate.update(task);
+									JOptionPane.showMessageDialog(mainWindow, "操作完成！");
+								}
+							}).execute();
 						}
 					}
 				}));

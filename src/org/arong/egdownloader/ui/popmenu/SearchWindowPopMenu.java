@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.model.Task;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.listener.MenuItemActonListener;
 import org.arong.egdownloader.ui.swing.AJMenuItem;
@@ -28,7 +27,6 @@ import org.arong.egdownloader.ui.window.MergeWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
-import org.arong.util.FileUtil2;
 
 public class SearchWindowPopMenu extends JPopupMenu {
 	public EgDownloaderWindow mainWindow;
@@ -194,8 +192,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
 						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-						String path = ComponentConst.CACHE_PATH + "/" + FileUtil2.filterDir(task.getUrl() + "/");
-						File coverFile = new File(path);
+						File coverFile = new File(task.getCoverCachePath());
 						if(coverFile.exists()){
 							coverFile.delete();
 							JOptionPane.showMessageDialog(mainWindow.searchComicWindow, "清理完成");

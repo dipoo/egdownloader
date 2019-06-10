@@ -23,6 +23,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.CreatingWindow;
 import org.arong.egdownloader.version.Version;
 import org.arong.util.FileUtil2;
@@ -133,7 +134,7 @@ public class ScriptParser {
 	public static Task getTaskByUrl(String url, Setting setting) throws Exception{
 		String source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", setting.getCookieInfo());
 		//保存源文件
-		FileUtil2.storeStr2file(source, "source/", "task.html");
+		FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "task.html");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		return JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
@@ -141,7 +142,7 @@ public class ScriptParser {
 	public static Task getTaskAndPicByUrl(String url, String tid, Setting setting) throws Exception{
 		String source = WebClient.getRequestUseJavaWithCookie(url, "UTF-8", setting.getCookieInfo());
 		//保存源文件
-		FileUtil2.storeStr2file(source, "source/", "task.html");
+		FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "task.html");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		Task task = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
@@ -196,7 +197,7 @@ public class ScriptParser {
 		}
 		String source = WebClient.getRequestUseJavaWithCookie(task.getUrl(), "UTF-8", setting.getCookieInfo());//WebClient.postRequestWithCookie(task.getUrl(), setting.getCookieInfo());
 		//保存源文件
-		FileUtil2.storeStr2file(source, "source/", "task.html");
+		FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "task.html");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("htmlSource", source);
 		
@@ -321,20 +322,26 @@ public class ScriptParser {
 			param.put("htmlSource", source);
 			
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
+			//获取名称
 			task.setName(t.getName());
 			//获取子名称
-	        task.setSubname(t.getSubname());
-	        //获取类别
-	        task.setType(t.getType());
+			task.setSubname(t.getSubname());
+			//获取上传者
+			task.setUploader(t.getUploader());
+			//获取发布日期
+			task.setPostedTime(t.getPostedTime());
+			//获取漫画类别
+			task.setType(t.getType());
 	        //获取封面路径
 	        task.setCoverUrl(t.getCoverUrl());
-	        //获取大小
+	        //获取数目及大小
+	        task.setTotal(t.getTotal());
 	        task.setSize(t.getSize());
+	        task.setTags(t.getTags());
+	        //设置下载结束索引
+	        task.setEnd(task.getTotal());
 	        //获取漫画语言
 	        task.setLanguage(t.getLanguage());
-	        //获取发布时间
-	        task.setPostedTime(t.getPostedTime());
-	        
 	        //获取图片集合
 	        int page = task.getTotal() % setting.getPageCount() == 0 ? task.getTotal() / setting.getPageCount() : task.getTotal() / setting.getPageCount() + 1;
 	        List<Picture> pictures = new ArrayList<Picture>();
@@ -380,7 +387,7 @@ public class ScriptParser {
 		String source = WebClient.getRequestUseJavaWithCookie(sourceUrl, "UTF-8", setting.getCookieInfo());
 		try {
 			//保存源文件
-			FileUtil2.storeStr2file(source, "source/", "download.html");
+			FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "download.html");
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("htmlSource", source);
 			param.put("version", Version.VERSION);
@@ -424,7 +431,7 @@ public class ScriptParser {
 				return;
 			}else{
 				//保存源文件
-				FileUtil2.storeStr2file(source, "source/", "task.html");
+				FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "task.html");
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("htmlSource", source);
 				result = parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath()));
@@ -455,7 +462,7 @@ public class ScriptParser {
 								resultArea.setText(pics.get(0).getUrl() + ":访问出错");
 							}else{
 								//保存源文件
-								FileUtil2.storeStr2file(source, "source/", "download.html");
+								FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "download.html");
 								param.put("htmlSource", source);
 								result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
 								if(result == null){
@@ -476,7 +483,7 @@ public class ScriptParser {
 							resultArea.setText(pics.get(0).getUrl() + ":访问出错");
 						}else{
 							//保存源文件
-							FileUtil2.storeStr2file(source, "source/", "download.html");
+							FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "download.html");
 							param.put("htmlSource", source);
 							result = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath()));
 							if(result == null){
@@ -495,7 +502,7 @@ public class ScriptParser {
 					resultArea.append("https://exhentai.org/:访问出错");
 				}else{
 					//保存源文件
-					FileUtil2.storeStr2file(source, "source/", "search.html");
+					FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "search.html");
 					result = search(source, setting);
 					if(result == null){
 						resultArea.append(setting.getSearchScriptPath() + "脚本解析出错\r\n");

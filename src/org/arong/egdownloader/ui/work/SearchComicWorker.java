@@ -8,6 +8,7 @@ import javax.swing.SwingWorker;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.spider.WebClient;
+import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.util.FileUtil2;
@@ -39,7 +40,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				return null;
 			}
 			//保存源文件
-			FileUtil2.storeStr2file(source, "source/", "search.html");
+			FileUtil2.storeStr2file(source, ComponentConst.SOURCE_PATH, "search.html");
 			String[] result = ScriptParser.search(source, mainWindow.setting);
 			if(result != null){
 				String json = result[1];

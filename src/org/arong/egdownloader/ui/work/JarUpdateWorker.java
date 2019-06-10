@@ -29,6 +29,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 	
 	protected Void doInBackground() throws Exception {
 		String jarName = "egdownloader.jar";
+		String tmpjarName = "egdownloader.jar_tmp";
 		InputStream is = null;
 		System.out.println("开始下载jar文件...");
 		String bakPath = binPath + File.separator + "bak" + File.separator + Version.JARVERSION + File.separator;
@@ -55,11 +56,17 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 				FileUtil2.ifNotExistsThenCreate(bakPath);
 				System.out.println(String.format("备份文件%s至%s", oldjar.getPath(), bakPath + jarName));
 				FileUtil2.copyFile(oldjar.getPath(), bakPath + jarName);
+				System.out.println(String.format("下载文件至%s", oldjar.getParent() + File.separator + tmpjarName));
 				//保存
-				int fsize = FileUtil2.storeStream(oldjar.getParent(), jarName, is);
+				int fsize = FileUtil2.storeStream(oldjar.getParent(), tmpjarName, is);
 				if(fsize != totalLength){
 					JOptionPane.showMessageDialog(null, "更新失败，jar文件下载不完整(" + FileUtil2.showSizeStr((long)fsize) + ")，请重试");
 				}else{
+					File tmpfile = new File(oldjar.getParent() + File.separator + tmpjarName);
+					System.out.println(String.format("重命名文件%s为%s", tmpjarName, jarName));
+					FileUtil2.copyByte(tmpfile, oldjar);
+					System.out.println(String.format("删除临时文件%s", tmpjarName));
+					FileUtil2.deleteFile(tmpfile);
 					JOptionPane.showMessageDialog(null, "jar文件更新成功，重启后生效。");
 				}
 			}

@@ -2,6 +2,7 @@ package org.arong.egdownloader.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.util.FileUtil2;
 
 /**
  * 搜索绅士站漫画列表任务模型
@@ -205,4 +206,16 @@ public class SearchTask {
 		return false;
 	}
 	
+	public String getCoverCachePath(){
+		if(url != null){
+			return ComponentConst.CACHE_PATH + "/" + getCoverCacheFileName();
+		}
+		return null;
+	}
+	public String getCoverCacheFileName(){
+		if(url != null){
+			return FileUtil2.filterDir(url.endsWith("/") ? url : url + "/");
+		}
+		return null;
+	}
 }

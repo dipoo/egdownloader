@@ -20,7 +20,7 @@ public class TaskList<T> extends ArrayList<T> {
 	private Map<String, Integer> taskUrlMap = new HashMap<String, Integer>();//用于通过地址检查任务是否已存在
 	//http://exhentai.org/t/33/9d【/339df975fe】9d2fdff9b097db4c220341baf463ad-1431193-1428-2018-png_250.jpg
 	private StringBuilder taskTokens = new StringBuilder();//用于通过任务地址与封面地址检查任务是否存在已添加的旧版，格式如：/339df975fe_{gid}/228ssdsdsa_{gid}
-	
+	public static final int COVER_TOKEN_SUB_LENGTH = 20;
 	public Map<String, Integer> getTaskUrlMap() {
 		return taskUrlMap;
 	}
@@ -40,7 +40,7 @@ public class TaskList<T> extends ArrayList<T> {
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] taskarr = task.getUrl().split("/g/");
 			String[] coverarr = task.getCoverUrl().split("-");
-			taskTokens.append(coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 10))
+			taskTokens.append(coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + COVER_TOKEN_SUB_LENGTH))
 					.append(taskarr[1].substring(0, taskarr[1].indexOf("/")));
 		}
 	}
@@ -48,7 +48,7 @@ public class TaskList<T> extends ArrayList<T> {
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] taskarr = task.getUrl().split("/g/");
 			String[] coverarr = task.getCoverUrl().split("-");
-			String token = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + 10) + taskarr[1].substring(0, taskarr[1].indexOf("/"));
+			String token = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + COVER_TOKEN_SUB_LENGTH) + taskarr[1].substring(0, taskarr[1].indexOf("/"));
 			if(taskTokens.indexOf(token) != -1){
 				taskTokens.replace(taskTokens.indexOf(token), taskTokens.indexOf(token) + token.length(), "");
 			}

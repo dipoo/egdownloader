@@ -43,6 +43,8 @@ public final class ComponentConst {
 	
 	public static String CACHE_PATH = "cache";//缓存目录
 	
+	public static String SOURCE_PATH = "source/";//缓存目录
+	
 	public final static String TAG_FILE_NAME = "tags.properties";
 	
 	public final static String TAG_FILE_PATH = ROOT_DATA_PATH + "/tags.properties";
