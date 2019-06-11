@@ -46,6 +46,7 @@ import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.AllTagsWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
+import org.arong.egdownloader.ui.window.SearchDetailInfoWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.DateUtil;
@@ -92,7 +93,7 @@ public class TaskTagsPanel extends JScrollPane {
 				    if(arr.length > 3){
 				    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
 				    			&& StringUtils.isNotBlank(arr[2].trim()) && !arr[1].trim().contains("--------") && !arr[1].trim().contains("英文原名")){
-				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , /*EmojiFilter.filterEmoji(*/(arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()));
+				    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim(), ((arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim())).replace("\\", "").trim());
 				    	}
 				    }
 				}
@@ -119,7 +120,7 @@ public class TaskTagsPanel extends JScrollPane {
 									    if(arr.length > 3){
 									    	if("".equals(arr[0].trim()) && StringUtils.isNotBlank(arr[1].trim())
 									    			&& StringUtils.isNotBlank(arr[2].trim()) && !arr[0].trim().contains("--------") && !arr[0].trim().contains("英文原名")){
-									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim() , (arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim()));
+									    		tagscnMap.put(filename.replace(".md", "") + ":" + arr[1].trim(), ((arr[2].trim().indexOf(")") > -1 ? arr[2].trim().substring(arr[2].trim().indexOf(")") + 1) : arr[2].trim())).replace("\\", "").trim());
 									    	}
 									    }
 									}
@@ -267,6 +268,7 @@ public class TaskTagsPanel extends JScrollPane {
 		clearBtn.setBounds(305, 110, 90, 30);
 		AJButton returnBtn = new AJButton("返回面板");
 		returnBtn.setBounds(405, 110, 90, 30);
+		final TaskTagsPanel this_ = this;
 		//本地搜索
 		localBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -277,6 +279,9 @@ public class TaskTagsPanel extends JScrollPane {
 				SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 				ssw.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", ""));
 				ssw.searchBtn.doClick();
+				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
+					this_.getRootPane().getParent().setVisible(false);
+				}
 			}
 		});
 		//在线搜索
@@ -288,6 +293,9 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 				mainWindow.searchComicWindow.doSearch(selectTags.replaceAll(";", " "));
 				mainWindow.searchComicWindow.setVisible(true);
+				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
+					this_.getRootPane().getParent().setVisible(false);
+				}
 			}
 		});
 		//标签收藏
@@ -308,11 +316,8 @@ public class TaskTagsPanel extends JScrollPane {
 				}else{
 					JOptionPane.showMessageDialog(mainWindow, "当前选择的标签为空");
 				}
-				if(textPane.getText().length() == 110 && textPane.getCom() != null){
-					if(textPane.getCom() instanceof JDialog || 
-							textPane.getCom() instanceof JWindow){
-						textPane.getCom().setVisible(false);
-					}
+				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
+					this_.getRootPane().getParent().setVisible(false);
 				}else{
 					setViewportView(textPane);
 				}
@@ -320,11 +325,8 @@ public class TaskTagsPanel extends JScrollPane {
 		});
 		returnBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(textPane.getText().length() == 110 && textPane.getCom() != null){
-					if(textPane.getCom() instanceof JDialog || 
-							textPane.getCom() instanceof JWindow){
-						textPane.getCom().setVisible(false);
-					}
+				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
+					this_.getRootPane().getParent().setVisible(false);
 				}else{
 					setViewportView(textPane);
 				}
@@ -336,7 +338,9 @@ public class TaskTagsPanel extends JScrollPane {
 				selectTag = "";
 				//清空
 				renderSelectTags(null, false);
-				if(textPane.getText().length() != 110){
+				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
+					this_.getRootPane().getParent().setVisible(false);
+				}else{
 					setViewportView(textPane);
 				}
 			}
@@ -525,7 +529,7 @@ public class TaskTagsPanel extends JScrollPane {
 	}
 	
 	private String parseFav(String group, String tag, String ftag){
-		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(MISC) ? "" : group + ":") + tag)){
+		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(MISC) ? "" : (group + ":")) + tag)){
 			return "<font color='red'>" + ftag + "</font>";
 		}
 		return ftag;

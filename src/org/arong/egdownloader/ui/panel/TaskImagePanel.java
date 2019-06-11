@@ -87,7 +87,8 @@ public class TaskImagePanel extends AJPanel {
 								int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
 								l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
 								l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-								icon.getImage().flush();//解决加载图片不完全问题
+								//icon.getImage().flush();//解决加载图片不完全问题
+								l.setImage(icon);
 								l.setIcon(icon);
 							}
 							break;
@@ -128,7 +129,7 @@ public class TaskImagePanel extends AJPanel {
 										int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
 										l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
 										l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-										icon.getImage().flush();//解决加载图片不完全问题
+										//icon.getImage().flush();//解决加载图片不完全问题
 										l.setImage(icon);
 										l.setIcon(icon);
 									}catch(Exception e){
@@ -167,6 +168,7 @@ public class TaskImagePanel extends AJPanel {
 								imageTaskPager.setVisible(false);
 							}
 							selectIndex = mainWindow.runningTable.getSelectedRow();
+							List<AJPanel> panels = new ArrayList<AJPanel>();
 							for(int i = 0; i < ptasks.size(); i ++){
 								//判断AJPanel是否存在
 								//AJPanel p = null;
@@ -284,7 +286,7 @@ public class TaskImagePanel extends AJPanel {
 											int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
 											l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
 											l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-											icon.getImage().flush();//解决加载图片不完全问题
+											//icon.getImage().flush();//解决加载图片不完全问题
 											l.setImage(icon);
 											l.setIcon(icon);
 										}catch(Exception e){
@@ -309,9 +311,14 @@ public class TaskImagePanel extends AJPanel {
 									p.add(l, BorderLayout.SOUTH);
 									p.add(bar, BorderLayout.NORTH);
 								}
+								panels.add(p);
 								container.add(p, i);
 								container.updateUI();
 							}
+							/*for(JPanel panel : panels){
+								container.add(panel);
+							}*/
+							//container.updateUI();
 							int totalPage = tasks.size() % PAGESIZE == 0 ? tasks.size() / PAGESIZE : tasks.size() / PAGESIZE + 1;
 							if(totalPage > 1){
 								if(imageTaskPager == null){
