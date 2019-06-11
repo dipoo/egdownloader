@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
@@ -117,6 +118,9 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				task.setCreateWorker(null);
 				if(window.viewModel == 2){
 					window.taskImagePanel.init(taskTable.getTasks());
+				}
+				if(window.allTagsWindow != null && StringUtils.isNotBlank(task.getTags())){
+					window.allTagsWindow.addTaskTags(task.getTags());
 				}
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");

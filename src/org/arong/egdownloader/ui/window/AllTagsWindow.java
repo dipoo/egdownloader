@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,10 +16,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -30,6 +33,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.ButtonUI;
 
 import org.apache.commons.lang.StringUtils;
+import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.FontConst;
@@ -48,6 +52,7 @@ import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
  * @date 2019-05-29
  */
 public class AllTagsWindow extends JDialog {
+	public boolean istask;//是否展示的是已建任务中所包含的标签
 	public EgDownloaderWindow mainWindow;
 	public JPanel typeBtnPanel;
 	public AJTextField searchField;
@@ -58,21 +63,40 @@ public class AllTagsWindow extends JDialog {
 	public AJLabel emptyLabel;
 	//public AJTextPane tagPane;
 	
-	public String title = "选择标签";
 	public CommonSwingWorker worker = null;
 	public Component[] tagBtns;
 	public String currentGroup;
 	public int currentPage;
 	public int pageSize = 250;
 	public AJPager pager;
-	public Map<String, Set<String>> allKeys;
+	public Map<String, Set<String>> allKeys;//所有任务标签	
+	public Map<String, Set<String>> allTaskKeys;//已建任务标签
+	public Map<String, Integer> allTaskCountMap;
 	public String emptyText = "在分类[%s]下搜索不到匹配的标签";
 	
+	public String getTitle(){
+		return istask ? "已建任务标签" : "全部任务标签";
+	}
+	
+	public Map<String, Set<String>> getKeys(){
+		return istask ? allTaskKeys : allKeys;
+	}
+	public void setkeys(Map<String, Set<String>> keys){
+		if(istask){
+			allTaskKeys = keys;
+		}else{
+			allKeys = keys;
+		}
+	}
 	public AllTagsWindow(final EgDownloaderWindow egDownloaderWindow){
-		
+		this(egDownloaderWindow, false);
+	}
+	
+	public AllTagsWindow(final EgDownloaderWindow egDownloaderWindow, boolean istask_){
+		this.istask = istask_;
 		this.mainWindow = egDownloaderWindow;
-		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
-		this.setTitle(title);
+		this.setSize((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 50) > ComponentConst.CLIENT_WIDTH ? ((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 50) : ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
+		this.setTitle(getTitle());
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLayout(null);
 		this.setLocationRelativeTo(null);
@@ -92,6 +116,15 @@ public class AllTagsWindow extends JDialog {
 		searchBtn.setForeground(Color.WHITE);
 		searchBtn.setUI(AJButton.blueBtnUi);
 		
+		JButton toggleBtn = new AJButton("切换", "", new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				istask = !istask;
+				searchBtn.doClick();
+			}
+		}, 950, 10, 60, 25);
+		toggleBtn.setForeground(Color.WHITE);
+		toggleBtn.setUI(AJButton.blueBtnUi);
+		
 		typeBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		typeBtnPanel.setBounds(280, 5, 620, 40);
 		ActionListener typeBtnActionListener = new ActionListener() {
@@ -103,6 +136,7 @@ public class AllTagsWindow extends JDialog {
 					}
 				}
 				btn.setUI(AJButton.redBtnUi);
+				btn.setSize(60, 25);
 				String row = btn.getName();
 				currentGroup = row;
 				searchTags(1, searchField.getText().trim());
@@ -127,6 +161,7 @@ public class AllTagsWindow extends JDialog {
 		tagPane.setBorder(null);
 		
 		scrollPane = new JScrollPane(tagPane);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		scrollPane.setBounds(0, 50, this.getWidth() - 20, this.getHeight() - 140);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBorder(null);
@@ -141,12 +176,13 @@ public class AllTagsWindow extends JDialog {
 		});
 		pager.setVisible(false);
 		
-		ComponentUtil.addComponents(getContentPane(), typeBtnPanel, searchField, searchBtn, separator, scrollPane, pager);
+		ComponentUtil.addComponents(getContentPane(), typeBtnPanel, searchField, searchBtn, toggleBtn, separator, scrollPane, pager);
 		setVisible(true);
 		
 		((JButton)(typeBtnPanel.getComponent(6))).setUI(AJButton.redBtnUi);
 		currentGroup = ComponentConst.TAGS_CN_FILENAMES[6].replaceAll(".md", "");
-		searchTags();
+		this.setVisible(false);
+		searchTags(istask);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -171,6 +207,33 @@ public class AllTagsWindow extends JDialog {
 	public void searchTags(){
 		searchTags(1, null);
 	}
+	public void searchTags(boolean istask){
+		this.istask = istask;
+		searchTags(1, null);
+	}
+	public void addTaskTags(String tags){
+		if(allTaskKeys != null){
+			if(StringUtils.isNotBlank(tags)){
+				String[] arr = tags.split(";"); String[] arr_= null;String mapkey;
+				for(String tag : arr){
+					arr_ = tag.split(":");
+					if(arr_.length == 1){
+						arr_ = (TaskTagsPanel.MISC + ":" + tag).split(":");
+					}
+					if(!getKeys().containsKey(arr_[0])){
+						getKeys().put(arr_[0], new HashSet<String>());
+					}
+					mapkey = arr_[0] + ":" + arr_[1].replaceAll("\\+", " ");
+					getKeys().get(arr_[0]).add(mapkey);
+					if(allTaskCountMap.containsKey(mapkey)){
+						allTaskCountMap.put(mapkey, allTaskCountMap.get(mapkey) + 1);
+					}else{
+						allTaskCountMap.put(mapkey, 1);
+					}
+				}
+			}
+		}
+	}
 	public void searchTags(final int page, final String searchkey){
 		if(worker != null && !worker.isDone()){
 			System.out.println("请等待...");
@@ -183,38 +246,62 @@ public class AllTagsWindow extends JDialog {
 					public void run() {
 						tagPane.removeAll();
 						pager.setVisible(false);
+						this_.setVisible(true);
 						
-						if(allKeys == null){
-							allKeys = new HashMap<String, Set<String>>();
+						if(getKeys() == null){
+							setkeys(new HashMap<String, Set<String>>());
 						}
 						
-						if(! allKeys.containsKey(currentGroup)){
-							if(TaskTagsPanel.tagscnMap != null){
-								String[] arr;
+						if(getKeys().isEmpty()){
+							String[] arr;
+							if(!istask && TaskTagsPanel.tagscnMap != null){
 								for(String key : TaskTagsPanel.tagscnMap.keySet()){
 									arr = key.split(":");
 									if(arr.length == 1){
 										arr = (TaskTagsPanel.MISC + ":" + key).split(":");
 										arr = key.split(":");
 									}
-									if(!allKeys.containsKey(arr[0])){
-										allKeys.put(arr[0], new HashSet<String>());
+									if(!getKeys().containsKey(arr[0])){
+										getKeys().put(arr[0], new HashSet<String>());
 									}
-									allKeys.get(arr[0]).add(arr[0] + ":" + arr[1]);
+									getKeys().get(arr[0]).add(arr[0] + ":" + arr[1]);
+								}
+							}else if(mainWindow.tasks != null){
+								if(allTaskCountMap == null){
+									allTaskCountMap = new HashMap<String, Integer>();
+								}
+								String[] arr_;String mapkey;
+								for(Task task : mainWindow.tasks){
+									if(StringUtils.isNotBlank(task.getTags())){
+										arr = task.getTags().split(";");
+										for(String tag : arr){
+											arr_ = tag.split(":");
+											if(arr_.length == 1){
+												arr_ = (TaskTagsPanel.MISC + ":" + tag).split(":");
+											}
+											if(!getKeys().containsKey(arr_[0])){
+												getKeys().put(arr_[0], new HashSet<String>());
+											}
+											mapkey = arr_[0] + ":" + arr_[1].replaceAll("\\+", " ");
+											getKeys().get(arr_[0]).add(mapkey);
+											if(allTaskCountMap.containsKey(mapkey)){
+												allTaskCountMap.put(mapkey, allTaskCountMap.get(mapkey) + 1);
+											}else{
+												allTaskCountMap.put(mapkey, 1);
+											}
+										}
+									}
 								}
 							}
 						}
 						
-						Set<String> keys = null;
-						if(TaskTagsPanel.tagscnMap != null){
-							keys = allKeys.get(currentGroup);
-						}
+						Set<String> keys = getKeys().get(currentGroup);
 						if(keys != null){
 							//关键字过滤
 							if(StringUtils.isNotBlank(searchkey)){
 								HashSet<String> filterKeys = new HashSet<String>();
 								for( String key : keys){
-									if(key.contains(searchkey.toLowerCase())){
+									if(key.toLowerCase().replace(currentGroup + ":", "").contains(searchkey.toLowerCase())){
 										filterKeys.add(key);
 									}else if(mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.get(key).contains(searchkey.toLowerCase())){
 										filterKeys.add(key);
@@ -222,6 +309,17 @@ public class AllTagsWindow extends JDialog {
 								}
 								keys = filterKeys;
 							}
+							if(istask){
+								//按照任务个数排序
+								Set<String> sortSet = new TreeSet<String>(new Comparator<String>() {
+									public int compare(String key1, String key2) {
+										return allTaskCountMap.get(key1) >= allTaskCountMap.get(key2) ? -1 : 1;
+									}
+								});
+						        sortSet.addAll(keys);
+						        keys = sortSet;
+							}
+							this_.setTitle(String.format("%s(%s条记录)", getTitle(), keys.size()));
 							if(keys.size() == 0){
 								emptyLabel.setText(String.format(emptyText, mainWindow.setting.isTagsTranslate() ? TaskTagsPanel.tagscnMap.get("rows:" + currentGroup) : currentGroup));
 								tagPane.add(emptyLabel);
@@ -229,10 +327,9 @@ public class AllTagsWindow extends JDialog {
 								return;
 							}
 							currentPage = page;
-							this_.setTitle(String.format("%s(%s条记录)", title, keys.size()));
 							//分页处理
 							if(keys.size() > pageSize){
-								HashSet<String> pageKeys = new HashSet<String>();
+								Set<String> pageKeys = new HashSet<String>();
 								int index = (page - 1) * pageSize, i = 0;
 								for( String key : keys ){
 									i ++;
@@ -251,18 +348,18 @@ public class AllTagsWindow extends JDialog {
 							}
 							int i = 0;int ebtnlength = tagBtns != null ? tagBtns.length : 0;
 							JButton b = null;
-							for(final String key : keys){
+							for(String key : keys){
 								i ++;
 								if(i < ebtnlength){
 									b = (JButton) tagBtns[i - 1];
-									b.setText(mainWindow.setting.isDebug() ? "" + i : String.format("<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() ? 
-											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", ""))));
+									b.setText(!mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
+											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), allTaskCountMap.get(key)));
 									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setVisible(true);
 								}else{
-									b = new JButton(mainWindow.setting.isDebug() ? "" + i : String.format("<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() ? 
-											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", ""))));
+									b = new JButton(!mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
+											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), allTaskCountMap.get(key)));
 									b.setFont(FontConst.Microsoft_BOLD_12);
 									b.setMargin(new Insets(1, 1, 1, 1));
 									//随机颜色
@@ -279,6 +376,12 @@ public class AllTagsWindow extends JDialog {
 							if(tagBtns == null || tagBtns.length < i){
 								tagBtns = tagPane.getComponents();
 							}
+						}else{
+							this_.setTitle(String.format("%s(%s条记录)", getTitle(), 0));
+							emptyLabel.setText(String.format(emptyText, mainWindow.setting.isTagsTranslate() ? TaskTagsPanel.tagscnMap.get("rows:" + currentGroup) : currentGroup));
+							tagPane.add(emptyLabel);
+							tagPane.updateUI();
+							return;
 						}
 					}
 				});

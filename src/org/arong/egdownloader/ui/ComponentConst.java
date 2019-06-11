@@ -225,6 +225,7 @@ public final class ComponentConst {
 	public final static String TASKGROUP_SEARCH_TEXT = "搜索";
 	public final static String TASKGROUP_MENU_TEXT = "任务组";
 	public final static String SETTING_MENU_TEXT = "配置";
+	public final static String TAG_MENU_TEXT = "标签";
 	public final static String OPERA_MENU_TEXT = "操作";
 	public final static String SEARCH_MENU_TEXT = "搜索";
 	public final static String CONSOLE_MENU_TEXT = "控制台";

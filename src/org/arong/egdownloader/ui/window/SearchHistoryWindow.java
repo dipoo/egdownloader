@@ -84,6 +84,7 @@ public class SearchHistoryWindow extends JDialog {
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		scrollPane.setSize(790, 480);
 		this.getContentPane().add(scrollPane);
+		this.setVisible(false);
 	}
 	
 	public void render(){
