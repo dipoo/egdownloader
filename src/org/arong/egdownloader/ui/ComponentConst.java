@@ -96,6 +96,8 @@ public final class ComponentConst {
 	public static String SCRIPT_SEARCH2_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/search2.js";
 	public static String SCRIPT_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/version";
 	
+	public static Map<String, Integer> allTaskCountMap = new HashMap<String, Integer>();//已建任务标签对应的任务数
+	
 	public static Map<String, String> typeColorMap = new HashMap<String, String>();
 	
 	static{

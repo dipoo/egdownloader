@@ -118,7 +118,9 @@ public class CountWindow extends JDialog {
 			if(StringUtils.isNotBlank(task.getTags())){
 				String[] arr = task.getTags().split(";");
 				for(String tag : arr){
-					tagMap.put(tag, 0);
+					if(StringUtils.isNotBlank(tag.trim())){
+						tagMap.put(tag, 0);
+					}
 				}
 			}
 		}

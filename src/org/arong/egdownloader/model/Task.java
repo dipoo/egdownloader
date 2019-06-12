@@ -533,4 +533,21 @@ public class Task {
 	public void setOldurl(String oldurl) {
 		this.oldurl = oldurl;
 	}
+	/**
+	 * 添加或删除任务时调用，刷新每个标签拥有的任务数
+	 * @param add
+	 */
+	public void flushTagsCount(boolean add){
+		if(StringUtils.isNotBlank(tags)){
+			String[] arr = tags.split(";");
+			for(String tag : arr){
+				tag = tag.replaceAll("\\+", " ");
+				if(ComponentConst.allTaskCountMap.containsKey(tag)){
+					ComponentConst.allTaskCountMap.put(tag, ComponentConst.allTaskCountMap.get(tag) + (add ? 1 : -1));
+				}else{
+					if(add) ComponentConst.allTaskCountMap.put(tag, 1);
+				}
+			}
+		}
+	}
 }

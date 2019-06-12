@@ -15,6 +15,7 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.db.AbstractSqlDbTemplate;
 import org.arong.egdownloader.db.DbTemplate;
 import org.arong.egdownloader.db.impl.PictureDom4jDbTemplate;
@@ -134,6 +135,8 @@ public class InitWindow extends JWindow {
 						tasks.get(i).setPictures(pictureDbTemplate.query("tid", tasks.get(i).getId()));
 					}
 					p_historyCount += tasks.get(i).getTotal();
+					//初始化任务标签对应的任务数
+					tasks.get(i).flushTagsCount(true);
 				}
 				/**
 				 * 为了兼容历史版本的db文件

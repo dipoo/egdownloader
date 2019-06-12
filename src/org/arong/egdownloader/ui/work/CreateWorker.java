@@ -122,6 +122,7 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 				if(window.allTagsWindow != null && StringUtils.isNotBlank(task.getTags())){
 					window.allTagsWindow.addTaskTags(task.getTags());
 				}
+				task.flushTagsCount(true);
 			}else{
 				JOptionPane.showMessageDialog(null, "创建异常");
 				throw new RuntimeException("任务获取为空");

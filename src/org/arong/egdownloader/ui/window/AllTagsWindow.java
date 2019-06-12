@@ -73,7 +73,6 @@ public class AllTagsWindow extends JFrame {
 	public AJPager pager;
 	public Map<String, Set<String>> allKeys;//所有任务标签	
 	public Map<String, Set<String>> allTaskKeys;//已建任务标签
-	public Map<String, Integer> allTaskCountMap;
 	public String emptyText = "在分类[%s]下搜索不到匹配的标签";
 	public Insets insets = new Insets(1, 1, 1, 1);
 	
@@ -162,7 +161,7 @@ public class AllTagsWindow extends JFrame {
 		tagPane = new JPanel();
 		tagPane.setLayout(new FlowLayout(FlowLayout.LEFT));
 		tagPane.setBounds(5, 5, this.getWidth() - 40, this.getHeight() - 160);
-		tagPane.setPreferredSize(new Dimension(this.getWidth() - 40,  this.getHeight() - 60));
+		tagPane.setPreferredSize(new Dimension(this.getWidth() - 40,  this.getHeight() - 140));
 		tagPane.setBorder(null);
 		
 		scrollPane = new JScrollPane(tagPane);
@@ -187,16 +186,9 @@ public class AllTagsWindow extends JFrame {
 		((JButton)(typeBtnPanel.getComponent(6))).setUI(AJButton.redBtnUi);
 		currentGroup = ComponentConst.TAGS_CN_FILENAMES[6].replaceAll(".md", "");
 		this.setVisible(false);
-		searchTags(istask);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Window this_ = (Window) e.getSource();
-				this_.dispose();
-			}
-			//窗体由激活状态变成非激活状态
-			public void windowDeactivated(WindowEvent e) {
-				//关闭后显示主界面
 				Window this_ = (Window) e.getSource();
 				this_.dispose();
 			}
@@ -230,10 +222,22 @@ public class AllTagsWindow extends JFrame {
 					}
 					mapkey = arr_[0] + ":" + arr_[1].replaceAll("\\+", " ");
 					getKeys().get(arr_[0]).add(mapkey);
-					if(allTaskCountMap.containsKey(mapkey)){
-						allTaskCountMap.put(mapkey, allTaskCountMap.get(mapkey) + 1);
-					}else{
-						allTaskCountMap.put(mapkey, 1);
+				}
+			}
+		}
+	}
+	public void delTaskTags(String tags){
+		if(allTaskKeys != null){
+			if(StringUtils.isNotBlank(tags)){
+				String[] arr = tags.split(";"); String[] arr_= null;String mapkey;
+				for(String tag : arr){
+					arr_ = tag.split(":");
+					if(arr_.length == 1){
+						arr_ = (TaskTagsPanel.MISC + ":" + tag).split(":");
+					}
+					if(getKeys().containsKey(arr_[0])){
+						mapkey = arr_[0] + ":" + arr_[1].replaceAll("\\+", " ");
+						getKeys().get(arr_[0]).remove(mapkey);
 					}
 				}
 			}
@@ -272,9 +276,6 @@ public class AllTagsWindow extends JFrame {
 									getKeys().get(arr[0]).add(arr[0] + ":" + arr[1]);
 								}
 							}else if(mainWindow.tasks != null){
-								if(allTaskCountMap == null){
-									allTaskCountMap = new HashMap<String, Integer>();
-								}
 								String[] arr_;String mapkey;
 								for(Task task : mainWindow.tasks){
 									if(StringUtils.isNotBlank(task.getTags())){
@@ -289,11 +290,6 @@ public class AllTagsWindow extends JFrame {
 											}
 											mapkey = arr_[0] + ":" + arr_[1].replaceAll("\\+", " ");
 											getKeys().get(arr_[0]).add(mapkey);
-											if(allTaskCountMap.containsKey(mapkey)){
-												allTaskCountMap.put(mapkey, allTaskCountMap.get(mapkey) + 1);
-											}else{
-												allTaskCountMap.put(mapkey, 1);
-											}
 										}
 									}
 								}
@@ -319,7 +315,8 @@ public class AllTagsWindow extends JFrame {
 								//按照任务个数排序
 						        Collections.sort(list, new Comparator<String>() {
 									public int compare(String key1, String key2) {
-										return allTaskCountMap.get(key2).compareTo(allTaskCountMap.get(key1));
+										return ((Integer)(ComponentConst.allTaskCountMap.get(key2) == null ? 0 : ComponentConst.allTaskCountMap.get(key2)))
+												.compareTo((Integer)(ComponentConst.allTaskCountMap.get(key1) == null ? 0 : ComponentConst.allTaskCountMap.get(key1)));
 									}
 								});
 							}
@@ -356,14 +353,14 @@ public class AllTagsWindow extends JFrame {
 								i ++;
 								if(i < ebtnlength){
 									b = (JButton) tagBtns[i - 1];
-									b.setText(mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
-											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), allTaskCountMap.get(key)));
+									b.setText(!mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
+											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(TaskTagsPanel.MISC + ":", ""))));
 									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setVisible(true);
 								}else{
-									b = new JButton(mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
-											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), allTaskCountMap.get(key)));
+									b = new JButton(!mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
+											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(TaskTagsPanel.MISC + ":", ""))));
 									b.setFont(FontConst.Microsoft_BOLD_12);
 									b.setMargin(insets);
 									//随机颜色

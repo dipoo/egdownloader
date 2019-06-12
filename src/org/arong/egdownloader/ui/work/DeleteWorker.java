@@ -60,6 +60,11 @@ public class DeleteWorker extends SwingWorker<Void, Void>{
 					mainWindow.taskDbTemplate.delete(t);//删除任务
 					//更新内存
 					table.getTasks().remove(t);
+					if(table.getTasks().size() > 0){
+						table.setRowSelectionInterval(0, 0);
+						table.scrollRectToVisible(table.getCellRect(0, 0, true));
+					}
+					t.flushTagsCount(false);
 					if(mainWindow.taskImagePanel != null){
 						mainWindow.taskImagePanel.init();
 					}
