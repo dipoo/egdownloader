@@ -67,8 +67,8 @@ public class Setting {
 	/**
 	 * 封面视图大小
 	 */
-	private int coverWidth = 150;
-	private int coverHeight = 216;
+	private int coverWidth = 350;//150;
+	private int coverHeight = 480;//216;
 	
 	private String skin = "BeautyEye";//皮肤
 	

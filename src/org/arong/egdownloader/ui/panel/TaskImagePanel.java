@@ -274,7 +274,7 @@ public class TaskImagePanel extends AJPanel {
 									l.setForeground(Color.WHITE);
 									l.setFont(FontConst.Microsoft_BOLD_12);
 									l.setVerticalTextPosition(JLabel.TOP);
-									l.setHorizontalTextPosition(JLabel.LEADING);
+									//l.setHorizontalTextPosition(JLabel.LEADING);
 									//Border border = BorderFactory.createLineBorder(Color.BLACK);
 									//l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
 									final String path = ptasks.get(i).getSaveDir() + "/cover.jpg";

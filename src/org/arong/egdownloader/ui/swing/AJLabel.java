@@ -80,8 +80,10 @@ public class AJLabel extends JLabel {
 		super.paintComponent(g);
 		if(image != null){
         	Graphics2D g2 = (Graphics2D)g;
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        	g2.getRenderingHints().put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        	g2.getRenderingHints().put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+            //g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
             int w = getWidth();
             int h = getHeight();
             int iw = image.getIconWidth();
@@ -94,6 +96,11 @@ public class AJLabel extends JLabel {
             int x = (w - width) / 2;
             int y = (h - height) / 2;
             g2.drawImage(image.getImage(), x, y, width, height, this);
+            /*count ++;
+            if(count > 3) {
+            	count = 0;
+            	imageRendered = true;
+            }*/
         }
 	}
 	public ImageIcon getImage() {
