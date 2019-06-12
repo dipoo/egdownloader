@@ -41,6 +41,7 @@ public class AboutMenuWindow extends JDialog {
 	private static final long serialVersionUID = -6501253363937575294L;
 	private EgDownloaderWindow mainWindow;
 	public AJTextPane aboutTextPane;
+	public JarUpdateWorker jarUpdateWorker;
 	
 	/**
 	 * 加入参数mainWindow主要是使关于窗口始终在主窗口的中央弹出
@@ -90,6 +91,10 @@ public class AboutMenuWindow extends JDialog {
 	}
 	
 	public void checkVersion(){
+		if(jarUpdateWorker != null){
+			JOptionPane.showMessageDialog(mainWindow, "正在升级中...");
+			return;
+		}
 		//检查版本号
 		final String vtitle = this.getTitle();
 		if(this.isVisible()){
@@ -103,6 +108,7 @@ public class AboutMenuWindow extends JDialog {
 				new CommonSwingWorker(new Runnable() {
 					public void run() {
 						try {
+							mainWindow.infoTabbedPane.setSelectedComponent(mainWindow.consolePanel);
 							String egVersion = WebClient.getRequestUseJava(ComponentConst.EG_VERSION_URL, "UTF-8");
 							System.out.println(egVersion);
 							Map<String, String> version = JsonUtil.json2Map(egVersion);
@@ -139,7 +145,8 @@ public class AboutMenuWindow extends JDialog {
 								if(oldjar.exists()){
 									int r = JOptionPane.showConfirmDialog(null, "最新程序jar文件版本号为：" + version.get("jarVersion") + "，是否更新？" + (StringUtils.isNotBlank(version.get("changelog")) ? "\n" + version.get("changelog") : ""));
 									if(r == JOptionPane.OK_OPTION){
-										new JarUpdateWorker(mainWindow, version, binPath).execute();
+										jarUpdateWorker = new JarUpdateWorker(mainWindow, version, binPath);
+										jarUpdateWorker.execute();
 										this_.dispose();
 									}
 								}else{

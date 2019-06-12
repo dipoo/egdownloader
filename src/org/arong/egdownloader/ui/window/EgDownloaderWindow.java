@@ -110,7 +110,7 @@ public class EgDownloaderWindow extends JFrame {
 	JMenuBar jMenuBar;// 菜单栏
 	public InitWindow initWindow;
 	public JFrame settingWindow;
-	public JDialog aboutWindow;
+	public AboutMenuWindow aboutWindow;
 	public JDialog addFormWindow;
 	public JDialog creatingWindow;
 	public JDialog detailWindow;

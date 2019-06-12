@@ -80,6 +80,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 			if(is != null){
 				try{is.close();}catch(Exception e){}
 			}
+			mainWindow.aboutWindow.jarUpdateWorker = null;
 		}
 		
 		return null;

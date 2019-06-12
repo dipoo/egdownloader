@@ -127,8 +127,8 @@ public class SearchComicWindow extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);//全屏
 		//this.setResizable(false);
 		this.setLocationRelativeTo(mainWindow);  
-		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 5, 50, 30);
-		keyField = new AJTextField("", 60, 5, 500, 30);
+		JLabel keyLabel = new AJLabel("关键字", Color.BLUE, 10, 10, 50, 30);
+		keyField = new AJTextField("", 50, 10, 500, 30);
 		keyField.setText("language:\"chinese$\"");
 		keyField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
@@ -146,18 +146,18 @@ public class SearchComicWindow extends JFrame {
 				search(page);
 			}
 			
-		}, 570, 5, 60, 30);
+		}, 560, 10, 60, 30);
 		cancelSearchBtn = new AJButton("取消", "", new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				mainWindow.searchComicWindow.toFront();
 				searchComicWorker.cancel(true);
 			}
 			
-		}, 570, 5, 60, 30);
+		}, 560, 10, 60, 30);
 		cancelSearchBtn.setVisible(false);
 		
 		leftBtn = new JButton(IconManager.getIcon("left"));
-		leftBtn.setBounds(640, 5, 30, 30);
+		leftBtn.setBounds(625, 10, 30, 30);
 		leftBtn.setToolTipText("后退");
 		leftBtn.setFocusable(false);
 		leftBtn.setCursor(CursorManager.getPointerCursor());
@@ -171,7 +171,7 @@ public class SearchComicWindow extends JFrame {
 			}
 		});
 		rightBtn = new JButton(IconManager.getIcon("right"));
-		rightBtn.setBounds(680, 5, 30, 30);
+		rightBtn.setBounds(660, 10, 30, 30);
 		rightBtn.setToolTipText("前进");
 		rightBtn.setFocusable(false);
 		rightBtn.setCursor(CursorManager.getPointerCursor());
@@ -184,6 +184,15 @@ public class SearchComicWindow extends JFrame {
 				searchBtn.doClick();
 			}
 		});
+		
+		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
+		loadingLabel.setBounds(625, 10, 120, 30);
+		loadingLabel.setVisible(false);
+		
+		totalLabel = new AJLabel("", "", Color.DARK_GRAY, JLabel.LEFT);
+		totalLabel.setBounds(695, 10, 600, 30);
+		totalLabel.setVisible(false);
+		
 		historyBtn = new AJButton("搜索历史", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(historyWindow == null){
@@ -193,18 +202,8 @@ public class SearchComicWindow extends JFrame {
 				historyWindow.toFront();
 				historyWindow.render();
 			}
-		}, 720, 5, 60, 30);
+		}, this.getWidth() - 220, 10, 60, 30);
 		historyBtn.setUI(AJButton.blueBtnUi);
-		
-		loadingLabel = new AJLabel("正在加载数据", "loading.gif", Color.BLACK, JLabel.LEFT);
-		loadingLabel.setBounds(640, 5, 120, 30);
-		loadingLabel.setVisible(false);
-		
-		totalLabel = new AJLabel("", "", Color.DARK_GRAY, JLabel.LEFT);
-		totalLabel.setBounds(60, 35, 600, 20);
-		totalLabel.setVisible(false);
-		
-		
 		favTagsBtn = new AJButton("标签收藏", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(searchTagsWindow == null){
@@ -215,15 +214,15 @@ public class SearchComicWindow extends JFrame {
 				searchTagsWindow.taskTagsPanel.parseTaskAttribute(null, mainWindow.setting.isTagsTranslate());
 				searchTagsWindow.setVisible(true);
 			}
-		}, this.getWidth() - 220, 5, 60, 30);
-		tagBtn = new AJButton("选择标签", "",  new ActionListener() {
+		}, this.getWidth() - 150, 10, 60, 30);
+		/*tagBtn = new AJButton("选择标签", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(searchTagWindow == null){
 					searchTagWindow = new SearchTagWindow(this_);
 				}
 				searchTagWindow.setVisible(true);
 			}
-		}, this.getWidth() - 150, 5, 60, 30);
+		}, this.getWidth() - 150, 10, 60, 30);*/
 		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				datas.clear();
@@ -231,10 +230,10 @@ public class SearchComicWindow extends JFrame {
 				keyPage.clear();
 				JOptionPane.showMessageDialog(this_, "清理成功");
 			}
-		}, this.getWidth() - 80, 5, 60, 30);
+		}, this.getWidth() - 80, 10, 60, 30);
 		
 		favTagsBtn.setUI(AJButton.blueBtnUi);
-		tagBtn.setUI(AJButton.blueBtnUi);
+/*		tagBtn.setUI(AJButton.blueBtnUi);*/
 		clearCacheBtn.setUI(AJButton.redBtnUi);
 		
 		/* 分类条件 */
@@ -357,7 +356,7 @@ public class SearchComicWindow extends JFrame {
 		
 		
 		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, cancelSearchBtn, leftBtn, rightBtn,
-				loadingLabel, totalLabel, favTagsBtn, tagBtn, clearCacheBtn, historyBtn, optionPanel, pager);
+				loadingLabel, totalLabel, favTagsBtn/*, tagBtn*/, clearCacheBtn, historyBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { 
@@ -389,8 +388,9 @@ public class SearchComicWindow extends JFrame {
 				SearchComicWindow window = (SearchComicWindow) e.getSource();
 				//设置清理缓存按钮位置
 				if(clearCacheBtn != null){
-					favTagsBtn.setLocation(window.getWidth() - 220, clearCacheBtn.getY());
-					tagBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());
+					historyBtn.setLocation(window.getWidth() - 220, clearCacheBtn.getY());
+					favTagsBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());
+					/*tagBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());*/
 					clearCacheBtn.setLocation(window.getWidth() - 80, clearCacheBtn.getY());
 				}
 				//设置分类条件大小
@@ -415,6 +415,7 @@ public class SearchComicWindow extends JFrame {
 				//设置分页面板大小
 				if(pager != null){
 					pager.setBounds(pager.getX(), window.getHeight() - 80, window.getWidth() - 20, pager.getHeight());
+					pager.updateUI();
 				}
 			}
 		});
@@ -491,13 +492,11 @@ public class SearchComicWindow extends JFrame {
 			}
 			searchComicWorker = new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page));
 			searchComicWorker.execute();
-			if(historyWindow == null){
-				historyWindow = new SearchHistoryWindow(this);
+			//记录历史记录
+			if(SearchHistoryWindow.historyMap == null){
+				SearchHistoryWindow.loadConsoleLog();
 			}
-			if(historyWindow.historyMap == null){
-				historyWindow.loadConsoleLog();
-			}
-			historyWindow.historyMap.put(keyText, DateUtil.showDate(DateUtil.YYYY_MM_DD_HH_MM_SS));
+			SearchHistoryWindow.historyMap.put(keyText, DateUtil.showDate(DateUtil.YYYY_MM_DD_HH_MM_SS));
 		}
 	}
 	

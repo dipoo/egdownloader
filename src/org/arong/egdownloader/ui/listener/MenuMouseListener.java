@@ -4,8 +4,6 @@ import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JDialog;
-
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.window.AboutMenuWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -48,7 +46,7 @@ public class MenuMouseListener implements MouseListener {
 			// 如果点击的是关于菜单，则将关于窗口显示出来，倘若关于窗口为null就先实例化
 			else if (ComponentConst.ABOUT_MENU_NAME.equals(menuName)) {
 				if (mainWindow.aboutWindow == null) {
-					JDialog aboutWindow = new AboutMenuWindow(mainWindow);
+					AboutMenuWindow aboutWindow = new AboutMenuWindow(mainWindow);
 					mainWindow.aboutWindow = aboutWindow;
 				}
 				mainWindow.aboutWindow.setLocationRelativeTo(mainWindow);
