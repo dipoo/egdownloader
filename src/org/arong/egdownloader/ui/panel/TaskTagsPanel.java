@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -209,24 +210,22 @@ public class TaskTagsPanel extends JScrollPane {
 						}
 					}else if("return".equals(e.getDescription())){
 						showMyFav = false;
-						parseTaskAttribute(currentTags, true);
+						parseTaskAttribute(currentTags, mainWindow.setting.isTagsTranslate());
 					}else if("fav".equals(e.getDescription())){
 						showMyFav = true;
-						parseTaskAttribute(currentTags, true);
+						parseTaskAttribute(currentTags, mainWindow.setting.isTagsTranslate());
 					}else if("showAllTagsWindow".equals(e.getDescription())){
 						if(mainWindow.allTagsWindow == null){
 							mainWindow.allTagsWindow = new AllTagsWindow(mainWindow);
-						}else{
-							mainWindow.allTagsWindow.istask = false;
-							mainWindow.allTagsWindow.searchBtn.doClick();
 						}
+						mainWindow.allTagsWindow.istask = false;
+						mainWindow.allTagsWindow.searchBtn.doClick();
 					}else if("showAllTaskTagsWindow".equals(e.getDescription())){
 						if(mainWindow.allTagsWindow == null){
 							mainWindow.allTagsWindow = new AllTagsWindow(mainWindow);
-						}else{
-							mainWindow.allTagsWindow.istask = true;
-							mainWindow.allTagsWindow.searchBtn.doClick();
 						}
+						mainWindow.allTagsWindow.istask = true;
+						mainWindow.allTagsWindow.searchBtn.doClick();
 					}else if("uploadedby".equals(e.getDescription())){
 						//搜索上传者
 						if(searchTask != null && StringUtils.isNotBlank(searchTask.getUploader())){
@@ -460,6 +459,7 @@ public class TaskTagsPanel extends JScrollPane {
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());
 	}
 	public void parseTaskAttribute(String tags, boolean trans){
+		if(tags == null) tags = currentTags;
 		trans = trans && tagscnMap != null;
 		if(showMyFav){
 			tags = mainWindow.setting.getFavTags();
@@ -468,7 +468,8 @@ public class TaskTagsPanel extends JScrollPane {
 		}
 		textPane.setText("...加载中...");
 		if(StringUtils.isNotBlank(tags)){
-			StringBuilder sb = new StringBuilder("<div style='font-family:微软雅黑;font-size:10px;padding:2px 5px;'>");
+			StringBuilder sb = new StringBuilder("<div style='font-family:微软雅黑;font-size:10px;padding:0px;margin:0px;'>");
+			sb.append("<div style='padding:0 7px;margin:0px;text-align:left'>");
 			if(searchTask != null){
 				sb.append(String.format("<b style='font-size:11px;color:#666'>%s</b><br>", searchTask.getName(), searchTask.getUploader()));
 				sb.append(String.format("<span>发布时间：<b style='color:orange'>%s</b>&nbsp;&nbsp;/&nbsp;&nbsp;图片数：<b style='color:orange'>%s</b>&nbsp;&nbsp;/&nbsp;&nbsp;评分：<b style='color:orange'>%s</b><br>上传者：<a href='uploadedby' style='text-decoration:none;'>%s</a>&nbsp;&nbsp;/&nbsp;&nbsp;BT：%s</span>", 
@@ -488,6 +489,8 @@ public class TaskTagsPanel extends JScrollPane {
 			sb.append("<a href='showAllTagsWindow' style='text-decoration:none;color:blue;'><b>[&nbsp;所有标签&nbsp;]&nbsp;</b></a>");
 			sb.append("<a href='showAllTaskTagsWindow' style='text-decoration:none;color:blue;'><b>[&nbsp;已建标签&nbsp;]&nbsp;</b></a>");
 			sb.append("<a href='trans_" + (trans ? "no" : "yes") + "' style='text-decoration:none;color:blue'><b>[&nbsp;" + (trans ? "原文" : "翻译") + "&nbsp;]&nbsp;</b></a>" + (trans ? "--<font style='color:green'>翻译词源来自<a href='https://github.com/Mapaler/EhTagTranslator/wiki'>https://github.com/Mapaler/EhTagTranslator/wiki</a></font>" : "") + "<br/>");
+			sb.append("</div>");
+			sb.append("<table style='width:100%'>");
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = parseTagGroup(tags);
@@ -495,13 +498,14 @@ public class TaskTagsPanel extends JScrollPane {
 			int i = 0;
 			for(String group : groups.keySet()){
 				i ++;
-				sb.append("<span style='font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：");
+				sb.append("<tr style='padding:0px;margin:0px;'><td width='42px' style='text-align:right;padding:0px;margin:0px;'><span style='padding:0px;font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：</td><td style='text-align:left;padding:0px;margin:0px;'>");
 				for(String attr : groups.get(group)){
 					sb.append("<a style='text-decoration:none' href='clickTag|");
 					if(!group.equals(MISC)){
 						sb.append(group).append(":");
 					}
-					sb.append("\"").append(attr.replaceAll("\\+", " ")).append("$\"'>[&nbsp;").append(parseFav(group, attr.replaceAll("\\+", " "), trans ? (tagscnMap.containsKey(group + ":" + attr.replaceAll("\\+", " ")) ? tagscnMap.get(group + ":" + attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " ")) : attr.replaceAll("\\+", " "))).append("&nbsp;]</a>&nbsp;");
+					attr = attr.replaceAll("\\+", " ");
+					sb.append("\"").append(attr).append("$\"'>[&nbsp;").append(parseFav(group, attr, trans ? (tagscnMap.containsKey(group + ":" + attr) ? tagscnMap.get(group + ":" + attr) : attr) : attr)).append(String.format("<b>%s</b>&nbsp;]</a>&nbsp;", ComponentConst.allTaskCountMap.get(group + ":" + attr) == null ? "" : String.format("(%s)", ComponentConst.allTaskCountMap.get(group + ":" + attr))));
 				}
 				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){
@@ -510,8 +514,9 @@ public class TaskTagsPanel extends JScrollPane {
 				}else{
 					sb.append("<br/>");
 				}
+				sb.append("</td></tr>");
 			}
-			sb.append("</div>");
+			sb.append("</table></div>");
 			textPane.setText(HtmlUtils.filterEmoji2SegoeUISymbolFont(sb.toString()));
 		}else{
 			if(!showMyFav && !searchTags){
@@ -524,6 +529,7 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 		}
+		setViewportView(textPane);
 	}
 	
 	private String parseFav(String group, String tag, String ftag){
@@ -562,5 +568,23 @@ public class TaskTagsPanel extends JScrollPane {
 			}
 		}
 		return groups;
+	}
+	
+	@Override
+	public void setViewportView(Component view) {
+		if(view == textPane){
+			if(this.getParent() instanceof JTabbedPane){
+				if(showMyFav){
+					mainWindow.infoTabbedPane.setTitleAt(mainWindow.infoTabbedPane.indexOfComponent(this), "<html><font color='red'>我收藏的标签</a></html>");
+				}else{
+					mainWindow.infoTabbedPane.setTitleAt(mainWindow.infoTabbedPane.indexOfComponent(this), "标签组");
+				}
+			}
+		}else if(view == confirmPanel){
+			if(this.getParent() instanceof JTabbedPane){
+				mainWindow.infoTabbedPane.setTitleAt(mainWindow.infoTabbedPane.indexOfComponent(this), "标签操作");
+			}
+		}
+		super.setViewportView(view);
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 /**
@@ -20,6 +21,7 @@ public class SimpleSearchMenuItem extends JMenuItem {
 	public SimpleSearchMenuItem(String text, final EgDownloaderWindow mainWindow){
 		super(text);
 		this.setForeground(new Color(0,0,85));
+		this.setIcon(IconManager.getIcon("browse"));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(mainWindow.simpleSearchWindow == null){

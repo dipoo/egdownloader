@@ -193,11 +193,18 @@ public class SearchTasksTable extends JTable {
 							if(comicWindow.searchDetailInfoWindow == null){
 								comicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(comicWindow);
 							}
-							if(Toolkit.getDefaultToolkit().getScreenSize().height - e.getYOnScreen() > comicWindow.searchDetailInfoWindow.getHeight()){
-								comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen()));
+							int x = 0, y = 0;
+							if(Toolkit.getDefaultToolkit().getScreenSize().width - e.getXOnScreen() < (comicWindow.searchDetailInfoWindow.getWidth())){
+								x = e.getXOnScreen() - comicWindow.searchDetailInfoWindow.getWidth();
 							}else{
-								comicWindow.searchDetailInfoWindow.showDetail(task, new Point(e.getXOnScreen() + 50, e.getYOnScreen() - comicWindow.searchDetailInfoWindow.getHeight()));
+								x = e.getXOnScreen();
 							}
+							if(Toolkit.getDefaultToolkit().getScreenSize().height - e.getYOnScreen() < (comicWindow.searchDetailInfoWindow.getHeight())){
+								y = e.getYOnScreen() - comicWindow.searchDetailInfoWindow.getHeight();
+							}else{
+								y = e.getYOnScreen();
+							}
+							comicWindow.searchDetailInfoWindow.showDetail(task, new Point(x, y));
 						}
 					}
 				}

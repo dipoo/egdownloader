@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskImagePanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
@@ -27,7 +28,7 @@ public class ChangeViewMenuItem extends JMenuItem {
 	private static final long serialVersionUID = 8033742031776192264L;
 	public ChangeViewMenuItem(String text, final EgDownloaderWindow window){
 		super(text);
-		//this.setIcon(IconManager.getIcon("stop"));
+		this.setIcon(IconManager.getIcon("change"));
 		this.setForeground(new Color(0,0,85));
 		this.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X,
                 java.awt.Event.CTRL_MASK));

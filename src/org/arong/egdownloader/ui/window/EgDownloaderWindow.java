@@ -304,6 +304,13 @@ public class EgDownloaderWindow extends JFrame {
 				"", IconManager.getIcon("task"));
 		tagMenu.add(new AllTagsMenuItem("所有任务标签", this, false));
 		tagMenu.add(new AllTagsMenuItem("已建任务标签", this, true));
+		tagMenu.add(new AJMenuItem("我收藏的标签", Color.RED, IconManager.getIcon("user"), new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainWindow.infoTabbedPane.setSelectedComponent(taskTagsPanel);
+				taskTagsPanel.showMyFav = true;
+				taskTagsPanel.parseTaskAttribute(null, mainWindow.setting.isTagsTranslate());
+			}
+		}));
 		// 菜单：操作
 		JMenu operaMenu = new AJMenu(ComponentConst.OPERA_MENU_TEXT, "", IconManager.getIcon("opera"));
 		JMenu taskMenu = new AJMenu("所有任务", "", IconManager.getIcon("task"));
@@ -320,6 +327,7 @@ public class EgDownloaderWindow extends JFrame {
 				AJMenuItem item = (AJMenuItem) e.getSource();
 				mainWindow.setting.setSkin(item.getText().replace("√", ""));
 				System.out.println("皮肤切换成功，重启后生效。");
+				mainWindow.infoTabbedPane.setSelectedComponent(consolePanel);
 			}
 		};
 		skinMenu.add(new AJMenuItem("BeautyEye".equals(setting.getSkin()) ? "默认皮肤" : "默认皮肤√", null, IconManager.getIcon(""), skinListener));
@@ -328,8 +336,9 @@ public class EgDownloaderWindow extends JFrame {
 		sizeMenu.add(new ChangeViewSizeMenuItem("大", this, 1));
 		sizeMenu.add(new ChangeViewSizeMenuItem("中√", this, 2));
 		sizeMenu.add(new ChangeViewSizeMenuItem("小", this, 3));
-		operaMenu.add(sizeMenu);
+		
 		operaMenu.add(skinMenu);
+		operaMenu.add(sizeMenu);
 		
 		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));
 		operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));

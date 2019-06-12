@@ -181,7 +181,6 @@ public class AllTagsWindow extends JFrame {
 		pager.setVisible(false);
 		
 		ComponentUtil.addComponents(getContentPane(), typeBtnPanel, searchField, searchBtn, toggleBtn, separator, scrollPane, pager);
-		setVisible(true);
 		
 		((JButton)(typeBtnPanel.getComponent(6))).setUI(AJButton.redBtnUi);
 		currentGroup = ComponentConst.TAGS_CN_FILENAMES[6].replaceAll(".md", "");

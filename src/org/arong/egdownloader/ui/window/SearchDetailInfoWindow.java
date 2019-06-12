@@ -12,7 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JWindow;
 
 import org.arong.egdownloader.model.SearchTask;
-import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 
@@ -28,7 +27,7 @@ public class SearchDetailInfoWindow extends JWindow {
 	public SearchDetailInfoWindow(final SearchComicWindow searchComicWindow){
 		
 		this.searchComicWindow = searchComicWindow;
-		this.setSize(ComponentConst.CLIENT_WIDTH - 400, 180);
+		this.setSize(720, 180);
 		this.setLocationRelativeTo(searchComicWindow);
 		this.setVisible(false);
 		

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.window.AllTagsWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 /**
@@ -20,6 +21,7 @@ public class AllTagsMenuItem extends JMenuItem {
 	public AllTagsMenuItem(String text, final EgDownloaderWindow mainWindow, boolean istask_){
 		super(text);
 		this.istask = istask_;
+		this.setIcon(IconManager.getIcon("openpic"));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
