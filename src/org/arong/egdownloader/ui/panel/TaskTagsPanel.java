@@ -533,7 +533,7 @@ public class TaskTagsPanel extends JScrollPane {
 	}
 	
 	private String parseFav(String group, String tag, String ftag){
-		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(MISC) ? "" : (group + ":")) + tag)){
+		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(MISC) ? "" : (group + ":")) + tag + ";")){
 			return "<font color='red'>" + ftag + "</font>";
 		}
 		return ftag;

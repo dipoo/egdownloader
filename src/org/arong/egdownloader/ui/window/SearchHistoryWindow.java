@@ -68,7 +68,7 @@ public class SearchHistoryWindow extends JDialog {
 				window.dispose();
 			}
 		});
-		
+		final SearchHistoryWindow this_ = this;
 		textPane = new AJTextPane("", Color.BLUE);
 		textPane.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -78,6 +78,7 @@ public class SearchHistoryWindow extends JDialog {
 						String key = e.getDescription().replace("search:", "");
 						comicWindow.doSearch(key, true);
 						comicWindow.toFront();
+						this_.dispose();
 					}
 				}
 			}
@@ -109,6 +110,7 @@ public class SearchHistoryWindow extends JDialog {
 			}
 			sb.append("</table>");
 			textPane.setText(sb.toString());
+			textPane.setCaretPosition(0);
 		}else{
 			textPane.setText("<html><br/><br/><center><h2>无历史搜索记录</h2></center></html>");
 		}

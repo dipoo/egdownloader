@@ -352,13 +352,13 @@ public class AllTagsWindow extends JFrame {
 								i ++;
 								if(i < ebtnlength){
 									b = (JButton) tagBtns[i - 1];
-									b.setText(!mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
+									b.setText(mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
 											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(TaskTagsPanel.MISC + ":", ""))));
 									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
 									b.setVisible(true);
 								}else{
-									b = new JButton(!mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
+									b = new JButton(mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
 											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(TaskTagsPanel.MISC + ":", ""))));
 									b.setFont(FontConst.Microsoft_BOLD_12);
 									b.setMargin(insets);
