@@ -334,7 +334,7 @@ public class EgDownloaderWindow extends JFrame {
 		skinMenu.add(new AJMenuItem("BeautyEye".equals(setting.getSkin()) ? "BeautyEye√" : "BeautyEye", null, IconManager.getIcon(""), skinListener));
 		JMenu sizeMenu = new AJMenu("视图封面", "", IconManager.getIcon("task"));
 		sizeMenu.add(new ChangeViewSizeMenuItem("大", this, 1));
-		sizeMenu.add(new ChangeViewSizeMenuItem("中√", this, 2));
+		sizeMenu.add(new ChangeViewSizeMenuItem("中", this, 2));
 		sizeMenu.add(new ChangeViewSizeMenuItem("小", this, 3));
 		
 		operaMenu.add(skinMenu);
@@ -370,15 +370,16 @@ public class EgDownloaderWindow extends JFrame {
 			tablePane = new JScrollPane();
 			taskImagePanel = new TaskImagePanel(this);
 			tablePane.setViewportView(taskImagePanel);
+			tablePane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 			tablePane.getVerticalScrollBar().setUnitIncrement(20);
-			tablePane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+			/*tablePane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 				public void adjustmentValueChanged(AdjustmentEvent e) {
 					JScrollBar bar = (JScrollBar) e.getSource();
 					if(e.getValue() + bar.getHeight() == bar.getMaximum()){
 						taskImagePanel.setPreferredSize(new Dimension((int)taskImagePanel.getPreferredSize().getWidth(), (int)taskImagePanel.getPreferredSize().getHeight() + bar.getUnitIncrement()));
 					}
 				}
-			});
+			});*/
 		}
 		tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));
