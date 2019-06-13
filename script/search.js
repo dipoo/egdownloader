@@ -2,7 +2,7 @@ var mark = {
     separator : [',', '###'],
 	page : ['Showing', ' ', ' results</p><div id="dms">'],
 	listSource : ['Uploader</th></tr>', '</td></tr></table></div></div>'],
-	intercept : ['<tr><td class="gl1c glcat">', "pages</div></td></tr>"],
+	intercept : ['<td class="gl1c glcat">', "pages</div></td></tr>"],
 	name : ['<div class="glink">', '</div><div><div class="gt"', '</div><div>&nbsp;</div></a>'],
 	url : [')"><a href="', '"><div class="glink">', ",'", "')"],
 	coverUrl : ['" src="', '" /></div>', 'data-src="', '.jpg" />'],
