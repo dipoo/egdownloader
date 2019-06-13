@@ -312,12 +312,14 @@ public class AllTagsWindow extends JFrame {
 							List<String> list = new ArrayList<String>(keys);
 							if(istask){
 								//按照任务个数排序
+								try{
 						        Collections.sort(list, new Comparator<String>() {
 									public int compare(String key1, String key2) {
 										return ((Integer)(ComponentConst.allTaskCountMap.get(key2) == null ? 0 : ComponentConst.allTaskCountMap.get(key2)))
 												.compareTo((Integer)(ComponentConst.allTaskCountMap.get(key1) == null ? 0 : ComponentConst.allTaskCountMap.get(key1)));
 									}
 								});
+								}catch(Exception e){e.printStackTrace();}
 							}
 							setTitle(String.format(getWindowTitle(), list.size()));
 							if(list.size() == 0){
@@ -399,9 +401,9 @@ public class AllTagsWindow extends JFrame {
 				//searchComicWindow.doSearch("female:"+ tags.getProperty(key) + "$");
 				if(mainWindow.searchComicWindow == null){
 					mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
-					if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
-						mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
-					}
+				}
+				if(mainWindow.searchComicWindow.searchDetailInfoWindow == null){
+					mainWindow.searchComicWindow.searchDetailInfoWindow = new SearchDetailInfoWindow(mainWindow.searchComicWindow);
 				}
 				mainWindow.searchComicWindow.searchDetailInfoWindow.taskTagsPanel.renderSelectTags(btn.getName(), true);
 				mainWindow.searchComicWindow.searchDetailInfoWindow.taskTagsPanel.textPane.setCom(mainWindow.searchComicWindow.searchDetailInfoWindow);

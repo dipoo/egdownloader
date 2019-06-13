@@ -26,6 +26,9 @@ public class InfoTabbedPane extends JTabbedPane {
 						p.showPictures(t);
 					}
 				}
+				if(mainWindow.infoTabbedPane.indexOfComponent(mainWindow.taskTagsPanel) != -1){
+					mainWindow.infoTabbedPane.setTitleAt(mainWindow.infoTabbedPane.indexOfComponent(mainWindow.taskTagsPanel), "标签组");
+				}
 			}
 		});
 	}

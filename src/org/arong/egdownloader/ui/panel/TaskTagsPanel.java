@@ -494,7 +494,6 @@ public class TaskTagsPanel extends JScrollPane {
 			//解析属性组
 			// language:english;parody:zootopia;male:fox boy;male:furry;artist:yitexity;:xx;xx
 			Map<String, List<String>> groups = parseTagGroup(tags);
-			
 			int i = 0;
 			for(String group : groups.keySet()){
 				i ++;
@@ -505,7 +504,7 @@ public class TaskTagsPanel extends JScrollPane {
 						sb.append(group).append(":");
 					}
 					attr = attr.replaceAll("\\+", " ");
-					sb.append("\"").append(attr).append("$\"'>[&nbsp;").append(parseFav(group, attr, trans ? (tagscnMap.containsKey(group + ":" + attr) ? tagscnMap.get(group + ":" + attr) : attr) : attr)).append(String.format("<b>%s</b>&nbsp;]</a>&nbsp;", ComponentConst.allTaskCountMap.get(group + ":" + attr) == null ? "" : String.format("(%s)", ComponentConst.allTaskCountMap.get(group + ":" + attr))));
+					sb.append("\"").append(attr).append("$\"'>[&nbsp;").append(parseFav(group, attr, trans ? (tagscnMap.containsKey(group + ":" + attr) ? tagscnMap.get(group + ":" + attr) : attr) : attr)).append(String.format("<b>%s</b>&nbsp;]</a>&nbsp;", ComponentConst.allTaskCountMap.get((group + ":" + attr).replace(MISC + ":", "")) == null ? "" : String.format("(%s)", ComponentConst.allTaskCountMap.get((group + ":" + attr).replace(MISC + ":", "")))));
 				}
 				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){
