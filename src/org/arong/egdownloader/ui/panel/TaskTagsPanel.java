@@ -58,8 +58,6 @@ import org.arong.util.HtmlUtils;
  */
 public class TaskTagsPanel extends JScrollPane {
 	
-	public final static String MISC = "misc";
-	
 	public EgDownloaderWindow mainWindow;
 	private SearchTask searchTask;
 	
@@ -392,7 +390,7 @@ public class TaskTagsPanel extends JScrollPane {
 				if(mainWindow.setting.isTagsTranslate()){ //汉化
 					String[] arr = tag.split(":");
 					if(arr.length == 1){
-						arr = (MISC + ":" + tag).split(":");
+						arr = (ComponentConst.MISC + ":" + tag).split(":");
 					}
 					String stag = tagscnMap.get(arr[0] + ":" + arr[1].replaceAll("\\$\"", "").replaceAll("\"", ""));
 					if(StringUtils.isBlank(stag)){
@@ -500,11 +498,11 @@ public class TaskTagsPanel extends JScrollPane {
 				sb.append("<tr style='padding:0px;margin:0px;'><td width='42px' style='text-align:right;padding:0px;margin:0px;'><span style='padding:0px;font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：</td><td style='text-align:left;padding:0px;margin:0px;'>");
 				for(String attr : groups.get(group)){
 					sb.append("<a style='text-decoration:none' href='clickTag|");
-					if(!group.equals(MISC)){
+					if(!group.equals(ComponentConst.MISC)){
 						sb.append(group).append(":");
 					}
 					attr = attr.replaceAll("\\+", " ");
-					sb.append("\"").append(attr).append("$\"'>[&nbsp;").append(parseFav(group, attr, trans ? (tagscnMap.containsKey(group + ":" + attr) ? tagscnMap.get(group + ":" + attr) : attr) : attr)).append(String.format("<b>%s</b>&nbsp;]</a>&nbsp;", ComponentConst.allTaskCountMap.get((group + ":" + attr).replace(MISC + ":", "")) == null ? "" : String.format("(%s)", ComponentConst.allTaskCountMap.get((group + ":" + attr).replace(MISC + ":", "")))));
+					sb.append("\"").append(attr).append("$\"'>[&nbsp;").append(parseFav(group, attr, trans ? (tagscnMap.containsKey(group + ":" + attr) ? tagscnMap.get(group + ":" + attr) : attr) : attr)).append(String.format("<b>%s</b>&nbsp;]</a>&nbsp;", ComponentConst.allTaskCountMap.get((group + ":" + attr).replace(ComponentConst.MISC + ":", "")) == null ? "" : String.format("(%s)", ComponentConst.allTaskCountMap.get((group + ":" + attr).replace(ComponentConst.MISC + ":", "")))));
 				}
 				if(groups.keySet().size() > 8){
 					if(i % 2 == 0){
@@ -532,7 +530,7 @@ public class TaskTagsPanel extends JScrollPane {
 	}
 	
 	private String parseFav(String group, String tag, String ftag){
-		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(MISC) ? "" : (group + ":")) + tag + ";")){
+		if(!showMyFav && StringUtils.isNotBlank(mainWindow.setting.getFavTags()) && (";" + mainWindow.setting.getFavTags()).contains(";" + (group.equals(ComponentConst.MISC) ? "" : (group + ":")) + tag + ";")){
 			return "<font color='red'>" + ftag + "</font>";
 		}
 		return ftag;
@@ -555,7 +553,7 @@ public class TaskTagsPanel extends JScrollPane {
 		for(String attr : attrs){
 			String[] arr = attr.split(":");
 			if(arr.length == 1 || arr[0].equals("")){
-				attr = MISC + ":" + attr.replaceAll(":", "");
+				attr = ComponentConst.MISC + ":" + attr.replaceAll(":", "");
 				arr = attr.split(":");
 			}
 			if(groups.containsKey(arr[0])){

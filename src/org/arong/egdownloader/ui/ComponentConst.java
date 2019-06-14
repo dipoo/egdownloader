@@ -62,6 +62,7 @@ public final class ComponentConst {
 	public final static String TAGS_CN_FILE_PATH = "script/EhTagTranslator.wiki/database/";//标签汉化文件目录
 	public static final String[] TAGS_CN_FILENAMES = new String[]{"artist.md", "character.md", "female.md", "group.md", "language.md", "male.md", "misc.md", "parody.md", "reclass.md", "rows.md"};
 	public static final String TAGS_CN_FILENAMES_DOWNLOAD_URL_PREFFIX = "https://raw.githubusercontent.com/wiki/Mapaler/EhTagTranslator/database/";
+	public static final String MISC = "misc"; 
 	
 	public static String EX_DOMAIN = "exhentai.org"; //域名
 	public static String EX_REPLACE_COVER_DOMAIN = "ehgt.org"; //封面替换域名

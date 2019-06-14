@@ -214,7 +214,7 @@ public class AllTagsWindow extends JFrame {
 				for(String tag : arr){
 					arr_ = tag.split(":");
 					if(arr_.length == 1){
-						arr_ = (TaskTagsPanel.MISC + ":" + tag).split(":");
+						arr_ = (ComponentConst.MISC + ":" + tag).split(":");
 					}
 					if(!getKeys().containsKey(arr_[0])){
 						getKeys().put(arr_[0], new HashSet<String>());
@@ -232,7 +232,7 @@ public class AllTagsWindow extends JFrame {
 				for(String tag : arr){
 					arr_ = tag.split(":");
 					if(arr_.length == 1){
-						arr_ = (TaskTagsPanel.MISC + ":" + tag).split(":");
+						arr_ = (ComponentConst.MISC + ":" + tag).split(":");
 					}
 					if(getKeys().containsKey(arr_[0])){
 						mapkey = arr_[0] + ":" + arr_[1].replaceAll("\\+", " ");
@@ -266,7 +266,7 @@ public class AllTagsWindow extends JFrame {
 								for(String key : TaskTagsPanel.tagscnMap.keySet()){
 									arr = key.split(":");
 									if(arr.length == 1){
-										arr = (TaskTagsPanel.MISC + ":" + key).split(":");
+										arr = (ComponentConst.MISC + ":" + key).split(":");
 										arr = key.split(":");
 									}
 									if(!getKeys().containsKey(arr[0])){
@@ -282,7 +282,7 @@ public class AllTagsWindow extends JFrame {
 										for(String tag : arr){
 											arr_ = tag.split(":");
 											if(arr_.length == 1){
-												arr_ = (TaskTagsPanel.MISC + ":" + tag).split(":");
+												arr_ = (ComponentConst.MISC + ":" + tag).split(":");
 											}
 											if(!getKeys().containsKey(arr_[0])){
 												getKeys().put(arr_[0], new HashSet<String>());
@@ -312,14 +312,15 @@ public class AllTagsWindow extends JFrame {
 							List<String> list = new ArrayList<String>(keys);
 							if(istask){
 								//按照任务个数排序
-								try{
+								
 						        Collections.sort(list, new Comparator<String>() {
 									public int compare(String key1, String key2) {
-										return ((Integer)(ComponentConst.allTaskCountMap.get(key2) == null ? 0 : ComponentConst.allTaskCountMap.get(key2)))
-												.compareTo((Integer)(ComponentConst.allTaskCountMap.get(key1) == null ? 0 : ComponentConst.allTaskCountMap.get(key1)));
+										Integer k2 = (Integer)(ComponentConst.allTaskCountMap.get(key2.replace(ComponentConst.MISC + ":", "")) == null ? 0 : ComponentConst.allTaskCountMap.get(key2.replace(ComponentConst.MISC + ":", "")));
+										Integer k1 = (Integer)(ComponentConst.allTaskCountMap.get(key1.replace(ComponentConst.MISC + ":", "")) == null ? 0 : ComponentConst.allTaskCountMap.get(key1.replace(ComponentConst.MISC + ":", "")));
+										return k2.compareTo(k1);
 									}
 								});
-								}catch(Exception e){e.printStackTrace();}
+								
 							}
 							setTitle(String.format(getWindowTitle(), list.size()));
 							if(list.size() == 0){
@@ -355,21 +356,21 @@ public class AllTagsWindow extends JFrame {
 								if(i < ebtnlength){
 									b = (JButton) tagBtns[i - 1];
 									b.setText(mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
-											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(TaskTagsPanel.MISC + ":", ""))));
-									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
-									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
+											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(ComponentConst.MISC + ":", ""))));
+									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(ComponentConst.MISC + ":", ""));
+									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(ComponentConst.MISC + ":", ""));
 									b.setVisible(true);
 								}else{
 									b = new JButton(mainWindow.setting.isDebug() ? "" + i : String.format(istask ? "<html>%s(%s)</html>" : "<html>%s</html>", HtmlUtils.filterEmoji2SegoeUISymbolFont(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate() && TaskTagsPanel.tagscnMap.containsKey(key) ? 
-											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(TaskTagsPanel.MISC + ":", ""))));
+											TaskTagsPanel.tagscnMap.get(key) : key.replaceAll(currentGroup + ":", "")), ComponentConst.allTaskCountMap.get(key.replaceAll(ComponentConst.MISC + ":", ""))));
 									b.setFont(FontConst.Microsoft_BOLD_12);
 									b.setMargin(insets);
 									//随机颜色
 									int r = (int) (Math.random() * 4);
 									b.setUI(btnUis[r]);
 									b.setForeground(Color.WHITE);
-									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
-									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(TaskTagsPanel.MISC + ":", ""));
+									b.setName(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(ComponentConst.MISC + ":", ""));
+									b.setToolTipText(String.format("%s$\"", key.replaceAll(":", ":\"")).replaceAll(ComponentConst.MISC + ":", ""));
 									b.addMouseListener(btnMouseListener);
 								}
 								tagPane.add(b, i - 1);
