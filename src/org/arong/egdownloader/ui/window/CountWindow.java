@@ -1,10 +1,13 @@
 package org.arong.egdownloader.ui.window;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,6 +28,7 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskTagsPanel;
+import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.FileUtil2;
@@ -147,6 +154,16 @@ public class CountWindow extends JDialog {
 				TaskTagsPanel.tagscnMap == null ? 0 : TaskTagsPanel.tagscnMap.size(), tagMap.size(),
 				lastCreateTime == null ? "" : lastCreateTime, lastDownloadTime == null ? "" : lastDownloadTime);
 		tagMap = null;
+		
+		Component[] comps = window.taskImagePanel.getComponents();
+		AJLabel l;int count = 0;
+		for(int i = 0; i < comps.length; i ++){
+			l = (AJLabel) ((JPanel)comps[i]).getComponent(0);
+			if(l.getImage() != null && l.getImage() != IconManager.getIcon("init")){
+				count ++;
+			}
+		}
+		System.out.println(count);
 		return s;
 	}
 	

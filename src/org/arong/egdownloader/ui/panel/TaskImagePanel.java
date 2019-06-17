@@ -115,8 +115,13 @@ public class TaskImagePanel extends AJPanel {
 		}
 	}
 	public void resetPanelHeight(){
+		resetPanelHeight(true);
+	}
+	public void resetPanelHeight(boolean wait){
 		try {
-			Thread.sleep(100);
+			if(wait){
+				Thread.sleep(100);
+			}
 			int maxheight = 0;
 			for(int i = 0; i < this.getComponents().length; i ++){
 				if(maxheight < ((int)this.getComponents()[i].getLocation().getY() + this.getComponents()[i].getHeight())){
@@ -465,6 +470,7 @@ public class TaskImagePanel extends AJPanel {
 										e.printStackTrace();
 									}
 								}
+								resetPanelHeight(false);
 							}
 						}else{
 							//更换为预载封面
@@ -475,16 +481,17 @@ public class TaskImagePanel extends AJPanel {
 								}catch(Exception e){
 									e.printStackTrace();
 								}
+								resetPanelHeight(false);
 							}
 						}
-						resetPanelHeight();
+						
 					}
 				}
 			}
 		};
 		timer = new Timer(true);
 		//1秒执行一次
-		timer.schedule(timerTask, 1000, 1000);
+		timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 	}
 	
 	public void stopTimer(){
