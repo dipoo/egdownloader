@@ -52,8 +52,9 @@ public class TaskImagePanel extends AJPanel {
 	public int page = 1;
 	private FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 	public AJPager imageTaskPager;
-	private static Color progressBarBorder = new Color(47, 110, 178);
-	private static Color progressBarBorder2 = new Color(65, 145, 65);//已完成颜色
+	private static Color progressBarColor = new Color(47, 110, 178);
+	private static Color progressBarCompletedColor = new Color(65, 145, 65);//已完成颜色
+	private static Color progressBarSearchedColor = new Color(65, 145, 65);//已完成颜色
 	public int scrollValue = -1; 
 	public TimerTask timerTask;
 	public Timer timer;
@@ -98,7 +99,10 @@ public class TaskImagePanel extends AJPanel {
 												l.setIcon(icon);
 											}
 											break;
-										}
+										}/*else{
+											JProgressBar b = (JProgressBar) p.getComponents()[j];
+											b.setString(getTaskInfo(mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1]))));
+										}*/
 									}
 									//p.updateUI();
 								}
@@ -169,7 +173,10 @@ public class TaskImagePanel extends AJPanel {
 							bar.setValue(task.getCurrent());
 							bar.setString(getTaskInfo(task));
 							if(task.getStatus() == TaskStatus.COMPLETED){
-								bar.setForeground(progressBarBorder2);
+								bar.setForeground(progressBarCompletedColor);
+							}
+							if(task.isSearched()){
+								bar.setForeground(progressBarSearchedColor);
 							}
 						}
 					}
@@ -344,11 +351,10 @@ public class TaskImagePanel extends AJPanel {
 									bar.setStringPainted(true);
 									bar.setFont(FontConst.Microsoft_BOLD_11);bar.setPreferredSize(new Dimension(110, 13));
 									if(ptasks.get(i).getStatus() == TaskStatus.COMPLETED){
-										bar.setForeground(progressBarBorder2);
+										bar.setForeground(progressBarCompletedColor);
 									}else{
-										bar.setForeground(progressBarBorder);
+										bar.setForeground(progressBarColor);
 									}
-									//bar.setBorder(BorderFactory.createLineBorder(progressBarBorder));
 									bar.setValue(ptasks.get(i).getCurrent());
 									p.add(l, BorderLayout.SOUTH);
 									p.add(bar, BorderLayout.NORTH);
@@ -421,13 +427,13 @@ public class TaskImagePanel extends AJPanel {
 		}*/
 		if(task.getStatus() == TaskStatus.STARTED){
 			txtsb.append(task.getDownSpeed().toLowerCase());
-		}/*else{
-			txtsb.append(task.getStatus().getStatus());
-		}*/
+		}else/* if(mainWindow.setting.getCoverWidth() > 100)*/{
+			txtsb.append(task.getType())/*.append(" ").append(task.getLanguage())*/;
+		}
 		if(task.isReaded()){
 			txtsb.append(" √");
 		}
-		//txtsb.append("</b></html>");
+		//txtsb.append("</div>");
 		return txtsb.toString();
 	}
 	

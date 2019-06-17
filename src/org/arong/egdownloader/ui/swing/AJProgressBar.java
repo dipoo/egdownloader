@@ -13,5 +13,8 @@ public class AJProgressBar extends JProgressBar {
 		super(min, max);
 		this.setBounds(x, y, width, height);
 	}
+	public AJProgressBar(int min, int max){
+		super(min, max);
+	}
 	
 }
