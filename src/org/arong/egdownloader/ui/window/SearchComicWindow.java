@@ -405,12 +405,7 @@ public class SearchComicWindow extends JFrame {
 				}
 				//设置图片面板大小
 				if(picturePane != null){
-					int height = window.getHeight() - 210;
-					tablePane.setSize(window.getWidth() - 20, height);
-					
-					int hr = (int)(tablePane.getWidth() / 260);
-					int zr = (int)(25 / hr) + 1;
-					picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
+					resetPicturePanelHeight();
 				}
 				//设置分页面板大小
 				if(pager != null){
@@ -624,6 +619,7 @@ public class SearchComicWindow extends JFrame {
 		}
 		if(tablePane == null){
 			tablePane = new JScrollPane();
+			tablePane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			tablePane.setBounds(5, 130, this.getWidth() - 20, this.getHeight() - 210);
 			tablePane.getViewport().setBackground(new Color(254,254,254));
 			mainWindow.searchComicWindow.getContentPane().add(tablePane);
@@ -633,9 +629,9 @@ public class SearchComicWindow extends JFrame {
 			//picturePane.setBackground(Color.LIGHT_GRAY);
 			picturePane.setLayout(new FlowLayout(FlowLayout.CENTER));
 			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
-			int hr = (int)(tablePane.getWidth() / 260);
-			int zr = (int)(25 / hr) + 1;
-			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
+			//int hr = (int)(tablePane.getWidth() / 260);
+			//int zr = (int)(25 / hr) + 1;
+			//picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
 			picturePane.addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
@@ -655,6 +651,7 @@ public class SearchComicWindow extends JFrame {
 			ComponentUtil.addComponents(picturePane, coverLabel);
 		}
 		
+		
 		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
 		jScrollBar.setValue(0);//滚动到最前
 		jScrollBar.setUnitIncrement(20);
@@ -662,8 +659,24 @@ public class SearchComicWindow extends JFrame {
 			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
 			mainWindow.searchComicWindow.pager.setVisible(true);
 		}
+		resetPicturePanelHeight();
 	}
-	
+	public void resetPicturePanelHeight(){
+		try {
+			Thread.sleep(100);
+			//重新计算滚动条
+			int maxheight = 0;
+			for(int i = 0; i < searchTasks.size(); i ++){
+				if(maxheight < picLabels[i].getLocation().getY() + picLabels[i].getHeight()){
+					maxheight = (int)(picLabels[i].getLocation().getY() + picLabels[i].getHeight());
+				}
+			}
+			picturePane.setPreferredSize(new Dimension(picturePane.getWidth(), maxheight + 30));	
+			picturePane.updateUI();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	public void dispose() {
 		mainWindow.setEnabled(true);
 		mainWindow.setVisible(true);
