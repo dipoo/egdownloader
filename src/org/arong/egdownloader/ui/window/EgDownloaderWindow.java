@@ -3,7 +3,6 @@
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
@@ -37,7 +36,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
 import javax.swing.ScrollPaneConstants;
@@ -372,14 +370,15 @@ public class EgDownloaderWindow extends JFrame {
 			tablePane.setViewportView(taskImagePanel);
 			tablePane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 			tablePane.getVerticalScrollBar().setUnitIncrement(20);
-			/*tablePane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+			
+			tablePane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 				public void adjustmentValueChanged(AdjustmentEvent e) {
-					JScrollBar bar = (JScrollBar) e.getSource();
+					/*JScrollBar bar = (JScrollBar) e.getSource();
 					if(e.getValue() + bar.getHeight() == bar.getMaximum()){
 						taskImagePanel.setPreferredSize(new Dimension((int)taskImagePanel.getPreferredSize().getWidth(), (int)taskImagePanel.getPreferredSize().getHeight() + bar.getUnitIncrement()));
-					}
+					}*/
 				}
-			});*/
+			});
 		}
 		tablePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tablePane.setBounds(new Rectangle(5, 40, ComponentConst.CLIENT_WIDTH - 20, 400));

@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -28,6 +30,7 @@ import javax.swing.SwingUtilities;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.FontConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
@@ -49,9 +52,12 @@ public class TaskImagePanel extends AJPanel {
 	public int page = 1;
 	private FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 	public AJPager imageTaskPager;
-	//public JPanel container;
 	private static Color progressBarBorder = new Color(47, 110, 178);
 	private static Color progressBarBorder2 = new Color(65, 145, 65);//已完成颜色
+	public int scrollValue = -1; 
+	public TimerTask timerTask;
+	public Timer timer;
+	
 	public TaskImagePanel(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.setLayout(layout);
@@ -65,6 +71,7 @@ public class TaskImagePanel extends AJPanel {
 		
 		//初始化组件
 		init(mainWindow.tasks);
+		runTimer();
 	}
 	public void changeViewSize(){
 		final TaskImagePanel this_ = this;
@@ -97,22 +104,25 @@ public class TaskImagePanel extends AJPanel {
 								}
 							}
 							this_.updateUI();
-							try {
-								Thread.sleep(100);
-								int maxheight = 0;
-								for(int i = 0; i < this_.getComponents().length; i ++){
-									if(maxheight < ((int)this_.getComponents()[i].getLocation().getY() + this_.getComponents()[i].getHeight())){
-										maxheight = ((int)this_.getComponents()[i].getLocation().getY() + this_.getComponents()[i].getHeight());
-									}
-								}
-								this_.setPreferredSize(new Dimension(this_.getWidth(), maxheight + 10));	
-								this_.updateUI();
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}}).execute();;
+							resetPanelHeight();
+						}}).execute();
 				}
 			});
+		}
+	}
+	public void resetPanelHeight(){
+		try {
+			Thread.sleep(100);
+			int maxheight = 0;
+			for(int i = 0; i < this.getComponents().length; i ++){
+				if(maxheight < ((int)this.getComponents()[i].getLocation().getY() + this.getComponents()[i].getHeight())){
+					maxheight = ((int)this.getComponents()[i].getLocation().getY() + this.getComponents()[i].getHeight());
+				}
+			}
+			this.setPreferredSize(new Dimension(this.getWidth(), maxheight + 10));	
+			this.updateUI();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 	public void init(){
@@ -297,7 +307,7 @@ public class TaskImagePanel extends AJPanel {
 									//l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
 									
 									
-									/*try{
+									try{
 										ImageIcon icon = IconManager.getIcon("init");
 										double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
 										int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
@@ -308,8 +318,8 @@ public class TaskImagePanel extends AJPanel {
 										l.setIcon(icon);
 									}catch(Exception e){
 										e.printStackTrace();
-									}*/
-									final String path = ptasks.get(i).getSaveDir() + "/cover.jpg";
+									}
+									/*final String path = ptasks.get(i).getSaveDir() + "/cover.jpg";
 									File cover = new File(path);
 									if(cover != null && cover.exists()){
 										try{
@@ -324,7 +334,7 @@ public class TaskImagePanel extends AJPanel {
 										}catch(Exception e){
 											e.printStackTrace();
 										}
-									}
+									}*/
 									
 									//AJLabel l2 = new AJLabel(getTaskInfo(ptasks.get(i)), Color.BLACK);
 									//l2.setBorder(new EmptyBorder(-4, 5, 1, 0));
@@ -347,19 +357,8 @@ public class TaskImagePanel extends AJPanel {
 								this_.add(p, i);
 								this_.updateUI();
 							}
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-							int maxheight = 0;
-							for(JPanel p : panels){
-								if(maxheight < ((int)p.getLocation().getY() + p.getHeight())){
-									maxheight = ((int)p.getLocation().getY() + p.getHeight());
-								}
-							}
-							this_.setPreferredSize(new Dimension(this_.getWidth(), maxheight + 10));
-							this_.updateUI();
+							resetPanelHeight();
+							mainWindow.tablePane.getVerticalScrollBar().setValue(1);
 							
 							int totalPage = tasks.size() % PAGESIZE == 0 ? tasks.size() / PAGESIZE : tasks.size() / PAGESIZE + 1;
 							if(totalPage > 1){
@@ -430,5 +429,62 @@ public class TaskImagePanel extends AJPanel {
 		}
 		//txtsb.append("</b></html>");
 		return txtsb.toString();
+	}
+	
+	public void runTimer(){
+		timerTask = new TimerTask() {
+			public void run() {
+				if(scrollValue == -1 || scrollValue != mainWindow.tablePane.getVerticalScrollBar().getValue()){
+					scrollValue = mainWindow.tablePane.getVerticalScrollBar().getValue();
+					Component[] comps = mainWindow.taskImagePanel.getComponents();
+					AJLabel l;
+					for(int i = 0; i < comps.length; i ++){
+						l = (AJLabel) ((JPanel)comps[i]).getComponent(0);
+						if((comps[i].getHeight() + comps[i].getY())  >= mainWindow.tablePane.getVerticalScrollBar().getValue()
+								&& comps[i].getY() - mainWindow.tablePane.getVerticalScrollBar().getValue() <= mainWindow.tablePane.getHeight()){
+							//加载真实封面
+							if(l.getImage() == IconManager.getIcon("init") || l.getImage() == null){
+								final String path = mainWindow.runningTable.getTasks().get(Integer.parseInt(comps[i].getName().split("\\|")[1])).getSaveDir() + "/cover.jpg";
+								File cover = new File(path);
+								if(cover != null && cover.exists()){
+									try{
+										ImageIcon icon = new ImageIcon(ImageIO.read(cover));
+										double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
+										int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
+										l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
+										l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
+										l.setImage(icon);
+										l.setIcon(icon);
+									}catch(Exception e){
+										e.printStackTrace();
+									}
+								}
+							}
+						}else{
+							//更换为预载封面
+							if(l.getImage() != null){
+								try{
+									l.setImage(null);
+									l.setIcon(null);
+								}catch(Exception e){
+									e.printStackTrace();
+								}
+							}
+						}
+						resetPanelHeight();
+					}
+				}
+			}
+		};
+		timer = new Timer(true);
+		//1秒执行一次
+		timer.schedule(timerTask, 1000, 1000);
+	}
+	
+	public void stopTimer(){
+		timer.cancel();
+		timerTask.cancel();
+		timer = null;
+		timerTask = null;
 	}
 }

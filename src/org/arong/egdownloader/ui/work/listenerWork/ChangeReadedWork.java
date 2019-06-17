@@ -24,5 +24,4 @@ public class ChangeReadedWork implements IMenuListenerTask {
 		//隐藏tablePopupMenu
 		mainWindow.tablePopupMenu.setVisible(false);
 	}
-
 }

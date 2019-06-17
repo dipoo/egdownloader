@@ -45,6 +45,7 @@ public class IconManager {
 	private static ImageIcon leftImage;
 	private static ImageIcon rightImage;
 	private static ImageIcon zipImage;
+	private static ImageIcon previewImage;
 	
 	private static ImageIcon ehImage;
 	private static ImageIcon tImage;
@@ -235,6 +236,11 @@ public class IconManager {
 				initImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "init.jpg"));
 			}
 			return initImage;
+		}else if("preview".equals(name)){
+			if(previewImage == null){
+				previewImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "preview.png"));
+			}
+			return previewImage;
 		}else if("left".equals(name)){
 			if(leftImage == null){
 				leftImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "left.png"));

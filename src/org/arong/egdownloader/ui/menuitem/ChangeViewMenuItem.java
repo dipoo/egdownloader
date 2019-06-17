@@ -1,6 +1,7 @@
 package org.arong.egdownloader.ui.menuitem;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -16,6 +18,7 @@ import javax.swing.ScrollPaneConstants;
 
 import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.panel.TaskImagePanel;
+import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 /**
@@ -43,9 +46,22 @@ public class ChangeViewMenuItem extends JMenuItem {
 					window.tablePane.getViewport().removeAll();
 					window.tablePane = new JScrollPane(table);
 					table.scrollRectToVisible(new Rectangle(0, 0));
-					//隐藏分页栏
-					if(window.taskImagePanel.imageTaskPager != null){
-						window.taskImagePanel.imageTaskPager.setVisible(false);
+					if(window.taskImagePanel != null){
+						window.taskImagePanel.stopTimer();
+						if(window.taskImagePanel.imageTaskPager != null){
+							//隐藏分页栏
+							window.taskImagePanel.imageTaskPager.setVisible(false);
+						}
+						//将所有封面换为默认封面
+						Component[] comps = window.taskImagePanel.getComponents();
+						AJLabel l;
+						for(int i = 0; i < comps.length; i ++){
+							l = (AJLabel) ((JPanel)comps[i]).getComponent(0);
+							if(l.getImage() != null){
+								l.setImage(null);
+								l.setIcon(null);
+							}
+						}
 					}
 				}else{
 					window.tablePane.removeAll();
@@ -54,6 +70,7 @@ public class ChangeViewMenuItem extends JMenuItem {
 						window.taskImagePanel = new TaskImagePanel(window);
 					}else{
 						window.taskImagePanel.init(window.tasks);
+						window.taskImagePanel.runTimer();
 					}
 					window.tablePane.setViewportView(window.taskImagePanel);
 					window.tablePane.getVerticalScrollBar().setUnitIncrement(20);
