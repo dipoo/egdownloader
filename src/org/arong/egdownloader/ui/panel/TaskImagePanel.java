@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ import org.arong.util.Tracker;
  *
  */
 public class TaskImagePanel extends AJPanel {
+	public TaskImagePanel this_ = this;
 	private EgDownloaderWindow mainWindow;
 	public int selectIndex = 0;
 	public static final int PAGESIZE = 200;
@@ -189,6 +191,7 @@ public class TaskImagePanel extends AJPanel {
 			}
 		});
 	}
+	
 	public void init(final List<Task> tasks){
 		final TaskImagePanel this_ = this;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -237,76 +240,7 @@ public class TaskImagePanel extends AJPanel {
 									p.setBackground(Color.WHITE);
 									p.setForeground(Color.WHITE);
 									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
-									p.addMouseListener(new MouseAdapter() {
-										public void mouseClicked(MouseEvent e) {
-											for(int i = 0; i < this_.getComponents().length; i ++){
-												//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
-												if(this_.getComponents()[i] instanceof AJPanel){
-													((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-												}
-											}
-											AJPanel p = (AJPanel)e.getSource();
-											p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-											selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
-											//同步任务表格的选中状态
-											mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
-											if(e.getButton() == MouseEvent.BUTTON3){
-												Task task = mainWindow.runningTable.getTasks().get(selectIndex);
-												mainWindow.tablePopupMenu.show(task, p, e.getPoint().x - 1, e.getPoint().y - 1);
-											}else{
-												//双击切换
-												if(e.getClickCount() == 2){
-													//任务开始或暂停
-													if(mainWindow.runningTable.rebuild){
-														Tracker.println(TaskingTable.class, "正在重建任务");
-														return;
-													}
-													Task task = mainWindow.runningTable.getTasks().get(selectIndex);
-													//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
-													if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
-														mainWindow.runningTable.startTask(task);
-													}
-													//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
-													else if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
-														mainWindow.runningTable.stopTask(task);
-													}
-													//如果状态为未创建，则开启创建线程
-													else if(task.getStatus() == TaskStatus.UNCREATED){
-														Tracker.println(getClass(), task.getName() + ":重新采集");
-														task.setReCreateWorker(new ReCreateWorker(task, mainWindow));
-														task.getReCreateWorker().execute();
-													}
-													
-													//mainWindow.infoTabbedPane.setSelectedIndex(1);
-												}else{
-													//切换信息面板tab
-													if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
-														mainWindow.taskInfoPanel.parseTask(mainWindow.tasks.get(selectIndex), selectIndex);
-													}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
-														TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-														panel.showTagGroup(mainWindow.tasks.get(selectIndex));
-													}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
-														PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
-														infoPanel.showPictures(mainWindow.tasks.get(selectIndex));
-													}
-												}
-											}
-										}
-										public void mouseEntered(MouseEvent e) {
-											AJPanel p = (AJPanel)e.getSource();
-											//p.setBackground(Color.ORANGE);
-											p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
-										}
-
-										public void mouseExited(MouseEvent e) {
-											AJPanel p = (AJPanel)e.getSource();
-											if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
-												p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-											}else{
-												p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-											}
-										}
-									});
+									p.addMouseListener(panelMouselistener);
 									AJLabel l = new AJLabel();
 									l.setName("cover" + ptasks.get(i).getId());
 									l.setOpaque(true);
@@ -317,7 +251,6 @@ public class TaskImagePanel extends AJPanel {
 									//l.setHorizontalTextPosition(JLabel.LEADING);
 									//Border border = BorderFactory.createLineBorder(Color.BLACK);
 									//l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
-									
 									
 									try{
 										ImageIcon icon = IconManager.getIcon("init");
@@ -399,6 +332,7 @@ public class TaskImagePanel extends AJPanel {
 								imageTaskPager.setVisible(true);
 							}
 						}
+						oldcomps = null;
 						//System.gc();
 					}
 				}).execute();
@@ -500,4 +434,75 @@ public class TaskImagePanel extends AJPanel {
 		timer = null;
 		timerTask = null;
 	}
+	
+	public MouseListener panelMouselistener = new MouseAdapter() {
+		public void mouseClicked(MouseEvent e) {
+			for(int i = 0; i < this_.getComponents().length; i ++){
+				//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
+				if(this_.getComponents()[i] instanceof AJPanel){
+					((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+				}
+			}
+			AJPanel p = (AJPanel)e.getSource();
+			p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+			selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
+			//同步任务表格的选中状态
+			mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
+			if(e.getButton() == MouseEvent.BUTTON3){
+				Task task = mainWindow.runningTable.getTasks().get(selectIndex);
+				mainWindow.tablePopupMenu.show(task, p, e.getPoint().x - 1, e.getPoint().y - 1);
+			}else{
+				//双击切换
+				if(e.getClickCount() == 2){
+					//任务开始或暂停
+					if(mainWindow.runningTable.rebuild){
+						Tracker.println(TaskingTable.class, "正在重建任务");
+						return;
+					}
+					Task task = mainWindow.runningTable.getTasks().get(selectIndex);
+					//如果状态为未开始或者已暂停，则将状态改为下载中，随后开启下载线程
+					if(task.getStatus() == TaskStatus.UNSTARTED || task.getStatus() == TaskStatus.STOPED){
+						mainWindow.runningTable.startTask(task);
+					}
+					//如果状态为下载中，则将状态改为已暂停，随后将下载线程取消掉
+					else if(task.getStatus() == TaskStatus.STARTED || task.getStatus() == TaskStatus.WAITING){
+						mainWindow.runningTable.stopTask(task);
+					}
+					//如果状态为未创建，则开启创建线程
+					else if(task.getStatus() == TaskStatus.UNCREATED){
+						Tracker.println(getClass(), task.getName() + ":重新采集");
+						task.setReCreateWorker(new ReCreateWorker(task, mainWindow));
+						task.getReCreateWorker().execute();
+					}
+					
+					//mainWindow.infoTabbedPane.setSelectedIndex(1);
+				}else{
+					//切换信息面板tab
+					if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
+						mainWindow.taskInfoPanel.parseTask(mainWindow.tasks.get(selectIndex), selectIndex);
+					}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
+						TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
+						panel.showTagGroup(mainWindow.tasks.get(selectIndex));
+					}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
+						PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
+						infoPanel.showPictures(mainWindow.tasks.get(selectIndex));
+					}
+				}
+			}
+		}
+		public void mouseEntered(MouseEvent e) {
+			AJPanel p = (AJPanel)e.getSource();
+			//p.setBackground(Color.ORANGE);
+			p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
+		}
+
+		public void mouseExited(MouseEvent e) {
+			AJPanel p = (AJPanel)e.getSource();
+			if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
+				p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+			}else{
+				p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+			}
+		}
+	};
 }
