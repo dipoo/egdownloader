@@ -90,8 +90,17 @@ public class SimpleSearchWindow extends JDialog {
 								hits = true;
 								//需要全部命中
 								for(String key : keysArr){
-									if(!allTasks.get(i).getTags().toLowerCase().startsWith(key.toLowerCase() + ";") && !allTasks.get(i).getTags().toLowerCase().contains(";" + key.toLowerCase() + ";")){
-										hits = false;
+									if(StringUtils.isNotBlank(key)){
+										if(key.startsWith("!")){
+											key = key.replace("!", "");
+											if(allTasks.get(i).getTags().toLowerCase().startsWith(key.toLowerCase() + ";") || allTasks.get(i).getTags().toLowerCase().contains(";" + key.toLowerCase() + ";")){
+												hits = false;
+											}
+										}else{
+											if(!allTasks.get(i).getTags().toLowerCase().startsWith(key.toLowerCase() + ";") && !allTasks.get(i).getTags().toLowerCase().contains(";" + key.toLowerCase() + ";")){
+												hits = false;
+											}
+										}
 									}
 								}
 								if(hits){

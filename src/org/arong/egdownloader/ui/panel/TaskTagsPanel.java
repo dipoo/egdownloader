@@ -59,11 +59,13 @@ import org.arong.util.HtmlUtils;
 public class TaskTagsPanel extends JScrollPane {
 	
 	public EgDownloaderWindow mainWindow;
+	public Component parent;
 	private SearchTask searchTask;
 	
 	public AJTextPane textPane;
 	public JPanel confirmPanel;
 	public JPanel selectedPanel;
+	public JPanel excludePanel;
 	/*public AJLabel selectTextLabel;*/
 	AJButton favBtn;
 	
@@ -71,7 +73,8 @@ public class TaskTagsPanel extends JScrollPane {
 	public String selectTags = null;//已选择的全部标签
 	public String selectTag = null;//当前选择的标签
 	public boolean searchTags = false;//是否为搜索时使用
-	public String currentTags = null;
+	public String currentTags = null;//选择的标签
+	public String excludeTags = null;//排除的标签
 	public boolean showMyFav = false;//显示我的收藏
 	
 	static{
@@ -141,11 +144,17 @@ public class TaskTagsPanel extends JScrollPane {
 			if(fs != null){try {fs.close();} catch (IOException e) {e.printStackTrace();}}
 		}
 	}
-	
 	public TaskTagsPanel(final EgDownloaderWindow mainWindow) {
+		this(mainWindow, null);
+	}
+	public TaskTagsPanel(final EgDownloaderWindow mainWindow, Component parent) {
 		this.mainWindow = mainWindow;
-		textPane = new AJTextPane(null,
-				Color.BLUE);
+		if(parent != null){
+			this.parent = parent;
+		}else{
+			this.parent = this.mainWindow;
+		}
+		textPane = new AJTextPane(null, Color.BLUE);
 		textPane.setBorder(null);
 		this.setViewportView(textPane);
 		this.setBorder(null);
@@ -249,20 +258,23 @@ public class TaskTagsPanel extends JScrollPane {
 		confirmPanel.setLayout(null);
 		/* 分类条件 */
 		selectedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		selectedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "已经选择的标签（点击可以移除；红色为最新选择，可以收藏或取消收藏）"));
-		selectedPanel.setBounds(5, 5, mainWindow.getWidth() - 30, 100);
+		selectedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "选择的标签（左键点击移除，右键点击添加至排除面板；红色为最新选择，可以收藏或取消收藏）"));
+		selectedPanel.setBounds(5, 5, (parent.getWidth() - 30) / 2, 120);
+		excludePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		excludePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "排除的标签（左键点击可以移除）"));
+		excludePanel.setBounds((parent.getWidth() - 30) / 2 + 10, 5, (parent.getWidth() - 30) / 2, 120);
 		AJButton localBtn = new AJButton("本地搜索");
-		localBtn.setBounds(5, 110, 90, 30);
+		localBtn.setBounds(5, 130, 90, 30);
 		localBtn.setUI(AJButton.blueBtnUi);
 		AJButton onlineBtn = new AJButton("在线搜索");
-		onlineBtn.setBounds(105, 110, 90, 30);
+		onlineBtn.setBounds(105, 130, 90, 30);
 		onlineBtn.setUI(AJButton.blueBtnUi);
 		favBtn = new AJButton("标签收藏");
-		favBtn.setBounds(205, 110, 90, 30);
+		favBtn.setBounds(205, 130, 90, 30);
 		AJButton clearBtn = new AJButton("清空所选");
-		clearBtn.setBounds(305, 110, 90, 30);
+		clearBtn.setBounds(305, 130, 90, 30);
 		AJButton returnBtn = new AJButton("返回面板");
-		returnBtn.setBounds(405, 110, 90, 30);
+		returnBtn.setBounds(405, 130, 90, 30);
 		final TaskTagsPanel this_ = this;
 		//本地搜索
 		localBtn.addActionListener(new ActionListener() {
@@ -272,7 +284,7 @@ public class TaskTagsPanel extends JScrollPane {
 					mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
 				}
 				SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
-				ssw.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", ""));
+				ssw.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", "") + ";!" + excludeTags.replaceAll(";", ";!").replaceAll("\\$\"", "").replaceAll("\"", ""));
 				ssw.searchBtn.doClick();
 				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
 					this_.getRootPane().getParent().setVisible(false);
@@ -331,8 +343,10 @@ public class TaskTagsPanel extends JScrollPane {
 			public void actionPerformed(ActionEvent e) {
 				selectTags = "";
 				selectTag = "";
+				excludeTags = "";
 				//清空
 				renderSelectTags(null, false);
+				renderExcludeTags(null, false);
 				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
 					this_.getRootPane().getParent().setVisible(false);
 				}else{
@@ -340,7 +354,7 @@ public class TaskTagsPanel extends JScrollPane {
 				}
 			}
 		});
-		ComponentUtil.addComponents(confirmPanel, selectedPanel, localBtn, onlineBtn, favBtn, clearBtn, returnBtn);
+		ComponentUtil.addComponents(confirmPanel, selectedPanel, excludePanel, localBtn, onlineBtn, favBtn, clearBtn, returnBtn);
 	}
 	public void renderSelectTags(String tag, boolean add){
 		
@@ -406,9 +420,20 @@ public class TaskTagsPanel extends JScrollPane {
 					public void mouseClicked(MouseEvent e) {
 						String tag_ = ((JButton)e.getSource()).getName();
 						String tag = tag_.replaceAll("\\$\"", "=====\"");
-						selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag + ";", "").replaceAll("=====\"", "\\$\"");
-						selectTag = selectTag.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
-						renderSelectTags(tag_, false);
+						//左键
+						if(e.getButton() == MouseEvent.BUTTON1){
+							selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+							selectTag = selectTag.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+							renderSelectTags(tag_, false);
+						}else if(e.getButton() == MouseEvent.BUTTON3){
+							//右键
+							selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+							selectTag = selectTag.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+							System.out.println("selectTags:" + selectTags);
+							System.out.println("selectTag:" + selectTag);
+							renderSelectTags(tag_, false);
+							renderExcludeTags(tag_, true);
+						}
 					}
 				}, true);
 				btn.setName(tag);
@@ -434,6 +459,84 @@ public class TaskTagsPanel extends JScrollPane {
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() { 
 				selectedPanel.updateUI();
+			}
+		});
+	}
+	
+	public void renderExcludeTags(String tag, boolean add){
+		
+		if(StringUtils.isBlank(tag)){
+			excludePanel.removeAll();
+		}else{
+			Component[] comps = excludePanel.getComponents();
+			boolean contains = false;
+			if(comps.length > 0){
+				for(Component com : comps){
+					JButton btn = (JButton)com;
+					if(btn.getName().equals(tag)){
+						excludePanel.remove(btn);
+						if(add){
+							excludePanel.add(btn);
+						}
+						contains = true;
+					}else{
+						btn.setUI(AJButton.lightBlueUi);
+					}
+				}
+			}
+			
+			if(!contains && add){
+				if(excludePanel.getComponentCount() >= 20){
+					JOptionPane.showMessageDialog(this, "你选择的标签太多了！");
+					setViewportView(confirmPanel);
+					return;
+				}
+				
+				if(StringUtils.isBlank(excludeTags)){
+					excludeTags = tag;
+				}else{
+					if(!excludeTags.contains(tag)){
+						excludeTags += ";" + tag;
+					}
+				}
+				
+				String text = tag;
+				if(mainWindow.setting.isTagsTranslate()){ //汉化
+					String[] arr = tag.split(":");
+					if(arr.length == 1){
+						arr = (ComponentConst.MISC + ":" + tag).split(":");
+					}
+					String stag = tagscnMap.get(arr[0] + ":" + arr[1].replaceAll("\\$\"", "").replaceAll("\"", ""));
+					if(StringUtils.isBlank(stag)){
+						stag = arr[1].replaceAll("\\$\"", "").replaceAll("\"", "");
+					}
+					String row = tagscnMap.get("rows:" + arr[0]);
+					if(StringUtils.isBlank(row)){
+						row = arr[0];
+					}
+					text = row + ":" + stag;
+				}
+				AJButton btn = new AJButton("<html>" + HtmlUtils.filterEmoji2SegoeUISymbolFont(text) + "</html>", null, new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						String tag_ = ((JButton)e.getSource()).getName();
+						String tag = tag_.replaceAll("\\$\"", "=====\"");
+						excludeTags = excludeTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+						renderExcludeTags(tag_, false);
+					}
+				}, true);
+				btn.setName(tag);
+				btn.setFont(FontConst.Microsoft_BOLD_12);
+				btn.setMargin(new Insets(1, 1, 1, 1));
+				btn.setToolTipText(tag);
+				btn.setForeground(Color.WHITE);
+				btn.setUI(AJButton.redBtnUi);
+				excludePanel.add(btn);
+			}
+			setViewportView(confirmPanel);
+		}
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run() { 
+				excludePanel.updateUI();
 			}
 		});
 	}

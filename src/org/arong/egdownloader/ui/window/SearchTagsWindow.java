@@ -34,7 +34,7 @@ public class SearchTagsWindow extends JDialog {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(searchComicWindow);
 		
-		taskTagsPanel = new TaskTagsPanel(searchComicWindow.mainWindow);
+		taskTagsPanel = new TaskTagsPanel(searchComicWindow.mainWindow, this);
 		taskTagsPanel.searchTags = true;
 		
 		ComponentUtil.addComponents(getContentPane(), taskTagsPanel);
