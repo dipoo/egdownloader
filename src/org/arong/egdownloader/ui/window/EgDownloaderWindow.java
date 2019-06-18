@@ -69,6 +69,7 @@ import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.UpdateAllNullTagsMenuItem;
 import org.arong.egdownloader.ui.panel.ConsolePanel;
 import org.arong.egdownloader.ui.panel.InfoTabbedPane;
+import org.arong.egdownloader.ui.panel.LocalSearchAndSortPanel;
 import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.panel.TaskImagePanel;
 import org.arong.egdownloader.ui.panel.TaskInfoPanel;
@@ -134,6 +135,7 @@ public class EgDownloaderWindow extends JFrame {
 	public TaskInfoPanel taskInfoPanel;
 	public TaskTagsPanel taskTagsPanel;
 	public PicturesInfoPanel picturesInfoPanel;
+	public LocalSearchAndSortPanel localSearchAndSortPanel;
 	
 	
 	public Setting setting;
@@ -428,11 +430,13 @@ public class EgDownloaderWindow extends JFrame {
 		taskInfoPanel.setBounds(5, 5, ComponentConst.CLIENT_WIDTH - 20, 200);
 		taskTagsPanel = new TaskTagsPanel(this);
 		picturesInfoPanel = new PicturesInfoPanel(this);
+		localSearchAndSortPanel = new LocalSearchAndSortPanel(this);
 		
 		infoTabbedPane.add("控制台", consolePanel);
 		infoTabbedPane.add("任务信息", taskInfoPanel);
 		infoTabbedPane.add("标签组", taskTagsPanel);
 		infoTabbedPane.add("图片列表", picturesInfoPanel);
+		infoTabbedPane.add("过滤排序", localSearchAndSortPanel);
 
 		// 添加各个子组件
 		ComponentUtil.addComponents(getContentPane(), infoTabbedPane, jMenuBar, tablePane, tablePopupMenu, emptyPanel);

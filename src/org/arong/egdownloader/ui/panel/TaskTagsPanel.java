@@ -46,7 +46,6 @@ import org.arong.egdownloader.ui.window.AllTagsWindow;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
 import org.arong.egdownloader.ui.window.SearchDetailInfoWindow;
-import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
@@ -70,11 +69,11 @@ public class TaskTagsPanel extends JScrollPane {
 	AJButton favBtn;
 	
 	public static Map<String, String> tagscnMap = null;
-	public String selectTags = null;//已选择的全部标签
-	public String selectTag = null;//当前选择的标签
+	public String selectTags = "";//已选择的全部标签
+	public String selectTag = "";//当前选择的标签
 	public boolean searchTags = false;//是否为搜索时使用
 	public String currentTags = null;//选择的标签
-	public String excludeTags = null;//排除的标签
+	public String excludeTags = "";//排除的标签
 	public boolean showMyFav = false;//显示我的收藏
 	
 	static{
@@ -280,12 +279,8 @@ public class TaskTagsPanel extends JScrollPane {
 		localBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
-				if(mainWindow.simpleSearchWindow == null){
-					mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
-				}
-				SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
-				ssw.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", "") + ";!" + excludeTags.replaceAll(";", ";!").replaceAll("\\$\"", "").replaceAll("\"", ""));
-				ssw.searchBtn.doClick();
+				mainWindow.localSearchAndSortPanel.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", "") + ";" + (StringUtils.isNotBlank(excludeTags) ? "!" : "") + excludeTags.replaceAll(";", ";!").replaceAll("\\$\"", "").replaceAll("\"", ""));
+				mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
 					this_.getRootPane().getParent().setVisible(false);
 				}

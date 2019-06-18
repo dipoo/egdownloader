@@ -189,14 +189,14 @@ public class MainPopupMenu extends AJPopupMenu{
 				"",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
+						final EgDownloaderWindow mainWindow = (EgDownloaderWindow)window;
 						TaskingTable table = (TaskingTable) mainWindow.runningTable;
 						int index = table.getSelectedRow();
 						Task task = table.getTasks().get(index);
 						if(mainWindow.simpleSearchWindow == null){
 							mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
 						}
-						final SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
+						/*final SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 						if(task.getAuthor() != null || task.getSubAuthor() != null){
 							if(task.getAuthor().contains("(") && task.getAuthor().contains(")") && task.getAuthor().indexOf("(") < task.getAuthor().indexOf(")")){
 								ssw.keyTextField.setText(task.getAuthor().substring(task.getAuthor().indexOf("(") + 1, task.getAuthor().indexOf(")")));
@@ -206,6 +206,19 @@ public class MainPopupMenu extends AJPopupMenu{
 							new CommonSwingWorker(new Runnable() {
 								public void run() {
 									ssw.searchBtn.doClick();
+								}
+							}).execute();
+						}*/
+						
+						if(task.getAuthor() != null || task.getSubAuthor() != null){
+							if(task.getAuthor().contains("(") && task.getAuthor().contains(")") && task.getAuthor().indexOf("(") < task.getAuthor().indexOf(")")){
+								mainWindow.localSearchAndSortPanel.keyTextField.setText(task.getAuthor().substring(task.getAuthor().indexOf("(") + 1, task.getAuthor().indexOf(")")));
+							}else{
+								mainWindow.localSearchAndSortPanel.keyTextField.setText(task.getAuthor() + "||" + task.getSubAuthor());
+							}
+							new CommonSwingWorker(new Runnable() {
+								public void run() {
+									mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 								}
 							}).execute();
 						}

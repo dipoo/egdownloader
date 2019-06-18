@@ -175,13 +175,10 @@ public class SearchWindowPopMenu extends JPopupMenu {
 					public void doWork(Window window, ActionEvent e) {
 						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
 						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-						if(mainWindow.simpleSearchWindow == null){
-							mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
-						}
-						SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
+						
 						if(task.getAuthor() != null){
-							ssw.keyTextField.setText(task.getAuthor());
-							ssw.searchBtn.doClick();
+							mainWindow.localSearchAndSortPanel.keyTextField.setText(task.getAuthor());
+							mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 							mainWindow.setVisible(true);
 							mainWindow.toFront();
 						}
