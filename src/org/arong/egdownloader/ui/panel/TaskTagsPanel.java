@@ -258,22 +258,22 @@ public class TaskTagsPanel extends JScrollPane {
 		/* 分类条件 */
 		selectedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		selectedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "选择的标签（左键点击移除，右键点击添加至排除面板；红色为最新选择，可以收藏或取消收藏）"));
-		selectedPanel.setBounds(5, 5, (parent.getWidth() - 30) / 2, 120);
+		selectedPanel.setBounds(5, 5, (parent.getWidth() - 30) / 2, 100);
 		excludePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		excludePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "排除的标签（左键点击可以移除）"));
-		excludePanel.setBounds((parent.getWidth() - 30) / 2 + 10, 5, (parent.getWidth() - 30) / 2, 120);
+		excludePanel.setBounds((parent.getWidth() - 30) / 2 + 10, 5, (parent.getWidth() - 30) / 2, 100);
 		AJButton localBtn = new AJButton("本地搜索");
-		localBtn.setBounds(5, 130, 90, 30);
+		localBtn.setBounds(5, 110, 90, 30);
 		localBtn.setUI(AJButton.blueBtnUi);
 		AJButton onlineBtn = new AJButton("在线搜索");
-		onlineBtn.setBounds(105, 130, 90, 30);
+		onlineBtn.setBounds(105, 110, 90, 30);
 		onlineBtn.setUI(AJButton.blueBtnUi);
 		favBtn = new AJButton("标签收藏");
-		favBtn.setBounds(205, 130, 90, 30);
+		favBtn.setBounds(205, 110, 90, 30);
 		AJButton clearBtn = new AJButton("清空所选");
-		clearBtn.setBounds(305, 130, 90, 30);
+		clearBtn.setBounds(305, 110, 90, 30);
 		AJButton returnBtn = new AJButton("返回面板");
-		returnBtn.setBounds(405, 130, 90, 30);
+		returnBtn.setBounds(405, 110, 90, 30);
 		final TaskTagsPanel this_ = this;
 		//本地搜索
 		localBtn.addActionListener(new ActionListener() {

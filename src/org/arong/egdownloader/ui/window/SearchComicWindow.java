@@ -631,7 +631,7 @@ public class SearchComicWindow extends JFrame {
 			picturePane.setBounds(10, 5, tablePane.getWidth() - 20, 250 * 6);
 			//int hr = (int)(tablePane.getWidth() / 260);
 			//int zr = (int)(25 / hr) + 1;
-			//picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  zr * 500));
+			picturePane.setPreferredSize(new Dimension(tablePane.getWidth() - 40,  -1));
 			picturePane.addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
 					if(mainWindow.searchComicWindow.searchDetailInfoWindow != null){
