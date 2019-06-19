@@ -225,7 +225,7 @@ public class SearchImagePanel extends JLabel {
 				}
 				icon.getImage().flush();//解决加载图片不完全问题
 				this.setIcon(icon);
-				mainWindow.searchComicWindow.resetPicturePanelHeight();
+				//mainWindow.searchComicWindow.resetPicturePanelHeight();
 			}
 		}
 	}
