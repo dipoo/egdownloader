@@ -60,6 +60,7 @@ public class TaskImagePanel extends AJPanel {
 	public int scrollValue = -1; 
 	public TimerTask timerTask;
 	public Timer timer;
+	public List<AJPanel> allPanels = new ArrayList<AJPanel>();
 	
 	public TaskImagePanel(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -168,7 +169,6 @@ public class TaskImagePanel extends AJPanel {
 										int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
 										l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
 										l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-										//icon.getImage().flush();//解决加载图片不完全问题
 										l.setImage(icon);
 										l.setIcon(icon);
 									}catch(Exception e){
@@ -198,7 +198,6 @@ public class TaskImagePanel extends AJPanel {
 			public void run() {
 				new CommonSwingWorker(new Runnable() {
 					public void run() {
-						Component[] oldcomps = this_.getComponents();
 						this_.removeAll();
 						if(tasks != null && tasks.size() > 0){
 							this_.scrollRectToVisible(new Rectangle(0, 0));
@@ -211,14 +210,13 @@ public class TaskImagePanel extends AJPanel {
 								imageTaskPager.setVisible(false);
 							}
 							selectIndex = mainWindow.runningTable.getSelectedRow();
-							List<AJPanel> panels = new ArrayList<AJPanel>();
 							for(int i = 0; i < ptasks.size(); i ++){
 								//判断AJPanel是否存在
-								//AJPanel p = null;
 								AJPanel p = null;
-								for(Component comp : oldcomps){
+								for(AJPanel comp : allPanels){
 									if(comp.getName() != null && comp.getName().startsWith(ptasks.get(i).getId() + "|")){
-										p = (AJPanel)comp;
+										p = comp;
+										allPanels.remove(comp);
 										break;
 									}
 								}
@@ -231,63 +229,50 @@ public class TaskImagePanel extends AJPanel {
 									JProgressBar bar = (JProgressBar)p.getComponent(1);
 									bar.setString(getTaskInfo(ptasks.get(i)));
 								}else{
-									p = new AJPanel();
-									//name规则：taskID|list索引
-									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
-									p.setToolTipText(ptasks.get(i).getDisplayName(mainWindow.setting));
-									p.setLayout(new BorderLayout());
-									p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-									p.setBackground(Color.WHITE);
-									p.setForeground(Color.WHITE);
-									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
-									p.addMouseListener(panelMouselistener);
-									AJLabel l = new AJLabel();
-									l.setName("cover" + ptasks.get(i).getId());
-									l.setOpaque(true);
-									l.setBackground(Color.BLACK);
-									l.setForeground(Color.WHITE);
-									l.setFont(FontConst.Microsoft_BOLD_12);
-									l.setVerticalTextPosition(JLabel.TOP);
-									//l.setHorizontalTextPosition(JLabel.LEADING);
-									//Border border = BorderFactory.createLineBorder(Color.BLACK);
-									//l.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
-									
-									try{
-										ImageIcon icon = IconManager.getIcon("init");
-										double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
-										int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
-										l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
-										l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-										//icon.getImage().flush();//解决加载图片不完全问题
-										l.setImage(icon);
-										l.setIcon(icon);
-									}catch(Exception e){
-										e.printStackTrace();
-									}
-									/*final String path = ptasks.get(i).getSaveDir() + "/cover.jpg";
-									File cover = new File(path);
-									if(cover != null && cover.exists()){
+									AJLabel l = null;JProgressBar bar = null;
+									if(allPanels.size() >= ptasks.size()){
+										//组件重用
+										p = allPanels.get(allPanels.size() - 1);
+										l = (AJLabel) p.getComponent(0);
+										bar = (JProgressBar) p.getComponent(1);
+									}else{
+										p = new AJPanel();
+										p.setLayout(new BorderLayout());
+										p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+										p.setBackground(Color.WHITE);
+										p.setForeground(Color.WHITE);
+										p.addMouseListener(panelMouselistener);
+										l = new AJLabel();
+										l.setOpaque(true);
+										l.setBackground(Color.BLACK);
+										l.setForeground(Color.WHITE);
+										l.setFont(FontConst.Microsoft_BOLD_12);
+										l.setVerticalTextPosition(JLabel.TOP);
 										try{
-											ImageIcon icon = new ImageIcon(ImageIO.read(cover));
+											ImageIcon icon = IconManager.getIcon("init");
 											double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
 											int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
 											l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
 											l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-											//icon.getImage().flush();//解决加载图片不完全问题
 											l.setImage(icon);
 											l.setIcon(icon);
 										}catch(Exception e){
 											e.printStackTrace();
 										}
-									}*/
+										bar = new JProgressBar(0, ptasks.get(i).getTotal());
+										bar.setBackground(Color.WHITE);
+										bar.setStringPainted(true);
+										bar.setFont(FontConst.Microsoft_BOLD_11);
+										bar.setPreferredSize(new Dimension(110, 13));
+									}
+									//name规则：taskID|list索引
+									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
+									p.setToolTipText(ptasks.get(i).getDisplayName(mainWindow.setting));
+									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
 									
-									//AJLabel l2 = new AJLabel(getTaskInfo(ptasks.get(i)), Color.BLACK);
-									//l2.setBorder(new EmptyBorder(-4, 5, 1, 0));
-									JProgressBar bar = new JProgressBar(0, ptasks.get(i).getTotal());
-									bar.setBackground(Color.WHITE);
+									l.setName("cover" + ptasks.get(i).getId());
+									
 									bar.setString(getTaskInfo(ptasks.get(i)));
-									bar.setStringPainted(true);
-									bar.setFont(FontConst.Microsoft_BOLD_11);bar.setPreferredSize(new Dimension(110, 13));
 									if(ptasks.get(i).getStatus() == TaskStatus.COMPLETED){
 										bar.setForeground(progressBarCompletedColor);
 									}else{
@@ -297,7 +282,9 @@ public class TaskImagePanel extends AJPanel {
 									p.add(l, BorderLayout.SOUTH);
 									p.add(bar, BorderLayout.NORTH);
 								}
-								panels.add(p);
+								if(allPanels.size() < PAGESIZE){
+									allPanels.add(0, p);
+								}
 								this_.add(p, i);
 								this_.updateUI();
 							}
@@ -334,7 +321,6 @@ public class TaskImagePanel extends AJPanel {
 							try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 							mainWindow.tablePane.getVerticalScrollBar().setValue(0);
 						}
-						oldcomps = null;
 						//System.gc();
 					}
 				}).execute();
