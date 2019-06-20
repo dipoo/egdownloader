@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -57,6 +58,7 @@ public final class JdbcUtil {
 		try {
 			prop = new Properties();
 			File conf = new File(JdbcUtil.class.getResource("/" + CONFIG_FILE_NAME).getPath());
+			InputStream is = null;
 			if(! conf.exists()){
 				String[] _p_ = new String[3]; _p_[0] = conf.getAbsolutePath();
 				conf = new File(FileUtil2.getProjectPath() + "/" + CONFIG_FILE_NAME);
@@ -64,17 +66,24 @@ public final class JdbcUtil {
 					_p_[1] = conf.getAbsolutePath();
 					conf = new File(FileUtil2.getAppPath(JdbcUtil.class) + "/" + CONFIG_FILE_NAME);
 					if(! conf.exists()){
-						_p_[2] = conf.getAbsolutePath();
-						StringBuffer sb = new StringBuffer();
-						for(String p : _p_){
-							sb.append(p).append(";");
+						is = JdbcUtil.class.getResourceAsStream("/" + CONFIG_FILE_NAME);
+						if(is == null){
+							_p_[2] = conf.getAbsolutePath();
+							StringBuffer sb = new StringBuffer();
+							for(String p : _p_){
+								sb.append(p).append(";");
+							}
+							throw new FileNotFoundException(sb.toString());
 						}
-						throw new FileNotFoundException(sb.toString());
 					}
 				}
 			}
 			// 加载数据库配置文件
-			prop.load(new BufferedReader(new FileReader(conf)));
+			if(is != null){
+				prop.load(is);
+			}else{
+				prop.load(new BufferedReader(new FileReader(conf)));
+			}
 
 			// 是否初始化数据源
 			if (prop.getProperty(CONFIG_USEDATASOURCE_KEY) != null

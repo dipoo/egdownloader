@@ -638,7 +638,9 @@ public class SearchComicWindow extends JFrame {
 		
 		for(int i = 0; i < searchTasks.size(); i ++){
 			final SearchImagePanel coverLabel = picLabels[i];
-			coverLabel.flush(searchTasks.get(i), 200 * i);
+			if(!searchTasks.get(i).getUrl().equals(coverLabel.labelId)){
+				coverLabel.flush(searchTasks.get(i), 200 * i);
+			}
 			ComponentUtil.addComponents(picturePane, coverLabel);
 		}
 		

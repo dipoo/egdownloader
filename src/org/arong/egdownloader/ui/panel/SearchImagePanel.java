@@ -26,6 +26,7 @@ public class SearchImagePanel extends JLabel {
 	private EgDownloaderWindow mainWindow;
 	public final static int DEFAULTWIDTH = 16;
 	public final static int DEFAULTHEIGHT = 16;
+	public String labelId;
 	private String tips;
 	public SearchImagePanel(final EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
@@ -136,6 +137,7 @@ public class SearchImagePanel extends JLabel {
 		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://"));
 		if(contains){this.setForeground(Color.RED);}
 		this.setText(genText(task));
+		labelId = task.getUrl();//用于标志
 		tips = task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : "");
 		this.setToolTipText(tips);
 		
