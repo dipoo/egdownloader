@@ -19,7 +19,6 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.spider.WebClientException;
-import org.arong.egdownloader.ui.panel.PicturesInfoPanel;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.util.DateUtil;
@@ -169,13 +168,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						task.setCurrent(task.getCurrent() + 1);//更新task的已下载数
 						Tracker.println(DownloadWorker.class, HtmlUtils.greenColorHtml(String.format("%s：%s(%s, %s)：下载完成，耗时%s", task.getDisplayName(), pic.getName(), FileUtil2.showSizeStr((long)size), pic.getPpi(), formatSecend(System.currentTimeMillis() - connectStart))));
 						if(mainWindow.tasks.get(mainWindow.runningTable.selectRowIndex) == task){
-							//刷新信息面板
-							if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
-								mainWindow.taskInfoPanel.parseTask(task, mainWindow.runningTable.selectRowIndex);
-							}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
-								PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
-								infoPanel.pictureTable.updateUI();
-							}
+							//切换信息面板tab
+							mainWindow.infoTabbedPane.flushTab(task);
 						}
 						
 						//更新图片信息

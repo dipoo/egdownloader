@@ -56,7 +56,8 @@ public class TaskImagePanel extends AJPanel {
 	public AJPager imageTaskPager;
 	private static Color progressBarColor = new Color(47, 110, 178);
 	private static Color progressBarCompletedColor = new Color(65, 145, 65);//已完成颜色
-	private static Color progressBarSearchedColor = new Color(65, 145, 65);//已完成颜色
+	private static Color progressBarSearchedColor = new Color(139, 26, 26);//搜索颜色
+	private static Color progressBarSelectedColor = Color.RED;//选中颜色
 	public int scrollValue = -1; 
 	public TimerTask timerTask;
 	public Timer timer;
@@ -179,12 +180,7 @@ public class TaskImagePanel extends AJPanel {
 							JProgressBar bar = (JProgressBar)p.getComponent(1);
 							bar.setValue(task.getCurrent());
 							bar.setString(getTaskInfo(task));
-							if(task.getStatus() == TaskStatus.COMPLETED){
-								bar.setForeground(progressBarCompletedColor);
-							}
-							if(task.isSearched()){
-								bar.setForeground(progressBarSearchedColor);
-							}
+							renderSelectBar(p, bar, true, task);
 						}
 					}
 				}).execute();
@@ -212,7 +208,7 @@ public class TaskImagePanel extends AJPanel {
 							selectIndex = mainWindow.runningTable.getSelectedRow();
 							for(int i = 0; i < ptasks.size(); i ++){
 								//判断AJPanel是否存在
-								AJPanel p = null;
+								AJPanel p = null;JProgressBar bar = null;
 								for(AJPanel comp : allPanels){
 									if(comp.getName() != null && comp.getName().startsWith(ptasks.get(i).getId() + "|")){
 										p = comp;
@@ -225,11 +221,10 @@ public class TaskImagePanel extends AJPanel {
 								if(p != null){
 									//name规则：taskID|list索引
 									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
-									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
-									JProgressBar bar = (JProgressBar)p.getComponent(1);
+									bar = (JProgressBar)p.getComponent(1);
 									bar.setString(getTaskInfo(ptasks.get(i)));
 								}else{
-									AJLabel l = null;JProgressBar bar = null;
+									AJLabel l = null;
 									if(allPanels.size() >= ptasks.size()){
 										//组件重用
 										p = allPanels.remove(allPanels.size() - 1);
@@ -257,7 +252,6 @@ public class TaskImagePanel extends AJPanel {
 									//name规则：taskID|list索引
 									p.setName(ptasks.get(i).getId() + "|" + ((page - 1) * PAGESIZE + i));
 									p.setToolTipText(ptasks.get(i).getDisplayName(mainWindow.setting));
-									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
 									
 									l.setName("cover" + ptasks.get(i).getId());
 									ImageIcon icon = IconManager.getIcon("init");
@@ -270,15 +264,11 @@ public class TaskImagePanel extends AJPanel {
 									
 									bar.setMaximum(ptasks.get(i).getTotal());
 									bar.setString(getTaskInfo(ptasks.get(i)));
-									if(ptasks.get(i).getStatus() == TaskStatus.COMPLETED){
-										bar.setForeground(progressBarCompletedColor);
-									}else{
-										bar.setForeground(progressBarColor);
-									}
 									bar.setValue(ptasks.get(i).getCurrent());
 									p.add(l, BorderLayout.SOUTH);
 									p.add(bar, BorderLayout.NORTH);
 								}
+								renderSelectBar(p, bar, selected, ptasks.get(i));
 								if(allPanels.size() < PAGESIZE){
 									allPanels.add(0, p);
 								}
@@ -294,6 +284,8 @@ public class TaskImagePanel extends AJPanel {
 										public void actionPerformed(ActionEvent e) {
 											JButton btn = (JButton) e.getSource();
 											this_.page = Integer.parseInt(btn.getName());
+											mainWindow.runningTable.setRowSelectionInterval((this_.page - 1) * PAGESIZE, (this_.page - 1) * PAGESIZE);
+											mainWindow.infoTabbedPane.flushTab(mainWindow.tasks.get((this_.page - 1) * PAGESIZE));
 											this_.init();
 										}
 									});
@@ -318,7 +310,6 @@ public class TaskImagePanel extends AJPanel {
 							try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 							mainWindow.tablePane.getVerticalScrollBar().setValue(0);
 						}
-						//System.gc();
 					}
 				}).execute();
 			}
@@ -403,8 +394,8 @@ public class TaskImagePanel extends AJPanel {
 								resetPanelHeight(false);
 							}
 						}
-						
 					}
+					System.gc();
 				}
 			}
 		};
@@ -422,17 +413,18 @@ public class TaskImagePanel extends AJPanel {
 	
 	public MouseListener panelMouselistener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
-			for(int i = 0; i < this_.getComponents().length; i ++){
-				//((AJPanel)this_.getComponents()[i]).setBackground(Color.WHITE);
-				if(this_.getComponents()[i] instanceof AJPanel){
-					((AJPanel)this_.getComponents()[i]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-				}
+			if(selectIndex - (page - 1) * PAGESIZE > -1){
+				((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+				JProgressBar bar = (JProgressBar) ((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE]).getComponent(1);
+				renderSelectBar((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE], bar, false, mainWindow.runningTable.getTasks().get(selectIndex));
 			}
 			AJPanel p = (AJPanel)e.getSource();
-			p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+			renderSelectBar(p, (JProgressBar)p.getComponent(1), true, mainWindow.runningTable.getTasks().get(selectIndex));
 			selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
 			//同步任务表格的选中状态
 			mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
+			//切换信息面板tab
+			mainWindow.infoTabbedPane.flushTab(mainWindow.tasks.get(selectIndex));
 			if(e.getButton() == MouseEvent.BUTTON3){
 				Task task = mainWindow.runningTable.getTasks().get(selectIndex);
 				mainWindow.tablePopupMenu.show(task, p, e.getPoint().x - 1, e.getPoint().y - 1);
@@ -459,35 +451,39 @@ public class TaskImagePanel extends AJPanel {
 						task.setReCreateWorker(new ReCreateWorker(task, mainWindow));
 						task.getReCreateWorker().execute();
 					}
-					
-					//mainWindow.infoTabbedPane.setSelectedIndex(1);
-				}else{
-					//切换信息面板tab
-					if(mainWindow.infoTabbedPane.getSelectedIndex() == 1){
-						mainWindow.taskInfoPanel.parseTask(mainWindow.tasks.get(selectIndex), selectIndex);
-					}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 2){
-						TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-						panel.showTagGroup(mainWindow.tasks.get(selectIndex));
-					}else if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
-						PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
-						infoPanel.showPictures(mainWindow.tasks.get(selectIndex));
-					}
 				}
 			}
 		}
 		public void mouseEntered(MouseEvent e) {
 			AJPanel p = (AJPanel)e.getSource();
-			//p.setBackground(Color.ORANGE);
-			p.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
+			renderSelectBar(p, (JProgressBar)p.getComponent(1), true,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
 		}
 
 		public void mouseExited(MouseEvent e) {
 			AJPanel p = (AJPanel)e.getSource();
 			if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
-				p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+				renderSelectBar(p, (JProgressBar)p.getComponent(1), false,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
 			}else{
-				p.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+				renderSelectBar(p, (JProgressBar)p.getComponent(1), true,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
 			}
 		}
 	};
+	
+	public void renderSelectBar(JPanel p, JProgressBar bar, boolean selected, Task task){
+		if(selected){
+			bar.setForeground(progressBarSelectedColor);
+			p.setBorder(BorderFactory.createLineBorder(progressBarSelectedColor, 2));
+		}else{
+			if(task.isSearched()){
+				bar.setForeground(progressBarSearchedColor);
+				p.setBorder(BorderFactory.createLineBorder(progressBarSearchedColor, 2));
+			}else if(task.getStatus() == TaskStatus.COMPLETED){
+				bar.setForeground(progressBarCompletedColor);
+				p.setBorder(BorderFactory.createLineBorder(progressBarCompletedColor, 2));
+			}else{
+				bar.setForeground(progressBarColor);
+				p.setBorder(BorderFactory.createLineBorder(progressBarColor, 2));
+			}
+		}
+	}
 }

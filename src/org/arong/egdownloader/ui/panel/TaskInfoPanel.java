@@ -72,7 +72,7 @@ public class TaskInfoPanel extends JScrollPane {
 		});
 	}
 	
-	public void parseTask(Task t, int index){
+	public void parseTask(Task t){
 		textPane.setText("<b>加载中...</b>");
 		try{
 			if(t != null){
@@ -111,33 +111,6 @@ public class TaskInfoPanel extends JScrollPane {
 						StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname(), 
 						t.getSaveDir(), 
 						StringUtils.isNotBlank(t.getOldurl()) ? String.format("旧版本<font color=black>：</font><a href='%s' style='font-weight:normal;text-decoration:underline;color:blue'>%s</a>", t.getOldurl(), t.getOldurl()) : "");
-				/*String text = ComponentConst.taskinfoHtml
-						.replace("@t_name", t.getName())
-						.replace("@t_subname", t.getSubname() == null ? "" : t.getSubname())
-						.replace("@t_url", "<a href='" + t.getUrl() + "'>" + (t.getUrl() == null ? "" : t.getUrl()) + "</a>")
-						.replace("@t_coverUrl", "<a href='" + t.getCoverUrl() + "'>" + (t.getCoverUrl() == null ? "" : t.getCoverUrl()) + "</a>")
-						.replace("@t_size", t.getSize())
-						.replace("@t_language", t.getLanguage() == null ? "" : t.getLanguage())
-						.replace("@t_total", t.getTotal() + "")
-						.replace("@t_type", t.getType() == null ? "" : t.getType())
-						.replace("@t_uploader", t.getUploader() == null ? "" : URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8"))
-						.replace("@t_postedTime", t.getPostedTime() == null ? "" : t.getPostedTime())
-						.replace("@t_status", renderStatus(t.getStatus()))
-						.replace("@t_createTime", t.getCreateTime() == null ? "" : t.getCreateTime())
-						.replace("@t_syncTime", t.getShowSyncTime())
-						.replace("@t_completedTime", t.getCompletedTime() == null ? "" : t.getCompletedTime())
-						.replace("@t_current", t.getCurrent() + "")
-						.replace("@t_ocurrentSize", FileUtil2.showSizeStr(size))
-						.replace("@t_onepsize", t.getCurrent() == 0 ? "0B" : FileUtil2.showSizeStr(size / t.getCurrent()))
-						.replace("@t_ocurrentrate", getSchedule(t.getCurrent(), t.getTotal()))
-						.replace("@t_start", t.getStart() + "")
-						.replace("@t_end", t.getEnd() + "")
-						.replace("@t_readed", t.isReaded() ? "是" : "否")
-						.replace("@t_original", t.isOriginal() ? "是" : "否")
-						.replace("@t_saveDirAsSubname", t.isSaveDirAsSubname() ? "是" : "否")
-						.replace("@t_tag", StringUtils.isBlank(t.getTag()) ? "一般" : t.getTag())
-						.replace("@t_groupname", StringUtils.isBlank(t.getGroupname()) ? "默认空间" : t.getGroupname())
-						.replace("@t_saveDir", t.getSaveDir());*/
 				textPane.setText(infoHtml);
 			}
 		} catch (UnsupportedEncodingException e1) {

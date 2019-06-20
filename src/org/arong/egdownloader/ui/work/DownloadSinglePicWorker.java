@@ -102,9 +102,8 @@ public class DownloadSinglePicWorker extends SwingWorker<Void, Void>{
 			}
 			Tracker.println(DownloadSinglePicWorker.class ,task.getDisplayName() + ":" + pic.getName() + "(" + FileUtil2.showSizeStr((long)size) + ", " + pic.getPpi() + ")下载完成。");
 			
-			if(mainWindow.infoTabbedPane.getSelectedIndex() == 3){
-				PicturesInfoPanel infoPanel = (PicturesInfoPanel) mainWindow.infoTabbedPane.getComponent(3);
-				infoPanel.showPictures(task);
+			if(mainWindow.infoTabbedPane.getSelectedComponent() == mainWindow.picturesInfoPanel){
+				mainWindow.picturesInfoPanel.showPictures(task);
 			}
 			
 			//更新图片信息

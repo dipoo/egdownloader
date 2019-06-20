@@ -253,17 +253,8 @@ public class TaskingTable extends JTable {
 				//获取点击的行数
 				int rowIndex = table.rowAtPoint(e.getPoint());
 				selectRowIndex = rowIndex;
-				
 				//切换信息面板tab
-				if(window.infoTabbedPane.getSelectedIndex() == 1){
-					window.taskInfoPanel.parseTask(window.tasks.get(rowIndex), rowIndex);
-				}else if(window.infoTabbedPane.getSelectedIndex() == 2){
-					TaskTagsPanel panel = (TaskTagsPanel) mainWindow.infoTabbedPane.getComponent(2);
-					panel.showTagGroup(window.tasks.get(rowIndex));
-				}else if(window.infoTabbedPane.getSelectedIndex() == 3){
-					PicturesInfoPanel infoPanel = (PicturesInfoPanel) window.infoTabbedPane.getComponent(3);
-					infoPanel.showPictures(window.tasks.get(rowIndex));
-				}
+				window.infoTabbedPane.flushTab(window.tasks.get(rowIndex));
 				
 				//左键
 				if(e.getButton() == MouseEvent.BUTTON1){

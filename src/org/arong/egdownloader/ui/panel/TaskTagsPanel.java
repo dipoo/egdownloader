@@ -180,7 +180,7 @@ public class TaskTagsPanel extends JScrollPane {
 												if(StringUtils.isBlank(currentTask.getPostedTime())){
 													currentTask.setPostedTime(t.getPostedTime());
 												}
-												if(mainWindow.infoTabbedPane.getSelectedIndex() == 2 && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
+												if(mainWindow.infoTabbedPane.getSelectedComponent() == mainWindow.taskTagsPanel && index == (mainWindow.viewModel == 1 ? mainWindow.runningTable.selectRowIndex : mainWindow.taskImagePanel.selectIndex)){
 													showTagGroup(currentTask);
 												}
 												mainWindow.taskDbTemplate.update(currentTask);
@@ -593,7 +593,7 @@ public class TaskTagsPanel extends JScrollPane {
 			int i = 0;
 			for(String group : groups.keySet()){
 				i ++;
-				sb.append("<tr style='padding:0px;margin:0px;'><td width='42px' style='text-align:right;padding:0px;margin:0px;'><span style='padding:0px;font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：</td><td style='text-align:left;padding:0px;margin:0px;'>");
+				sb.append("<tr style='padding:0px;margin:0px;'><td width='50px' style='text-align:right;padding:0px;margin:0px;'><span style='padding:0px;font-weight:bold;color:#D2691E'>").append(trans && tagscnMap.containsKey("rows:" + group) ? tagscnMap.get("rows:" + group) : group).append("</span>：</td><td style='text-align:left;padding:0px;margin:0px;'>");
 				for(String attr : groups.get(group)){
 					sb.append("<a style='text-decoration:none' href='clickTag|");
 					if(!group.equals(ComponentConst.MISC)){

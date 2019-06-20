@@ -8,28 +8,30 @@ import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 
 public class InfoTabbedPane extends JTabbedPane {
+	public EgDownloaderWindow mainWindow;
 	public InfoTabbedPane(final EgDownloaderWindow mainWindow) {
+		this.mainWindow = mainWindow;
 		this.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				InfoTabbedPane this_ = (InfoTabbedPane) e.getSource();
 				int index = mainWindow.runningTable.getSelectedRow();
-				if(mainWindow.tasks.size() > index){
-					Task t = mainWindow.tasks.get(index);
-					if(this_.getSelectedComponent() instanceof TaskInfoPanel){
-						mainWindow.taskInfoPanel.parseTask(t, index);
-					}else if(this_.getSelectedComponent() instanceof TaskTagsPanel){
-						TaskTagsPanel p = (TaskTagsPanel) this_.getSelectedComponent();
-						p.showTagGroup(t);
-					}
-					else if(this_.getSelectedComponent() instanceof PicturesInfoPanel){
-						PicturesInfoPanel p = (PicturesInfoPanel) this_.getSelectedComponent();
-						p.showPictures(t);
-					}
-				}
-				if(mainWindow.infoTabbedPane.indexOfComponent(mainWindow.taskTagsPanel) != -1){
-					mainWindow.infoTabbedPane.setTitleAt(mainWindow.infoTabbedPane.indexOfComponent(mainWindow.taskTagsPanel), "标签组");
-				}
+				Task t = mainWindow.tasks.get(index);
+				flushTab(t);
 			}
 		});
+	}
+	public void flushTab(Task t){
+		if(this.getSelectedComponent() instanceof TaskInfoPanel){
+			mainWindow.taskInfoPanel.parseTask(t);
+		}else if(this.getSelectedComponent() instanceof TaskTagsPanel){
+			TaskTagsPanel p = (TaskTagsPanel) this.getSelectedComponent();
+			p.showTagGroup(t);
+		}
+		else if(this.getSelectedComponent() instanceof PicturesInfoPanel){
+			PicturesInfoPanel p = (PicturesInfoPanel) this.getSelectedComponent();
+			p.showPictures(t);
+		}
+		if(mainWindow.infoTabbedPane.indexOfComponent(mainWindow.taskTagsPanel) != -1){
+			mainWindow.infoTabbedPane.setTitleAt(mainWindow.infoTabbedPane.indexOfComponent(mainWindow.taskTagsPanel), "标签组");
+		}
 	}
 }
