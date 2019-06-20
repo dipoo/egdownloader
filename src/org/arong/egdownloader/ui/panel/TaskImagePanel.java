@@ -232,7 +232,7 @@ public class TaskImagePanel extends AJPanel {
 									AJLabel l = null;JProgressBar bar = null;
 									if(allPanels.size() >= ptasks.size()){
 										//组件重用
-										p = allPanels.get(allPanels.size() - 1);
+										p = allPanels.remove(allPanels.size() - 1);
 										l = (AJLabel) p.getComponent(0);
 										bar = (JProgressBar) p.getComponent(1);
 									}else{
@@ -248,18 +248,7 @@ public class TaskImagePanel extends AJPanel {
 										l.setForeground(Color.WHITE);
 										l.setFont(FontConst.Microsoft_BOLD_12);
 										l.setVerticalTextPosition(JLabel.TOP);
-										try{
-											ImageIcon icon = IconManager.getIcon("init");
-											double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
-											int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
-											l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
-											l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-											l.setImage(icon);
-											l.setIcon(icon);
-										}catch(Exception e){
-											e.printStackTrace();
-										}
-										bar = new JProgressBar(0, ptasks.get(i).getTotal());
+										bar = new JProgressBar(0, 1);
 										bar.setBackground(Color.WHITE);
 										bar.setStringPainted(true);
 										bar.setFont(FontConst.Microsoft_BOLD_11);
@@ -271,7 +260,15 @@ public class TaskImagePanel extends AJPanel {
 									p.setBorder(BorderFactory.createLineBorder(selected ? Color.RED : Color.BLACK, 2));
 									
 									l.setName("cover" + ptasks.get(i).getId());
+									ImageIcon icon = IconManager.getIcon("init");
+									double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
+									int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
+									l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
+									l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
+									l.setImage(icon);
+									l.setIcon(icon);
 									
+									bar.setMaximum(ptasks.get(i).getTotal());
 									bar.setString(getTaskInfo(ptasks.get(i)));
 									if(ptasks.get(i).getStatus() == TaskStatus.COMPLETED){
 										bar.setForeground(progressBarCompletedColor);
