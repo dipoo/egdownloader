@@ -302,7 +302,6 @@ public class TaskImagePanel extends AJPanel {
 								this_.updateUI();
 							}
 							resetPanelHeight();
-							mainWindow.tablePane.getVerticalScrollBar().setValue(1);
 							
 							int totalPage = tasks.size() % PAGESIZE == 0 ? tasks.size() / PAGESIZE : tasks.size() / PAGESIZE + 1;
 							if(totalPage > 1){
@@ -331,6 +330,9 @@ public class TaskImagePanel extends AJPanel {
 								imageTaskPager.updateUI();
 								imageTaskPager.setVisible(true);
 							}
+							mainWindow.tablePane.getVerticalScrollBar().setValue(1);
+							try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+							mainWindow.tablePane.getVerticalScrollBar().setValue(0);
 						}
 						oldcomps = null;
 						//System.gc();

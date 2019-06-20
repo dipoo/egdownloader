@@ -63,7 +63,6 @@ import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenLogMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
-import org.arong.egdownloader.ui.menuitem.SimpleSearchMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.UpdateAllNullTagsMenuItem;
@@ -112,7 +111,6 @@ public class EgDownloaderWindow extends JFrame {
 	public AboutMenuWindow aboutWindow;
 	public JDialog addFormWindow;
 	public JDialog creatingWindow;
-	public JDialog detailWindow;
 	public JDialog checkingWindow;
 	public JDialog coverWindow2;//漫画封面，鼠标点击弹出
 	public SearchCoverWindow coverWindow;//漫画封面，鼠标移动出现
@@ -120,7 +118,6 @@ public class EgDownloaderWindow extends JFrame {
 	public JDialog deletingWindow;
 	public JDialog zipWindow;
 	public JDialog resetAllTaskWindow;
-	public JDialog simpleSearchWindow;
 	public JDialog countWindow;
 	public AllTagsWindow allTagsWindow;
 	public SearchComicWindow searchComicWindow;
@@ -341,7 +338,7 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(sizeMenu);
 		
 		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));
-		operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));
+		/*operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));*/
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		
 		
@@ -530,14 +527,10 @@ public class EgDownloaderWindow extends JFrame {
 					window.creatingWindow.requestFocus();
 				}else if(window.addFormWindow != null && window.addFormWindow.isVisible()){
 					window.addFormWindow.requestFocus();
-				}else if(window.detailWindow != null && window.detailWindow.isVisible()){
-					window.detailWindow.requestFocus();
 				}else if(window.editWindow != null && window.editWindow.isVisible()){
 					window.editWindow.requestFocus();
 				}else if(window.deletingWindow != null && window.deletingWindow.isVisible()){
 					window.deletingWindow.requestFocus();
-				}else if(window.simpleSearchWindow != null && window.simpleSearchWindow.isVisible()){
-					window.simpleSearchWindow.requestFocus();
 				}else{
 				}
 			}
@@ -658,10 +651,10 @@ public class EgDownloaderWindow extends JFrame {
 					}, 10000);
 				}
 				ComponentUtil.disposeAll(searchComicWindow, settingWindow,
-						detailWindow, aboutWindow, addFormWindow,
-						creatingWindow, detailWindow, checkingWindow,
+						aboutWindow, addFormWindow,
+						creatingWindow, checkingWindow,
 						coverWindow2, coverWindow, editWindow, deletingWindow,
-						resetAllTaskWindow, countWindow, simpleSearchWindow);
+						resetAllTaskWindow, countWindow, zipWindow, allTagsWindow);
 				this.setVisible(false);
 				this.dispose();
 			}

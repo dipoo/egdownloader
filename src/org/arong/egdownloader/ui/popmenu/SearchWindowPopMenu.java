@@ -24,7 +24,6 @@ import org.arong.egdownloader.ui.swing.AJMenuItem;
 import org.arong.egdownloader.ui.table.TaskingTable;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
 import org.arong.egdownloader.ui.window.MergeWindow;
-import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.egdownloader.ui.window.form.AddFormDialog;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 
@@ -130,15 +129,9 @@ public class SearchWindowPopMenu extends JPopupMenu {
 							return;
 						}
 						//以封面地址搜索
-						if(mainWindow.simpleSearchWindow == null){
-							mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
-						}
-						SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 						if(StringUtils.isNotBlank(st.getCoverUrl())){
-							ssw.keyTextField.setText(String.format("cover:%s", st.getCoverUrl().replaceAll("-jpg_l.jpg", "").replaceAll("https:", "").replaceAll("http:", "")));
-							ssw.searchBtn.doClick();
-							mainWindow.setVisible(true);
-							mainWindow.toFront();
+							mainWindow.localSearchAndSortPanel.keyTextField.setText(String.format("cover:%s", st.getCoverUrl().replaceAll("-jpg_l.jpg", "").replaceAll("https:", "").replaceAll("http:", "")));
+							mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 						}
 						Task t = table.getTasks().get(0);//选中第一行
 						mainWindow.searchComicWindow.mergeWindow.setTask(t);
@@ -147,19 +140,6 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						mainWindow.searchComicWindow.mergeWindow.toFront();
 					}
 				}));
-		/*showTagsItem = new AJMenuItem("显示标签组", Color.BLACK, "",
-				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
-					public void doWork(Window window, ActionEvent e) {
-						EgDownloaderWindow mainWindow = (EgDownloaderWindow) window;
-						if(mainWindow.searchComicWindow.searchTagsWindow == null){
-							mainWindow.searchComicWindow.searchTagsWindow = new SearchTagsWindow(mainWindow.searchComicWindow);
-						}
-						SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-						mainWindow.searchComicWindow.searchTagsWindow.updateTaskTags(task);
-						mainWindow.searchComicWindow.searchTagsWindow.setVisible(true);
-						mainWindow.searchComicWindow.searchTagsWindow.toFront();
-					}
-				}));*/
 		JMenuItem searchAuthorItem = new AJMenuItem("搜索作者", Color.BLACK, "",
 				new MenuItemActonListener(mainWindow, new IMenuListenerTask() {
 					public void doWork(Window window, ActionEvent e) {
@@ -200,7 +180,6 @@ public class SearchWindowPopMenu extends JPopupMenu {
 		this.add(openPictureItem);
 		this.add(openPageItem);
 		this.add(openBtPageItem);
-		/*this.add(showTagsItem);*/
 		this.add(showMergeItem);
 		this.add(searchAuthorItem);
 		this.add(searchLocalAuthorItem);

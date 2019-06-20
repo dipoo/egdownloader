@@ -34,7 +34,8 @@ public class LocalSearchAndSortPanel extends JPanel {
 	public JComboBox sortCombobox2;//升序、降序
 	public JLabel searchResultLabel;//搜索结果
 	
-	public final static String[] sortColumnTexts = {"无", "发布时间", "创建时间", "数目", "大小", "进度", "语言", "类型", "状态", "阅读状态"};
+	public final static String[] sortColumnTexts = {"无", "发布时间", "创建时间", "数目", "大小", "进度", "语言", "类型",
+		"状态", "阅读状态", "名称", "子标题", "已下载数", "上传者", "是否原图", "作者"};
 	public final static String[] sortTypeTexts = {"降序", "升序"};
 	
 	public void doSearch(String key){
@@ -204,7 +205,6 @@ public class LocalSearchAndSortPanel extends JPanel {
 						final String sortColumn = (String) sortCombobox.getSelectedItem();
 						final int sortTypeIndex = sortCombobox2.getSelectedIndex();
 						final boolean all_ = all;
-						//{"无", "发布时间", "创建时间", "数目", "大小", "进度", "语言", "类型", "状态", "阅读状态"}
 						Collections.sort(all ? table.getTasks() : results, new Comparator<Task>() {
 							public int compare(Task t1, Task t2) {
 								if(all_){
@@ -217,11 +217,6 @@ public class LocalSearchAndSortPanel extends JPanel {
 									return sortTypeIndex == 0 ? t2.getCreateTime().compareTo(t1.getCreateTime()) : 
 										t1.getCreateTime().compareTo(t2.getCreateTime());
 								}else if(sortColumn.equals(sortColumnTexts[3])){
-									/*if(sortTypeIndex == 0){
-										if(t2.getTotal() > t1.getTotal()) return 1;
-										if(t2.getTotal() == t1.getTotal()) return 0;
-										if(t2.getTotal() < t1.getTotal()) return -1;
-									}*/
 									return sortTypeIndex == 0 ? (t2.getTotal() >= t1.getTotal() ? 1 : -1)
 											: (t2.getTotal() >= t1.getTotal() ? -1 : 1);
 								}else if(sortColumn.equals(sortColumnTexts[4])){
@@ -245,6 +240,23 @@ public class LocalSearchAndSortPanel extends JPanel {
 										t1.getStatus().compareTo(t2.getStatus());
 								}else if(sortColumn.equals(sortColumnTexts[9])){
 									return sortTypeIndex == 0 ? t2.isReaded() ? 1 : -1 : t2.isReaded() ? -1 : 1;
+								}else if(sortColumn.equals(sortColumnTexts[10])){
+									return sortTypeIndex == 0 ? t2.getName().compareTo(t1.getName()) : 
+										t1.getName().compareTo(t2.getName());
+								}else if(sortColumn.equals(sortColumnTexts[11])){
+									return sortTypeIndex == 0 ? t2.getSubname().compareTo(t1.getSubname()) : 
+										t1.getSubname().compareTo(t2.getSubname());
+								}else if(sortColumn.equals(sortColumnTexts[12])){
+									return sortTypeIndex == 0 ? (t2.getCurrent() >= t1.getCurrent() ? 1 : -1)
+											: (t2.getCurrent() >= t1.getCurrent() ? -1 : 1);
+								}else if(sortColumn.equals(sortColumnTexts[13])){
+									return sortTypeIndex == 0 ? t2.getUploader().compareTo(t1.getUploader()) : 
+										t1.getUploader().compareTo(t2.getUploader());
+								}else if(sortColumn.equals(sortColumnTexts[14])){
+									return sortTypeIndex == 0 ? t2.isOriginal() ? 1 : -1 : t2.isOriginal() ? -1 : 1;
+								}else if(sortColumn.equals(sortColumnTexts[15])){
+									return sortTypeIndex == 0 ? (t2.getAuthor() == null ? "" : t2.getAuthor()).compareTo((t1.getAuthor() == null ? "" : t1.getAuthor())) : 
+										(t2.getAuthor() == null ? "" : t2.getAuthor()).compareTo((t1.getAuthor() == null ? "" : t1.getAuthor()));
 								}
 								return 0;
 							}
@@ -267,6 +279,8 @@ public class LocalSearchAndSortPanel extends JPanel {
 						sortCombobox.getSelectedIndex() == 0 ? "" : String.format("<font color='orange'>[%s->%s]</font>排序", sortCombobox.getSelectedItem(), sortCombobox2.getSelectedItem()),
 						all ? "" : String.format("，结果<font color='green'>[%s]</font>条", j),
 						formatSecend(System.currentTimeMillis() - t)));
+				mainWindow.setVisible(true);
+				mainWindow.toFront();
 				mainWindow.infoTabbedPane.setSelectedIndex(mainWindow.infoTabbedPane.indexOfComponent(this_));
 			}
 		}, 620, 20, 60, 30);
@@ -277,7 +291,7 @@ public class LocalSearchAndSortPanel extends JPanel {
 		sortCombobox2 = new JComboBox(sortTypeTexts);
 		sortCombobox2.setBounds(810, 20, 100, 30);
 		
-		searchResultLabel = new AJLabel("", Color.BLUE, 10, 70, 900, 30);
+		searchResultLabel = new AJLabel("", Color.BLUE, 10, 70, 1000, 30);
 		
 		ComponentUtil.addComponents(textPanel, keyTextField, searchBtn, sortCombobox, sortCombobox2, searchResultLabel);
 		this.add(textPanel, BorderLayout.CENTER);

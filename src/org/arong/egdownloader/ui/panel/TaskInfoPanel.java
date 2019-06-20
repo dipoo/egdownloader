@@ -19,7 +19,6 @@ import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.swing.AJTextPane;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
-import org.arong.egdownloader.ui.window.SimpleSearchWindow;
 import org.arong.util.FileUtil2;
 import org.arong.util.HtmlUtils;
 
@@ -39,10 +38,6 @@ public class TaskInfoPanel extends JScrollPane {
 		textPane.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					if(mainWindow.simpleSearchWindow == null){
-						mainWindow.simpleSearchWindow = new SimpleSearchWindow(mainWindow);
-					}
-					SimpleSearchWindow ssw = (SimpleSearchWindow) mainWindow.simpleSearchWindow;
 					if("openSaveDir".equals(e.getDescription())){
 						//打开保存目录
 						try {
@@ -53,34 +48,23 @@ public class TaskInfoPanel extends JScrollPane {
 					}else if("searchUploader".equals(e.getDescription())){
 						//搜索上传者
 						if(StringUtils.isNotBlank(t.getUploader())){
-							
 							mainWindow.infoTabbedPane.setSelectedComponent(mainWindow.taskTagsPanel);
 							mainWindow.taskTagsPanel.renderSelectTags(String.format("uploader:\"%s\"", t.getUploader()), true);
-							
-							/*if(mainWindow.searchComicWindow == null){
-								mainWindow.searchComicWindow = new SearchComicWindow(mainWindow);
-							}
-							try {
-								mainWindow.searchComicWindow.doSearch(String.format("uploader:\"%s\"", URLDecoder.decode(URLDecoder.decode(t.getUploader(), "UTF-8"), "UTF-8")));
-							} catch (UnsupportedEncodingException e1) {
-								e1.printStackTrace();
-							}
-							mainWindow.searchComicWindow.setVisible(true);*/
 						}
 					}else if("searchLanguage".equals(e.getDescription())){
 						if(StringUtils.isNotBlank(t.getLanguage())){
-							ssw.keyTextField.setText(String.format("language:%s", t.getLanguage()));
-							ssw.searchBtn.doClick();
+							mainWindow.localSearchAndSortPanel.keyTextField.setText(String.format("language:%s", t.getLanguage()));
+							mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 						}
 					}else if("searchType".equals(e.getDescription())){
 						if(StringUtils.isNotBlank(t.getType())){
-							ssw.keyTextField.setText(String.format("type:%s", t.getType()));
-							ssw.searchBtn.doClick();
+							mainWindow.localSearchAndSortPanel.keyTextField.setText(String.format("type:%s", t.getType()));
+							mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 						}
 					}else if("searchLocalTag".equals(e.getDescription())){
 						if(StringUtils.isNotBlank(t.getTag())){
-							ssw.keyTextField.setText(String.format("localtag:%s", t.getTag()));
-							ssw.searchBtn.doClick();
+							mainWindow.localSearchAndSortPanel.keyTextField.setText(String.format("localtag:%s", t.getTag()));
+							mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 						}
 					}
 				}

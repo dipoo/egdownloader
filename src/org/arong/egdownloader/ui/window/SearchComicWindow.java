@@ -70,7 +70,6 @@ public class SearchComicWindow extends JFrame {
 	private static final long serialVersionUID = -3912589805632312855L;
 	
 	public EgDownloaderWindow mainWindow;
-	public SearchTagWindow searchTagWindow;
 	public SearchTagsWindow searchTagsWindow;
 	public MergeWindow mergeWindow;
 	public SearchDetailInfoWindow searchDetailInfoWindow;
@@ -215,14 +214,6 @@ public class SearchComicWindow extends JFrame {
 				searchTagsWindow.setVisible(true);
 			}
 		}, this.getWidth() - 150, 10, 60, 30);
-		/*tagBtn = new AJButton("选择标签", "",  new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				if(searchTagWindow == null){
-					searchTagWindow = new SearchTagWindow(this_);
-				}
-				searchTagWindow.setVisible(true);
-			}
-		}, this.getWidth() - 150, 10, 60, 30);*/
 		clearCacheBtn = new AJButton("清理缓存", "",  new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				datas.clear();
@@ -680,9 +671,7 @@ public class SearchComicWindow extends JFrame {
 	public void dispose() {
 		mainWindow.setEnabled(true);
 		mainWindow.setVisible(true);
-		if(searchTagWindow != null && searchTagWindow.isVisible()){
-			searchTagWindow.dispose();
-		}
+		ComponentUtil.disposeAll(searchTagsWindow, mergeWindow, searchDetailInfoWindow, coverWindow, historyWindow);
 		super.dispose();
 	}
 	//根据前进或后退改变keyList的元素排序

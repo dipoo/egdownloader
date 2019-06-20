@@ -47,7 +47,12 @@ import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.work.interfaces.IMenuListenerTask;
 import org.arong.util.FileUtil2;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
-
+/**
+ * 废除
+ * @author Administrator
+ *
+ */
+@Deprecated
 public class SearchTagWindow extends JDialog {
 
 	private static final long serialVersionUID = 682782292634346851L;

@@ -279,7 +279,7 @@ public class TaskTagsPanel extends JScrollPane {
 		localBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setViewportView(textPane);
-				mainWindow.localSearchAndSortPanel.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", "") + ";" + (StringUtils.isNotBlank(excludeTags) ? "!" : "") + excludeTags.replaceAll(";", ";!").replaceAll("\\$\"", "").replaceAll("\"", ""));
+				mainWindow.localSearchAndSortPanel.keyTextField.setText("tags:" + selectTags.replaceAll("\\$\"", "").replaceAll("\"", "") + (StringUtils.isNotBlank(excludeTags) ? ";!" + excludeTags.replaceAll(";", ";!").replaceAll("\\$\"", "").replaceAll("\"", "") : ""));
 				mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 				if(this_.getRootPane().getParent() instanceof SearchDetailInfoWindow){
 					this_.getRootPane().getParent().setVisible(false);
@@ -417,12 +417,12 @@ public class TaskTagsPanel extends JScrollPane {
 						String tag = tag_.replaceAll("\\$\"", "=====\"");
 						//左键
 						if(e.getButton() == MouseEvent.BUTTON1){
-							selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+							selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"").replaceAll(";;", ";");
 							selectTag = selectTag.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
 							renderSelectTags(tag_, false);
 						}else if(e.getButton() == MouseEvent.BUTTON3){
 							//右键
-							selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
+							selectTags = selectTags.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"").replaceAll(";;", ";");
 							selectTag = selectTag.replaceAll("\\$\"", "=====\"").replaceAll(tag, "").replaceAll("=====\"", "\\$\"");
 							System.out.println("selectTags:" + selectTags);
 							System.out.println("selectTag:" + selectTag);
