@@ -113,6 +113,9 @@ public class TaskImagePanel extends AJPanel {
 							}
 							this_.updateUI();
 							resetPanelHeight();
+							mainWindow.tablePane.getVerticalScrollBar().setValue(mainWindow.tablePane.getVerticalScrollBar().getValue() + 1);
+							try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+							mainWindow.tablePane.getVerticalScrollBar().setValue(mainWindow.tablePane.getVerticalScrollBar().getValue() - 1);
 						}}).execute();
 				}
 			});
@@ -132,8 +135,12 @@ public class TaskImagePanel extends AJPanel {
 					maxheight = ((int)this.getComponents()[i].getLocation().getY() + this.getComponents()[i].getHeight());
 				}
 			}
-			this.setPreferredSize(new Dimension(this.getWidth(), maxheight + 10));	
-			this.updateUI();
+			if(maxheight == 0){
+				resetPanelHeight(wait);
+			}else{
+				this.setPreferredSize(new Dimension(this.getWidth(), maxheight + 10));	
+				this.updateUI();
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -245,6 +252,7 @@ public class TaskImagePanel extends AJPanel {
 										l.setVerticalTextPosition(JLabel.TOP);
 										bar = new JProgressBar(0, 1);
 										bar.setBackground(Color.WHITE);
+										bar.setBorder(null);
 										bar.setStringPainted(true);
 										bar.setFont(FontConst.Microsoft_BOLD_11);
 										bar.setPreferredSize(new Dimension(110, 13));
@@ -414,13 +422,12 @@ public class TaskImagePanel extends AJPanel {
 	public MouseListener panelMouselistener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
 			if(selectIndex - (page - 1) * PAGESIZE > -1){
-				((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE]).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 				JProgressBar bar = (JProgressBar) ((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE]).getComponent(1);
 				renderSelectBar((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE], bar, false, mainWindow.runningTable.getTasks().get(selectIndex));
 			}
 			AJPanel p = (AJPanel)e.getSource();
-			renderSelectBar(p, (JProgressBar)p.getComponent(1), true, mainWindow.runningTable.getTasks().get(selectIndex));
 			selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
+			renderSelectBar(p, (JProgressBar)p.getComponent(1), true, mainWindow.runningTable.getTasks().get(selectIndex));
 			//同步任务表格的选中状态
 			mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
 			//切换信息面板tab

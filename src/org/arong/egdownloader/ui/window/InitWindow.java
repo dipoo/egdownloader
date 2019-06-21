@@ -83,9 +83,9 @@ public class InitWindow extends JWindow {
 			backPanel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
 			JLabel v = new AJLabel(Version.NAME + "v" + Version.VERSION + "." + Version.JARVERSION, Color.WHITE, 0, 10, icon.getIconWidth(), 30);
 			v.setHorizontalAlignment(JLabel.CENTER);
-			v.setFont(FontConst.Songti_BOLD_13);
+			v.setFont(FontConst.Microsoft_BOLD_13);
 			textLabel = new AJLabel("程序初始化",Color.WHITE, 0, 100, icon.getIconWidth(), 30);
-			textLabel.setFont(FontConst.Songti_BOLD_13);
+			textLabel.setFont(FontConst.Microsoft_BOLD_13);
 			textLabel.setHorizontalAlignment(JLabel.CENTER);
 			backPanel.add(v);
 			backPanel.add(textLabel);

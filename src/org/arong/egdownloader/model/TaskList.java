@@ -91,6 +91,22 @@ public class TaskList<T> extends ArrayList<T> {
 		return super.addAll(c);
 	}
 	
+	@Override
+	public boolean addAll(int index, Collection<? extends T> c) {
+		if(c != null && c.size() > 0 && c.iterator().next() instanceof Task){
+			Iterator<? extends T> it = c.iterator();
+			while(it.hasNext()){
+				T o = it.next();
+				if(o instanceof Task){
+					Task t = (Task)o;
+					taskUrlMap.put(t.getUrl().replaceAll("https://", "http://"), 0);
+					addCoverToken(t);
+				}
+			}
+		}
+		changeSupport.firePropertyChange("", null, null);
+		return super.addAll(index, c);
+	}
 	public boolean removeAll(Collection<?> c) {
 		if(c != null && c.size() > 0 && c.iterator().next() instanceof Task){
 			Iterator<?> it = c.iterator();

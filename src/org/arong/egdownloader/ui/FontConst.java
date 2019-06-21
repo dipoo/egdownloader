@@ -44,4 +44,5 @@ public class FontConst {
 	public final static Font Microsoft_PLAIN_11 = new Font("微软雅黑", Font.PLAIN, 11);
 	public final static Font Microsoft_BOLD_11 = new Font("微软雅黑", Font.BOLD, 11);
 	public final static Font Microsoft_BOLD_12 = new Font("微软雅黑", Font.BOLD, 12);
+	public final static Font Microsoft_BOLD_13 = new Font("微软雅黑", Font.BOLD, 13);
 }
