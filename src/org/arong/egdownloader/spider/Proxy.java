@@ -139,7 +139,8 @@ public class Proxy {
 	}
 	
 	public static String[] getIEProxy(){
-		try { 
+		try {
+			Class.forName("com.ice.jni.registry.RegistryKey");
 			// 注册表表项值 
 			RegistryKey registryKey = Registry.openSubkey( Registry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", RegistryKey.ACCESS_READ); 
 			// 注册表表项键 
@@ -154,9 +155,8 @@ public class Proxy {
 					return value.split(";");
 				}
 			}
+		} catch (ClassNotFoundException e){
 		} catch (Exception e) {
-			//System.out.println("ERROR:操作Windows注册表失败.");
-			//e.printStackTrace();
 		}
 		return null;
 	}
