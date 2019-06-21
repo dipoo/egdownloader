@@ -110,6 +110,7 @@ public class SettingWindow extends JFrame{
 		public ButtonGroup proxyTypeButtonGroup;
 		public JRadioButton httpRadioButton;
 		public JRadioButton socksRadioButton;
+		public JRadioButton ieRadioButton;
 		public JLabel proxyIpLabel;
 		public JTextField proxyIpField;
 		public JLabel proxyPortLabel;
@@ -337,15 +338,18 @@ public class SettingWindow extends JFrame{
 			socksRadioButton = new JRadioButton("SOCKS", "socks".equals(setting.getProxyType()));
 			socksRadioButton.setBounds(230, 70, 80, 30);
 			proxyTypeButtonGroup.add(socksRadioButton);
+			ieRadioButton = new JRadioButton("使用IE配置", "ie".equals(setting.getProxyType()));
+			ieRadioButton.setBounds(315, 70, 120, 30);
+			proxyTypeButtonGroup.add(ieRadioButton);
 			proxyIpLabel = new AJLabel("服务器：", labelColor, 25, 110, 100, 30);
-			proxyIpField = new AJTextField(setting.getProxyIp(), "", 125, 110, 200, 30);
+			proxyIpField = new AJTextField(setting.getProxyIp(), "", 130, 110, 200, 30);
 			proxyPortLabel = new AJLabel("端口：", labelColor, 350, 110, 100, 30);
 			proxyPortField = new AJTextField(setting.getProxyPort(), "", 405, 110, 80, 30);
 			proxyUsernameLabel = new AJLabel("用户名：", labelColor, 25, 150, 100, 30);
-			proxyUsernameField = new AJTextField(setting.getProxyUsername(), "", 125, 150, 200, 30);
+			proxyUsernameField = new AJTextField(setting.getProxyUsername(), "", 130, 150, 200, 30);
 			proxyPwdLabel = new AJLabel("密码：", labelColor, 25, 190, 100, 30);
 			proxyPwdField = new JPasswordField(setting.getProxyPwd());
-			proxyPwdField.setBounds(125, 190, 200, 30);
+			proxyPwdField.setBounds(130, 190, 200, 30);
 			proxyTestBtn = new AJButton("测试", "", "", new OperaBtnMouseListener(mainWindow, MouseAction.CLICK, new IListenerTask() {
 				public void doWork(Window window, MouseEvent e) {
 					if(testProxyWindow == null){
@@ -363,7 +367,7 @@ public class SettingWindow extends JFrame{
 			//proxyTipLabel =  new AJLabel("提示：测试前请先保存当前配置", Color.BLUE, 200, 230, 300, 30);
 			
 			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyTypeLabel, proxyIpLabel, httpRadioButton,
-					socksRadioButton, proxyIpField, proxyPortLabel, proxyPortField,
+					socksRadioButton, ieRadioButton, proxyIpField, proxyPortLabel, proxyPortField,
 					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn/*, proxyTipLabel*/);
 			
 			settingTabPanel.add("基本配置", basicPanel);
@@ -445,6 +449,8 @@ public class SettingWindow extends JFrame{
 						String proxyType = "http";
 						if(socksRadioButton.isSelected()){
 							proxyType = "socks";
+						}else if(ieRadioButton.isSelected()){
+							proxyType = "ie";
 						}
 						String proxyIp = settingWindow.proxyIpField.getText();
 						String proxyPort = settingWindow.proxyPortField.getText();

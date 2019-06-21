@@ -26,6 +26,7 @@ import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
+import org.arong.egdownloader.spider.Proxy;
 import org.arong.egdownloader.spider.WebClient;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.FontConst;
@@ -174,6 +175,9 @@ public class InitWindow extends JWindow {
 					}
 				}
 			}
+			//设置代理
+			Proxy.init(setting.isUseProxy(), setting.getProxyType(), setting.getProxyIp(), 
+					setting.getProxyPort(), setting.getProxyUsername(), setting.getProxyPwd());
 			if(!setting.isDebug()){
 				textLabel.setText("检测远程脚本");
 				//检测脚本是否发生变化

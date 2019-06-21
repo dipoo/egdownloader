@@ -3,19 +3,32 @@ package org.arong.egdownloader.spider;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Proxy.Type;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.lang.StringUtils;
+
+import com.ice.jni.registry.RegDWordValue;
+import com.ice.jni.registry.Registry;
+import com.ice.jni.registry.RegistryKey;
+import com.ice.jni.registry.RegistryValue;
 /**
  * 代理
+ * 
+IE代理服务器对应于注册表中字段：HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings下面的值：ProxyServer，ProxyEnable，ProxyOverride 
+ProxyEnable用来表示是否使用代理，用0,1表示，类型为REG_DWORD，不能为REG_SZ 
+ProxyServer用来表示代理服务器ip:port，如http=localhost:1080;socks=localhost:1080，类型为REG_SZ 
+ProxyOverride表示跳过代理的配置，比如跳过本地代理，该值为<local> 
  * @author dipoo
  * @since 2016-03-22
  */
 public class Proxy {
 	public static boolean useProxy;
+	public static boolean useIEProxy;//直接使用IE代理
 	public static java.net.Proxy.Type type = java.net.Proxy.Type.HTTP;//HTTP或者SOCKS
 	public static String ip;
 	public static String port;
@@ -29,14 +42,18 @@ public class Proxy {
 		username = username_;
 		pwd = pwd_;
 		
-		if("http".equals(type_)){
-			type = java.net.Proxy.Type.HTTP;
+		if("ie".equals(type_)){
+			useIEProxy = true;
+		}else{
+			if("http".equals(type_)){
+				type = java.net.Proxy.Type.HTTP;
+			}
+			//jdk6的socks4代理存在bug
+			else if("socks".equals(type_)){
+				type = java.net.Proxy.Type.SOCKS;
+			}
+			//proxy();
 		}
-		//jdk的socks4代理存在bug
-		else if("socks".equals(type_)){
-			type = java.net.Proxy.Type.SOCKS;
-		}
-		//proxy();
 	}
 	
 	/**
@@ -67,13 +84,28 @@ public class Proxy {
 	public static HttpClient getHttpClient(){
 		HttpClient httpClient = new HttpClient();
 		if(useProxy){
-			//设置代理服务器的ip地址和端口
-			httpClient.getHostConfiguration().setProxy(ip, Integer.parseInt(port));
-			//使用抢先认证
-			httpClient.getParams().setAuthenticationPreemptive(true);
-			//如果代理需要密码验证，这里设置用户名密码
-			if(username != null && pwd != null){
-				httpClient.getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, pwd));
+			if(useIEProxy){
+				String[] ieproxys = getIEProxy();
+				if(ieproxys != null){
+					//取第一个代理设置
+					String[] arr = ieproxys[0].split("=");
+					if(arr.length == 2){
+						//String type = arr[0];
+						String[] hostport = arr[1].split(":");
+						if(hostport.length == 2){
+							httpClient.getHostConfiguration().setProxy(hostport[0], Integer.parseInt(hostport[1]));
+						}
+					}
+				}
+			}else{
+				//设置代理服务器的ip地址和端口
+				httpClient.getHostConfiguration().setProxy(ip, Integer.parseInt(port));
+				//使用抢先认证
+				httpClient.getParams().setAuthenticationPreemptive(true);
+				//如果代理需要密码验证，这里设置用户名密码
+				if(username != null && pwd != null){
+					httpClient.getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, pwd));
+				}
 			}
 		}
 		return httpClient;
@@ -81,7 +113,50 @@ public class Proxy {
 	
 	public static java.net.Proxy getNetProxy(){
 		if(useProxy){
-			return new java.net.Proxy(type, new InetSocketAddress(ip, Integer.parseInt(port)));
+			if(useIEProxy){
+				String[] ieproxys = getIEProxy();
+				if(ieproxys != null){
+					//取第一个代理设置
+					String[] arr = ieproxys[0].split("=");
+					if(arr.length == 2){
+						Type type = null;
+						String[] hostport = arr[1].split(":");
+						if(hostport.length == 2){
+							if(arr[0].equals("http")){
+								type = java.net.Proxy.Type.HTTP;
+							}else if(arr[0].equals("socks")){
+								type = java.net.Proxy.Type.SOCKS;
+							}
+							return new java.net.Proxy(type, new InetSocketAddress(hostport[0], Integer.parseInt(hostport[1])));
+						}
+					}
+				}
+			}else{
+				return new java.net.Proxy(type, new InetSocketAddress(ip, Integer.parseInt(port)));
+			}
+		}
+		return null;
+	}
+	
+	public static String[] getIEProxy(){
+		try { 
+			// 注册表表项值 
+			RegistryKey registryKey = Registry.openSubkey( Registry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", RegistryKey.ACCESS_READ); 
+			// 注册表表项键 
+			RegistryValue registryValue = registryKey.getValue("ProxyEnable");
+			boolean proxyEnable = ((RegDWordValue) registryValue).getData() != 0;
+			//  开启了Internet代理
+			if (proxyEnable == true){
+				registryValue = registryKey.getValue("ProxyServer");
+				String value = new String(registryValue.getByteData());
+				if(StringUtils.isNotBlank(value)){
+					//http=localhost:1080;socks=localhost:1080
+					return value.split(";");
+				}
+			}
+		} catch (Exception e) {
+			//System.out.println("ERROR:操作Windows注册表失败.");
+			//e.printStackTrace();
 		}
 		return null;
 	}
