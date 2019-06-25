@@ -536,16 +536,20 @@ public class TaskTagsPanel extends JScrollPane {
 		});
 	}
 	public void showTagGroup(Task t){
-		showMyFav = false;
-		searchTags = false;
-		setViewportView(textPane);
-		parseTaskAttribute(t);
+		try{
+			showMyFav = false;
+			searchTags = false;
+			setViewportView(textPane);
+			parseTaskAttribute(t);
+		}catch(Exception e){}
 	}
 	public void showSearchTagGroup(SearchTask t){
-		showMyFav = false;
-		searchTags = true;
-		setViewportView(textPane);
-		parseTaskAttribute(t);
+		try{
+			showMyFav = false;
+			searchTags = true;
+			setViewportView(textPane);
+			parseTaskAttribute(t);
+		}catch(Exception e){}
 	}
 	public void parseTaskAttribute(Task t){
 		parseTaskAttribute(t.getTags(), mainWindow.setting.isTagsTranslate());

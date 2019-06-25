@@ -262,13 +262,15 @@ public class TaskImagePanel extends AJPanel {
 									p.setToolTipText(ptasks.get(i).getDisplayName(mainWindow.setting));
 									
 									l.setName("cover" + ptasks.get(i).getId());
-									ImageIcon icon = IconManager.getIcon("init");
-									double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
-									int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
-									l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
-									l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
-									l.setImage(icon);
-									l.setIcon(icon);
+									if(l.getIcon() != IconManager.getIcon("init")){
+										ImageIcon icon = IconManager.getIcon("init");
+										double w = icon.getIconWidth() > mainWindow.setting.getCoverWidth() ? mainWindow.setting.getCoverWidth() : icon.getIconWidth();
+										int height = w > icon.getIconWidth() ? icon.getIconHeight() : (int)(icon.getIconHeight() * (w / icon.getIconWidth()));
+										l.setSize((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height);
+										l.setPreferredSize(new Dimension((int)w, height > mainWindow.setting.getCoverHeight() ? mainWindow.setting.getCoverHeight() : height));
+										l.setImage(icon);
+										l.setIcon(icon);
+									}
 									
 									bar.setMaximum(ptasks.get(i).getTotal());
 									bar.setString(getTaskInfo(ptasks.get(i)));
