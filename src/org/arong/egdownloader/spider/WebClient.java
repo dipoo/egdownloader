@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -360,6 +361,7 @@ public class WebClient {
             //模拟http头文件
             urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36");
             urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
+            urlConnection.setRequestProperty("Accept-Encoding", "gzip");
             
             if(cookie != null){
             	urlConnection.setRequestProperty("Cookie", cookie); 
@@ -389,7 +391,11 @@ public class WebClient {
             } else {
                 if (responseCode == 200 || responseCode == 201) {
                 	//inputStream不能关闭，应由调用方进行关闭
-                	inputStream = urlConnection.getInputStream();
+                	if("gzip".equals(urlConnection.getContentEncoding())){
+                		inputStream = new GZIPInputStream(urlConnection.getInputStream());
+                	}else{
+                		inputStream = urlConnection.getInputStream();
+                	}
                 	objects[1] = urlConnection.getContentLength();
                 }
                 foundRedirect = false;
@@ -464,7 +470,7 @@ public class WebClient {
 	            //模拟http头文件
 	            urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0;)");
 	            urlConnection.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*");
-	           
+	            urlConnection.setRequestProperty("Accept-Encoding", "gzip");
 	            if(cookie != null){
 	            	urlConnection.setRequestProperty("Cookie", cookie); 
 	            }
@@ -492,22 +498,35 @@ public class WebClient {
 	                nURL = location;
 	                foundRedirect = true;
 	            } else {
-	                if (responseCode == 200 || responseCode == 201) {
-	                    in = new BufferedInputStream(urlConnection.getInputStream());
-	                } else {
-	                    in = new BufferedInputStream(urlConnection.getErrorStream());
-	                }
-	                int size = responseLength == -1 ? 4096 : responseLength;
-	                if (encoding != null) {
-	                    responseContent = read(in, size, encoding);
-	                } else {
-	                    out = new ByteArrayOutputStream();
-	                    byte[] bytes = new byte[size];
-	                    int read;
-	                    while ((read = in.read(bytes)) > 0) {
-	                        out.write(bytes, 0, read);
-	                    }
-	                    responseContent = new String(out.toByteArray());
+	            	InputStream tempInputStream = null;
+	            	if("gzip".equals(urlConnection.getContentEncoding())){
+	            		if (responseCode == 200 || responseCode == 201) {
+            				tempInputStream = urlConnection.getInputStream();
+            			}else{
+            				tempInputStream = urlConnection.getErrorStream();
+            			}
+	            		tempInputStream = new GZIPInputStream(tempInputStream);
+	            	}else{
+	            		if (responseCode == 200 || responseCode == 201) {
+	            			tempInputStream = urlConnection.getInputStream();
+		                } else {
+		                	tempInputStream = urlConnection.getErrorStream();
+		                }
+	            	}
+	                if(tempInputStream != null){
+                		in = new BufferedInputStream(tempInputStream);
+	                	int size = responseLength == -1 ? 4096 : responseLength;
+		                if (encoding != null) {
+		                    responseContent = read(in, size, encoding);
+		                } else {
+		                    out = new ByteArrayOutputStream();
+		                    byte[] bytes = new byte[size];
+		                    int read;
+		                    while ((read = in.read(bytes)) > 0) {
+		                        out.write(bytes, 0, read);
+		                    }
+		                    responseContent = new String(out.toByteArray());
+		                }
 	                }
 	                foundRedirect = false;
 	            }

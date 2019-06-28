@@ -45,8 +45,8 @@ public class LoginWindow extends JDialog {
 		params.put("referer", "http://forums.e-hentai.org/index.php");
 		params.put("b", "");
 		params.put("bt", "");
-		params.put("UserName", "waprong");
-		params.put("PassWord", "19890226");//
+		params.put("UserName", "username");
+		params.put("PassWord", "******");//
 		params.put("CookieDate", "1");
 		String cookieInfo = WebClient.getCookieByPostWithoutCookie("https://forums.e-hentai.org/index.php?act=Login&CODE=01",
 				"UTF-8", params); 
