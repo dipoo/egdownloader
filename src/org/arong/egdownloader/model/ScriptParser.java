@@ -45,14 +45,12 @@ public class ScriptParser {
 	private static File collectScriptFile;
 	private static File downloadScriptFile;
 	public static File searchScriptFile;
-	public static File searchScriptFile2;
 	
 	public static void clearFiles(){
 		createScriptFile = null;
 		collectScriptFile = null;
 		downloadScriptFile = null;
 		searchScriptFile = null;
-		searchScriptFile2 = null;
 	}
 	
 	public static File getCreateScriptFile(String filePath) {
@@ -77,14 +75,6 @@ public class ScriptParser {
 	}
 	
 	public static File getSearchScriptFile(String filePath) {
-		if(filePath.contains("2")){
-			if(searchScriptFile2 == null){
-				searchScriptFile2 = new File(filePath);
-			}
-			if(searchScriptFile2.exists()){
-				return searchScriptFile2;
-			}
-		}
 		if(searchScriptFile == null){
 			searchScriptFile = new File(filePath);
 		}

@@ -233,6 +233,17 @@ public class Task {
 	public String getLanguage() {
 		return language;
 	}
+	
+	public String getRealLanguage() {
+		if(StringUtils.isNotBlank(tags) && tags.contains("language:")){
+			for(String tag : tags.split(";")){
+				if(tag.contains("language:")){
+					return tag.replace("language:", "");
+				}
+			}
+		}
+		return language;
+	}
 
 	public void setLanguage(String language) {
 		this.language = language;

@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
 import org.arong.egdownloader.ui.FontConst;
@@ -102,11 +103,11 @@ public class TaskImagePanel extends AJPanel {
 												l.setImage(icon);
 												l.setIcon(icon);
 											}
-											break;
-										}/*else{
+											//break;
+										}else{
 											JProgressBar b = (JProgressBar) p.getComponents()[j];
 											b.setString(getTaskInfo(mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1]))));
-										}*/
+										}
 									}
 									//p.updateUI();
 								}
@@ -187,7 +188,7 @@ public class TaskImagePanel extends AJPanel {
 							JProgressBar bar = (JProgressBar)p.getComponent(1);
 							bar.setValue(task.getCurrent());
 							bar.setString(getTaskInfo(task));
-							renderSelectBar(p, bar, true, task);
+							renderSelectBarColor(p, bar, true, task);
 						}
 					}
 				}).execute();
@@ -278,7 +279,7 @@ public class TaskImagePanel extends AJPanel {
 									p.add(l, BorderLayout.SOUTH);
 									p.add(bar, BorderLayout.NORTH);
 								}
-								renderSelectBar(p, bar, selected, ptasks.get(i));
+								renderSelectBarColor(p, bar, selected, ptasks.get(i));
 								if(allPanels.size() < PAGESIZE){
 									allPanels.add(0, p);
 								}
@@ -355,6 +356,11 @@ public class TaskImagePanel extends AJPanel {
 		}else/* if(mainWindow.setting.getCoverWidth() > 100)*/{
 			txtsb.append(task.getType())/*.append(" ").append(task.getLanguage())*/;
 		}
+		if(mainWindow.setting.getCoverWidth() == 350){
+			if(StringUtils.isNotBlank(task.getRealLanguage())){
+				txtsb.append(" ").append(task.getRealLanguage());
+			}
+		}
 		if(task.isReaded()){
 			txtsb.append(" √");
 		}
@@ -425,11 +431,11 @@ public class TaskImagePanel extends AJPanel {
 		public void mouseClicked(MouseEvent e) {
 			if(selectIndex - (page - 1) * PAGESIZE > -1){
 				JProgressBar bar = (JProgressBar) ((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE]).getComponent(1);
-				renderSelectBar((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE], bar, false, mainWindow.runningTable.getTasks().get(selectIndex));
+				renderSelectBarColor((AJPanel)this_.getComponents()[selectIndex - (page - 1) * PAGESIZE], bar, false, mainWindow.runningTable.getTasks().get(selectIndex));
 			}
 			AJPanel p = (AJPanel)e.getSource();
 			selectIndex = Integer.parseInt(p.getName().split("\\|")[1]);
-			renderSelectBar(p, (JProgressBar)p.getComponent(1), true, mainWindow.runningTable.getTasks().get(selectIndex));
+			renderSelectBarColor(p, (JProgressBar)p.getComponent(1), true, mainWindow.runningTable.getTasks().get(selectIndex));
 			//同步任务表格的选中状态
 			mainWindow.runningTable.setRowSelectionInterval(selectIndex, selectIndex);
 			//切换信息面板tab
@@ -465,20 +471,20 @@ public class TaskImagePanel extends AJPanel {
 		}
 		public void mouseEntered(MouseEvent e) {
 			AJPanel p = (AJPanel)e.getSource();
-			renderSelectBar(p, (JProgressBar)p.getComponent(1), true,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
+			renderSelectBarColor(p, (JProgressBar)p.getComponent(1), true,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
 		}
 
 		public void mouseExited(MouseEvent e) {
 			AJPanel p = (AJPanel)e.getSource();
 			if(selectIndex != Integer.parseInt(p.getName().split("\\|")[1])){
-				renderSelectBar(p, (JProgressBar)p.getComponent(1), false,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
+				renderSelectBarColor(p, (JProgressBar)p.getComponent(1), false,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
 			}else{
-				renderSelectBar(p, (JProgressBar)p.getComponent(1), true,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
+				renderSelectBarColor(p, (JProgressBar)p.getComponent(1), true,  mainWindow.runningTable.getTasks().get(Integer.parseInt(p.getName().split("\\|")[1])));
 			}
 		}
 	};
 	
-	public void renderSelectBar(JPanel p, JProgressBar bar, boolean selected, Task task){
+	public void renderSelectBarColor(JPanel p, JProgressBar bar, boolean selected, Task task){
 		if(selected){
 			bar.setForeground(progressBarSelectedColor);
 			p.setBorder(BorderFactory.createLineBorder(progressBarSelectedColor, 2));

@@ -24,6 +24,7 @@ import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.CursorManager;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
+import org.arong.egdownloader.ui.panel.TaskTagsPanel;
 import org.arong.egdownloader.ui.popmenu.SearchWindowPopMenu;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.window.SearchComicWindow;
@@ -102,9 +103,32 @@ public class SearchTasksTable extends JTable {
 					SearchTask task = tasks.get(row);
 					//是否已创建该任务
 					boolean contains = comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || comicWindow.mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+					
+					//当选择语言选择全部时，标题上显示语言
+					StringBuilder lang = null;
+					if(comicWindow.language.getSelectedIndex() == 0){
+						if(StringUtils.isNotBlank(task.getTags()) && task.getTags().contains("language:")){
+							for(String tag : task.getTags().split(";")){
+								if(tag.contains("language:") && ! tag.contains("translated")){
+									if(lang == null) lang = new StringBuilder();
+									if(TaskTagsPanel.tagscnMap != null && comicWindow.mainWindow.setting.isTagsTranslate()){
+										lang.append(lang.length() > 0 ? "," : "").append(TaskTagsPanel.tagscnMap.get(tag));
+									}else{
+										lang.append(lang.length() > 0 ? "," : "").append(tag.replace("language:", ""));
+									}
+								}
+							}
+						}
+					}
+					
 					tc.setPreferredWidth(700);
 					tc.setMaxWidth(1800);
-					JLabel l = new AJLabel(String.format("<html>%s%s%s%s</html>", (comicWindow.checkNewVersion(task) ? HtmlUtils.redColorHtml("[新版本]") : ""), (contains ? HtmlUtils.redColorHtml("[已存在]") : ""), (task.isFavAuthorOrGroup(comicWindow.mainWindow.setting.getFavTags()) ? "[<font color=red>★</font>]" : ""), value.toString()), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
+					JLabel l = new AJLabel(String.format("<html>%s%s%s%s%s</html>", 
+							lang != null ? HtmlUtils.colorHtml(String.format("[%s]", lang.toString()), "#0719f1") : "", 
+									(comicWindow.checkNewVersion(task) ? HtmlUtils.redColorHtml("[新版本]") : ""), 
+									(contains ? HtmlUtils.redColorHtml("[已存在]") : ""), 
+									(task.isFavAuthorOrGroup(comicWindow.mainWindow.setting.getFavTags()) ? "[<font color=red>★</font>]" : ""), 
+									value.toString()), c, isSelected ? FontConst.Microsoft_BOLD_11 : FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					if(task.getBtUrl() != null){
 						try{
 							l.setIcon(IconManager.getIcon("t"));

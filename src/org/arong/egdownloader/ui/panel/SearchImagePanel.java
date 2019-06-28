@@ -128,14 +128,13 @@ public class SearchImagePanel extends JLabel {
 		flush(task, 0);
 	}
 	
-	public void flushTitle(){
-		
+	public void flushTitle(SearchTask task){
+		this.setText(genText(task));
 	}
 	
 	public void flush(final SearchTask task, final long delay){
 		this.setForeground(Color.WHITE);
-		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://"));
-		if(contains){this.setForeground(Color.RED);}
+		//if(contains){this.setForeground(Color.RED);}
 		this.setText(genText(task));
 		labelId = task.getUrl();//用于标志
 		tips = task.getName() + (StringUtils.isNotBlank(task.getUploader()) ? "[" + task.getUploader() + "]" : "");
@@ -233,9 +232,31 @@ public class SearchImagePanel extends JLabel {
 	}
 	
 	public String genText(SearchTask task){
-		return "<html><small>" + (mainWindow.searchComicWindow.checkNewVersion(task) ? HtmlUtils.redColorHtml("[新]") : "") + HtmlUtils.colorHtml(task.getRating() + "分 ", "#f2e986") +  
-				(StringUtils.isNotBlank(task.getType()) ? 
-						(ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "") +
-						" " + (StringUtils.isBlank(task.getDate()) ? "" : task.getDate().substring(2)) + (StringUtils.isBlank(task.getFilenum()) ? "" : " " + HtmlUtils.colorHtml(task.getFilenum() + "P", "#f2e986")) + "</small></html>";
+		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) ||
+				mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://"));
+		//当选择全部时，面板上显示语言
+		StringBuilder lang = null;
+		if(mainWindow.searchComicWindow.language.getSelectedIndex() == 0){
+			if(StringUtils.isNotBlank(task.getTags()) && task.getTags().contains("language:")){
+				for(String tag : task.getTags().split(";")){
+					if(tag.contains("language:") && ! tag.contains("translated")){
+						if(lang == null) lang = new StringBuilder();
+						if(TaskTagsPanel.tagscnMap != null && mainWindow.setting.isTagsTranslate()){
+							lang.append(lang.length() > 0 ? "," : "").append(TaskTagsPanel.tagscnMap.get(tag));
+						}else{
+							lang.append(lang.length() > 0 ? "," : "").append(tag.replace("language:", ""));
+						}
+					}
+				}
+			}
+		}
+		return String.format("<html><small>%s%s%s%s %s%s%s</small></html>", 
+						contains ? HtmlUtils.redColorHtml("[已建]") : "",
+						mainWindow.searchComicWindow.checkNewVersion(task) ? HtmlUtils.redColorHtml("[新]") : "", 
+						HtmlUtils.colorHtml(task.getRating() + " ", "#f2e986"),
+						StringUtils.isNotBlank(task.getType()) ? (ComponentConst.typeColorMap.get(task.getType().toUpperCase()) == null ? String.format(ComponentConst.typeColorMap.get("other"), task.getType()) : ComponentConst.typeColorMap.get(task.getType().toUpperCase())) : "", 
+						StringUtils.isBlank(task.getDate()) ? "" : task.getDate().substring(2),
+						StringUtils.isBlank(task.getFilenum()) ? "" : " " + HtmlUtils.colorHtml(task.getFilenum() + "P", "#f2e986"), 
+						lang != null ? HtmlUtils.colorHtml(String.format(" %s", lang.toString()), "#e6b5ef") : "");
 	}
 }

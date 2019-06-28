@@ -70,6 +70,7 @@ public class MergeWindow extends JDialog {
 								if(merging){
 									System.out.println("任务合并中...");
 								}else{
+									window.infoTabbedPane.setSelectedComponent(window.consolePanel);
 									merging = true;showMergeInfo();
 									//采集新版本任务信息
 									Task oldtask = (Task)objs[0];
@@ -89,7 +90,7 @@ public class MergeWindow extends JDialog {
 											merging = false;showMergeInfo();
 											return;
 										}
-										if(newtask.getPictures() == null && newtask.getPictures().size() == 0){
+										if(newtask.getPictures() == null || newtask.getPictures().size() == 0){
 											JOptionPane.showConfirmDialog(MergeWindow.this, "任务合并失败：新版本任务图片列表为空！");
 											merging = false;showMergeInfo();
 											return;

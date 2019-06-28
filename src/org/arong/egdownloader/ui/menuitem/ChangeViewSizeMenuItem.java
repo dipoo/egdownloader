@@ -36,8 +36,8 @@ public class ChangeViewSizeMenuItem extends JMenuItem {
 					window.setting.setCoverWidth(100);
 					window.setting.setCoverHeight(144);
 				}else{
-					window.setting.setCoverWidth(250);
-					window.setting.setCoverHeight(360);
+					window.setting.setCoverWidth(350);
+					window.setting.setCoverHeight(480);
 				}
 				this_.setText(this_.getText() + "√");
 				if(window.taskImagePanel != null){

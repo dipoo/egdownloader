@@ -38,7 +38,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang.StringUtils;
-import org.arong.egdownloader.model.ScriptParser;
 import org.arong.egdownloader.model.SearchTask;
 import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.ui.ComponentConst;
@@ -53,6 +52,7 @@ import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.table.SearchTasksTable;
+import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.egdownloader.ui.work.SearchComicWorker;
 import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
@@ -320,7 +320,6 @@ public class SearchComicWindow extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				viewModel = viewModel == 1 ? 2 : 1;
 				mainWindow.setting.setSearchViewModel(viewModel);
-				ScriptParser.searchScriptFile = null;
 				searchBtn.doClick();
 			}
 		}, 0, 0, 60, 30);
@@ -598,7 +597,9 @@ public class SearchComicWindow extends JFrame {
 	}
 	
 	public void showResult2(final String totalPage, final Integer currentPage){
+		boolean first = false;
 		if(picLabels[0] == null){
+			first = true;
 			for(int i = 0; i < 25; i ++){
 				SearchImagePanel coverLabel = new SearchImagePanel(i, mainWindow);
 				picLabels[i] = coverLabel;
@@ -640,10 +641,11 @@ public class SearchComicWindow extends JFrame {
 			final SearchImagePanel coverLabel = picLabels[i];
 			if(!searchTasks.get(i).getUrl().equals(coverLabel.labelId)){
 				coverLabel.flush(searchTasks.get(i), 200 * i);
+			}else{
+				coverLabel.flushTitle(searchTasks.get(i));
 			}
 			ComponentUtil.addComponents(picturePane, coverLabel);
 		}
-		
 		
 		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
 		jScrollBar.setValue(0);//滚动到最前
@@ -652,23 +654,32 @@ public class SearchComicWindow extends JFrame {
 			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
 			mainWindow.searchComicWindow.pager.setVisible(true);
 		}
-		resetPicturePanelHeight();
+		resetPicturePanelHeight(first ? 500 : 100);
 	}
 	public void resetPicturePanelHeight(){
-		try {
-			Thread.sleep(100);
-			//重新计算滚动条
-			int maxheight = 0;
-			for(int i = 0; i < searchTasks.size(); i ++){
-				if(maxheight < picLabels[i].getLocation().getY() + picLabels[i].getHeight()){
-					maxheight = (int)(picLabels[i].getLocation().getY() + picLabels[i].getHeight());
+		resetPicturePanelHeight(100);
+	}
+	public void resetPicturePanelHeight(final long delay){
+		new CommonSwingWorker(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(delay);
+					//重新计算滚动条
+					int maxheight = 0;
+					for(int i = 0; i < searchTasks.size(); i ++){
+						if(maxheight < picLabels[i].getLocation().getY() + picLabels[i].getHeight()){
+							maxheight = (int)(picLabels[i].getLocation().getY() + picLabels[i].getHeight());
+						}
+					}
+					if(picturePane.getPreferredSize().getHeight() != (maxheight + 30d)){
+						picturePane.setPreferredSize(new Dimension(picturePane.getWidth(), maxheight + 30));	
+						picturePane.updateUI();
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
-			picturePane.setPreferredSize(new Dimension(picturePane.getWidth(), maxheight + 30));	
-			picturePane.updateUI();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		}).execute();
 	}
 	public void dispose() {
 		mainWindow.setEnabled(true);

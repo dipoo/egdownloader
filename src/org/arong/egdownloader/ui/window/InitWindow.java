@@ -82,7 +82,8 @@ public class InitWindow extends JWindow {
 	        };
 	        backPanel.setLayout(null);
 			backPanel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
-			JLabel v = new AJLabel(Version.NAME + "v" + Version.VERSION + "." + Version.JARVERSION, Color.WHITE, 0, 10, icon.getIconWidth(), 30);
+			String text = String.format("<html>%s<span style='font-family:Consolas;font-size:12px;'>v%s.%s</span></html>", Version.NAME, Version.VERSION, Version.JARVERSION);
+			JLabel v = new AJLabel(text, Color.WHITE, 0, 10, icon.getIconWidth(), 30);
 			v.setHorizontalAlignment(JLabel.CENTER);
 			v.setFont(FontConst.Microsoft_BOLD_13);
 			textLabel = new AJLabel("程序初始化",Color.WHITE, 0, 100, icon.getIconWidth(), 30);
