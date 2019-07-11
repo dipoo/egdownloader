@@ -1,4 +1,4 @@
-﻿package org.arong.egdownloader.ui.window;
+package org.arong.egdownloader.ui.window;
 
 import java.awt.AWTException;
 import java.awt.Color;
