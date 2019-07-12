@@ -14,7 +14,7 @@ public class InfoTabbedPane extends JTabbedPane {
 		this.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				int index = mainWindow.runningTable.getSelectedRow();
-				if(index>=0){
+				if(index >= 0){
 					Task t = mainWindow.tasks.get(index);
 					flushTab(t);
 				}

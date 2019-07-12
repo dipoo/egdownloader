@@ -367,7 +367,7 @@ public class SettingWindow extends JFrame{
 			//proxyTipLabel =  new AJLabel("提示：测试前请先保存当前配置", Color.BLUE, 200, 230, 300, 30);
 			
 			addComponentsJpanel(proxyPanel, proxyLabel, noRadioButton, yesRadioButton, proxyTypeLabel, proxyIpLabel, httpRadioButton,
-					socksRadioButton, ieRadioButton, proxyIpField, proxyPortLabel, proxyPortField,
+					socksRadioButton/*, ieRadioButton*/, proxyIpField, proxyPortLabel, proxyPortField,
 					proxyUsernameLabel, proxyUsernameField, proxyPwdLabel, proxyPwdField, proxyTestBtn/*, proxyTipLabel*/);
 			
 			settingTabPanel.add("基本配置", basicPanel);
