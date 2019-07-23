@@ -47,7 +47,6 @@ import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskList;
-import org.arong.egdownloader.spider.Proxy;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.ComponentUtil;
 import org.arong.egdownloader.ui.IconManager;
