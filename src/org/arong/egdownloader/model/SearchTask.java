@@ -214,7 +214,7 @@ public class SearchTask {
 	}
 	public String getCoverCacheFileName(){
 		if(url != null){
-			return FileUtil2.filterDir(url.endsWith("/") ? url : url + "/");
+			return FileUtil2.filterDir((url.endsWith("/") ? url : url + "/").replaceAll("e-hentai.org", "exhentai.org"));
 		}
 		return null;
 	}

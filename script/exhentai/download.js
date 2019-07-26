@@ -1,5 +1,5 @@
 var mark = {
-	original : ['https://e-hentai.org/fullimg.php', '">Download original'],	
+	original : ['https://exhentai.org/fullimg.php', '">Download original'],	
     realUrl : ['<img id="img" src="', '" style=']
 };
 

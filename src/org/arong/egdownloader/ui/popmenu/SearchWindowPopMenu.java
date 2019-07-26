@@ -130,7 +130,7 @@ public class SearchWindowPopMenu extends JPopupMenu {
 						}
 						//以封面地址搜索
 						if(StringUtils.isNotBlank(st.getCoverUrl())){
-							mainWindow.localSearchAndSortPanel.keyTextField.setText(String.format("cover:%s", st.getCoverUrl().replaceAll("-jpg_l.jpg", "").replaceAll("https:", "").replaceAll("http:", "")));
+							mainWindow.localSearchAndSortPanel.keyTextField.setText(String.format("cover:%s", st.getCoverUrl().replaceAll("-jpg_l.jpg", "").replaceAll("//exhentai.org", "").replaceAll("//e-hentai.org", "").replaceAll("//ehgt.org", "").replaceAll("https:", "").replaceAll("https:", "").replaceAll("http:", "")));
 							mainWindow.localSearchAndSortPanel.searchBtn.doClick();
 						}
 						Task t = table.getTasks().get(0);//选中第一行

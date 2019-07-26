@@ -2,14 +2,14 @@ var mark = {
 	postedTime : ['Posted:</td><td class="gdt2">', '</td></tr><tr><td class="gdt1">Parent'],
     name : ['<h1 id="gn">', '</h1><h1'],
     subname : ['</h1><h1 id="gj">', '</h1></div>'],
-    uploader : ['://e-hentai.org/uploader/', '</a></div><div id="gdd">', '">'],
-	type : ["document.location='https://e-hentai.org/", 'div></div><div id="gdn">', '">', '</'],//
+    uploader : ['://exhentai.org/uploader/', '</a></div><div id="gdd">', '">'],
+	type : ["document.location='https://exhentai.org/", 'div></div><div id="gdn">', '">', '</'],//
 	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
 	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;'],
 	tagsource:['<div id="taglist">', '</div><div id="tagmenu_act"'],
-	tags:['https://e-hentai.org/tag/', '" class="', 'toggle_tagmenu']
+	tags:['https://exhentai.org/tag/', '" class="', 'toggle_tagmenu']
 };
 
 function interceptFromSource(source, prefix, suffix){
