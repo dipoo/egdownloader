@@ -45,6 +45,7 @@ public class Proxy {
 		if("ie".equals(type_)){
 			useIEProxy = true;
 		}else{
+			useIEProxy = false;
 			if("http".equals(type_)){
 				type = java.net.Proxy.Type.HTTP;
 			}
