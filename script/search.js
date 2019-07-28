@@ -84,6 +84,7 @@ function parse(source, openhttps){
 		var prefix = mark.intercept[1];
 		var i = 0;
 		while(source.indexOf(mark.intercept[0]) != -1){
+			if(i == 25) break;
 			var task = {};
 			task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
 			if(task.name.indexOf(mark.name[2]) != -1){
