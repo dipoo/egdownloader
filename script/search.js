@@ -1,8 +1,8 @@
 var mark = {
     separator : [',', '###'],
 	page : ['Showing', ' ', ' results</p><div id="dms">'],
-	listSource : ['Uploader</th></tr>', '</div></td></tr></table>'],
-	intercept : ['<td class="gl1c glcat">', "pages</div></td></tr>"],
+	listSource : ['Uploader</th></tr>', '</tr></table><table '],
+	intercept : ['<td class="gl1c glcat">', "pages</div></td>"],
 	name : ['<div class="glink">', '</div><div><div class="gt"', '</div><div>&nbsp;</div></a>'],
 	url : [')"><a href="', '"><div class="glink">', ",'", "')"],
 	coverUrl : ['" src="', '" /></div>', 'data-src="', '.jpg" />'],
@@ -10,7 +10,7 @@ var mark = {
 	type : ["document.location='https://e-hentai.org/", '/div></td><td class="gl2c">', '">', '<'],
 	filenum : ['https://e-hentai.org/uploader/', 'pages</div>', '</a></div><div>', ' '],
 	btUrl : ["return popUp('", "', 610, 590)"],
-	uploader : ['e-hentai.org/uploader', 'pages</div></td></tr>', '>', '<'],
+	uploader : ['e-hentai.org/uploader', 'pages</div></td>', '>', '<'],
 	tags : ['<div><div class="gt" ', '</div></div></a></td>', 'title="', '">'],
 	rate_position: ['<div class="ir" style="background-position:', ';opacity:'],
 	rate_mapping: {

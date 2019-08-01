@@ -167,10 +167,12 @@ public class AddFormDialog extends JDialog {
 						if("/".equals(url.substring(url.length() - 1, url.length()))){
 							url = url.substring(0, url.length() - 1);
 						}
-						
+						url = url.replaceAll("exhentai.org", "e-hentai.org");
 						//重复性验证
 						if(! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("https://", "http://")) && 
-								! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("http://", "https://"))){
+								! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("http://", "https://")) &&
+								! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("https://", "http://").replaceAll("e-hentai.org", "exhentai.org")) && 
+								! mainWindow.taskDbTemplate.exsits("url", url.replaceAll("http://", "https://").replaceAll("e-hentai.org", "exhentai.org"))){
 							
 							if(((EgDownloaderWindow)this_.mainWindow).creatingWindow == null){
 								((EgDownloaderWindow)this_.mainWindow).creatingWindow = new CreatingWindow(mainWindow);
