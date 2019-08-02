@@ -38,7 +38,8 @@ public class HttpsUtils {
         private static HttpsURLConnection getHttpsConnection(String urlStr, Proxy proxy) throws IOException {
                 URL url = new URL(urlStr);
                 System.out.println(urlStr + ",proxy:" + proxy);
-                System.setProperty("https.protocols", "TLSv1");
+                System.setProperty("https.protocols", "TLSv1.2,TLSv1.1,SSLv3");
+                System.setProperty("jsse.enableSNIExtension", "false");
                 HttpsURLConnection conn = null;
                 if(proxy != null){
                 	conn = (HttpsURLConnection) url.openConnection(proxy);
@@ -54,7 +55,7 @@ public class HttpsUtils {
 	                // 不验证服务器主机名和证书
 	                conn.setHostnameVerifier(new IgnoreHostnameVerifier());
 	                TrustManager[] tm = { new X509TrustManager4None() };
-	                SSLContext sslContext = SSLContext.getInstance("SSL");
+	                SSLContext sslContext = SSLContext.getInstance("TLS");
 	                sslContext.init(null, tm, new java.security.SecureRandom());
 	                
 	                SSLSocketFactory ssf = sslContext.getSocketFactory();

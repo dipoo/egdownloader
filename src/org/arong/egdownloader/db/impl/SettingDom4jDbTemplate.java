@@ -176,6 +176,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		ele.addAttribute("tagsTranslate", t.isTagsTranslate() + "");
 		ele.addAttribute("maxThread", t.getMaxThread() + "");
 		ele.addAttribute("viewModel", t.getViewModel() + "");
+		ele.addAttribute("siteModel", t.getSiteModel() + "");
 		ele.addAttribute("searchViewModel", t.getSearchViewModel() + "");
 		ele.addAttribute("skin", t.getSkin());
 		
@@ -219,6 +220,7 @@ public class SettingDom4jDbTemplate implements DbTemplate<Setting> {
 		t.setTagsTranslate("true".equals(ele.attributeValue("tagsTranslate")) ? true : "true".equals(ele.attributeValue("tagsTranslate")));
 		t.setMaxThread(ele.attributeValue("maxThread") == null ? 0 : Integer.parseInt(ele.attributeValue("maxThread")));
 		t.setViewModel(ele.attributeValue("viewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("viewModel")));
+		t.setSiteModel(ele.attributeValue("siteModel") == null ? 1 : Integer.parseInt(ele.attributeValue("siteModel")));
 		t.setSearchViewModel(ele.attributeValue("searchViewModel") == null ? 1 : Integer.parseInt(ele.attributeValue("searchViewModel")));
 		t.setLoginUrl(ele.attributeValue("loginUrl") == null ? t.getLoginUrl() : ele.attributeValue("loginUrl"));
 		if(ele.attributeValue("tags") != null){

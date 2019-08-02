@@ -33,7 +33,7 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 				cover = new File(task.getCoverCachePath());
 				if(cover == null || !cover.exists()){
 					try {
-						Thread.sleep(300);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {}
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
@@ -53,12 +53,13 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 											is = (InputStream)streamAndLength[0];
 											FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
 										}catch(Exception e1){
-											
+											e1.printStackTrace();
 										}finally{
 											if(is != null){
 												try{is.close();}catch(Exception e1){}
 											}
 										}
+										e.printStackTrace();
 									}finally{
 										if(is != null){
 											try{is.close();}catch(Exception e){}

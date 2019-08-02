@@ -86,6 +86,7 @@ public class SearchComicWindow extends JFrame {
 	public JButton favTagsBtn;
 	public JButton tagBtn;
 	public JButton changeViewBtn;
+	public JButton changeSiteBtn;
 	private JButton clearCacheBtn;
 	private JButton historyBtn;
 	public SearchTasksTable searchTable;
@@ -107,17 +108,25 @@ public class SearchComicWindow extends JFrame {
 	public String page = "1";
 	public SearchWindowPopMenu popMenu;
 	public int viewModel = 2;//2为图片浏览；1为表格浏览
+	public int siteModel = 1;//1为里站；2为表站
 	public int selectTaskIndex = 0;//操作的任务索引
 	public int f_cats = 0; //ex分类参数
 	public String f_sto = ""; //ex是否具有BT文件参数
 	public SearchComicWorker searchComicWorker;
+	public Map<Integer, String> siteModelDescMap = new HashMap<Integer, String>();
+	public String windowTitle = "搜索%s漫画";
 	
 	public SearchComicWindow(final EgDownloaderWindow mainWindow){
+		
+		siteModelDescMap.put(1, "里站");
+		siteModelDescMap.put(2, "表站");
+		
 		final SearchComicWindow this_ = this;
 		this.mainWindow = mainWindow;
 		viewModel = mainWindow.setting.getSearchViewModel();
+		siteModel = mainWindow.setting.getSiteModel();
 		this.setSize(ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT);
-		this.setTitle("搜索里站漫画");
+		this.setTitle(String.format(windowTitle, siteModelDescMap.get(siteModel)));
 		this.setIconImage(IconManager.getIcon("eh").getImage());
 		this.setLayout(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -323,8 +332,24 @@ public class SearchComicWindow extends JFrame {
 				searchBtn.doClick();
 			}
 		}, 0, 0, 60, 30);
+		//切换网站
+		changeSiteBtn = new AJButton(String.format("切换%s", siteModelDescMap.get(siteModel == 1 ? 2 : 1)), "",  new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				changeSiteBtn.setText(String.format("切换%s", siteModelDescMap.get(siteModel)));
+				siteModel = siteModel == 1 ? 2 : 1;
+				mainWindow.setting.setSiteModel(siteModel);
+				setTitle(String.format(windowTitle, siteModelDescMap.get(siteModel)));
+				
+				//清理缓存
+				datas.clear();
+				pageInfo.clear();
+				keyPage.clear();
+				
+				searchBtn.doClick();
+			}
+		}, 0, 0, 60, 30);
 		
-		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn);
+		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn, changeSiteBtn);
 		/* 分类条件 end*/
 		
 		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
@@ -464,7 +489,7 @@ public class SearchComicWindow extends JFrame {
 			
 			key = k;
 			currentPage = page;
-			String exurl = "https://exhentai.org/?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
+			String exurl = (siteModel == 1 ? "https://exhentai.org/" : "https://e-hentai.org/") + "?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
 					(Integer.parseInt(page) - 1) + "&f_cats=" + f_cats + "&f_sto=" + f_sto;
 			if(!keyText.equals("")){
 				//过滤key

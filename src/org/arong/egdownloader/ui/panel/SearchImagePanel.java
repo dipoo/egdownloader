@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.SearchTask;
+import org.arong.egdownloader.model.TaskList;
 import org.arong.egdownloader.ui.ComponentConst;
 import org.arong.egdownloader.ui.FontConst;
 import org.arong.egdownloader.ui.IconManager;
@@ -71,7 +72,7 @@ public class SearchImagePanel extends JLabel {
 						mainWindow.searchComicWindow.popMenu = new SearchWindowPopMenu(mainWindow);
 					}
 					SearchTask task = mainWindow.searchComicWindow.searchTasks.get(mainWindow.searchComicWindow.selectTaskIndex);
-					boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) || mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().substring(0, task.getUrl().length() - 1).replaceAll("https://", "http://"));
+					boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(TaskList.getCacheKey(task.getUrl()));
 					if(contains){
 						mainWindow.searchComicWindow.popMenu.openPictureItem.setVisible(true);
 						mainWindow.searchComicWindow.popMenu.downItem.setVisible(false);
@@ -232,8 +233,7 @@ public class SearchImagePanel extends JLabel {
 	}
 	
 	public String genText(SearchTask task){
-		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://")) ||
-				mainWindow.tasks.getTaskUrlMap().containsKey(task.getUrl().replaceAll("https://", "http://"));
+		boolean contains = mainWindow.tasks.getTaskUrlMap().containsKey(TaskList.getCacheKey(task.getUrl()));
 		//当选择全部时，面板上显示语言
 		StringBuilder lang = null;
 		if(mainWindow.searchComicWindow.language.getSelectedIndex() == 0){

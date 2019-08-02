@@ -19,6 +19,7 @@ public class Setting {
 	private boolean downloadOriginal = true;//下载原图
 	private boolean saveDirAsSubname = false;//以子名称作为保存目录
 	private int viewModel = 1;//默认显示模式
+	private int siteModel = 1;//默认搜索网站（1：里站2：表站）
 	private int searchViewModel = 1;//默认搜索显示模式
 	private boolean showAsSubname = true;//以子名称展示
 	private boolean tagsTranslate = true;//标签是否汉化显示
@@ -313,6 +314,12 @@ public class Setting {
 	}
 	public void setUseCoverReplaceDomain(boolean useCoverReplaceDomain) {
 		this.useCoverReplaceDomain = useCoverReplaceDomain;
+	}
+	public int getSiteModel() {
+		return siteModel;
+	}
+	public void setSiteModel(int siteModel) {
+		this.siteModel = siteModel;
 	}
 	
 }

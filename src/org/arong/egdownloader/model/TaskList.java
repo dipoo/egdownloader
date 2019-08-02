@@ -58,7 +58,7 @@ public class TaskList<T> extends ArrayList<T> {
 	public boolean add(T e) {
 		if(e instanceof Task){
 			Task t = (Task)e;
-			taskUrlMap.put(t.getUrl().replaceAll("https://", "http://").replaceAll("exhentai.org", "e-hentai.org"), 0);
+			taskUrlMap.put(getCacheKey(t.getUrl()), 0);
 			addCoverToken(t);
 		}
 		changeSupport.firePropertyChange("", null, null);
@@ -68,7 +68,7 @@ public class TaskList<T> extends ArrayList<T> {
 	public boolean remove(Object o) {
 		if(o instanceof Task){
 			Task t = (Task)o;
-			taskUrlMap.remove(t.getUrl().replaceAll("https://", "http://").replaceAll("exhentai.org", "e-hentai.org"));
+			taskUrlMap.remove(getCacheKey(t.getUrl()));
 			removeCoverToken(t);
 		}
 		changeSupport.firePropertyChange("", null, null);
@@ -82,7 +82,7 @@ public class TaskList<T> extends ArrayList<T> {
 				T o = it.next();
 				if(o instanceof Task){
 					Task t = (Task)o;
-					taskUrlMap.put(t.getUrl().replaceAll("https://", "http://").replaceAll("exhentai.org", "e-hentai.org"), 0);
+					taskUrlMap.put(getCacheKey(t.getUrl()), 0);
 					addCoverToken(t);
 				}
 			}
@@ -99,7 +99,7 @@ public class TaskList<T> extends ArrayList<T> {
 				T o = it.next();
 				if(o instanceof Task){
 					Task t = (Task)o;
-					taskUrlMap.put(t.getUrl().replaceAll("https://", "http://").replaceAll("exhentai.org", "e-hentai.org"), 0);
+					taskUrlMap.put(getCacheKey(t.getUrl()), 0);
 					addCoverToken(t);
 				}
 			}
@@ -114,7 +114,7 @@ public class TaskList<T> extends ArrayList<T> {
 				Object o = it.next();
 				if(o instanceof Task){
 					Task t = (Task)o;
-					taskUrlMap.remove(t.getUrl().replaceAll("https://", "http://").replaceAll("exhentai.org", "e-hentai.org"));
+					taskUrlMap.remove(getCacheKey(t.getUrl()));
 					removeCoverToken(t);
 				}
 			}
@@ -126,10 +126,17 @@ public class TaskList<T> extends ArrayList<T> {
 	public void add(int index, T e) {
 		if(e instanceof Task){
 			Task t = (Task)e;
-			taskUrlMap.put(t.getUrl().replaceAll("https://", "http://").replaceAll("exhentai.org", "e-hentai.org"), 0);
+			taskUrlMap.put(getCacheKey(t.getUrl()), 0);
 			addCoverToken(t);
 		}
 		changeSupport.firePropertyChange("", null, null);
 		super.add(index, e);
+	}
+	
+	public static String getCacheKey(String url){
+		if(StringUtils.isNotBlank(url)){
+			return url.replaceAll("https://", "http://").replaceAll("exhentai.org", "").replaceAll("e-hentai.org", "");
+		}
+		return url;
 	}
 }
