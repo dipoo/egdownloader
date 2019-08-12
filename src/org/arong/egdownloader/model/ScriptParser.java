@@ -384,10 +384,23 @@ public class ScriptParser {
 			param.put("down_original", task.isOriginal());//是否下载原图
 			
 			url = parseJsScript(param, getDownloadScriptFile(setting.getDownloadScriptPath())).toString();
+			if(StringUtils.isBlank(url)){
+				if(StringUtils.isNotBlank(source)){
+					String error = null;
+					if(source.contains(ServerError.IP_BANED.getEerror())){
+						error = ServerError.parseServerError(ServerError.IP_BANED);
+					}else if(source.contains(ServerError.QUOTA_EXCEEDED.getEerror())){
+						error = ServerError.parseServerError(ServerError.QUOTA_EXCEEDED);
+					}
+					if(error != null){
+						throw new ServerException(error);
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Tracker.println(ScriptParser.class, task.getName() + ":getdownloadUrl异常,请检查" + setting.getDownloadScriptPath() + "脚本是否出现问题！");
-			return null;
+			throw e;
 		}
 		return url;
 	}

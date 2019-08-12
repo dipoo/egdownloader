@@ -14,6 +14,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.model.Picture;
 import org.arong.egdownloader.model.ScriptParser;
+import org.arong.egdownloader.model.ServerException;
 import org.arong.egdownloader.model.Setting;
 import org.arong.egdownloader.model.Task;
 import org.arong.egdownloader.model.TaskStatus;
@@ -196,7 +197,16 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 						continue;
 					}catch (WebClientException e) {
 						//碰到网络异常，任务暂停
-						Tracker.println("当前无网络，请检查网络设置是否正确");
+						Tracker.println("当前网络异常，请检查网络设置是否正确");
+						task.setStatus(TaskStatus.STOPED);
+						table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+						//开始任务等待列表中的第一个任务
+						table.startWaitingTask();
+						e.printStackTrace();
+						return null;
+					}catch (ServerException e) {
+						//碰到服务器异常，任务暂停
+						Tracker.println(HtmlUtils.redColorHtml(String.format("%s，%s停止下载", e.getMessage(), task.getDisplayName())));
 						task.setStatus(TaskStatus.STOPED);
 						table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
 						//开始任务等待列表中的第一个任务
