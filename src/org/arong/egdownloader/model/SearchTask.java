@@ -35,6 +35,8 @@ public class SearchTask {
 	
 	private int coverLength;//封面字节大小
 	
+	private boolean coverDownloadFail; //封面是否下载失败
+	
 	public String getAuthor() {
 		return author;
 	}
@@ -217,5 +219,13 @@ public class SearchTask {
 			return FileUtil2.filterDir((url.endsWith("/") ? url : url + "/").replaceAll("e-hentai.org", "exhentai.org").replaceAll("https:", "http:"));
 		}
 		return null;
+	}
+
+	public boolean isCoverDownloadFail() {
+		return coverDownloadFail;
+	}
+
+	public void setCoverDownloadFail(boolean coverDownloadFail) {
+		this.coverDownloadFail = coverDownloadFail;
 	}
 }

@@ -2,6 +2,7 @@ package org.arong.egdownloader.ui.work;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -20,6 +21,7 @@ import org.arong.util.FileUtil2;
 public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 	private List<SearchTask> tasks;
 	private EgDownloaderWindow mainWindow;
+	private int runningCount = 0;
 	public DownloadCacheCoverWorker(List<SearchTask> tasks, EgDownloaderWindow mainWindow){
 		this.mainWindow = mainWindow;
 		this.tasks = tasks;
@@ -33,8 +35,11 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 				cover = new File(task.getCoverCachePath());
 				if(cover == null || !cover.exists()){
 					try {
-						Thread.sleep(1000);
+						while(runningCount > 3){
+							Thread.sleep(1000);
+						}
 					} catch (InterruptedException e) {}
+					runningCount ++;
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							new CommonSwingWorker(new Runnable() {
@@ -45,7 +50,11 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 										task.setCoverLength((Integer) streamAndLength[1]);
 										is = (InputStream)streamAndLength[0];
 										FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
+										runningCount --;
 									}catch(Exception e){
+										try {
+											Thread.sleep(2000);
+										} catch (InterruptedException e1) {}
 										//最多下两次
 										try{
 											Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 20 * 1000);
@@ -54,7 +63,9 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 											FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
 										}catch(Exception e1){
 											e1.printStackTrace();
+											task.setCoverDownloadFail(true);
 										}finally{
+											runningCount --;
 											if(is != null){
 												try{is.close();}catch(Exception e1){}
 											}

@@ -46,6 +46,7 @@ public class IconManager {
 	private static ImageIcon rightImage;
 	private static ImageIcon zipImage;
 	private static ImageIcon previewImage;
+	private static ImageIcon failImage;
 	
 	private static ImageIcon ehImage;
 	private static ImageIcon tImage;
@@ -236,6 +237,11 @@ public class IconManager {
 				initImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "init.jpg"));
 			}
 			return initImage;
+		}else if("fail".equals(name)){
+			if(failImage == null){
+				failImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "fail.png"));
+			}
+			return failImage;
 		}else if("preview".equals(name)){
 			if(previewImage == null){
 				previewImage = new ImageIcon(IconManager.class.getResource(ComponentConst.ICON_PATH + "preview.png"));

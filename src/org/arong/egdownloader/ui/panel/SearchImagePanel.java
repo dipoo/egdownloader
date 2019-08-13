@@ -167,6 +167,14 @@ public class SearchImagePanel extends JLabel {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {}
+						if(task.isCoverDownloadFail()){
+							icon = IconManager.getIcon("fail");
+							this_.setSize(36, 36);
+							icon.getImage().flush();
+							this_.setIcon(icon);
+							mainWindow.searchComicWindow.resetPicturePanelHeight();
+							return;
+						}
 					}
 					
 					i = 1;
@@ -176,6 +184,14 @@ public class SearchImagePanel extends JLabel {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {}
+						if(task.isCoverDownloadFail()){
+							icon = IconManager.getIcon("fail");
+							this_.setSize(36, 36);
+							icon.getImage().flush();
+							this_.setIcon(icon);
+							mainWindow.searchComicWindow.resetPicturePanelHeight();
+							return;
+						}
 						cover = new File(path);
 					}
 					
