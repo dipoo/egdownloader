@@ -427,8 +427,9 @@ public class WebClient {
         String nURL = (urlString.startsWith("http://") || urlString
                 .startsWith("https://")) ? urlString : ("http:" + urlString)
                 .intern();
-        //nURL = nURL.replaceAll("http://exhentai.org", "https://e-hentai.org").replaceAll("https://exhentai.org", "https://e-hentai.org");
-        nURL = nURL.replaceAll("http://", "https://");
+        if(nURL.contains("hentai.org")){
+        	nURL = nURL.replaceAll("http://", "https://");
+        }
         String method = "GET";
         String post = null;
         String digest = null;

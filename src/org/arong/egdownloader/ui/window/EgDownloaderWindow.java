@@ -62,6 +62,7 @@ import org.arong.egdownloader.ui.menuitem.ClearConsoleMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenLogMenuItem;
 import org.arong.egdownloader.ui.menuitem.OpenRootMenuItem;
 import org.arong.egdownloader.ui.menuitem.ResetMenuItem;
+import org.arong.egdownloader.ui.menuitem.RestartMenuItem;
 import org.arong.egdownloader.ui.menuitem.StartAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.StopAllTaskMenuItem;
 import org.arong.egdownloader.ui.menuitem.UpdateAllNullTagsMenuItem;
@@ -337,7 +338,9 @@ public class EgDownloaderWindow extends JFrame {
 		operaMenu.add(new ChangeViewMenuItem(" 切换视图", this));
 		/*operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));*/
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
-		
+		if(ComponentConst.runByExe4j){
+			operaMenu.add(new RestartMenuItem(" 重启下载器", this));
+		}
 		
 		// 菜单：控制台
 		JMenu consoleMenu = new AJMenu(ComponentConst.CONSOLE_MENU_TEXT,

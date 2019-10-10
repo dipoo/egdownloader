@@ -66,6 +66,11 @@ public class InitWindow extends JWindow {
 			if(ComponentConst.osname == null){
 				ComponentConst.osname = "Linux";
 			}
+			//是否为exe4j
+			if(System.getProperties().containsKey("exe4j.launchName")){
+				ComponentConst.runByExe4j = true;
+				ComponentConst.runExe4jLaunchName = System.getProperties().getProperty("exe4j.launchName");
+			}
 			
 			final ImageIcon icon = IconManager.getIcon("init");
 			this.setSize(icon.getIconWidth(), icon.getIconHeight());

@@ -44,7 +44,12 @@ import org.arong.egdownloader.ui.work.interfaces.IListenerTask;
 public class TestProxyWindow extends JDialog{
 
 	private static final long serialVersionUID = 1922141062996395003L;
-	
+	/**
+	 * http://ip-api.com/json
+	 * https://ip.seeip.org/geoip
+	 * https://ip.nf/me.json
+	 * @param setting
+	 */
 	public TestProxyWindow(final Setting setting){
 		this.setTitle("代理测试");
 		this.setSize(600, 460);
@@ -52,7 +57,7 @@ public class TestProxyWindow extends JDialog{
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		JLabel urlLabel = new AJLabel("测试地址:", Color.BLUE, 10, 15, 60, 30);
-		final JTextField urlField = new AJTextField("http://ip.catr.cn/", "", 70, 15, 435, 30);//http://www.ip111.cn/
+		final JTextField urlField = new AJTextField("http://ip-api.com/json", "", 70, 15, 435, 30);//http://www.ip111.cn/
 		JLabel typeLabel = new AJLabel("编码类型:", Color.BLUE, 10, 55, 60, 30);
 		ButtonGroup buttonGroup = new ButtonGroup();
 		final JRadioButton rb1 = new JRadioButton("UTF-8", true);
@@ -95,7 +100,7 @@ public class TestProxyWindow extends JDialog{
 								try{
 									result = WebClient.getRequestUseJavaWithCookie(url, rb1.isSelected() ? rb1.getText() : rb2.getText(), null, 10 * 1000); 
 									if(StringUtils.isNotBlank(result)){
-										boolean html = true;String source = "";
+										boolean html = true;String source = result;
 										if(result.toLowerCase().contains("<body>")){
 											source = Spider.getTextFromSource(result.toLowerCase(), "<body>", "</body>");
 											source = filterImg(source);

@@ -89,6 +89,9 @@ public final class ComponentConst {
 	
 	public static String osname;//操作系统名称
 	
+	public static boolean runByExe4j;//是否以exe4j方式运行
+	public static String runExe4jLaunchName;//以exe4j方式运行的程序路径
+	
 	public static String EG_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/egversion";
 	public static String SCRIPT_CREATE_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";
 	public static String SCRIPT_COLLECT_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/collectPicture.js";
