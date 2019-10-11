@@ -26,7 +26,12 @@ public class Main {
 	private static int iPort = 50009;
 
 	public static void main(String[] args) {
-
+		try{
+			//删除windows计划任务
+			Runtime.getRuntime().exec(String.format("cmd.exe /c schtasks /delete /tn %s /F", ComponentConst.RESTART_PLAN_TASK_NAME));
+		}catch(Exception e){}
+		
+		
 		Thread thread = null; // 启动服务器的线程
 		try {
 			// 连接服务器

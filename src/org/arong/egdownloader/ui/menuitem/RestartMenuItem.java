@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JMenuItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.ui.ComponentConst;
+import org.arong.egdownloader.ui.IconManager;
 import org.arong.egdownloader.ui.window.EgDownloaderWindow;
+import org.arong.egdownloader.ui.window.RestartTipsWindow;
+import org.arong.egdownloader.ui.work.CommonSwingWorker;
 import org.arong.util.FileUtil2;
 /**
  * 重启
@@ -23,62 +26,46 @@ public class RestartMenuItem extends JMenuItem {
 
 	public RestartMenuItem(String text, final EgDownloaderWindow window){
 		super(text);
-		//this.setIcon(IconManager.getIcon("folder"));
+		this.setIcon(IconManager.getIcon("task"));
 		this.setForeground(new Color(0,0,85));
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(StringUtils.isNotBlank(ComponentConst.runExe4jLaunchName)){
 					try {
-						System.out.println("重启下载器：" + ComponentConst.runExe4jLaunchName);
-						try {
-							Thread.sleep(3000);
-							Process proc = Runtime.getRuntime().exec("cmd.exe /c " + ComponentConst.runExe4jLaunchName);
-							FileUtil2.storeStream("data", "11.log", proc.getInputStream());
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+						window.setVisible(false);
+						new RestartTipsWindow();
+						Calendar calendar = Calendar.getInstance();
+						calendar.add(Calendar.MINUTE, 1); //十秒之后重启
+						String task_create = String.format("cmd.exe /c schtasks /create /tn %s /tr \"%s\" /sc once /st \"%s\"", ComponentConst.RESTART_PLAN_TASK_NAME, 
+								ComponentConst.runExe4jLaunchName, new SimpleDateFormat("HH:mm:ss").format(calendar.getTime()));
+						Process proc = Runtime.getRuntime().exec(task_create);
+						System.out.println("重启下载器：" + task_create);
+						FileUtil2.storeStream("data", "restart.log", proc.getInputStream());
+						final int se = 60 - calendar.get(Calendar.SECOND);
+						if(se > 5){
+							new CommonSwingWorker(new Runnable() {
+								public void run() {
+									try {
+										Thread.sleep((se - 3) * 1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									} finally{
+										System.exit(0);
+									}
+								}
+							}).execute();
+						}else{
+							System.exit(0);
 						}
-						//startProgram("E:\\zhangshaorong\\soft\\PanDownload\\PanDownload.exe"/*ComponentConst.runExe4jLaunchName*/);
-						/*Desktop.getDesktop().open(new File(ComponentConst.runExe4jLaunchName));*/
 					} catch (IOException e) {
 						e.printStackTrace();
 						System.out.println("重启失败：" + e.getMessage());
+						System.exit(0);
 					}
-					/*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-						public void run() {
-							try {
-								System.out.println("重启下载器：" + ComponentConst.runExe4jLaunchName);
-								Process proc = Runtime.getRuntime().exec("cmd.exe /c " + ComponentConst.runExe4jLaunchName);
-								FileUtil2.storeStream("data", "11.log", proc.getInputStream());
-							} catch (IOException e) {
-								e.printStackTrace();
-								System.out.println("重启失败：" + e.getMessage());
-							}
-						}
-					}));*/
-					System.exit(0);
 				}else{
 					System.out.println("当前环境不支持重启。");
 				}
 			}
 		});
 	}
-	
-	public static void startProgram(String programPath) throws IOException {  
-	    if (StringUtils.isNotBlank(programPath)) {  
-	        try {  
-	            String programName = programPath.substring(programPath.lastIndexOf("/") + 1, programPath.lastIndexOf("."));  
-	            List<String> list = new ArrayList<String>();  
-	            list.add("cmd.exe");  
-	            list.add("/c");  
-	            list.add("start");  
-	            list.add("\"" + programName + "\"");  
-	            list.add("\"" + programPath + "\"");  
-	            ProcessBuilder pBuilder = new ProcessBuilder(list);  
-	            pBuilder.start();  
-	        } catch (Exception e) {  
-	            e.printStackTrace();  
-	            System.out.println("应用程序：" + programPath + "不存在！");  
-	        }  
-	    }  
-	}  
 }

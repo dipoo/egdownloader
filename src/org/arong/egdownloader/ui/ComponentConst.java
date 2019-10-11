@@ -91,6 +91,7 @@ public final class ComponentConst {
 	
 	public static boolean runByExe4j;//是否以exe4j方式运行
 	public static String runExe4jLaunchName;//以exe4j方式运行的程序路径
+	public final static String RESTART_PLAN_TASK_NAME = Version.NAME + "_restart_task";
 	
 	public static String EG_VERSION_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/egversion";
 	public static String SCRIPT_CREATE_URL = "http://raw.githubusercontent.com/dipoo/egdownloader/master/script/createTask.js";

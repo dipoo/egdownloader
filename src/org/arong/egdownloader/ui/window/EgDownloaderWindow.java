@@ -133,6 +133,7 @@ public class EgDownloaderWindow extends JFrame {
 	public TaskTagsPanel taskTagsPanel;
 	public PicturesInfoPanel picturesInfoPanel;
 	public LocalSearchAndSortPanel localSearchAndSortPanel;
+	public RestartMenuItem restartMenuItem;
 	
 	
 	public Setting setting;
@@ -339,7 +340,8 @@ public class EgDownloaderWindow extends JFrame {
 		/*operaMenu.add(new SimpleSearchMenuItem(" 本地搜索", this));*/
 		operaMenu.add(new OpenRootMenuItem(" 打开根目录", this));
 		if(ComponentConst.runByExe4j){
-			operaMenu.add(new RestartMenuItem(" 重启下载器", this));
+			restartMenuItem = new RestartMenuItem(" 重启下载器", this);
+			operaMenu.add(restartMenuItem);
 		}
 		
 		// 菜单：控制台
@@ -456,8 +458,9 @@ public class EgDownloaderWindow extends JFrame {
 			});
 		    final JMenuItem searchItem = new JMenuItem("搜索");
 		    final JMenuItem settingItem = new JMenuItem("配置");
+		    final JMenuItem restartItem = ComponentConst.runByExe4j ? new JMenuItem("重启") : null;
 		    final JMenuItem exitItem = new JMenuItem("退出");
-		    ComponentUtil.addComponents(trayMenu, searchItem, settingItem, exitItem);
+		    ComponentUtil.addComponents(trayMenu, searchItem, settingItem, restartItem, exitItem);
 		    exitItem.addActionListener(new ActionListener() {
 			    public void actionPerformed(ActionEvent e) {
 					//保存数据
@@ -465,6 +468,13 @@ public class EgDownloaderWindow extends JFrame {
 					System.exit(0);
 			    }
 		    });
+		    if(restartItem != null){
+		    	restartItem.addActionListener(new ActionListener() {
+				    public void actionPerformed(ActionEvent e) {
+				    	restartMenuItem.doClick();
+				    }
+			    });
+		    }
 		    settingItem.addActionListener(new ActionListener() {
 			    public void actionPerformed(ActionEvent e) {
 			    	if (mainWindow.settingWindow == null) {
@@ -640,6 +650,7 @@ public class EgDownloaderWindow extends JFrame {
 					});
 					minTips.getContentPane().add(tips);
 					minTips.toFront();
+					minTips.setAlwaysOnTop(true);
 					minTips.requestFocus();
 					minTips.setVisible(true);
 					Timer t = new Timer();

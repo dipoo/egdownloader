@@ -100,6 +100,7 @@ public class InitWindow extends JWindow {
 			textLabel.setForeground(Color.WHITE);
 			this.setVisible(true);
 			this.toFront();
+			this.setAlwaysOnTop(true);
 			textLabel.setText("读取配置数据");
 			//检测数据目录是否存在,不存在则创建一个
 			File data_path = new File(ComponentConst.getXmlDirPath());

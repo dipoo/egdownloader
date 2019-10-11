@@ -57,6 +57,7 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 				System.out.println(String.format("备份文件%s至%s", oldjar.getPath(), bakPath + jarName));
 				FileUtil2.copyFile(oldjar.getPath(), bakPath + jarName);
 				System.out.println(String.format("下载文件至%s", oldjar.getParent() + File.separator + tmpjarName));
+				System.out.println("请耐心等候...");
 				//保存
 				int fsize = FileUtil2.storeStream(oldjar.getParent(), tmpjarName, is);
 				if(fsize != totalLength){
@@ -67,7 +68,10 @@ public class JarUpdateWorker extends SwingWorker<Void, Void>{
 					FileUtil2.copyByte(tmpfile, oldjar);
 					System.out.println(String.format("删除临时文件%s", tmpjarName));
 					FileUtil2.deleteFile(tmpfile);
-					JOptionPane.showMessageDialog(null, "jar文件更新成功，重启后生效。");
+					int r = JOptionPane.showConfirmDialog(null, "jar文件更新成功，重启后下载器后生效，是否立即重启？", "更新完成", JOptionPane.YES_NO_OPTION);
+					if(r == JOptionPane.OK_OPTION){
+						mainWindow.restartMenuItem.doClick();
+					}
 				}
 			}
 		}catch(Exception e1) {
