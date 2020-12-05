@@ -53,6 +53,7 @@ import org.arong.egdownloader.ui.swing.AJPager;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
+import org.arong.egdownloader.ui.work.DownloadCacheCoverWorker;
 import org.arong.egdownloader.ui.work.SearchComicWorker;
 import org.arong.util.DateUtil;
 import org.arong.util.FileUtil2;
@@ -480,6 +481,8 @@ public class SearchComicWindow extends JFrame {
 			}
 			totalLabel.setText(keyPage.get(k).replace("共搜索到", HtmlUtils.redColorHtml("[缓存]") + "共搜索到"));
 			hideLoading();
+			//下载封面线程
+			new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
 		}else{
 			if(keyChange){
 				//重置页数

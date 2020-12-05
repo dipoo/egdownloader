@@ -2,7 +2,6 @@ package org.arong.egdownloader.ui.work;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -35,8 +34,8 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 				cover = new File(task.getCoverCachePath());
 				if(cover == null || !cover.exists()){
 					try {
-						while(runningCount > 3){
-							Thread.sleep(1000);
+						while(runningCount > 2){
+							Thread.sleep(2000);
 						}
 					} catch (InterruptedException e) {}
 					runningCount ++;

@@ -173,6 +173,7 @@ public class SearchImagePanel extends JLabel {
 							icon.getImage().flush();
 							this_.setIcon(icon);
 							mainWindow.searchComicWindow.resetPicturePanelHeight();
+							task.setCoverDownloadFail(false);
 							return;
 						}
 					}
@@ -190,6 +191,7 @@ public class SearchImagePanel extends JLabel {
 							icon.getImage().flush();
 							this_.setIcon(icon);
 							mainWindow.searchComicWindow.resetPicturePanelHeight();
+							task.setCoverDownloadFail(false);
 							return;
 						}
 						cover = new File(path);
