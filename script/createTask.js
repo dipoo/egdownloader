@@ -4,7 +4,7 @@ var mark = {
     subname : ['</h1><h1 id="gj">', '</h1></div>'],
     uploader : ['hentai.org/uploader/', '</a></div><div id="gdd">', '">'],
 	type : ["document.location='https://e", 'div></div><div id="gdn">', '">', '</'],//
-	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>'],
+	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>', ') no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
 	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
 	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;'],
@@ -51,6 +51,9 @@ function parse(source){
 	task.subname = interceptFromSource(source, mark.subname[0], mark.subname[1]);
 	task.uploader = interceptFromSource(source, mark.uploader[0], mark.uploader[1]).split(mark.uploader[2])[0];
 	task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]).replace("https://ehgt.org", "http://ehgt.org");
+	if(task.coverUrl == ''){
+		task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[2]).replace("https://ehgt.org", "http://ehgt.org");
+	}
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
 	task.type = interceptFromSource(task.type, mark.type[2], mark.type[3]);
 	task.total = parseInt(trim(interceptFromSource(source, mark.total[0], mark.total[1])));
