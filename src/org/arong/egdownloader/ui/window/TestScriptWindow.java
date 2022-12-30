@@ -59,7 +59,7 @@ public class TestScriptWindow extends JDialog{
 		downloadCb.setBounds(360, 55, 30, 30);
 		JLabel seLabel = new AJLabel("搜索列表", Color.BLACK, 400, 55, 70, 30);
 		final JCheckBox searchCb = new JCheckBox("", true);
-		searchCb.setBounds(420, 55, 30, 30);
+		searchCb.setBounds(480, 55, 30, 30);
 		final JTextArea resultArea = new AJTextArea();
 		resultArea.setEditable(false);
 		resultArea.setAutoscrolls(true);

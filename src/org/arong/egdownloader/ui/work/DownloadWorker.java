@@ -130,7 +130,8 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							pic.setRealUrl(null);
 							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s：403", task.getDisplayName(), pic.getName())));
 							delete(existNameFs);
-							exceptionNum ++;
+							//exceptionNum ++;
+							exceptionNum = requireNum;//使之停止
 							continue;
 						}else if(totalLength != size){
 							//获取的流大小与http响应不一致则不算下载成功

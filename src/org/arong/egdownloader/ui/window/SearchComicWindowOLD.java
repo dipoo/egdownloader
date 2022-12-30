@@ -50,7 +50,6 @@ import org.arong.egdownloader.ui.swing.AJButton;
 import org.arong.egdownloader.ui.swing.AJCheckBox;
 import org.arong.egdownloader.ui.swing.AJLabel;
 import org.arong.egdownloader.ui.swing.AJPager;
-import org.arong.egdownloader.ui.swing.AJPager2;
 import org.arong.egdownloader.ui.swing.AJTextField;
 import org.arong.egdownloader.ui.table.SearchTasksTable;
 import org.arong.egdownloader.ui.work.CommonSwingWorker;
@@ -67,9 +66,9 @@ import com.sun.awt.AWTUtilities;
  * @author dipoo
  * @since 2015-03-11
  */
-public class SearchComicWindow extends JFrame {
+public class SearchComicWindowOLD extends JFrame {
 
-	private static final long serialVersionUID = -3912589805632312855L;
+	/*private static final long serialVersionUID = -3912589805632312855L;
 	
 	public EgDownloaderWindow mainWindow;
 	public SearchTagsWindow searchTagsWindow;
@@ -95,7 +94,7 @@ public class SearchComicWindow extends JFrame {
 	public JScrollPane tablePane;
 	public JPanel picturePane;
 	public JPanel optionPanel;
-	public AJPager2 pager;
+	public AJPager pager;
 	public boolean haveBt;//是否有bt下载文件
 	public String key = " ";//搜索条件的字符串
 	public String currentPage = "1";
@@ -118,12 +117,12 @@ public class SearchComicWindow extends JFrame {
 	public Map<Integer, String> siteModelDescMap = new HashMap<Integer, String>();
 	public String windowTitle = "搜索%s漫画";
 	
-	public SearchComicWindow(final EgDownloaderWindow mainWindow){
+	public SearchComicWindowOLD(final EgDownloaderWindow mainWindow){
 		
 		siteModelDescMap.put(1, "里站");
 		siteModelDescMap.put(2, "表站");
 		
-		final SearchComicWindow this_ = this;
+		final SearchComicWindowOLD this_ = this;
 		this.mainWindow = mainWindow;
 		viewModel = mainWindow.setting.getSearchViewModel();
 		siteModel = mainWindow.setting.getSiteModel();
@@ -235,10 +234,10 @@ public class SearchComicWindow extends JFrame {
 		}, this.getWidth() - 80, 10, 60, 30);
 		
 		favTagsBtn.setUI(AJButton.blueBtnUi);
-/*		tagBtn.setUI(AJButton.blueBtnUi);*/
+		tagBtn.setUI(AJButton.blueBtnUi);
 		clearCacheBtn.setUI(AJButton.redBtnUi);
 		
-		/* 分类条件 */
+		 分类条件 
 		optionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		optionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(Integer.parseInt("bababa", 16)), 1), "条件过滤"));
 		optionPanel.setBounds(6, 55, ComponentConst.CLIENT_WIDTH - 23, 65);
@@ -279,7 +278,7 @@ public class SearchComicWindow extends JFrame {
 				f_sto = jcb.isSelected() ? "on" : "";
 			}
 		});
-		language = new JComboBox(new String[]{"全部", "中文"/*, "日文"*/, "英文", "韩文", "法文"});
+		language = new JComboBox(new String[]{"全部", "中文", "日文", "英文", "韩文", "法文"});
 		language.setSelectedIndex(1);
 		language.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -287,12 +286,12 @@ public class SearchComicWindow extends JFrame {
 				String[] keys = key.split(" ");
 				if(keys[0].indexOf("language:") != -1){
 					key = key.replace(keys[0], "");
-					/*for(int i = 1; i < keys.length; i ++){
+					for(int i = 1; i < keys.length; i ++){
 						key += keys[i];
 						if(i != keys.length - 1){
 							key += " ";
 						}
-					}*/
+					}
 				}
 				switch(language.getSelectedIndex()){
 					case 0:
@@ -301,9 +300,9 @@ public class SearchComicWindow extends JFrame {
 					case 1:
 						keyField.setText("language:\"chinese$\" " + key);
 						break;
-					/*case 2:
+					case 2:
 						keyField.setText("language:\"japanese$\" " + key);
-						break;*/	
+						break;	
 					case 2:
 						keyField.setText("language:\"english$\" " + key);
 						break;
@@ -352,9 +351,9 @@ public class SearchComicWindow extends JFrame {
 		}, 0, 0, 60, 30);
 		
 		ComponentUtil.addComponents(optionPanel, language, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, changeViewBtn, changeSiteBtn);
-		/* 分类条件 end*/
+		 分类条件 end
 		
-		pager = new AJPager2(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
+		pager = new AJPager(20, ComponentConst.CLIENT_HEIGHT - 80, ComponentConst.CLIENT_WIDTH, ComponentConst.CLIENT_HEIGHT, new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				JButton btn = (JButton) e.getSource();
@@ -373,7 +372,7 @@ public class SearchComicWindow extends JFrame {
 		
 		
 		ComponentUtil.addComponents(this.getContentPane(), keyLabel, keyField, searchBtn, cancelSearchBtn, leftBtn, rightBtn,
-				loadingLabel, totalLabel, favTagsBtn/*, tagBtn*/, clearCacheBtn, historyBtn, optionPanel, pager);
+				loadingLabel, totalLabel, favTagsBtn, tagBtn, clearCacheBtn, historyBtn, optionPanel, pager);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { 
@@ -394,7 +393,7 @@ public class SearchComicWindow extends JFrame {
 		});
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				SearchComicWindow this_ = (SearchComicWindow) e.getSource();
+				SearchComicWindowOLD this_ = (SearchComicWindowOLD) e.getSource();
 				this_.dispose();
 			}
 		});
@@ -402,12 +401,12 @@ public class SearchComicWindow extends JFrame {
 		//窗口大小变化监听
 		this.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
-				SearchComicWindow window = (SearchComicWindow) e.getSource();
+				SearchComicWindowOLD window = (SearchComicWindowOLD) e.getSource();
 				//设置清理缓存按钮位置
 				if(clearCacheBtn != null){
 					historyBtn.setLocation(window.getWidth() - 220, clearCacheBtn.getY());
 					favTagsBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());
-					/*tagBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());*/
+					tagBtn.setLocation(window.getWidth() - 150, clearCacheBtn.getY());
 					clearCacheBtn.setLocation(window.getWidth() - 80, clearCacheBtn.getY());
 				}
 				//设置分类条件大小
@@ -435,7 +434,7 @@ public class SearchComicWindow extends JFrame {
 		//鼠标动作监听
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
-				SearchComicWindow window = (SearchComicWindow) e.getSource();
+				SearchComicWindowOLD window = (SearchComicWindowOLD) e.getSource();
 				if(window.getWidth() < ComponentConst.CLIENT_WIDTH){
 					window.setSize(ComponentConst.CLIENT_WIDTH, window.getHeight());
 				}
@@ -445,7 +444,7 @@ public class SearchComicWindow extends JFrame {
 			}
 
 			public void mouseEntered(MouseEvent e) {
-				SearchComicWindow comicWindow = (SearchComicWindow) e.getSource();
+				SearchComicWindowOLD comicWindow = (SearchComicWindowOLD) e.getSource();
 				if(comicWindow.searchDetailInfoWindow != null){
 					comicWindow.searchDetailInfoWindow.setVisible(false);
 				}
@@ -472,39 +471,29 @@ public class SearchComicWindow extends JFrame {
 		if(! (keyText + "," + page).equals(keyList.get(keyList.size() - 1))){
 			keyList.add(keyText + "," + page);
 		}
-		/*if(datas.containsKey(k) && datas.get(k).containsKey(page)){
+		if(datas.containsKey(k) && datas.get(k).containsKey(page)){
 			cache = true;
 			searchTasks = datas.get(k).get(page);
 			if(viewModel == 1){
-				if(page.contains("next=")){
-					showResult(pageInfo.get(k), page.replace("next=", ""), null);
-				}else{
-					showResult(pageInfo.get(k), null, page.replace("prev=", ""));
-				}
-				
+				showResult(pageInfo.get(k), Integer.parseInt(page));
 			}else{
-				if(page.contains("next=")){
-					showResult2(pageInfo.get(k), page.replace("next=", ""), null);
-				}else{
-					showResult2(pageInfo.get(k), null, page.replace("prev=", ""));
-				}
+				showResult2(pageInfo.get(k), Integer.parseInt(page));
 			}
 			totalLabel.setText(keyPage.get(k).replace("共搜索到", HtmlUtils.redColorHtml("[缓存]") + "共搜索到"));
 			hideLoading();
 			//下载封面线程
 			new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
-		}else{*/
+		}else{
 			if(keyChange){
 				//重置页数
-				page = "";
+				page = "1";
 			}
 			cache = false;
 			
 			key = k;
 			currentPage = page;
-			/*String exurl = (siteModel == 1 ? "https://exhentai.org/" : "https://e-hentai.org/") + "?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
-					(Integer.parseInt(page) - 1) + "&f_cats=" + f_cats + "&f_sto=" + f_sto;*/
-			String exurl = (siteModel == 1 ? "https://exhentai.org/" : "https://e-hentai.org/") + "?f_cats=" + f_cats + "&f_sto=" + f_sto + "&" + page;
+			String exurl = (siteModel == 1 ? "https://exhentai.org/" : "https://e-hentai.org/") + "?advsearch=1&f_sname=on&f_stags=on&f_sh=on&f_spf=&f_spt=&page=" + 
+					(Integer.parseInt(page) - 1) + "&f_cats=" + f_cats + "&f_sto=" + f_sto;
 			if(!keyText.equals("")){
 				//过滤key
 				try {
@@ -514,14 +503,14 @@ public class SearchComicWindow extends JFrame {
 				}
 				exurl = exurl + "&f_search=" + keyText;
 			}
-			searchComicWorker = new SearchComicWorker(mainWindow, exurl, page);
+			searchComicWorker = new SearchComicWorker(mainWindow, exurl, Integer.parseInt(page));
 			searchComicWorker.execute();
 			//记录历史记录
 			if(SearchHistoryWindow.historyMap == null){
 				SearchHistoryWindow.loadConsoleLog();
 			}
 			SearchHistoryWindow.historyMap.put(keyText, DateUtil.showDate(DateUtil.YYYY_MM_DD_HH_MM_SS));
-		/*}*/
+		}
 	}
 	
 	
@@ -558,9 +547,9 @@ public class SearchComicWindow extends JFrame {
 				case 1:
 					key = "language:\"chinese$\" " + key;
 					break;
-				/*case 2:
+				case 2:
 					key = "language:\"japanese$\" " + key;
-					break;*/
+					break;
 				case 2:
 					key = "language:\"english$\" " + key;
 					break;
@@ -606,13 +595,12 @@ public class SearchComicWindow extends JFrame {
 	}
 	
 	public void setTotalInfo(String totalPage, String totalTasks, long spend){
-		//totalLabel.setText(String.format("<html>%s共搜索到 <b>%s</b> 页，总计 <b>%s</b> 本漫画，耗时 <b>%s</b> 秒</html>", (cache ? HtmlUtils.redColorHtml("[缓存]") : ""), HtmlUtils.greenColorHtml(totalPage), HtmlUtils.greenColorHtml(StringUtils.isBlank(totalTasks) ? "1" : totalTasks), HtmlUtils.greenColorHtml(String.format("%.2f", (spend / 1000f)))));
-		totalLabel.setText(String.format("<html>%s共搜索到 <b>%s</b> 本漫画，耗时 <b>%s</b> 秒</html>", (cache ? HtmlUtils.redColorHtml("[缓存]") : ""), HtmlUtils.greenColorHtml(StringUtils.isBlank(totalTasks) ? "1" : totalTasks), HtmlUtils.greenColorHtml(String.format("%.2f", (spend / 1000f)))));
+		totalLabel.setText(String.format("<html>%s共搜索到 <b>%s</b> 页，总计 <b>%s</b> 本漫画，耗时 <b>%s</b> 秒</html>", (cache ? HtmlUtils.redColorHtml("[缓存]") : ""), HtmlUtils.greenColorHtml(totalPage), HtmlUtils.greenColorHtml(StringUtils.isBlank(totalTasks) ? "1" : totalTasks), HtmlUtils.greenColorHtml(String.format("%.2f", (spend / 1000f)))));
 	}
 	
 	public SearchImagePanel[] picLabels = new SearchImagePanel[25];
 	
-	public void showResult(String totalPage, String next, String prev){
+	public void showResult(String totalPage, Integer currentPage){
 		if(picturePane != null){mainWindow.searchComicWindow.getContentPane().remove(tablePane);tablePane = null;}
 		if(searchTable == null){
 			searchTable = new SearchTasksTable(5, 130, this.getWidth() - 20,
@@ -630,13 +618,13 @@ public class SearchComicWindow extends JFrame {
 		searchTable.updateUI();
 		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
 		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
-		if(next != null && prev != null){
-			mainWindow.searchComicWindow.pager.change(StringUtils.isNotBlank(next) ? Integer.parseInt(next) : null, StringUtils.isNotBlank(prev) ? Integer.parseInt(prev) : null);
+		if(totalPage != null && currentPage != null){
+			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
 			mainWindow.searchComicWindow.pager.setVisible(true);
 		}
 	}
 	
-	public void showResult2(final String totalPage, String next, String prev){
+	public void showResult2(final String totalPage, final Integer currentPage){
 		boolean first = false;
 		if(picLabels[0] == null){
 			first = true;
@@ -690,8 +678,8 @@ public class SearchComicWindow extends JFrame {
 		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
 		jScrollBar.setValue(0);//滚动到最前
 		jScrollBar.setUnitIncrement(20);
-		if(next != null && prev != null){
-			mainWindow.searchComicWindow.pager.change(StringUtils.isNotBlank(next) ? Integer.parseInt(next) : null, StringUtils.isNotBlank(prev) ? Integer.parseInt(prev) : null);
+		if(totalPage != null && currentPage != null){
+			mainWindow.searchComicWindow.pager.change(Integer.parseInt(totalPage), currentPage);
 			mainWindow.searchComicWindow.pager.setVisible(true);
 		}
 		resetPicturePanelHeight(first ? 500 : 100);
@@ -752,5 +740,5 @@ public class SearchComicWindow extends JFrame {
 			}
 		}
 		return false;
-	}
+	}*/
 }

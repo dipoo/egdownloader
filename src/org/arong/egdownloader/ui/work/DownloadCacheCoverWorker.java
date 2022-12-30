@@ -27,15 +27,17 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 	}
 	
 	protected Void doInBackground() throws Exception {
-		File cover;
+		File cover = null;
 		if(tasks != null){
-			for(int i = 0; i < tasks.size(); i ++){
+			dlcovers(-1, cover);
+			
+			/*for(int i = 0; i < tasks.size(); i ++){
 				final SearchTask task = tasks.get(i);
 				cover = new File(task.getCoverCachePath());
 				if(cover == null || !cover.exists()){
 					try {
 						while(runningCount > 2){
-							Thread.sleep(2000);
+							Thread.sleep(1000);
 						}
 					} catch (InterruptedException e) {}
 					runningCount ++;
@@ -45,7 +47,7 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 								public void run() {
 									InputStream is = null;
 									try{
-										Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 20 * 1000);
+										Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 10 * 1000);
 										task.setCoverLength((Integer) streamAndLength[1]);
 										is = (InputStream)streamAndLength[0];
 										FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
@@ -56,7 +58,7 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 										} catch (InterruptedException e1) {}
 										//最多下两次
 										try{
-											Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 20 * 1000);
+											Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 10 * 1000);
 											task.setCoverLength((Integer) streamAndLength[1]);
 											is = (InputStream)streamAndLength[0];
 											FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
@@ -80,9 +82,56 @@ public class DownloadCacheCoverWorker extends SwingWorker<Void, Void>{
 						}
 					});
 				}
-			}
+			}*/
 		}
 		return null;
 	}
 
+	
+	private void dlcovers(int index, File cover){
+		index ++;
+		if(index >= tasks.size()) return;
+		final SearchTask task = tasks.get(index);
+		cover = new File(task.getCoverCachePath());
+		if(cover == null || !cover.exists()){
+			InputStream is = null;
+			runningCount ++;
+			try{
+				Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 10 * 1000);
+				task.setCoverLength((Integer) streamAndLength[1]);
+				is = (InputStream)streamAndLength[0];
+				FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
+				runningCount --;
+				dlcovers(index, cover);
+			}catch(Exception e){
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {}
+				//最多下两次
+				try{
+					Object[] streamAndLength = WebClient.getStreamAndLengthUseJavaWithCookie(task.getDownloadCoverUrl(mainWindow.setting.isUseCoverReplaceDomain()), mainWindow.setting.getCookieInfo(), 10 * 1000);
+					task.setCoverLength((Integer) streamAndLength[1]);
+					is = (InputStream)streamAndLength[0];
+					FileUtil2.storeStream(ComponentConst.CACHE_PATH, task.getCoverCacheFileName(), is);
+				}catch(Exception e1){
+					e1.printStackTrace();
+					task.setCoverDownloadFail(true);
+				}finally{
+					runningCount --;
+					if(is != null){
+						try{is.close();}catch(Exception e1){}
+					}
+					dlcovers(index, cover);
+				}
+				e.printStackTrace();
+			}finally{
+				if(is != null){
+					try{is.close();}catch(Exception e){}
+				}
+			}
+		}else{
+			cover = null;
+			dlcovers(index, cover);
+		}
+	}
 }

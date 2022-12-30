@@ -10,10 +10,10 @@ public final class Version {
 	// 程序版本号
 	public final static String VERSION = "0.95";
 	// jar版本号
-	public final static String JARVERSION = "11";
+	public final static String JARVERSION = "12";
 	// 程序作者
 	public final static String AUTHOR = "dipoo";
 	// 程序最后修改时间
-	public final static String MODIFLIED = "2019-08-02";
+	public final static String MODIFLIED = "2022-12-30";
 	
 }

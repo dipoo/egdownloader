@@ -145,18 +145,18 @@ public class SearchTasksTable extends JTable {
 				}else if(column == 3){//评分
 					tc.setPreferredWidth(80);
 					tc.setMaxWidth(120);
-					return new AJLabel(String.format("<html>&nbsp;&nbsp;&nbsp;&nbsp;%s★</html>", value.toString()), c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
+					return new AJLabel(String.format("<html>&nbsp;&nbsp;&nbsp;&nbsp;%s★</html>", value.toString()), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				}else if(column == 4){//上传者
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
+					JLabel l = new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 					l.setForeground(uploaderColor);
 					l.setToolTipText("点击搜索该上传者的上传的漫画");
 					return l;
 				}else if(column == 5){//发布时间
 					tc.setPreferredWidth(100);
 					tc.setMaxWidth(150);
-					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.CENTER);
+					return new AJLabel(value.toString(), c, FontConst.Microsoft_PLAIN_11, JLabel.LEFT);
 				}else{
 					return null;
 				}

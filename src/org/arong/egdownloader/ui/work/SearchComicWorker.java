@@ -23,8 +23,8 @@ import org.arong.util.Tracker;
 public class SearchComicWorker extends SwingWorker<Void, Void>{
 	private EgDownloaderWindow mainWindow;
 	private String url;
-	private Integer currentPage;
-	public SearchComicWorker(EgDownloaderWindow mainWindow, String url, Integer currentPage){
+	private String currentPage;
+	public SearchComicWorker(EgDownloaderWindow mainWindow, String url, String currentPage){
 		this.mainWindow = mainWindow;
 		this.url = url;
 		this.currentPage = currentPage;
@@ -60,7 +60,13 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				}
 				String totalTasks = result[0].split(",")[0];
 				//总页数
-				String totalPage = result[0].split(",")[1];
+				String totalPage = "1"/*result[0].split(",")[1]*/;
+				String prev = result[0].split(",")[1].trim();
+				String next = "";
+				if(result[0].split(",").length == 3){
+					next = result[0].split(",")[2].trim();
+				}
+				
 				if(isCancelled()) return null;
 				searchComicWindow.setTotalInfo(totalPage, totalTasks, System.currentTimeMillis() - t);
 				searchComicWindow.searchTasks = searchTasks;
@@ -68,16 +74,16 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				//下载封面线程
 				new DownloadCacheCoverWorker(searchTasks, mainWindow).execute();
 				
-				if(searchComicWindow.datas.get(searchComicWindow.key) == null){
+				/*if(searchComicWindow.datas.get(searchComicWindow.key) == null){
 					searchComicWindow.datas.put(searchComicWindow.key, new HashMap<String, List<SearchTask>>());
 					searchComicWindow.keyPage.put(searchComicWindow.key, searchComicWindow.totalLabel.getText());
 					searchComicWindow.pageInfo.put(searchComicWindow.key, totalPage);
 				}
-				searchComicWindow.datas.get(searchComicWindow.key).put((currentPage) + "", searchTasks);
+				searchComicWindow.datas.get(searchComicWindow.key).put((currentPage) + "", searchTasks);*/
 				if(searchComicWindow.viewModel == 1){
-					searchComicWindow.showResult(totalPage, currentPage);
+					searchComicWindow.showResult(totalPage, next, prev);
 				}else{
-					searchComicWindow.showResult2(totalPage, currentPage);
+					searchComicWindow.showResult2(totalPage, next, prev);
 				}
 				
 			}else{
