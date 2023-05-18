@@ -54,6 +54,7 @@ public class SearchComicWorker extends SwingWorker<Void, Void>{
 				List<SearchTask> searchTasks = null;
 				try{
 					searchTasks = JsonUtil.jsonArray2beanList(SearchTask.class, json);
+					//System.out.println(searchTasks);
 				}catch(Exception e){
 					System.out.println(HtmlUtils.redColorHtml("返回的搜索数据：" + json));
 					throw e;

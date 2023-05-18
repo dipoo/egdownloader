@@ -631,6 +631,8 @@ public class SearchComicWindow extends JFrame {
 		JScrollBar jScrollBar = tablePane.getVerticalScrollBar();
 		jScrollBar.setValue(jScrollBar.getMinimum());//滚动到最前
 		if(next != null && prev != null){
+			try{Integer.parseInt(next);}catch(Exception e){next = null;}
+			try{Integer.parseInt(prev);}catch(Exception e){prev = null;}
 			mainWindow.searchComicWindow.pager.change(StringUtils.isNotBlank(next) ? Integer.parseInt(next) : null, StringUtils.isNotBlank(prev) ? Integer.parseInt(prev) : null);
 			mainWindow.searchComicWindow.pager.setVisible(true);
 		}
@@ -691,6 +693,8 @@ public class SearchComicWindow extends JFrame {
 		jScrollBar.setValue(0);//滚动到最前
 		jScrollBar.setUnitIncrement(20);
 		if(next != null && prev != null){
+			try{Integer.parseInt(next);}catch(Exception e){next = null;}
+			try{Integer.parseInt(prev);}catch(Exception e){prev = null;}
 			mainWindow.searchComicWindow.pager.change(StringUtils.isNotBlank(next) ? Integer.parseInt(next) : null, StringUtils.isNotBlank(prev) ? Integer.parseInt(prev) : null);
 			mainWindow.searchComicWindow.pager.setVisible(true);
 		}

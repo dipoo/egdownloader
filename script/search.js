@@ -7,7 +7,7 @@ var mark = {
 	intercept : ['<td class="gl1c glcat">', "pages</div></td>"],
 	name : ['<div class="glink">', '</div><div><div class="gt"', '</div><div>&nbsp;</div></a>'],
 	url : [')"><a href="', '"><div class="glink">', ",'", "')"],
-	coverUrl : ['https://exhentai.org/t/', '" src="https://ehgt.org/', '_250.jpg', 'data-src="https://ehgt.org/'],
+	coverUrl : ['https://s.exhentai.org/t/', '" src="https://ehgt.org/', '_250.jpg', 'data-src="https://ehgt.org/'],
 	//coverUrl : ['" src="', '" /></div>', 'data-src="', '.jpg" />'],
 	date : ['" id="posted_', '/div><div class="ir" style="background-position', '">', '<'],
 	type : ["document.location='https://e", '/div></td><td class="gl2c">', '">', '<'],
@@ -81,8 +81,10 @@ function pageInfo(source){
 	}
 	var prev = interceptFromSource(source, mark.prev[0], mark.prev[1]);
 	prev = prev.replace(mark.prev[2], "");
+	try{prev = parseInt(prev);}catch(e){prev = null;}
 	var next = interceptFromSource(source, mark.next[0], mark.next[1]);
 	next = next.replace(mark.next[2], "");
+	try{next = parseInt(next);}catch(e){next = 0;}
 	//return count + mark.separator[0] + (parseInt(count) % 25 == 0 ? parseInt(count / 25) : parseInt(count / 25) + 1);
 	return count + mark.separator[0] + prev + mark.separator[0] + next;
 }

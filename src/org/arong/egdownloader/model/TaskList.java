@@ -40,17 +40,25 @@ public class TaskList<T> extends ArrayList<T> {
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] taskarr = task.getUrl().split("/g/");
 			String[] coverarr = task.getCoverUrl().split("-");
-			taskTokens.append(coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + COVER_TOKEN_SUB_LENGTH))
+			try{
+				taskTokens.append(coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + COVER_TOKEN_SUB_LENGTH))
 					.append(taskarr[1].substring(0, taskarr[1].indexOf("/")));
+			}catch(Exception e){
+				
+			}
 		}
 	}
 	private void removeCoverToken(Task task){
 		if(StringUtils.isNotBlank(task.getUrl()) && StringUtils.isNotBlank(task.getCoverUrl())){
 			String[] taskarr = task.getUrl().split("/g/");
 			String[] coverarr = task.getCoverUrl().split("-");
-			String token = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + COVER_TOKEN_SUB_LENGTH) + taskarr[1].substring(0, taskarr[1].indexOf("/"));
-			if(taskTokens.indexOf(token) != -1){
-				taskTokens.replace(taskTokens.indexOf(token), taskTokens.indexOf(token) + token.length(), "");
+			try{
+				String token = coverarr[0].substring(coverarr[0].lastIndexOf("/"), coverarr[0].lastIndexOf("/") + COVER_TOKEN_SUB_LENGTH) + taskarr[1].substring(0, taskarr[1].indexOf("/"));
+				if(taskTokens.indexOf(token) != -1){
+					taskTokens.replace(taskTokens.indexOf(token), taskTokens.indexOf(token) + token.length(), "");
+				}
+			}catch(Exception e){
+				
 			}
 		}
 	}

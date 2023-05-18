@@ -216,6 +216,7 @@ public class InitWindow extends JWindow {
 			}
 			
 		}catch(Exception e){
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "运行报错：" + e.getMessage());
 			JOptionPane.showMessageDialog(null, "自动退出");
 			System.exit(0);

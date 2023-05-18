@@ -76,7 +76,10 @@ public class CreateWorker extends SwingWorker<Void, Void>{
 					JOptionPane.showMessageDialog(null, "读取封面文件超时，请检查网络后重试");
 				} catch (ConnectTimeoutException e){
 					JOptionPane.showMessageDialog(null, "封面地址连接超时，请检查网络后重试");
-				} 
+				} catch (Exception e){
+					JOptionPane.showMessageDialog(null, "下载封面失败，暂略过");
+					e.printStackTrace();
+				}
 				
 				//设置最后创建时间
 				setting.setLastCreateTime(task.getCreateTime());
