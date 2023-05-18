@@ -117,7 +117,7 @@ function parse(source){
 			if(source.indexOf(mark.coverUrl[0]) != -1){
 				task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[2]);
 				if(task.coverUrl && task.coverUrl != ''){
-					task.coverUrl = mark.coverUrl[0] + task.coverUrl + mark.coverUrl[2];
+					task.coverUrl = /*mark.coverUrl[0]*/"http://ehgt.org/" + task.coverUrl + mark.coverUrl[2];
 					task.coverUrl = task.coverUrl.replace("250.jpg", "l.jpg");
 				}
 			}else{

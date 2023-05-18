@@ -50,9 +50,9 @@ function parse(source){
 	task.name = interceptFromSource(source, mark.name[0], mark.name[1]);
 	task.subname = interceptFromSource(source, mark.subname[0], mark.subname[1]);
 	task.uploader = interceptFromSource(source, mark.uploader[0], mark.uploader[1]).split(mark.uploader[2])[0];
-	task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]).replace("https://ehgt.org", "http://ehgt.org");
+	task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[1]).replace("https://ehgt.org", "http://ehgt.org").replace("https://s.exhentai.org/t", "http://ehgt.org");
 	if(task.coverUrl == ''){
-		task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[2]).replace("https://ehgt.org", "http://ehgt.org");
+		task.coverUrl = interceptFromSource(source, mark.coverUrl[0], mark.coverUrl[2]).replace("https://ehgt.org", "http://ehgt.org").replace("https://s.exhentai.org/t", "http://ehgt.org");
 	}
 	task.type = interceptFromSource(source, mark.type[0], mark.type[1]);
 	task.type = interceptFromSource(task.type, mark.type[2], mark.type[3]);
