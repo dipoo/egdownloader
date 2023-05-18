@@ -422,7 +422,7 @@ public class ScriptParser {
 		param.put("htmlSource", source);
 		
 		Object result = parseJsScript(param, getSearchScriptFile(first ? setting.getSearchScriptPath() : setting.getSearchScriptPath2()));
-		System.out.println(result);
+		//System.out.println(result);
 		return result == null ? null : result.toString().split("\\###");
 	}
 	
