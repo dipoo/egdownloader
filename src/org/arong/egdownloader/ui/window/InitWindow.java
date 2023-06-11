@@ -197,9 +197,10 @@ public class InitWindow extends JWindow {
 					if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){
 						ComponentConst.remoteScriptVersion = scriptVersion;
 						ComponentConst.scriptChange = true;
-						int r = JOptionPane.showConfirmDialog(null, "远程脚本发生变化，是否同步？");
-						this.toFront();
+						this.setVisible(false);
+						int r = JOptionPane.showConfirmDialog(this, "远程脚本发生变化，是否同步？");
 						if(r == JOptionPane.OK_OPTION){
+							this.setVisible(true);
 							new UpdateScriptWorker(this).execute();
 						}else{
 							startMain();
@@ -217,8 +218,8 @@ public class InitWindow extends JWindow {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "运行报错：" + e.getMessage());
-			JOptionPane.showMessageDialog(null, "自动退出");
+			JOptionPane.showMessageDialog(this, "运行报错：" + e.getMessage());
+			JOptionPane.showMessageDialog(this, "自动退出");
 			System.exit(0);
 		}
 	}
