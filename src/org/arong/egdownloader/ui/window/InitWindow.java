@@ -185,16 +185,16 @@ public class InitWindow extends JWindow {
 			//设置代理
 			Proxy.init(setting.isUseProxy(), setting.getProxyType(), setting.getProxyIp(), 
 					setting.getProxyPort(), setting.getProxyUsername(), setting.getProxyPwd());
+			//V.2015.03.26
+			ComponentConst.localScriptVersion = FileUtil2.getTextFromReader(new FileReader("script/version"));
 			if(!setting.isDebug()){
 				textLabel.setText("检测远程脚本");
 				//检测脚本是否发生变化
 				try {
 					scriptVersion = WebClient.getRequestUseJava(ComponentConst.SCRIPT_VERSION_URL, null);
-					//V.2015.03.26
-					String currentVersion = FileUtil2.getTextFromReader(new FileReader("script/version"));
 	
 					//版本返回信息需要以V.2字符串开头，否则可能获取的数据不正确，不做更新操作
-					if(scriptVersion.startsWith("V.2") && scriptVersion != null && !currentVersion.equals(scriptVersion)){
+					if(scriptVersion.startsWith("V.2") && scriptVersion != null && !ComponentConst.localScriptVersion.equals(scriptVersion)){
 						ComponentConst.remoteScriptVersion = scriptVersion;
 						ComponentConst.scriptChange = true;
 						this.setVisible(false);

@@ -20,6 +20,7 @@ import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.arong.egdownloader.spider.SpiderException;
 import org.arong.egdownloader.spider.WebClient;
@@ -195,9 +196,9 @@ public class ScriptParser {
 			Task t = JsonUtil.json2bean(Task.class, parseJsScript(param, getCreateScriptFile(setting.getCreateTaskScriptPath())).toString());
 			
 			//获取名称
-			task.setName(t.getName());
+			task.setName(StringEscapeUtils.unescapeHtml(t.getName()));
 			//获取子名称
-			task.setSubname(t.getSubname());
+			task.setSubname(StringEscapeUtils.unescapeHtml(t.getSubname()));
 			//获取上传者
 			task.setUploader(t.getUploader());
 			//获取发布日期

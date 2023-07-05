@@ -130,9 +130,12 @@ public class DownloadWorker extends SwingWorker<Void, Void>{
 							pic.setRealUrl(null);
 							Tracker.println(HtmlUtils.redColorHtml(String.format("%s：%s：403", task.getDisplayName(), pic.getName())));
 							delete(existNameFs);
-							//exceptionNum ++;
-							exceptionNum = requireNum;//使之停止
-							continue;
+							task.setStatus(TaskStatus.STOPED);
+							Tracker.println(DownloadWorker.class, HtmlUtils.redColorHtml(String.format("【%s】：403，停止下载。", task.getDisplayName())));
+							table.setRunningNum(table.getRunningNum() - 1);//当前运行的任务数-1
+							//开始任务等待列表中的第一个任务
+							table.startWaitingTask();
+							return null;
 						}else if(totalLength != size){
 							//获取的流大小与http响应不一致则不算下载成功
 							pic.setRealUrl(null);

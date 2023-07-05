@@ -72,7 +72,7 @@ public class AboutMenuWindow extends JDialog {
 			}
 		});
 		
-		aboutTextPane = new AJTextPane(ComponentConst.ABOUT_TEXTPANE_TEXT,
+		aboutTextPane = new AJTextPane(String.format(ComponentConst.ABOUT_TEXTPANE_TEXT, ComponentConst.localScriptVersion),
 				Color.BLUE);
 		aboutTextPane.addHyperlinkListener(new HyperlinkListener() {
 			
