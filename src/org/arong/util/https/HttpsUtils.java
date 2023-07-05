@@ -39,7 +39,7 @@ public class HttpsUtils {
                 URL url = new URL(urlStr);
                 System.out.println(urlStr + ",proxy:" + proxy);
                 System.setProperty("https.protocols", "TLSv1.2,TLSv1.1,TLSv1,,SSLv3");
-                System.setProperty("jsse.enableSNIExtension", "false");
+                // System.setProperty("jsse.enableSNIExtension", "false");
                 HttpsURLConnection conn = null;
                 if(proxy != null){
                 	conn = (HttpsURLConnection) url.openConnection(proxy);
