@@ -6,7 +6,7 @@ var mark = {
 	type : ["document.location='https://e", 'div></div><div id="gdn">', '">', '</'],//
 	coverUrl : ['background:transparent url(', ') 0 0 no-repeat"></div>', ') no-repeat"></div>'],
 	total : ['Length:</td><td class="gdt2">', ' pages</td></tr><tr><td class="gdt1'],
-	size : ['File Size:</td><td class="gdt2">', 'B</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
+	size : ['File Size:</td><td class="gdt2">', 'iB</td></tr><tr><td class="gdt1">Length', '&nbsp;<span class="halp"'],
 	language : ['Language:</td><td class="gdt2">', ' &nbsp;</td></tr><tr><td class="gdt1">File Size:', ' &nbsp;<span class="halp', ' &nbsp;'],
 	tagsource:['<div id="taglist">', '</div><div id="tagmenu_act"'],
 	tags:['hentai.org/tag/', '" class="', 'toggle_tagmenu']
