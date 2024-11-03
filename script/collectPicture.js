@@ -1,8 +1,8 @@
 var mark = {//
-    listSource : ['<div id="gdt">', '<div id="cdiv" class="gm">'],//
-	intercept : ['style="height', "class=\"gdt"],//
-	showUrl : ['"><a href="', '"><img alt='],//
-	name : ['title="', '" src=']//
+    listSource : ['<div id="gdt"', '<div id="cdiv" class="gm">'],//
+	intercept : ['style="width', '><a'],//
+	showUrl : [' href="', '"><div title="'],//
+	name : ['title="', '" style="width']//
 };
 
 function parseJsonArray(array){
